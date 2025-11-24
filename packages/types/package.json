@@ -1,0 +1,16 @@
+{
+  "name": "@workflow-builder/types",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    "./common": "./common/index.ts",
+    "./node-data": "./node-data/index.ts",
+    "./node-types": "./node-types/index.ts",
+    "./node-schema": "./node-schema/index.ts",
+    "./node-validation-schema": "./node-validation-schema/index.ts",
+    "./selection": "./selection/index.ts"
+  }
+}
+

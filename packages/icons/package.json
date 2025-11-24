@@ -1,0 +1,8 @@
+{
+  "name": "@workflow-builder/icons",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./index.tsx",
+  "types": "./index.tsx"
+}
+

@@ -1,0 +1,39 @@
+# Lefthook configuration for pre-commit hooks
+# https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  commands:
+    # Run Biome linter and formatter
+    biome-check:
+      run: pnpm biome check --write {staged_files}
+      stage_fixed: true
+      glob: "*.{js,jsx,ts,tsx,json,css,md}"
+    
+    # TypeScript type checking
+    typecheck:
+      run: pnpm typecheck
+      glob: "*.{ts,tsx}"
+    
+    # Next.js linting
+    next-lint:
+      run: pnpm lint --fix
+      glob: "*.{js,jsx,ts,tsx}"
+
+pre-push:
+  parallel: true
+  commands:
+    # Full type check before push
+    typecheck:
+      run: pnpm typecheck
+    
+    # Full lint check before push
+    lint:
+      run: pnpm lint
+
+commit-msg:
+  commands:
+    # Validate commit message format (optional)
+    commitlint:
+      run: echo "Commit message validation can be added here"
+
