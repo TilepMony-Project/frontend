@@ -3,6 +3,7 @@
 import {
   Archive,
   ArrowLeftRight,
+  ArrowsClockwise,
   Asterisk,
   Box,
   Building2,
@@ -104,7 +105,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   // Node icons - TilepMoney (Lucide React)
   CurrencyDollar: DollarSign, // Deposit
   Coins: Coins, // Mint
-  ArrowsClockwise: ArrowLeftRight, // Swap
+  ArrowsClockwise: ArrowsClockwise, // Swap
   Bridge: Link2, // Bridge (using Link2 as bridge icon)
   Bank: Building2, // Redeem
   PaperPlaneRight: Send, // Transfer

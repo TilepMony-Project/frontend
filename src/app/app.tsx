@@ -1,32 +1,32 @@
 'use client';
 
-import styles from './app.module.css';
 // Plugins entry point
 import '@/features/plugins-core/index';
-import { PropsWithChildren } from 'react';
-import { OptionalHooks } from './features/plugins-core/components/optional-hooks';
+import type { PropsWithChildren } from 'react';
+
+import styles from './app.module.css';
 import { AppBarContainerLazy } from './features/app-bar/app-bar-container-lazy';
-import { PropertiesBarContainerLazy } from './features/properties-bar/properties-bar-container-lazy';
-import { AppLoaderContainer } from './features/integration/components/app-loader/app-loader-container';
 import { DiagramContainer as Diagram } from './features/diagram/diagram';
-import { PaletteContainerLazy } from './features/palette/palette-container-lazy';
 import { DiagramWrapper } from './features/diagram/diagram-wrapper';
+import { ExecutionMonitor } from './features/execution/components/execution-monitor/execution-monitor';
+import { AppLoaderContainer } from './features/integration/components/app-loader/app-loader-container';
+import { withIntegration } from './features/integration/components/with-integration';
+import { PaletteContainerLazy } from './features/palette/palette-container-lazy';
+import { OptionalHooks } from './features/plugins-core/components/optional-hooks';
+import { PropertiesBarContainerLazy } from './features/properties-bar/properties-bar-container-lazy';
 import { SnackbarContainer } from './features/snackbar/snackbar-container';
 
-import { withIntegration } from './features/integration/components/with-integration';
-
 function AppComponent(_props: PropsWithChildren) {
-
   return (
-    <div className={styles['container']}>
-      <div className={styles['header']}>
+    <div className={styles.container}>
+      <div className={styles.header}>
         <AppBarContainerLazy />
       </div>
-      <div className={styles['content']}>
-        <div className={styles['panel']}>
+      <div className={styles.content}>
+        <div className={styles.panel}>
           <PaletteContainerLazy />
         </div>
-        <div className={styles['panel']}>
+        <div className={styles.panel}>
           <div className={styles['right-panel']}>
             <PropertiesBarContainerLazy />
           </div>
@@ -36,6 +36,7 @@ function AppComponent(_props: PropsWithChildren) {
         <Diagram />
       </DiagramWrapper>
       <SnackbarContainer />
+      <ExecutionMonitor />
       <AppLoaderContainer />
       <OptionalHooks />
     </div>

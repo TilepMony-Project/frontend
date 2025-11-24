@@ -1,0 +1,265 @@
+.panel {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: min(420px, calc(100% - 32px));
+  background: var(--surface-primary, #0f172a);
+  color: #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.35);
+  padding: 16px 20px 20px;
+  z-index: 30;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.collapsed {
+  transform: translateY(calc(100% - 56px));
+  opacity: 0.88;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title span {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-running {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.status-finished,
+.status-complete {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.status-failed {
+  background: rgba(248, 113, 113, 0.2);
+  color: #f87171;
+}
+
+.status-waiting {
+  background: rgba(250, 204, 21, 0.2);
+  color: #facc15;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms ease;
+}
+
+.icon-button:hover {
+  background: rgba(148, 163, 184, 0.15);
+}
+
+.progress-block {
+  margin-top: 16px;
+}
+
+.progress-labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  transition: width 200ms ease;
+}
+
+.body {
+  margin-top: 16px;
+  display: grid;
+  gap: 16px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.section {
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  padding-top: 12px;
+}
+
+.section h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.node-list,
+.log-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.node-item,
+.log-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.node-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.node-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #f8fafc;
+}
+
+.node-type {
+  font-size: 11px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.status-chip {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: capitalize;
+}
+
+.pending {
+  background: rgba(148, 163, 184, 0.2);
+  color: #cbd5f5;
+}
+
+.processing {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.complete {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+}
+
+.failed {
+  background: rgba(248, 113, 113, 0.25);
+  color: #f87171;
+}
+
+.log-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.log-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.log-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #cbd5f5;
+}
+
+.hash-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.empty-state {
+  font-size: 13px;
+  color: #cbd5f5;
+  background: rgba(15, 23, 42, 0.35);
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px dashed rgba(148, 163, 184, 0.4);
+}
+
+.error {
+  color: #f87171;
+  font-size: 12px;
+}
+
+.muted {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .panel {
+    width: calc(100% - 24px);
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+  }
+}
