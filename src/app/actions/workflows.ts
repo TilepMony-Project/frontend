@@ -5,6 +5,55 @@ import connectDB from '@/lib/mongodb';
 import Workflow from '@/models/Workflow';
 import { revalidatePath } from 'next/cache';
 
+export type WorkflowSummary = {
+  id: string;
+  name: string;
+  description?: string;
+  status: 'draft' | 'running' | 'running_waiting' | 'stopped' | 'finished' | 'failed';
+  createdAt: string;
+  updatedAt: string;
+  lastExecutedAt: string | null;
+  nodesCount: number;
+  edgesCount: number;
+};
+
+function serializeWorkflow(workflow: typeof Workflow extends infer T ? T : never): WorkflowSummary {
+  // Using any because Workflow lean() returns plain objects at runtime.
+  const plainWorkflow = workflow as unknown as {
+    _id: string;
+    id?: string;
+    name: string;
+    description?: string;
+    status: WorkflowSummary['status'];
+    createdAt: Date;
+    updatedAt: Date;
+    lastExecutedAt?: Date | null;
+    nodes?: unknown[];
+    edges?: unknown[];
+  };
+
+  return {
+    id: plainWorkflow._id?.toString() ?? plainWorkflow.id ?? '',
+    name: plainWorkflow.name,
+    description: plainWorkflow.description,
+    status: plainWorkflow.status,
+    createdAt: plainWorkflow.createdAt?.toISOString() ?? new Date().toISOString(),
+    updatedAt: plainWorkflow.updatedAt?.toISOString() ?? new Date().toISOString(),
+    lastExecutedAt: plainWorkflow.lastExecutedAt
+      ? plainWorkflow.lastExecutedAt.toISOString()
+      : null,
+    nodesCount: Array.isArray(plainWorkflow.nodes) ? plainWorkflow.nodes.length : 0,
+    edgesCount: Array.isArray(plainWorkflow.edges) ? plainWorkflow.edges.length : 0,
+  };
+}
+
+function revalidateWorkflowPaths() {
+  const paths = ['/', '/dashboard', '/workspace', '/workspace/[workflowId]'];
+  for (const path of paths) {
+    revalidatePath(path);
+  }
+}
+
 /**
  * Server Action to auto-save a workflow
  * This is called with debouncing (500ms) from the client
@@ -37,7 +86,7 @@ export async function autoSaveWorkflow(
         return { success: false, workflowId: '', error: 'Workflow not found' };
       }
 
-      revalidatePath('/');
+      revalidateWorkflowPaths();
       return { success: true, workflowId: workflow._id.toString() };
     }
 
@@ -51,7 +100,7 @@ export async function autoSaveWorkflow(
       status: 'draft',
     });
 
-    revalidatePath('/');
+    revalidateWorkflowPaths();
     return { success: true, workflowId: workflow._id.toString() };
   } catch (error) {
     console.error('Error auto-saving workflow:', error);
@@ -73,4 +122,10 @@ export async function saveWorkflow(
 ): Promise<{ success: boolean; workflowId: string; error?: string }> {
   // Same implementation as auto-save, but can be extended with additional logic
   return autoSaveWorkflow(workflowId, data, userId);
+}
+
+export async function getWorkflowsForUser(userId = 'default-user'): Promise<WorkflowSummary[]> {
+  await connectDB();
+  const workflows = await Workflow.find({ userId }).sort({ updatedAt: -1 }).lean();
+  return workflows.map((workflow) => serializeWorkflow(workflow));
 }

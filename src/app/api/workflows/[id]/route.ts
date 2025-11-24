@@ -1,6 +1,14 @@
 import connectDB from '@/lib/mongodb';
 import Workflow from '@/models/Workflow';
+import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
+
+function revalidateWorkflowPaths() {
+  const paths = ['/', '/dashboard', '/workspace', '/workspace/[workflowId]'];
+  for (const path of paths) {
+    revalidatePath(path);
+  }
+}
 
 // GET /api/workflows/[id] - Get specific workflow
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -13,6 +21,8 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
     if (!workflow) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
     }
+
+    revalidateWorkflowPaths();
 
     return NextResponse.json({ workflow }, { status: 200 });
   } catch (error) {
@@ -67,6 +77,8 @@ export async function DELETE(
     if (!workflow) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
     }
+
+    revalidateWorkflowPaths();
 
     return NextResponse.json({ message: 'Workflow deleted successfully' }, { status: 200 });
   } catch (error) {

@@ -5,9 +5,9 @@ import { NextResponse } from 'next/server';
 
 function revalidateWorkflowPaths() {
   const paths = ['/', '/dashboard', '/workspace', '/workspace/[workflowId]'];
-  paths.forEach((path) => {
+  for (const path of paths) {
     revalidatePath(path);
-  });
+  }
 }
 
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -39,5 +39,3 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ error: 'Failed to duplicate workflow' }, { status: 500 });
   }
 }
-
-

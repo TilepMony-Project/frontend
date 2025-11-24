@@ -1,0 +1,297 @@
+.container {
+  min-height: 100vh;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: var(--ax-ui-bg-secondary-default);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.titleGroup h1 {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: var(--ax-txt-primary-default);
+}
+
+.titleGroup p {
+  margin: 0.25rem 0 0;
+  color: var(--ax-txt-secondary-default);
+  font-size: 0.95rem;
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.ctaButton {
+  min-width: 160px;
+  height: 3rem;
+  font-size: 1rem;
+  border-radius: var(--ax-token-radius-shell);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  background: var(--ax-ui-bg-primary-default);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ax-ui-stroke-secondary-default);
+  background: var(--ax-ui-bg-secondary-default);
+  color: var(--ax-txt-primary-default);
+}
+
+.searchInput input {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  width: 100%;
+}
+
+.select {
+  border-radius: 0.75rem;
+  border: 1px solid var(--ax-ui-stroke-secondary-default);
+  background: var(--ax-ui-bg-secondary-default);
+  color: var(--ax-txt-primary-default);
+  padding: 0.75rem 1rem;
+  min-width: 180px;
+}
+
+.viewToggle {
+  display: flex;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ax-ui-stroke-secondary-default);
+  overflow: hidden;
+}
+
+.viewButton {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ax-txt-secondary-default);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.viewButtonActive {
+  background: var(--ax-ui-bg-tertiary-default);
+  color: var(--ax-txt-primary-default);
+}
+
+.contentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--ax-txt-secondary-default);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: var(--ax-ui-bg-primary-default);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--ax-ui-stroke-secondary-default);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ax-txt-primary-default);
+}
+
+.cardDescription {
+  margin: 0;
+  color: var(--ax-txt-secondary-default);
+  font-size: 0.9rem;
+}
+
+.statusBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: var(--ax-ui-bg-secondary-default);
+  border: 1px solid var(--ax-ui-stroke-secondary-default);
+  color: var(--ax-txt-secondary-default);
+}
+
+.statusBadgeDraft {
+  background: var(--ax-colors-gray-100);
+  color: var(--ax-colors-gray-700);
+}
+
+.statusBadgeRunning,
+.statusBadgeRunning_waiting {
+  background: var(--ax-colors-green-100);
+  color: var(--ax-colors-green-800);
+}
+
+.statusBadgeFinished {
+  background: var(--ax-colors-blue-100);
+  color: var(--ax-colors-blue-800);
+}
+
+.statusBadgeFailed {
+  background: var(--ax-colors-red-100);
+  color: var(--ax-colors-red-800);
+}
+
+.statusBadgeStopped {
+  background: var(--ax-colors-yellow-100);
+  color: var(--ax-colors-yellow-900);
+}
+
+.statsRow {
+  display: flex;
+  gap: 1rem;
+  color: var(--ax-txt-secondary-default);
+  font-size: 0.85rem;
+}
+
+.actions {
+  margin-top: auto;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cardButton {
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+  border-radius: 0.75rem;
+  padding: 0.6rem;
+  border: 1px solid var(--ax-ui-stroke-secondary-default);
+  background: transparent;
+  color: var(--ax-txt-primary-default);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cardButtonPrimary {
+  border-color: transparent;
+  background: var(--ax-colors-acc1-500);
+  color: white;
+}
+
+.dangerButton {
+  color: var(--ax-colors-red-600);
+  border-color: var(--ax-colors-red-300);
+}
+
+.tableWrapper {
+  border-radius: 1rem;
+  border: 1px solid var(--ax-ui-stroke-secondary-default);
+  overflow: hidden;
+  background: var(--ax-ui-bg-primary-default);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: var(--ax-ui-bg-secondary-default);
+}
+
+.table th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  font-size: 0.85rem;
+  color: var(--ax-txt-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.table td {
+  padding: 0.85rem 1rem;
+  border-top: 1px solid var(--ax-ui-stroke-secondary-default);
+  color: var(--ax-txt-primary-default);
+}
+
+.tableActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.smallButton {
+  border-radius: 0.5rem;
+  border: 1px solid var(--ax-ui-stroke-secondary-default);
+  background: transparent;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.smallButtonPrimary {
+  border-color: transparent;
+  background: var(--ax-colors-acc1-500);
+  color: white;
+}
+
+.emptyState {
+  border: 1px dashed var(--ax-ui-stroke-secondary-default);
+  border-radius: 1rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  background: var(--ax-ui-bg-primary-default);
+  color: var(--ax-txt-secondary-default);
+}
+
+.emptyState h3 {
+  margin: 0 0 0.5rem;
+  color: var(--ax-txt-primary-default);
+}
+
+.muted {
+  color: var(--ax-txt-secondary-default);
+  font-size: 0.85rem;
+}
