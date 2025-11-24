@@ -8,32 +8,41 @@ pre-commit:
     biome-check:
       run: pnpm biome check --write {staged_files}
       stage_fixed: true
-      glob: "*.{js,jsx,ts,tsx,json,css,md}"
+      glob: "src/**/*.{ts,tsx,js,jsx}"
     
     # TypeScript type checking
     typecheck:
       run: pnpm typecheck
-      glob: "*.{ts,tsx}"
+      glob: "src/**/*.{ts,tsx}"
     
     # Next.js linting
     next-lint:
       run: pnpm lint --fix
-      glob: "*.{js,jsx,ts,tsx}"
-
-pre-push:
-  parallel: true
-  commands:
-    # Full type check before push
-    typecheck:
-      run: pnpm typecheck
-    
-    # Full lint check before push
-    lint:
-      run: pnpm lint
+      glob: "src/**/*.{js,jsx,ts,tsx}"
+      stage_fixed: true
 
 commit-msg:
   commands:
-    # Validate commit message format (optional)
-    commitlint:
-      run: echo "Commit message validation can be added here"
+    # Validate commit message follows semantic commit format
+    # Format: type(scope): subject
+    # Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+    semantic-commit:
+      run: |
+        commit_msg=$(cat "$1")
+        if ! echo "$commit_msg" | grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .+'; then
+          echo "❌ Invalid commit message format!"
+          echo ""
+          echo "Commit message must follow semantic commit format:"
+          echo "  type(scope): subject"
+          echo ""
+          echo "Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+          echo ""
+          echo "Examples:"
+          echo "  feat: add new feature"
+          echo "  fix(api): resolve authentication bug"
+          echo "  docs: update README"
+          echo ""
+          exit 1
+        fi
+      stage_fixed: true
 
