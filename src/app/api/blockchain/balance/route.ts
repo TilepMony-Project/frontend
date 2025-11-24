@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // GET /api/blockchain/balance - Get user balances
 export async function GET(request: NextRequest) {
@@ -37,4 +37,3 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to fetch balances' }, { status: 500 });
   }
 }
-

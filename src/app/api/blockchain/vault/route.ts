@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // POST /api/blockchain/vault - Deposit to vault
 export async function POST(request: NextRequest) {
@@ -37,4 +37,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to deposit to vault' }, { status: 500 });
   }
 }
-

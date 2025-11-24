@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Workflow from '@/models/Workflow';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // GET /api/workflows - List all workflows for user
 export async function GET(request: NextRequest) {
@@ -10,9 +10,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const userId = searchParams.get('userId') || 'default-user'; // TODO: Get from auth
 
-    const workflows = await Workflow.find({ userId })
-      .sort({ updatedAt: -1 })
-      .lean();
+    const workflows = await Workflow.find({ userId }).sort({ updatedAt: -1 }).lean();
 
     return NextResponse.json({ workflows }, { status: 200 });
   } catch (error) {
@@ -44,4 +42,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create workflow' }, { status: 500 });
   }
 }
-

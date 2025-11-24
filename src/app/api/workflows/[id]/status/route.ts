@@ -1,15 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Execution from '@/models/Execution';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // GET /api/workflows/[id]/status - Get execution status
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
 
+    const { id } = await params;
     const searchParams = request.nextUrl.searchParams;
     const executionId = searchParams.get('executionId');
 
@@ -25,9 +23,7 @@ export async function GET(
     }
 
     // Get latest execution for workflow
-    const execution = await Execution.findOne({ workflowId: params.id })
-      .sort({ createdAt: -1 })
-      .lean();
+    const execution = await Execution.findOne({ workflowId: id }).sort({ createdAt: -1 }).lean();
 
     if (!execution) {
       return NextResponse.json({ error: 'No execution found' }, { status: 404 });
@@ -39,4 +35,3 @@ export async function GET(
     return NextResponse.json({ error: 'Failed to fetch execution status' }, { status: 500 });
   }
 }
-

@@ -1,10 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // POST /api/blockchain/swap - Execute swap via dummy aggregator
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { inputToken, outputToken, amount, swapProvider, slippageTolerance, walletAddress } = body;
+    const { inputToken, outputToken, amount, swapProvider, slippageTolerance, walletAddress } =
+      body;
 
     // Validate inputs
     if (!inputToken || !outputToken || !amount || !swapProvider || !walletAddress) {
@@ -12,7 +13,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (inputToken === outputToken) {
-      return NextResponse.json({ error: 'Input and output tokens must be different' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Input and output tokens must be different' },
+        { status: 400 }
+      );
     }
 
     // TODO: Implement actual smart contract call to DummyAggregator
@@ -41,4 +45,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to execute swap' }, { status: 500 });
   }
 }
-

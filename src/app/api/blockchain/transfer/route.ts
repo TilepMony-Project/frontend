@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // POST /api/blockchain/transfer - Transfer tokens
 export async function POST(request: NextRequest) {
@@ -33,4 +33,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to transfer tokens' }, { status: 500 });
   }
 }
-

@@ -1,7 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createPublicClient, http, parseEther } from 'viem';
-import { mantleTestnet } from 'viem/chains';
-import { contractAddresses } from '@/lib/web3/config';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // POST /api/blockchain/mint - Mint tokens via dummy issuer
 export async function POST(request: NextRequest) {
@@ -16,10 +13,10 @@ export async function POST(request: NextRequest) {
 
     // TODO: Implement actual smart contract call
     // For now, simulate the mint operation
-    const client = createPublicClient({
-      chain: mantleTestnet,
-      transport: http(process.env.NEXT_PUBLIC_MANTLE_RPC_URL || 'https://rpc.testnet.mantle.xyz'),
-    });
+    // const client = createPublicClient({
+    //   chain: mantleTestnet,
+    //   transport: http(process.env.NEXT_PUBLIC_MANTLE_RPC_URL || 'https://rpc.testnet.mantle.xyz'),
+    // });
 
     // Simulate transaction
     // In production, this would:
@@ -49,4 +46,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to mint tokens' }, { status: 500 });
   }
 }
-

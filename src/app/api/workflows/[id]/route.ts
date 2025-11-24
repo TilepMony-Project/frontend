@@ -1,16 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Workflow from '@/models/Workflow';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // GET /api/workflows/[id] - Get specific workflow
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
 
-    const workflow = await Workflow.findById(params.id);
+    const { id } = await params;
+    const workflow = await Workflow.findById(id);
 
     if (!workflow) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
@@ -24,18 +22,16 @@ export async function GET(
 }
 
 // PUT /api/workflows/[id] - Update workflow
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
 
+    const { id } = await params;
     const body = await request.json();
     const { name, description, nodes, edges, status } = body;
 
     const workflow = await Workflow.findByIdAndUpdate(
-      params.id,
+      id,
       {
         ...(name && { name }),
         ...(description !== undefined && { description }),
@@ -59,13 +55,14 @@ export async function PUT(
 
 // DELETE /api/workflows/[id] - Delete workflow
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const workflow = await Workflow.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const workflow = await Workflow.findByIdAndDelete(id);
 
     if (!workflow) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
@@ -77,4 +74,3 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete workflow' }, { status: 500 });
   }
 }
-

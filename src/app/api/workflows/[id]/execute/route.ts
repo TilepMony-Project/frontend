@@ -1,17 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
-import Workflow from '@/models/Workflow';
 import Execution from '@/models/Execution';
+import Workflow from '@/models/Workflow';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // POST /api/workflows/[id]/execute - Execute workflow
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
 
-    const workflow = await Workflow.findById(params.id);
+    const { id } = await params;
+    const workflow = await Workflow.findById(id);
 
     if (!workflow) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
@@ -24,7 +22,7 @@ export async function POST(
 
     // Create execution record
     const execution = await Execution.create({
-      workflowId: params.id,
+      workflowId: id,
       userId: workflow.userId,
       status: 'running',
       startedAt: new Date(),
@@ -32,7 +30,7 @@ export async function POST(
     });
 
     // Update workflow status
-    await Workflow.findByIdAndUpdate(params.id, {
+    await Workflow.findByIdAndUpdate(id, {
       status: 'running',
       lastExecutedAt: new Date(),
     });
@@ -54,4 +52,3 @@ export async function POST(
     return NextResponse.json({ error: 'Failed to execute workflow' }, { status: 500 });
   }
 }
-

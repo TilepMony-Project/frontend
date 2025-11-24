@@ -4,7 +4,7 @@ import { IntegrationWrapper } from './wrapper/integration-wrapper';
 
 import { getStoreDataForIntegration } from '@/store/slices/diagram-slice/actions';
 
-import { IntegrationDataFormatOptional, OnSave } from '@/features/integration/types';
+import type { IntegrationDataFormatOptional, OnSave } from '@/features/integration/types';
 import { showSnackbarSaveErrorIfNeeded, showSnackbarSaveSuccessIfNeeded } from '../../utils/show-snackbar';
 
 const localStorageDiagramKey = 'workflowBuilderDiagram';
