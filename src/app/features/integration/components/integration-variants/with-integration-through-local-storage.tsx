@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useEffect, useState } from 'react';
 
 import { IntegrationWrapper } from './wrapper/integration-wrapper';
 
@@ -13,11 +13,19 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
   WrappedComponent: React.ComponentType<WProps>,
 ) {
   function WithIntegrationComponent(props: React.ComponentProps<typeof WrappedComponent>) {
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+      setIsClient(true);
+    }, []);
+
     const handleSave: OnSave = useCallback(async (savingParams) => {
       const data = getStoreDataForIntegration();
 
       try {
-        localStorage.setItem(localStorageDiagramKey, JSON.stringify(data));
+        if (typeof window !== 'undefined' && window.localStorage) {
+          localStorage.setItem(localStorageDiagramKey, JSON.stringify(data));
+        }
 
         /*
           showSnackbarSaveSuccessIfNeeded(savingParams);
@@ -45,6 +53,10 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
     }, []);
 
     const { name, layoutDirection, nodes, edges }: IntegrationDataFormatOptional = useMemo(() => {
+      if (!isClient || typeof window === 'undefined' || !window.localStorage) {
+        return {};
+      }
+
       const data = localStorage.getItem(localStorageDiagramKey);
       if (!data) {
         return {};
@@ -65,7 +77,7 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
       }
 
       return {};
-    }, []);
+    }, [isClient]);
 
     return (
       <IntegrationWrapper name={name} layoutDirection={layoutDirection} nodes={nodes} edges={edges} onSave={handleSave}>

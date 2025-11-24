@@ -1,9 +1,9 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { createConfig, http } from 'wagmi';
 import { mantleTestnet } from 'viem/chains';
+import { http, createConfig } from 'wagmi';
 import { injected, walletConnect } from 'wagmi/connectors';
 
-// RainbowKit config
+// RainbowKit config with SSR support
 export const rainbowKitConfig = getDefaultConfig({
   appName: 'TilepMoney',
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'your-project-id',
@@ -16,10 +16,14 @@ export const wagmiConfig = createConfig({
   chains: [mantleTestnet],
   connectors: [
     injected(),
-    walletConnect({ projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'your-project-id' }),
+    walletConnect({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'your-project-id',
+    }),
   ],
   transports: {
-    [mantleTestnet.id]: http(process.env.NEXT_PUBLIC_MANTLE_RPC_URL || 'https://rpc.testnet.mantle.xyz'),
+    [mantleTestnet.id]: http(
+      process.env.NEXT_PUBLIC_MANTLE_RPC_URL || 'https://rpc.testnet.mantle.xyz'
+    ),
   },
 });
 
@@ -39,4 +43,3 @@ export const contractAddresses = {
   dummyBridge: process.env.NEXT_PUBLIC_DUMMY_BRIDGE_ADDRESS || '',
   vault: process.env.NEXT_PUBLIC_VAULT_ADDRESS || '',
 };
-
