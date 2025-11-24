@@ -1,9 +1,3 @@
-:root {
-  --wb-import-error-color: var(--ax-public-snackbar-title-color);
-  --wb-import-error-background-color: var(--ax-public-snackbar-error-background);
-  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid var(--ax-public-snackbar-error-border);
-  --wb-import-error-border-radius: var(--ax-public-snackbar-border-radius);
-}
 
 .container {
   display: flex;

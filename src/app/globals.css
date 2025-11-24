@@ -15,6 +15,120 @@
   --wb-scroll-thumb-color: var(--ax-scrollbar-bg-default);
   --wb-scroll-thumb-hover-color: var(--colors-gray-gray-500); /* missing token */
   --wb-scroll-track-color: transparent;
+
+  /* Form label variables */
+  --ax-public-form-label-color: var(--ax-txt-secondary-default);
+  --ax-public-form-label-asterisk-color: var(--ax-txt-error-default);
+
+  /* Loader variables */
+  --wb-loader-background-opacity: 1;
+  --wb-panel-background-color: var(--ax-ui-bg-primary-default);
+
+  /* Saving status variables */
+  --wb-saving-status--in-progress-color: var(--ax-colors-acc1-500); /* missing token */
+  --wb-saving-status--saved-color: var(--ax-input-stroke-primary-success); /* missing token */
+  --wb-saving-status--not-saved-color: var(--ax-input-stroke-primary-error); /* missing token */
+
+  /* Sales contact variables */
+  --wb-sales-contact-color: var(--ax-txt-primary-default);
+  --wb-sales-contact-position-color: var(--ax-txt-secondary-default);
+
+  /* No access variables */
+  --wb-no-access-color: var(--ax-txt-primary-default);
+  --wb-no-access-sub-title-color: var(--ax-txt-secondary-default);
+
+  /* Conditions form variables */
+  --wb-conditions-form-border-color: var(--ax-ui-stroke-primary-default); /* missing token */
+  --wb-conditions-form-border-radius: 0.75rem; /* missing token */
+  --wb-conditions-form-header-color: var(--ax-public-form-label-color);
+  --wb-conditions-form-tag-bg-color: var(--ax-chips-neutral-bg);
+  --wb-conditions-form-inputs-background: var(--ax-ui-bg-secondary-default); /* missing token */
+  --wb-conditions-form-input-background: var(--ax-ui-bg-primary-default); /* missing token */
+  --wb-conditions-form-input-background-destructive: var(--ax-colors-red-400-10); /* missing token */
+
+  /* Branch card variables */
+  --wb-branch-card-padding: 0.5rem;
+  --wb-branch-card-border-radius: 0.5rem;
+  --wb-branch-card-border-width: 0.0625rem;
+  --wb-branch-card-border-color: var(--ax-ui-stroke-secondary-default);
+  --wb-branch-card-gap: 0.375rem;
+  --wb-branch-card-actions-gap: 0.375rem;
+  --wb-branch-card-chip-padding: 0.3125rem 0.375rem;
+  --wb-branch-card-chip-border-radius: 0.25rem;
+  --wb-branch-card-chip-background: var(--ax-ui-stroke-secondary-default);
+  --wb-branch-card-chip-color: var(--ax-chips-acc2-txt);
+  --wb-branch-card-chip-background-no-conditions: var(--ax-chips-acc2-bg);
+  --wb-branch-card-chip-gap: 0.25rem;
+
+  /* Indicator dot variables */
+  --wb-indicator-dot-size: 0.75rem;
+  --wb-indicator-dot-radius: calc(var(--wb-indicator-dot-size) / 2);
+  --wb-indicator-dot-background-color: var(--ax-colors-orange-400); /* missing token */
+  --wb-indicator-dot-pulse-radius-size: 0.625rem;
+
+  /* Syntax highlighter variables */
+  --wb-syntax-highlighter-color: var(--ax-colors-gray-600);
+  --wb-syntax-highlighter-color-variable-key: var(--ax-colors-acc5-700);
+  --wb-syntax-highlighter-color-variable-value: var(--ax-colors-blue-500);
+  --wb-syntax-highlighter-background-color-highlight: var(--ax-colors-green-400-30);
+  --wb-syntax-highlighter-color-cursor: var(--ax-colors-blue-500);
+
+  /* Connectable item variables */
+  --wb-connectable-item-horizontal-padding: 0.75rem;
+  --wb-connectable-item-vertical-padding: 0.625rem;
+  --wb-connectable-item-background: var(--ax-ui-bg-tertiary-default);
+  --wb-connectable-item-border-width: 0.0625rem;
+  --wb-connectable-item-border-color: var(--ax-input-stroke-primary-default);
+  --wb-connectable-item-border-radius: 0.375rem;
+
+  /* Node section variables */
+  --wb-node-section-gap: 0.75rem;
+  --wb-node-section-padding: 0.625rem;
+  --wb-node-section-border-radius: 0.5rem;
+  --wb-node-section-border-color: var(--ax-ui-stroke-primary-default);
+  --wb-node-section-border-width: 0.0625rem;
+
+  /* Branches container variables */
+  --wb-branches-container-gap: 0.25rem;
+
+  /* Import export modal variables */
+  --wb-import-error-color: var(--ax-public-snackbar-title-color);
+  --wb-import-error-background-color: var(--ax-public-snackbar-error-background);
+  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid var(--ax-public-snackbar-error-border);
+  --wb-import-error-border-radius: var(--ax-public-snackbar-border-radius);
+
+  /* Template selector variables */
+  --wb-template-tile-background: var(--ax-ui-bg-secondary-default); /* missing token */
+  --wb-template-tile-subtitle-color: var(--ax-colors-gray-500); /* missing token */
+  --wb-template-tile-outline-color: var(--ax-colors-gray-400); /* missing token */
+  --wb-template-tile-outline-hover-color: var(--ax-colors-acc1-500); /* missing token */
+  --wb-template-tile-color: var(--ax-txt-primary-default); /* missing token */
+  --wb-template-icon-color: var(--ax-txt-primary-default); /* missing token */
+  --wb-template-title-width: 116px;
+  --wb-template-title-padding: 12px;
+  --wb-template-subtitle-color: var(--ax-colors-gray-500); /* missing token */
+}
+
+/* Syntax highlighter theme-specific variables */
+html[data-theme='light'] {
+  --wb-syntax-highlighter-color: var(--ax-colors-gray-600);
+  --wb-syntax-highlighter-color-variable-key: var(--ax-colors-acc5-700);
+  --wb-syntax-highlighter-color-variable-value: var(--ax-colors-acc1-600);
+  --wb-syntax-highlighter-background-color-highlight: var(--ax-colors-green-400-30);
+  --wb-syntax-highlighter-color-cursor: var(--ax-txt-secondary-default);
+}
+
+html[data-theme='dark'] {
+  --wb-syntax-highlighter-color: var(--ax-colors-gray-200);
+  --wb-syntax-highlighter-color-variable-key: var(--ax-colors-orange-300);
+  --wb-syntax-highlighter-color-variable-value: var(--ax-colors-acc1-400);
+  --wb-syntax-highlighter-background-color-highlight: var(--ax-colors-green-400-30);
+  --wb-syntax-highlighter-color-cursor: var(--ax-colors-blue-500);
+}
+
+/* Ace Editor global styles */
+.ace_tooltip {
+  display: none !important;
 }
 
 @layer reset {

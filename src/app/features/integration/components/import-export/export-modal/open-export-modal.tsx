@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 import { openModal } from '@/features/modals/stores/use-modal-store';
 import { ExportModal } from './export-modal';
 

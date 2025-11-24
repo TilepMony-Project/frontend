@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Input, Select, NavButton, SegmentPicker } from '@synergycodes/overflow-ui';
 import { useMemo } from 'react';
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 import styles from './conditions-form-field.module.css';
 import { comparisonsOperators, validateCondition } from '@/features/json-form/utils/conditional-transform';
 import { DynamicCondition } from '@/features/json-form/types/controls';

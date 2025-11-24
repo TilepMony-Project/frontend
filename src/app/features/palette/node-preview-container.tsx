@@ -1,8 +1,8 @@
 import useStore from '@/store/store';
 import { useTranslateIfPossible } from '@/hooks/use-translate-if-possible';
 import { WorkflowNodeTemplate } from '../diagram/nodes/workflow-node-template/workflow-node-template';
-import { PaletteItem } from '@workflow-builder/types/common';
-import { NodeType } from '@workflow-builder/types/node-types';
+import { PaletteItem } from '@/types/common';
+import { NodeType } from '@/types/node-types';
 import { AiAgentNodeTemplate } from '../diagram/nodes/ai-agent-node-template/ai-agent-node-template';
 import { DecisionNodeTemplate } from '../diagram/nodes/decision-node-template/decision-node-template';
 

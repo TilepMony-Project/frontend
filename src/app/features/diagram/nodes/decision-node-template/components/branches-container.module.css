@@ -1,6 +1,3 @@
-:root {
-  --wb-branches-container-gap: 0.25rem;
-}
 
 .branches-container {
   display: flex;

@@ -1,7 +1,3 @@
-:root {
-  --wb-loader-background-opacity: 1;
-  --wb-panel-background-color: var(--ax-ui-bg-primary-default);
-}
 
 .container {
   position: absolute;

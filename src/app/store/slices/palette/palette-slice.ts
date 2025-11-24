@@ -1,4 +1,4 @@
-import { DraggingItem, PaletteItem, StatusType } from '@workflow-builder/types/common';
+import { DraggingItem, PaletteItem, StatusType } from '@/types/common';
 import { GetDiagramState, SetDiagramState } from '@/store/store';
 import { paletteData } from '@/data/palette';
 

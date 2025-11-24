@@ -3,7 +3,7 @@ import { ConnectableItem } from '../../components/connectable-item/connectable-i
 import { NodeSection } from '../../components/node-section/node-section';
 import { PlaceholderButton } from '../../components/placeholder-button/placeholder-button';
 import { useTranslation } from 'react-i18next';
-import { LayoutDirection } from '@workflow-builder/types/common';
+import { LayoutDirection } from '@/types/common';
 import styles from './branches-container.module.css';
 import clsx from 'clsx';
 

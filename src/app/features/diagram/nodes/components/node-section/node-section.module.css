@@ -1,10 +1,3 @@
-:root {
-  --wb-node-section-gap: 0.75rem;
-  --wb-node-section-padding: 0.625rem;
-  --wb-node-section-border-radius: 0.5rem;
-  --wb-node-section-border-color: var(--ax-ui-stroke-primary-default);
-  --wb-node-section-border-width: 0.0625rem;
-}
 
 .container {
   display: flex;

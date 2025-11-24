@@ -5,8 +5,8 @@ import {
   DiagramModel,
   LayoutDirection,
   WorkflowBuilderReactFlowInstance,
-} from '@workflow-builder/types/common';
-import { WorkflowBuilderNode, WorkflowBuilderEdge } from '@workflow-builder/types/node-data';
+} from '@/types/common';
+import { WorkflowBuilderNode, WorkflowBuilderEdge } from '@/types/node-data';
 import { getEdgeZIndex } from '@/features/diagram/edges/get-edge-z-index';
 import { getNodeWithErrors } from '@/utils/validation/get-node-errors';
 import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';

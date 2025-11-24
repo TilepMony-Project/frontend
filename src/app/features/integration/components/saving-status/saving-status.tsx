@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 import styles from './saving-status.module.css';
 import { useIntegrationStore } from '../../stores/use-integration-store';
 

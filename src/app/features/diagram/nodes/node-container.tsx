@@ -2,7 +2,7 @@ import useStore from '@/store/store';
 
 import { memo } from 'react';
 import { NodeProps } from '@xyflow/react';
-import { WorkflowBuilderNode } from '@workflow-builder/types/node-data';
+import { WorkflowBuilderNode } from '@/types/node-data';
 import { WorkflowNodeTemplate } from './workflow-node-template/workflow-node-template';
 import { NodeAsPortWrapper } from '@synergycodes/overflow-ui';
 import { getHandlePosition } from '../handles/get-handle-position';

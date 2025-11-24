@@ -2,8 +2,8 @@
 import { IntegrationDataFormat } from '@/features/integration/types';
 import useStore from '@/store/store';
 import { getNodeWithErrors } from '@/utils/validation/get-node-errors';
-import { LayoutDirection } from '@workflow-builder/types/common';
-import { WorkflowBuilderEdge, WorkflowBuilderNode } from '@workflow-builder/types/node-data';
+import { LayoutDirection } from '@/types/common';
+import { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
 
 export function getStoreNodes() {
   return useStore.getState().nodes;

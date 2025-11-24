@@ -2,7 +2,7 @@ import { simpleFlow } from './templates/simple-flow';
 import { userRegistration } from './templates/user-registration';
 import { blackFriday } from './templates/black-friday';
 import { callFlow } from './templates/call-flow';
-import { TemplateModel } from '@workflow-builder/types/common';
+import { TemplateModel } from '@/types/common';
 import { snapToGridIfNeeded } from '@/utils/position-utils';
 
 function snapTemplateToGrid(template: TemplateModel) {

@@ -1,4 +1,4 @@
-import { PaletteItem } from '@workflow-builder/types/common';
+import { PaletteItem } from '@/types/common';
 
 type NodesDefinitionsBySubType = {
   [subType: string]: PaletteItem;

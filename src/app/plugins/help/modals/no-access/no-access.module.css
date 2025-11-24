@@ -1,7 +1,3 @@
-:root {
-  --wb-no-access-color: var(--ax-txt-primary-default);
-  --wb-no-access-sub-title-color: var(--ax-txt-secondary-default);
-}
 
 .container {
   width: 100%;

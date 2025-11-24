@@ -1,7 +1,3 @@
-:root {
-  --wb-sales-contact-color: var(--ax-txt-primary-default);
-  --wb-sales-contact-position-color: var(--ax-txt-secondary-default);
-}
 
 .container {
   width: 100%;

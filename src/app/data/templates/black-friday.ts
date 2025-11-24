@@ -1,4 +1,4 @@
-import { DiagramModel, TemplateModel } from '@workflow-builder/types/common';
+import { DiagramModel, TemplateModel } from '@/types/common';
 
 const diagram: DiagramModel = {
   name: 'Black Friday Deals',

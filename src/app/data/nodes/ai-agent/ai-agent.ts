@@ -1,7 +1,7 @@
-import { PaletteItem } from '@workflow-builder/types/common';
+import { PaletteItem } from '@/types/common';
 import { schema } from './schema';
 import { defaultPropertiesData } from './default-properties-data';
-import { NodeType } from '@workflow-builder/types/node-types';
+import { NodeType } from '@/types/node-types';
 import { uischema } from './uischema';
 
 export const aiAgent: PaletteItem = {

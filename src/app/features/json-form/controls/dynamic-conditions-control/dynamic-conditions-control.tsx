@@ -6,7 +6,7 @@ import { DynamicCondition, DynamicConditionsControlProps } from '../../types/con
 import { createControlRenderer } from '../../utils/rendering';
 import { ControlWrapper } from '../control-wrapper';
 import { ConditionsForm, ConditionsFormHandle } from './dynamic-conditions-form/conditions-form';
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 import styles from './dynamic-conditions-control.module.css';
 import { conditionsToDependencies } from '../../utils/conditional-transform';
 import { ConditionModalFooter } from './dynamic-condition-modal-footer/condition-modal-footer';

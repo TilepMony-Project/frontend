@@ -1,4 +1,4 @@
-import { WorkflowBuilderEdge } from 'apps/types/src/node-data';
+import { WorkflowBuilderEdge } from '@/types/node-data';
 import useStore from '@/store/store';
 import { Input } from '@synergycodes/overflow-ui';
 import styles from './edge-properties.module.css';

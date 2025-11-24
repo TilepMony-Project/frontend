@@ -1,8 +1,3 @@
-:root {
-  --wb-saving-status--in-progress-color: var(--ax-colors-acc1-500); /* missing token */
-  --wb-saving-status--saved-color: var(--ax-input-stroke-primary-success); /* missing token */
-  --wb-saving-status--not-saved-color: var(--ax-input-stroke-primary-error); /* missing token */
-}
 
 .status {
   position: absolute;

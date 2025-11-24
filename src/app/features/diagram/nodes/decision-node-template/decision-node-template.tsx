@@ -1,8 +1,8 @@
-import { IconType } from '@workflow-builder/types/common';
-import { LayoutDirection } from '@workflow-builder/types/common';
+import { IconType } from '@/types/common';
+import { LayoutDirection } from '@/types/common';
 import { memo, useMemo } from 'react';
 import { NodeDescription, NodeIcon, NodePanel, Status } from '@synergycodes/overflow-ui';
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 import { BranchesContainer } from './components/branches-container';
 import { DecisionBranch } from '@/features/json-form/types/controls';
 

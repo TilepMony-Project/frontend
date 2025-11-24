@@ -1,5 +1,5 @@
 import { NavButton } from '@synergycodes/overflow-ui';
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 import { useTranslation } from 'react-i18next';
 import { useContext } from 'react';
 import { IntegrationContext } from '../integration-variants/context/integration-context-wrapper';

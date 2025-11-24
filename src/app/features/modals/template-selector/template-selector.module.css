@@ -1,8 +1,3 @@
-:root {
-  --wb-template-title-width: 116px;
-  --wb-template-title-padding: 12px;
-  --wb-template-subtitle-color: var(--ax-colors-gray-500) /* missing token */;
-}
 
 .container {
   width: 100%;

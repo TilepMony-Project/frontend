@@ -2,13 +2,13 @@ import clsx from 'clsx';
 import styles from './ai-agent-node-template.module.css';
 
 import { Handle } from '@xyflow/react';
-import { IconType, LayoutDirection } from '@workflow-builder/types/common';
+import { IconType, LayoutDirection } from '@/types/common';
 import { memo, useMemo } from 'react';
 import { Collapsible, NodeDescription, NodeIcon, NodePanel, Status } from '@synergycodes/overflow-ui';
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 import { SettingInfo } from './components/setting-info/setting-info';
 import { ToolInfo } from './components/tool-info/tool-info';
-import { ItemOption } from '@workflow-builder/types/node-schema';
+import { ItemOption } from '@/types/node-schema';
 import { NodeDataProperties } from '@/features/json-form/types/default-properties';
 import { AiAgentNodeSchema } from '../../../../data/nodes/ai-agent/schema';
 import { getHandleId } from '../../handles/get-handle-id';

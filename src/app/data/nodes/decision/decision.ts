@@ -1,8 +1,8 @@
-import { PaletteItem } from '@workflow-builder/types/common';
+import { PaletteItem } from '@/types/common';
 import { defaultPropertiesData } from './default-properties-data';
 import { DecisionNodeSchema, schema } from './schema';
 import { uischema } from './uischema';
-import { NodeType } from '@workflow-builder/types/node-types';
+import { NodeType } from '@/types/node-types';
 
 export const decision: PaletteItem<DecisionNodeSchema> = {
   label: 'node.decision.label',

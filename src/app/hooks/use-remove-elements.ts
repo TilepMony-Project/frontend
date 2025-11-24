@@ -1,4 +1,4 @@
-import { Selection } from '@workflow-builder/types/selection';
+import { Selection } from '@/types/selection';
 import { useReactFlow } from '@xyflow/react';
 
 export function useRemoveElements() {

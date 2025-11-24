@@ -1,4 +1,4 @@
-import { PrimitiveFieldType } from '@workflow-builder/types/node-schema';
+import { PrimitiveFieldType } from '@/types/node-schema';
 
 type TypeMap = {
   string: string;

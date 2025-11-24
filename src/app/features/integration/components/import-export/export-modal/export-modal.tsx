@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, SnackbarType } from '@synergycodes/overflow-ui';
 
 import { showSnackbar } from '@/utils/show-snackbar';
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 
 import { getStoreDataForIntegration } from '@/store/slices/diagram-slice/actions';
 import { SyntaxHighlighterLazy } from '@/features/syntax-highlighter/components/syntax-highlighter-lazy';

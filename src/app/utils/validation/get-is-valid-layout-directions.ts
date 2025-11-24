@@ -1,4 +1,4 @@
-import { LayoutDirection, layoutDirections } from '@workflow-builder/types/common';
+import { LayoutDirection, layoutDirections } from '@/types/common';
 
 export function getIsValidLayoutDirections(value?: unknown) {
   if (typeof value !== 'string') {

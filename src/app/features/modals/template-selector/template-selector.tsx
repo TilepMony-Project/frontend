@@ -1,5 +1,5 @@
 import { Tile } from './components/tile';
-import { DiagramModel } from '@workflow-builder/types/common';
+import { DiagramModel } from '@/types/common';
 import clsx from 'clsx';
 import { Trans, useTranslation } from 'react-i18next';
 import styles from './template-selector.module.css';

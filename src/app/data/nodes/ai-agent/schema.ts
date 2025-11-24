@@ -1,4 +1,4 @@
-import { NodeSchema } from '@workflow-builder/types/node-schema';
+import { NodeSchema } from '@/types/node-schema';
 import { sharedProperties } from '../shared/shared-properties';
 import { statusOptions } from '../shared/general-information';
 import { chatModelOptions, memoryOptions } from './select-options';

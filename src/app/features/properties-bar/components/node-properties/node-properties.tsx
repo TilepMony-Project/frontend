@@ -1,4 +1,4 @@
-import { WorkflowBuilderNode } from 'apps/types/src/node-data';
+import { WorkflowBuilderNode } from '@/types/node-data';
 import useStore from '@/store/store';
 import { JsonFormsReactProps } from '@jsonforms/react';
 import { JSONForm } from '@/features/json-form/json-form';

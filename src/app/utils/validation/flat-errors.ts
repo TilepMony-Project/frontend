@@ -1,4 +1,4 @@
-import { FlatError } from '@workflow-builder/types/node-schema';
+import { FlatError } from '@/types/node-schema';
 import { ErrorObject } from 'ajv';
 
 export function flatErrors(

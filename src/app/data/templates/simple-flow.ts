@@ -1,4 +1,4 @@
-import { DiagramModel, TemplateModel } from '@workflow-builder/types/common';
+import { DiagramModel, TemplateModel } from '@/types/common';
 
 const defaultDiagram: DiagramModel = {
   name: 'Simple workflow diagram',

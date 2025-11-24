@@ -1,6 +1,6 @@
 import { statusOptions } from '../shared/general-information';
 import { sharedProperties } from '../shared/shared-properties';
-import { NodeSchema } from '@workflow-builder/types/node-schema';
+import { NodeSchema } from '@/types/node-schema';
 
 const conditions = {
   type: 'array',

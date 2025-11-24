@@ -9,7 +9,7 @@ import { AiToolsControlProps, AiAgentTool } from '../../types/controls';
 import { toolOptions } from '../../../../data/nodes/ai-agent/select-options';
 import { AddAiToolFormContent } from './components/add-ai-tool-form-content/add-ai-tool-form-content';
 import { AddAiToolFooter } from './components/add-ai-tool-footer/add-ai-tool-footer';
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 import { closeModal, openModal } from '@/features/modals/stores/use-modal-store';
 
 function hasAnyValue(data: AiAgentTool): boolean {

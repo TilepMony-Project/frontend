@@ -1,7 +1,7 @@
 import useStore from '@/store/store';
 
 import { NodeProps, Position, Node } from '@xyflow/react';
-import { NodeData } from '@workflow-builder/types/node-data';
+import { NodeData } from '@/types/node-data';
 import { memo, useMemo } from 'react';
 import { NodeAsPortWrapper } from '@synergycodes/overflow-ui';
 import { AiAgentNodeTemplate } from './ai-agent-node-template/ai-agent-node-template';

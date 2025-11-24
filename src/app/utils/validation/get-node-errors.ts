@@ -1,5 +1,5 @@
 import Ajv from 'ajv';
-import { WorkflowBuilderNode } from '@workflow-builder/types/node-data';
+import { WorkflowBuilderNode } from '@/types/node-data';
 import { flatErrors } from './flat-errors';
 import { getNodeDefinition } from './get-node-definition';
 

@@ -17,8 +17,8 @@ import {
   OnSelectionChangeParams,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { WorkflowBuilderOnSelectionChangeParams } from '@workflow-builder/types/common';
-import { WorkflowBuilderEdge, WorkflowBuilderNode } from '@workflow-builder/types/node-data';
+import { WorkflowBuilderOnSelectionChangeParams } from '@/types/common';
+import { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
 import { LabelEdge } from './edges/label-edge/label-edge';
 import { usePaletteDrop } from '@/hooks/use-palette-drop';
 import {

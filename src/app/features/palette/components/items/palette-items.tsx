@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './palette-items.module.css';
 import { NodePreviewContainer } from '../../node-preview-container';
-import { PaletteItem } from '@workflow-builder/types/common';
+import { PaletteItem } from '@/types/common';
 import { DragEvent } from 'react';
 
 type PaletteItemsProps = {

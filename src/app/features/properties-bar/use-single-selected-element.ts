@@ -1,5 +1,5 @@
 import useStore from '@/store/store';
-import { WorkflowBuilderNode, WorkflowBuilderEdge } from 'apps/types/src/node-data';
+import { WorkflowBuilderNode, WorkflowBuilderEdge } from '@/types/node-data';
 import { WorkflowEditorState } from '@/store/store';
 
 export type SingleSelectedElement = {

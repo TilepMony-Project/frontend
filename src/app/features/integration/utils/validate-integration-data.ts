@@ -1,5 +1,5 @@
 import { type Node } from '@xyflow/react';
-import { WorkflowBuilderNode } from '@workflow-builder/types/node-data';
+import { WorkflowBuilderNode } from '@/types/node-data';
 import { getIsValidJson } from '@/utils/validation/get-is-valid-json';
 import { getNodeWithErrors } from '@/utils/validation/get-node-errors';
 import { getIsValidLayoutDirections } from '@/utils/validation/get-is-valid-layout-directions';

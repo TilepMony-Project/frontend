@@ -1,4 +1,4 @@
-import { WorkflowBuilderNode } from '@workflow-builder/types/node-data';
+import { WorkflowBuilderNode } from '@/types/node-data';
 
 export const mockNodeDelay: WorkflowBuilderNode = {
   id: 'delay-1',

@@ -1,4 +1,4 @@
-import { PaletteItem } from '@workflow-builder/types/common';
+import { PaletteItem } from '@/types/common';
 import { defaultPropertiesData } from './default-properties-data';
 import { NotificationNodeSchema, schema } from './schema';
 import { uischema } from './uischema';

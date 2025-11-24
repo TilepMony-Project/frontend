@@ -1,7 +1,7 @@
 // About actions: apps/frontend/src/app/store/README.md
 import { OnSelectionChangeParams } from '@xyflow/react';
 import useStore from '@/store/store';
-import { WorkflowBuilderEdge, WorkflowBuilderNode } from '@workflow-builder/types/node-data';
+import { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
 
 export function getStoreSelection(): OnSelectionChangeParams {
   const state = useStore.getState();

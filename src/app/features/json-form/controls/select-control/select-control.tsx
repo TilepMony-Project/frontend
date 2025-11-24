@@ -3,8 +3,8 @@ import { SelectControlProps } from '../../types/controls';
 import { createControlRenderer } from '../../utils/rendering';
 import { Select, SelectBaseProps } from '@synergycodes/overflow-ui';
 import { ControlWrapper } from '../control-wrapper';
-import { PrimitiveFieldSchema } from '@workflow-builder/types/node-schema';
-import { Icon } from '@workflow-builder/icons';
+import { PrimitiveFieldSchema } from '@/types/node-schema';
+import { Icon } from '@/components/icons';
 
 function SelectControl(props: SelectControlProps) {
   const { data, handleChange, path, enabled, schema } = props;

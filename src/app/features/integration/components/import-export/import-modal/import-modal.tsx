@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, SnackbarType } from '@synergycodes/overflow-ui';
 
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 import { showSnackbar } from '@/utils/show-snackbar';
 
 import { setStoreDataFromIntegration } from '@/store/slices/diagram-slice/actions';

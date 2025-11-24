@@ -1,4 +1,4 @@
-import { BaseNodePropertiesSchema } from '@workflow-builder/types/node-schema';
+import { BaseNodePropertiesSchema } from '@/types/node-schema';
 
 export const sharedProperties: BaseNodePropertiesSchema = {
   label: {

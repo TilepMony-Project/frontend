@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CaretDown } from '@phosphor-icons/react';
 import { MenuItemProps, Menu, NavButton } from '@synergycodes/overflow-ui';
-import { Icon } from '@workflow-builder/icons';
+import { Icon } from '@/components/icons';
 
 type Language = {
   code: string;
