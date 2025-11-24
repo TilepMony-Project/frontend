@@ -2,6 +2,7 @@
 
 import {
   Archive,
+  ArrowLeft,
   ArrowLeftRight,
   Asterisk,
   Box,
@@ -19,6 +20,7 @@ import {
   Info,
   LayoutGrid,
   Link2,
+  List,
   Loader2,
   Lock,
   Maximize2,
@@ -34,6 +36,7 @@ import {
   PlusCircle,
   Redo2,
   Save,
+  Search,
   Send,
   ShieldCheck,
   SlidersHorizontal,
@@ -65,6 +68,9 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   ArrowUUpRight: Redo2,
   TreeStructureDown: Network,
   Cards: LayoutGrid,
+  ArrowLeft: ArrowLeft,
+  Search: Search,
+  List: List,
   Copy: Copy,
 
   // Modal and form icons

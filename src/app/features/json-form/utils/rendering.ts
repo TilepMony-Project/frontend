@@ -1,4 +1,9 @@
-import { type ControlProps, type JsonFormsRendererRegistryEntry, rankWith, uiTypeIs } from '@jsonforms/core';
+import {
+  type ControlProps,
+  type JsonFormsRendererRegistryEntry,
+  rankWith,
+  uiTypeIs,
+} from '@jsonforms/core';
 import type {
   UISchemaControlElementType,
   UISchemaElementType,

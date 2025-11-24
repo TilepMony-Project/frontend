@@ -1,11 +1,12 @@
 import styles from '../../app-bar.module.css';
 
-import { NavButton, Menu, Input } from '@synergycodes/overflow-ui';
-import { useMemo, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
 import { Icon } from '@/components/icons';
-import useStore from '@/store/store';
+import { IntegrationContext } from '@/features/integration/components/integration-variants/context/integration-context-wrapper';
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
+import useStore from '@/store/store';
+import { Input, Menu, NavButton } from '@synergycodes/overflow-ui';
+import { ChevronDown } from 'lucide-react';
+import { useContext, useMemo, useState } from 'react';
 
 type ProjectSelectionProps = {
   onDuplicateClick?: () => void;
@@ -16,6 +17,21 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
   const isReadOnlyMode = useStore((store) => store.isReadOnlyMode);
   const setDocumentName = useStore((state) => state.setDocumentName);
   const [editName, setEditName] = useState<boolean>(false);
+  const { onSave } = useContext(IntegrationContext);
+
+  function handleCommitName() {
+    setEditName(false);
+    if (onSave) {
+      void onSave({ isAutoSave: false });
+    }
+  }
+
+  function handleStartEditing() {
+    if (isReadOnlyMode) {
+      return;
+    }
+    setEditName(true);
+  }
 
   const items = useMemo(
     () => [
@@ -38,7 +54,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
             if (event.target.value.length > 128) return;
             setDocumentName(event.target.value);
           }}
-          onBlur={() => setEditName(false)}
+          onBlur={handleCommitName}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.currentTarget.blur();
@@ -47,9 +63,23 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
           autoFocus={true}
         />
       ) : (
-        <span className={styles['title']} onClick={() => !isReadOnlyMode && setEditName(true)}>
+        <button
+          className={styles.title}
+          type="button"
+          disabled={isReadOnlyMode}
+          onClick={handleStartEditing}
+          onKeyDown={(event) => {
+            if (isReadOnlyMode) {
+              return;
+            }
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              setEditName(true);
+            }
+          }}
+        >
           {documentName}
-        </span>
+        </button>
       )}
       <div className={styles['menu-container']}>
         <Menu items={items}>

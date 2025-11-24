@@ -18,7 +18,11 @@ import { OptionalHooks } from './features/plugins-core/components/optional-hooks
 import { PropertiesBarContainerLazy } from './features/properties-bar/properties-bar-container-lazy';
 import { SnackbarContainer } from './features/snackbar/snackbar-container';
 
-function AppComponent(_props: PropsWithChildren) {
+type AppComponentProps = PropsWithChildren<{
+  workflowId?: string | null;
+}>;
+
+function AppComponent(_props: AppComponentProps) {
   const selectedNodesCount = useStore((state) => state.selectedNodesIds.length);
   const selectedEdgesCount = useStore((state) => state.selectedEdgesIds.length);
   const hasSingleSelection = selectedNodesCount + selectedEdgesCount === 1;
