@@ -10,13 +10,13 @@ const generalInformation: UISchema = {
   elements: [
     {
       type: 'Text',
-      scope: scope('properties.label'),
+      scope: scope('properties.label' as any),
       label: 'Title',
       placeholder: 'Node Title...',
     },
     {
       type: 'Text',
-      scope: scope('properties.description'),
+      scope: scope('properties.description' as any),
       label: 'Description',
       placeholder: 'Type your description here...',
     },

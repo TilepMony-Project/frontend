@@ -10,7 +10,7 @@ export const decision: PaletteItem<DecisionNodeSchema> = {
   type: 'decision',
   icon: 'ArrowsSplit',
   templateType: NodeType.DecisionNode,
-  defaultPropertiesData,
+  defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
 };

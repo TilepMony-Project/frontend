@@ -10,12 +10,12 @@ export const uischema: UISchema = {
     {
       label: 'Label',
       type: 'Text',
-      scope: scope('properties.label'),
+      scope: scope('properties.label' as any),
     },
     {
       label: 'Description',
       type: 'Text',
-      scope: scope('properties.description'),
+      scope: scope('properties.description' as any),
       placeholder: 'Type your description here...',
     },
     {

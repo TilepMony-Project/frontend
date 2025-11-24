@@ -1,7 +1,5 @@
 'use client';
 
-import styles from '../../app-bar.module.css';
-
 import { Button } from '@synergycodes/overflow-ui';
 import { useRouter } from 'next/navigation';
 
@@ -18,19 +16,19 @@ export function Toolbar() {
   }
 
   return (
-    <div className={styles.toolbar}>
-      <div className={styles['brand-section']}>
+    <div className="flex items-center justify-between gap-8">
+      <div className="flex items-center gap-4">
         <Button
-          className={styles['back-button']}
+          className="flex items-center gap-[0.35rem] rounded-full px-[0.85rem] py-[0.35rem] font-semibold"
           variant="secondary"
           size="small"
           onClick={handleNavigateToDashboard}
         >
           <Icon name="ArrowLeft" size={16} />
-          <span>Back</span>
+          Back
         </Button>
       </div>
-      <div className={styles['nav-segment']}>
+      <div className="flex items-center gap-2">
         <OptionalAppBarTools>
           <SaveButton />
           <RunButton />

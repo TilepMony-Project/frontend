@@ -8,7 +8,7 @@ export const delay: PaletteItem<DelayNodeSchema> = {
   description: 'node.delay.description',
   type: 'delay',
   icon: 'Timer',
-  defaultPropertiesData,
+  defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
 };

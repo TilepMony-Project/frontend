@@ -1,4 +1,4 @@
-import styles from '../../app-bar.module.css';
+
 
 import { Icon } from '@/components/icons';
 import { IntegrationContext } from '@/features/integration/components/integration-variants/context/integration-context-wrapper';
@@ -45,8 +45,8 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
   );
 
   return (
-    <div className={styles['project-selection']}>
-      <span className={styles['folder-name']}>Drafts /</span>
+    <div className="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 hidden md:flex">
+      <span className="text-[var(--ax-txt-tertiary-default)] text-sm">Drafts /</span>
       {editName && !isReadOnlyMode ? (
         <Input
           value={documentName}
@@ -64,7 +64,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
         />
       ) : (
         <button
-          className={styles.title}
+          className="text-[var(--ax-txt-primary-default)] min-h-[1em] min-w-[1em] bg-transparent border-none p-0 font-inherit cursor-pointer empty:border-b empty:border-dotted empty:border-current disabled:cursor-default ml-2 md:ml-0"
           type="button"
           disabled={isReadOnlyMode}
           onClick={handleStartEditing}
@@ -81,7 +81,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
           {documentName}
         </button>
       )}
-      <div className={styles['menu-container']}>
+      <div className="relative">
         <Menu items={items}>
           <NavButton tooltip="Pick the Project">
             <ChevronDown />
