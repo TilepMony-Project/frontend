@@ -7,6 +7,10 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
       - name: Extract deployment info
         id: info
         run: |
@@ -17,22 +21,18 @@ jobs:
       - name: Get Commit Messages
         id: get_commits
         run: |
-          if [ "${{ github.event_name }}" == "push" ]; then
-            COMMITS=$(echo '${{ toJSON(github.event.commits) }}' | jq -r '.[] | "- [" + (.message | split("\n")[0]) + "](" + .url + ")"')
-          else
-            COMMITS="Manual Trigger / Not a push event"
-          fi
+          LAST_COMMIT=$(git log -1 --pretty=format:"- [%s](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/%H)")
           echo "COMMITS<<EOF" >> $GITHUB_ENV
-          echo "$COMMITS" >> $GITHUB_ENV
+          echo "$LAST_COMMIT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - name: Notify Telegram (Success)
-        if: success()
+        if: env.STATE == 'success'
         run: |
           TEXT=$(cat <<'EOF'
           ✅ *Frontend Deploy Success!*
           
           Repository: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
-          Branch: [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+          Branch: [${{ github.event.deployment.ref }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.deployment.ref }})
           By: [${{ github.actor }}](${{ github.server_url }}/${{ github.actor }})
                     
           *Commits:*
@@ -53,13 +53,13 @@ jobs:
             -d disable_web_page_preview="true"
 
       - name: Notify Telegram (Failed)
-        if: failure()
+        if: env.STATE == 'failure'
         run: |
           TEXT=$(cat <<'EOF'
           ❌ *Frontend Deploy Failed*
           
           Repository: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
-          Branch: [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+          Branch: [${{ github.event.deployment.ref }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.deployment.ref }})
           By: [${{ github.actor }}](${{ github.server_url }}/${{ github.actor }})
 
           *Commits:*
