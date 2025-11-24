@@ -31,7 +31,7 @@ export function loadData(loadData: Partial<IntegrationDataFormat>) {
     setStoreDataFromIntegration(loadData);
 
     showSnackbar({
-      title: 'restoreDiagramSuccess',
+      title: 'Workflow restored successfully',
       variant: SnackbarType.SUCCESS,
     });
   } else {

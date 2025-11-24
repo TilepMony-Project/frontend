@@ -1,4 +1,5 @@
 import connectDB from '@/lib/mongodb';
+import { startWorkflowExecution } from '@/lib/workflow/executor';
 import Execution from '@/models/Execution';
 import Workflow from '@/models/Workflow';
 import { type NextRequest, NextResponse } from 'next/server';
@@ -35,9 +36,8 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
       lastExecutedAt: new Date(),
     });
 
-    // TODO: Start workflow execution in background
-    // This should be handled by a job queue or background process
-    // For now, we'll return the execution ID and handle execution via polling
+    // Start workflow execution in the background
+    startWorkflowExecution(workflow, execution);
 
     return NextResponse.json(
       {

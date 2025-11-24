@@ -1,49 +1,50 @@
 'use client';
 
-import type { ComponentType, SVGProps } from 'react';
 import {
-  Save,
-  Upload,
-  Download,
-  Undo2,
-  Redo2,
-  Network,
-  LayoutGrid,
-  DollarSign,
-  Coins,
-  ArrowLeftRight,
-  Link2,
-  Building2,
-  Send,
-  ShieldCheck,
-  Clock,
-  GitBranch,
-  Lock,
-  Image,
   Archive,
-  MoreVertical,
-  PanelLeft,
+  ArrowLeftRight,
+  Asterisk,
   Box,
-  PlusCircle,
-  GripVertical,
-  X,
-  Maximize2,
-  Loader2,
+  Building2,
   CheckCircle2,
-  XCircle,
+  ChevronDown,
+  Clock,
+  Coins,
   Copy,
+  DollarSign,
+  Download,
+  GitBranch,
+  GripVertical,
+  Image,
+  Info,
+  LayoutGrid,
+  Link2,
+  Loader2,
+  Lock,
+  Maximize2,
+  MinusCircle,
+  Moon,
+  MoreVertical,
+  Network,
+  PanelLeft,
   Pencil,
   PencilOff,
-  Moon,
-  Sun,
-  ChevronDown,
-  Info,
-  MinusCircle,
-  SlidersHorizontal,
-  Trash2,
+  Play,
   Plus,
-  Asterisk,
+  PlusCircle,
+  Redo2,
+  Save,
+  Send,
+  ShieldCheck,
+  SlidersHorizontal,
+  Sun,
+  Trash2,
+  Undo2,
+  Upload,
+  X,
+  XCircle,
 } from 'lucide-react';
+import type { ComponentType, SVGProps } from 'react';
 
 export type IconProps = SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -65,7 +66,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   TreeStructureDown: Network,
   Cards: LayoutGrid,
   Copy: Copy,
-  
+
   // Modal and form icons
   LockSimpleOpen: Lock,
   Image: Image,
@@ -80,7 +81,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   Spinner: Loader2,
   CheckCircle: CheckCircle2,
   XCircle: XCircle,
-  
+
   // Additional icons used in components
   Pencil: Pencil,
   PencilSimple: Pencil,
@@ -96,9 +97,10 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   SlidersHorizontal: SlidersHorizontal,
   Trash: Trash2,
   Trash2: Trash2,
+  Play: Play,
   Plus: Plus,
   Asterisk: Asterisk,
-  
+
   // Node icons - TilepMoney (Lucide React)
   CurrencyDollar: DollarSign, // Deposit
   Coins: Coins, // Mint
@@ -123,12 +125,7 @@ function getIconComponent(name?: string): ComponentType<IconProps> | null {
   return null;
 }
 
-export const Icon: ComponentType<IconProps> = ({ 
-  size = 24, 
-  className, 
-  name,
-  ...props 
-}) => {
+export const Icon: ComponentType<IconProps> = ({ size = 24, className, name, ...props }) => {
   if (!name) {
     return null;
   }
@@ -146,24 +143,16 @@ export const Icon: ComponentType<IconProps> = ({
     }
 
     // Add spinning animation for Spinner icon
-    const spinnerClassName = name === 'Spinner' 
-      ? `${className || ''} animate-spin`.trim()
-      : className;
+    const spinnerClassName =
+      name === 'Spinner' ? `${className || ''} animate-spin`.trim() : className;
 
-    return (
-      <IconComponent
-        size={iconSize}
-        className={spinnerClassName}
-        {...props}
-      />
-    );
+    return <IconComponent size={iconSize} className={spinnerClassName} {...props} />;
   }
 
   // Final fallback: show placeholder with icon name
-  const iconSize = typeof size === 'string' 
-    ? (size === 'large' ? 32 : size === 'small' ? 16 : 24)
-    : size;
-    
+  const iconSize =
+    typeof size === 'string' ? (size === 'large' ? 32 : size === 'small' ? 16 : 24) : size;
+
   return (
     <svg
       width={iconSize}
@@ -176,7 +165,14 @@ export const Icon: ComponentType<IconProps> = ({
       {...props}
     >
       <rect width="24" height="24" fill="currentColor" opacity="0.1" />
-      <text x="12" y="12" textAnchor="middle" dominantBaseline="middle" fontSize="8" fill="currentColor">
+      <text
+        x="12"
+        y="12"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontSize="8"
+        fill="currentColor"
+      >
         {name.substring(0, 2)}
       </text>
     </svg>

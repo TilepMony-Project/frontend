@@ -1,15 +1,13 @@
+import { ProjectSelection } from '@/features/app-bar/components/project-selection/project-selection';
+import { DiagramContainer } from '@/features/diagram/diagram';
 import {
   hasRegisteredComponentDecorator,
   registerComponentDecorator,
 } from '@/features/plugins-core/adapters/adapter-components';
-
-import { DiagramContainer } from '@/features/diagram/diagram';
-import { ProjectSelection } from '@/features/app-bar/components/project-selection/project-selection';
-import { PropertiesBar } from '@/features/properties-bar/components/properties-bar/properties-bar';
-
-import { FooterSupportButton } from './components/footer-support-button';
-import { getAppBarButton } from './components/app-bar/get-app-bar-button';
 import { registerFunctionDecorator } from '@/features/plugins-core/adapters/adapter-functions';
+import { PropertiesBar } from '@/features/properties-bar/components/properties-bar/properties-bar';
+import { getAppBarButton } from './components/app-bar/get-app-bar-button';
+import { FooterSupportButton } from './components/footer-support-button';
 import { addItemsToDots } from './functions/add-items-to-dots';
 
 registerComponentDecorator('OptionalFooterContent', {
@@ -19,12 +17,6 @@ registerComponentDecorator('OptionalFooterContent', {
 
 registerFunctionDecorator('getControlsDotsItems', {
   callback: addItemsToDots,
-  place: 'after',
-  priority: 10,
-});
-
-registerComponentDecorator('OptionalAppBarTools', {
-  content: getAppBarButton('FolderOpen', 'plugins.help.tooltipOpen'),
   place: 'after',
   priority: 10,
 });
