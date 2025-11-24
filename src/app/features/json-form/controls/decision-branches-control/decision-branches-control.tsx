@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { DecisionBranchesControlProps, DecisionBranch } from '../../types/controls';
+import type { DecisionBranchesControlProps, DecisionBranch } from '../../types/controls';
 import { PlaceholderButton } from '@/features/diagram/nodes/components/placeholder-button/placeholder-button';
 import { createControlRenderer } from '../../utils/rendering';
 import { BranchCard } from './branch-card/branch-card';

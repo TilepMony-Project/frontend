@@ -1,4 +1,4 @@
-import { Connection } from '@xyflow/react';
+import type { Connection } from '@xyflow/react';
 import { isInnerHandle } from '../handles/is-inner-handle';
 
 export function getEdgeZIndex(connection: Connection): number | undefined {

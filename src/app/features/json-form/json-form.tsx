@@ -1,10 +1,10 @@
-import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
+import type { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import { JsonForms } from '@jsonforms/react';
 import { textControlRenderer } from './controls/text-control/text-control';
 import { groupLayoutRenderer } from './layouts/group-layout/group-layout';
 
 import styles from './json-form.module.css';
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import { accordionLayoutRenderer } from './layouts/accordion-layout/accordion-layout';
 import { verticalLayoutRenderer } from './layouts/vertical-layout/vertical-layout';
 import { unknownRenderer } from './utils/unknown-renderer';

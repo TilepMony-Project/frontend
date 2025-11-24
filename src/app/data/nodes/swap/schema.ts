@@ -1,4 +1,4 @@
-import { NodeSchema } from '@/types/node-schema';
+import type { NodeSchema } from '@/types/node-schema';
 
 export const tokenOptions = [
   { label: 'USDT', value: 'USDT' },

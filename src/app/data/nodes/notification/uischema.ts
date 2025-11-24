@@ -1,7 +1,7 @@
-import { UISchema } from '@/features/json-form/types/uischema';
+import type { UISchema } from '@/features/json-form/types/uischema';
 import { generalInformation } from '../shared/general-information';
-import { NotificationNodeSchema, notificationTypeOptions, priorityOptions } from './schema';
-import { PaletteItem } from '@/types/common';
+import { type NotificationNodeSchema, notificationTypeOptions, priorityOptions } from './schema';
+import type { PaletteItem } from '@/types/common';
 import { getScope } from '@/features/json-form/utils/get-scope';
 
 const scope = getScope<NotificationNodeSchema>;

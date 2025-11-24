@@ -1,4 +1,4 @@
-import { NodeSchema } from '@/types/node-schema';
+import type { NodeSchema } from '@/types/node-schema';
 
 export const numberOfBranchesOptions = [
   { label: '2', value: 2 },

@@ -1,9 +1,9 @@
-import { SelectControlProps } from '../../types/controls';
+import type { SelectControlProps } from '../../types/controls';
 
 import { createControlRenderer } from '../../utils/rendering';
-import { Select, SelectBaseProps } from '@synergycodes/overflow-ui';
+import { Select, type SelectBaseProps } from '@synergycodes/overflow-ui';
 import { ControlWrapper } from '../control-wrapper';
-import { PrimitiveFieldSchema } from '@/types/node-schema';
+import type { PrimitiveFieldSchema } from '@/types/node-schema';
 import { Icon } from '@/components/icons';
 
 function SelectControl(props: SelectControlProps) {

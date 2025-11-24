@@ -1,5 +1,5 @@
-import { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import { RedeemNodeSchema } from './schema';
+import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
+import type { RedeemNodeSchema } from './schema';
 
 export const defaultPropertiesData: NodeDataProperties<RedeemNodeSchema> = {
   label: 'Redeem',

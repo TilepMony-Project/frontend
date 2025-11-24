@@ -1,6 +1,6 @@
-import { PaletteItem } from '@/types/common';
+import type { PaletteItem } from '@/types/common';
 import { defaultPropertiesData } from './default-properties-data';
-import { schema, RedeemNodeSchema } from './schema';
+import { schema, type RedeemNodeSchema } from './schema';
 import { uischema } from './uischema';
 
 export const redeemNode: PaletteItem<RedeemNodeSchema> = {

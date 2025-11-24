@@ -1,7 +1,7 @@
 import { uischema } from './uischema';
 import { defaultPropertiesData } from './default-properties-data';
-import { ConditionalNodeSchema, schema } from './schema';
-import { PaletteItem } from '@/types/common';
+import { type ConditionalNodeSchema, schema } from './schema';
+import type { PaletteItem } from '@/types/common';
 
 export const conditional: PaletteItem<ConditionalNodeSchema> = {
   label: 'node.conditional.label',

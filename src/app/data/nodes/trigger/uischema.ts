@@ -1,6 +1,6 @@
-import { UISchema } from '@/features/json-form/types/uischema';
+import type { UISchema } from '@/features/json-form/types/uischema';
 import { generalInformation } from '../shared/general-information';
-import { PaletteItem } from '@/types/common';
+import type { PaletteItem } from '@/types/common';
 import {
   triggerTypeOptions,
   frequencyOptions,
@@ -9,7 +9,7 @@ import {
   maxRetriesOptions,
   timeoutOptions,
   eventTypeOptions,
-  TriggerNodeSchema,
+  type TriggerNodeSchema,
 } from './schema';
 import { getScope } from '@/features/json-form/utils/get-scope';
 

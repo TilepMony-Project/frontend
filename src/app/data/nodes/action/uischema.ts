@@ -1,4 +1,4 @@
-import { PaletteItem } from '@/types/common';
+import type { PaletteItem } from '@/types/common';
 import {
   actionTypeOptions,
   priorityOptions,
@@ -12,10 +12,10 @@ import {
   templateOptions,
   outputFormatOptions,
   saveLocationOptions,
-  ActionNodeSchema,
+  type ActionNodeSchema,
 } from './schema';
 import { generalInformation } from '../shared/general-information';
-import { UISchema } from '@/features/json-form/types/uischema';
+import type { UISchema } from '@/features/json-form/types/uischema';
 import { getScope } from '@/features/json-form/utils/get-scope';
 
 const scope = getScope<ActionNodeSchema>;

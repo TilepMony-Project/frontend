@@ -1,8 +1,8 @@
-import { WorkflowBuilderNode } from '@/types/node-data';
+import type { WorkflowBuilderNode } from '@/types/node-data';
 import useStore from '@/store/store';
-import { JsonFormsReactProps } from '@jsonforms/react';
+import type { JsonFormsReactProps } from '@jsonforms/react';
 import { JSONForm } from '@/features/json-form/json-form';
-import { JsonFormsProps } from '@jsonforms/core';
+import type { JsonFormsProps } from '@jsonforms/core';
 import { isDeepEqual } from 'remeda';
 import { memo } from 'react';
 import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';

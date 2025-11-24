@@ -1,4 +1,4 @@
-import { Handle, HandleType, Position } from '@xyflow/react';
+import { Handle, type HandleType, Position } from '@xyflow/react';
 import styles from './connectable-item.module.css';
 import clsx from 'clsx';
 import { getHandleId } from '@/features/diagram/handles/get-handle-id';

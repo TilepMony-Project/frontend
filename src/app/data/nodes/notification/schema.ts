@@ -1,6 +1,6 @@
 import { sharedProperties } from '../shared/shared-properties';
 import { statusOptions } from '../shared/general-information';
-import { NodeSchema } from '@/types/node-schema';
+import type { NodeSchema } from '@/types/node-schema';
 
 export const notificationTypeOptions = {
   email: { label: 'Email', value: 'email', icon: 'EnvelopeSimple' },

@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import { useCallback, useMemo, useRef } from 'react';
 import { NavButton, TextArea } from '@synergycodes/overflow-ui';
-import { DynamicCondition, DynamicConditionsControlProps } from '../../types/controls';
+import type { DynamicCondition, DynamicConditionsControlProps } from '../../types/controls';
 import { createControlRenderer } from '../../utils/rendering';
 import { ControlWrapper } from '../control-wrapper';
-import { ConditionsForm, ConditionsFormHandle } from './dynamic-conditions-form/conditions-form';
+import { ConditionsForm, type ConditionsFormHandle } from './dynamic-conditions-form/conditions-form';
 import { Icon } from '@/components/icons';
 import styles from './dynamic-conditions-control.module.css';
 import { conditionsToDependencies } from '../../utils/conditional-transform';

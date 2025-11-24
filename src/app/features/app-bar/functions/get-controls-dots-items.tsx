@@ -1,6 +1,6 @@
 import { withOptionalFunctionPlugins } from '@/features/plugins-core/adapters/adapter-functions';
 
-import { MenuItemProps } from '@synergycodes/overflow-ui';
+import type { MenuItemProps } from '@synergycodes/overflow-ui';
 import { Icon } from '@/components/icons';
 
 import { openExportModal } from '@/features/integration/components/import-export/export-modal/open-export-modal';

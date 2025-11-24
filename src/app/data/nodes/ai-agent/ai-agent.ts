@@ -1,4 +1,4 @@
-import { PaletteItem } from '@/types/common';
+import type { PaletteItem } from '@/types/common';
 import { schema } from './schema';
 import { defaultPropertiesData } from './default-properties-data';
 import { NodeType } from '@/types/node-types';

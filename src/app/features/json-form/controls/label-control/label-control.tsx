@@ -1,5 +1,5 @@
-import { JsonFormsRendererRegistryEntry, LabelProps } from '@jsonforms/core';
-import { LabelElement } from '../../types/label';
+import type { JsonFormsRendererRegistryEntry, LabelProps } from '@jsonforms/core';
+import type { LabelElement } from '../../types/label';
 import { withJsonFormsLabelProps } from '@jsonforms/react';
 import { createTester } from '../../utils/rendering';
 import { Label } from '@/components/form/label/label';

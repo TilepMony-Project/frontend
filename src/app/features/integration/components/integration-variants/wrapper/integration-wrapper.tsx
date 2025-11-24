@@ -1,7 +1,7 @@
-import { PropsWithChildren, useEffect } from 'react';
+import { type PropsWithChildren, useEffect } from 'react';
 
 import { loadData } from '@/features/integration/stores/use-integration-store';
-import { IntegrationDataFormatOptional, OnSave } from '@/features/integration/types';
+import type { IntegrationDataFormatOptional, OnSave } from '@/features/integration/types';
 
 import { IntegrationContextWrapper } from '../context/integration-context-wrapper';
 

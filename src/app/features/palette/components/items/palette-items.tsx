@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import styles from './palette-items.module.css';
 import { NodePreviewContainer } from '../../node-preview-container';
-import { PaletteItem } from '@/types/common';
-import { DragEvent } from 'react';
+import type { PaletteItem } from '@/types/common';
+import type { DragEvent } from 'react';
 
 type PaletteItemsProps = {
   onDragStart: (event: DragEvent) => void;

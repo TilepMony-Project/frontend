@@ -3,7 +3,7 @@ import styles from './setting-info.module.css';
 import { Plus } from 'lucide-react';
 import { IconPlaceholder } from '../icon-placeholder/icon-placeholder';
 import { NodeInfoWrapper } from '../node-info-wrapper/node-wrapper-info';
-import { Icon, WBIcon } from '@/components/icons';
+import { Icon, type WBIcon } from '@/components/icons';
 
 type SettingPlaceholderProps = {
   label: string;

@@ -1,5 +1,5 @@
 import useStore from '@/store/store';
-import { useRef, DragEvent } from 'react';
+import { useRef, type DragEvent } from 'react';
 import { dataFormat } from '@/utils/consts';
 
 export function usePaletteDragAndDrop(canDrag: boolean) {

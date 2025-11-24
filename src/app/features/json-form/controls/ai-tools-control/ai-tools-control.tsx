@@ -5,7 +5,7 @@ import { Button } from '@synergycodes/overflow-ui';
 import { createControlRenderer } from '../../utils/rendering';
 import { useCallback } from 'react';
 import { FormControlWithLabel } from '@/components/form/form-control-with-label/form-control-with-label';
-import { AiToolsControlProps, AiAgentTool } from '../../types/controls';
+import type { AiToolsControlProps, AiAgentTool } from '../../types/controls';
 import { toolOptions } from '../../../../data/nodes/ai-agent/select-options';
 import { AddAiToolFormContent } from './components/add-ai-tool-form-content/add-ai-tool-form-content';
 import { AddAiToolFooter } from './components/add-ai-tool-footer/add-ai-tool-footer';

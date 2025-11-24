@@ -1,5 +1,5 @@
-import { FlatError } from '@/types/node-schema';
-import { ErrorObject } from 'ajv';
+import type { FlatError } from '@/types/node-schema';
+import type { ErrorObject } from 'ajv';
 
 export function flatErrors(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,5 +1,5 @@
 import { Handle } from '@xyflow/react';
-import { IconType, LayoutDirection } from '@/types/common';
+import type { IconType, LayoutDirection } from '@/types/common';
 import { memo, useMemo } from 'react';
 import {
   Collapsible,
@@ -14,7 +14,7 @@ import { getHandlePosition } from '../../handles/get-handle-position';
 
 import styles from './workflow-node-template.module.css';
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
-import { NodeData } from '@/types/node-data';
+import type { NodeData } from '@/types/node-data';
 
 export type WorkflowNodeTemplateProps = {
   id: string;

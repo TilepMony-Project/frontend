@@ -1,5 +1,5 @@
 import styles from '../../app-bar.module.css';
-import { NavButton, Menu, MenuItemProps } from '@synergycodes/overflow-ui';
+import { NavButton, Menu, type MenuItemProps } from '@synergycodes/overflow-ui';
 import { MoreVertical } from 'lucide-react';
 import { useMemo } from 'react';
 import { getControlsDotsItems } from '../../functions/get-controls-dots-items';

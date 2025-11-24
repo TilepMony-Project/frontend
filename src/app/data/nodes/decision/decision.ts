@@ -1,6 +1,6 @@
-import { PaletteItem } from '@/types/common';
+import type { PaletteItem } from '@/types/common';
 import { defaultPropertiesData } from './default-properties-data';
-import { DecisionNodeSchema, schema } from './schema';
+import { type DecisionNodeSchema, schema } from './schema';
 import { uischema } from './uischema';
 import { NodeType } from '@/types/node-types';
 

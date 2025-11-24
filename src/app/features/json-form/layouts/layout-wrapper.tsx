@@ -1,5 +1,5 @@
 import { IndicatorDot } from '../components/indicator-dot/indicator-dot';
-import { BaseLayoutElement, LayoutProps } from '../types/layouts';
+import type { BaseLayoutElement, LayoutProps } from '../types/layouts';
 
 type Props = LayoutProps<BaseLayoutElement> & {
   children: React.ReactNode;

@@ -1,5 +1,5 @@
-import { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import { DelayNodeSchema } from './schema';
+import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
+import type { DelayNodeSchema } from './schema';
 
 export const defaultPropertiesData: NodeDataProperties<DelayNodeSchema> = {
   label: 'node.delay.label',

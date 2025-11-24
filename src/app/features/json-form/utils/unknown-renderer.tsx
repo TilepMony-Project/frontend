@@ -1,9 +1,9 @@
 import {
-  ControlProps,
+  type ControlProps,
   isControl,
   isLayout,
-  JsonFormsRendererRegistryEntry,
-  LayoutProps,
+  type JsonFormsRendererRegistryEntry,
+  type LayoutProps,
   or,
   rankWith,
 } from '@jsonforms/core';

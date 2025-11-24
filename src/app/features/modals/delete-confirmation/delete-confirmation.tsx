@@ -1,4 +1,4 @@
-import { Node, Edge } from '@xyflow/react';
+import type { Node, Edge } from '@xyflow/react';
 import styles from './delete-confirmation.module.css';
 import { Checkbox, Button } from '@synergycodes/overflow-ui';
 import { useState } from 'react';

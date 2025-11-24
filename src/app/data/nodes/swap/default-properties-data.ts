@@ -1,5 +1,5 @@
-import { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import { SwapNodeSchema } from './schema';
+import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
+import type { SwapNodeSchema } from './schema';
 
 export const defaultPropertiesData: NodeDataProperties<SwapNodeSchema> = {
   label: 'Swap',

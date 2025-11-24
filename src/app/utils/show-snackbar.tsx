@@ -1,5 +1,5 @@
 import { closeSnackbar, enqueueSnackbar } from 'notistack';
-import { Snackbar, SnackbarProps } from '@synergycodes/overflow-ui';
+import { Snackbar, type SnackbarProps } from '@synergycodes/overflow-ui';
 
 const AUTO_HIDE_DURATION_TIME = 3000;
 

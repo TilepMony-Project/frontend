@@ -10,7 +10,7 @@ import { SyntaxHighlighterLazy } from '@/features/syntax-highlighter/components/
 
 import styles from '../import-export-modal.module.css';
 import {
-  IntegrationDataError,
+  type IntegrationDataError,
   validateIntegrationData,
 } from '@/features/integration/utils/validate-integration-data';
 import { closeModal } from '@/features/modals/stores/use-modal-store';

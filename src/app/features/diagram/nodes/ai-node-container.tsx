@@ -1,12 +1,12 @@
 import useStore from '@/store/store';
 
-import { NodeProps, Position, Node } from '@xyflow/react';
-import { NodeData } from '@/types/node-data';
+import { type NodeProps, Position, type Node } from '@xyflow/react';
+import type { NodeData } from '@/types/node-data';
 import { memo, useMemo } from 'react';
 import { NodeAsPortWrapper } from '@synergycodes/overflow-ui';
 import { AiAgentNodeTemplate } from './ai-agent-node-template/ai-agent-node-template';
-import { AiAgentNodeSchema } from '../../../data/nodes/ai-agent/schema';
-import { NodeDataProperties } from '../../json-form/types/default-properties';
+import type { AiAgentNodeSchema } from '../../../data/nodes/ai-agent/schema';
+import type { NodeDataProperties } from '../../json-form/types/default-properties';
 import { chatModelOptions, memoryOptions } from '../../../data/nodes/ai-agent/select-options';
 import { getIsValidFromProperties } from '@/utils/validation/get-is-valid-from-properties';
 

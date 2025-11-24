@@ -4,7 +4,7 @@ import type {
   HorizontalLayoutElement,
   VerticalLayoutElement,
 } from './layouts';
-import {
+import type {
   DatePickerControlElement,
   SelectControlElement,
   SwitchControlElement,
@@ -14,7 +14,7 @@ import {
   AiToolsControlElement,
   DecisionBranchesControlElement,
 } from './controls';
-import { LabelElement } from './label';
+import type { LabelElement } from './label';
 
 export type UISchemaControlElement<T extends string = string> = (
   | TextControlElement

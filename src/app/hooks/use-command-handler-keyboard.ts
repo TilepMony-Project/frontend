@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 
-import { CommandHandler } from './use-command-handler';
+import type { CommandHandler } from './use-command-handler';
 import { useKeyPress } from './use-key-press';
 
 export function useCommandHandlerKeyboard(commandHandler: CommandHandler) {

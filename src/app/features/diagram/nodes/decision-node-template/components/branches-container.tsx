@@ -1,8 +1,8 @@
-import { DecisionBranch } from '@/features/json-form/types/controls';
+import type { DecisionBranch } from '@/features/json-form/types/controls';
 import { ConnectableItem } from '../../components/connectable-item/connectable-item';
 import { NodeSection } from '../../components/node-section/node-section';
 import { PlaceholderButton } from '../../components/placeholder-button/placeholder-button';
-import { LayoutDirection } from '@/types/common';
+import type { LayoutDirection } from '@/types/common';
 import styles from './branches-container.module.css';
 import clsx from 'clsx';
 

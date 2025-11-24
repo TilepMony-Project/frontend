@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/no-thenable */
-import { IfThenElseSchema } from '@/types/node-validation-schema';
+import type { IfThenElseSchema } from '@/types/node-validation-schema';
 import { delayTypeOptions } from './select-options';
 
 export const conditionalValidation = {

@@ -1,6 +1,6 @@
 import { Input } from '@synergycodes/overflow-ui';
 import { ControlWrapper } from '../control-wrapper';
-import { TextControlProps } from '../../types/controls';
+import type { TextControlProps } from '../../types/controls';
 
 import { createControlRenderer } from '../../utils/rendering';
 import { useEffect, useState } from 'react';

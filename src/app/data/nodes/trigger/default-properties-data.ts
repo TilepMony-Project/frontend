@@ -1,5 +1,5 @@
-import { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import { TriggerNodeSchema } from './schema';
+import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
+import type { TriggerNodeSchema } from './schema';
 
 export const defaultPropertiesData: NodeDataProperties<TriggerNodeSchema> = {
   label: 'node.trigger.label',

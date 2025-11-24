@@ -1,4 +1,4 @@
-import { FlatError } from '@/types/node-schema';
+import type { FlatError } from '@/types/node-schema';
 
 export function getIsValidFromProperties(properties: unknown): boolean | undefined {
   if (!properties) {

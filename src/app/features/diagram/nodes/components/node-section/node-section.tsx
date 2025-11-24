@@ -1,5 +1,5 @@
 import styles from './node-section.module.css';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 type Props = PropsWithChildren<{ label: string }>;
 

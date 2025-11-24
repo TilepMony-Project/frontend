@@ -1,6 +1,6 @@
-import { PaletteItem } from '@/types/common';
+import type { PaletteItem } from '@/types/common';
 import { defaultPropertiesData } from './default-properties-data';
-import { schema, BridgeNodeSchema } from './schema';
+import { schema, type BridgeNodeSchema } from './schema';
 import { uischema } from './uischema';
 
 export const bridgeNode: PaletteItem<BridgeNodeSchema> = {

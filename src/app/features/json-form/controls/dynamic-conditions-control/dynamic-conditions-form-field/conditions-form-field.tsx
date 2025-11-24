@@ -7,7 +7,7 @@ import {
   comparisonsOperators,
   validateCondition,
 } from '@/features/json-form/utils/conditional-transform';
-import { DynamicCondition } from '@/features/json-form/types/controls';
+import type { DynamicCondition } from '@/features/json-form/types/controls';
 
 type ConditionsFormFieldProps = {
   condition: Partial<DynamicCondition>;

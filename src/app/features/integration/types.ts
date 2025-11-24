@@ -1,5 +1,5 @@
-import { LayoutDirection } from '@/types/common';
-import { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
+import type { LayoutDirection } from '@/types/common';
+import type { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
 
 export type IntegrationDataFormat = {
   name: string;

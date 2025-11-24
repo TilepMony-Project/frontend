@@ -1,6 +1,6 @@
-import { UISchema } from '@/features/json-form/types/uischema';
+import type { UISchema } from '@/features/json-form/types/uischema';
 import { getScope } from '@/features/json-form/utils/get-scope';
-import { TransferNodeSchema } from './schema';
+import type { TransferNodeSchema } from './schema';
 
 const scope = getScope<TransferNodeSchema>;
 

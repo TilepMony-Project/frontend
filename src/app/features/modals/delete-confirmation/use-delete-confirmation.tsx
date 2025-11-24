@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Node, Edge } from '@xyflow/react';
+import type { Node, Edge } from '@xyflow/react';
 import { DeleteConfirmation, DeleteConfirmationButtons } from './delete-confirmation';
 import { MinusCircle } from 'lucide-react';
 import useStore from '@/store/store';

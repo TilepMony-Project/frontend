@@ -1,6 +1,6 @@
-import { PaletteItem } from '@/types/common';
+import type { PaletteItem } from '@/types/common';
 import { defaultPropertiesData } from './default-properties-data';
-import { schema, SwapNodeSchema } from './schema';
+import { schema, type SwapNodeSchema } from './schema';
 import { uischema } from './uischema';
 
 export const swapNode: PaletteItem<SwapNodeSchema> = {

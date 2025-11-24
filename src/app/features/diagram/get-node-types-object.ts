@@ -1,6 +1,6 @@
 import { NodeType } from '@/types/node-types';
 import { NodeContainer } from './nodes/node-container';
-import { NodeTypes } from '@xyflow/react';
+import type { NodeTypes } from '@xyflow/react';
 import { AiNodeContainer } from './nodes/ai-node-container';
 import { DecisionNodeContainer } from './nodes/decision-node-container';
 

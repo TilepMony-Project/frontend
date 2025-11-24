@@ -1,7 +1,7 @@
-import { UISchema } from '@/features/json-form/types/uischema';
+import type { UISchema } from '@/features/json-form/types/uischema';
 import { generalInformation } from '../shared/general-information';
-import { PaletteItem } from '@/types/common';
-import { DelayNodeSchema } from './schema';
+import type { PaletteItem } from '@/types/common';
+import type { DelayNodeSchema } from './schema';
 import { getScope } from '@/features/json-form/utils/get-scope';
 import { delayTypeOptions } from './select-options';
 

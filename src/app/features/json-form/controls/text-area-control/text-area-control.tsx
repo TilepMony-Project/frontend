@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TextAreaControlProps } from '../../types/controls';
+import type { TextAreaControlProps } from '../../types/controls';
 import { createControlRenderer } from '../../utils/rendering';
 import { ControlWrapper } from '../control-wrapper';
 import { TextArea } from '@synergycodes/overflow-ui';

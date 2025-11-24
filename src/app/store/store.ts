@@ -1,20 +1,20 @@
 import { createWithEqualityFn } from 'zustand/traditional';
-import { StateCreator } from 'zustand/vanilla';
+import type { StateCreator } from 'zustand/vanilla';
 import {
-  DiagramDataModificationState,
+  type DiagramDataModificationState,
   useDiagramDataModificationSlice,
 } from './slices/diagram-data-modification/diagram-data-modification-slice';
-import { PaletteState, usePaletteSlice } from './slices/palette/palette-slice';
+import { type PaletteState, usePaletteSlice } from './slices/palette/palette-slice';
 import {
-  DiagramSelectionState,
+  type DiagramSelectionState,
   useDiagramSelectionSlice,
 } from './slices/diagram-selection/diagram-selection-slice';
-import { DiagramState, useDiagramSlice } from './slices/diagram-slice';
+import { type DiagramState, useDiagramSlice } from './slices/diagram-slice';
 import { devtools } from 'zustand/middleware';
 import { withInterceptingMiddleware } from './middleware/middleware';
 import { shallow } from 'zustand/shallow';
 import {
-  UserPreferencesState,
+  type UserPreferencesState,
   useUserPreferencesSlice,
 } from './slices/user-preferences/user-preferences-slice';
 

@@ -1,11 +1,11 @@
-import { Draft, produce } from 'immer';
-import {
-  type EdgeData,
-  type NodeData,
-  type WorkflowBuilderEdge,
-  type WorkflowBuilderNode,
+import { type Draft, produce } from 'immer';
+import type {
+  EdgeData,
+  NodeData,
+  WorkflowBuilderEdge,
+  WorkflowBuilderNode,
 } from '@/types/node-data';
-import { type GetDiagramState, type SetDiagramState } from '@/store/store';
+import type { GetDiagramState, SetDiagramState } from '@/store/store';
 import {
   type OnEdgesChange,
   type OnNodesChange,

@@ -1,4 +1,4 @@
-import { BaseNodePropertiesSchema } from '@/types/node-schema';
+import type { BaseNodePropertiesSchema } from '@/types/node-schema';
 
 export const sharedProperties: BaseNodePropertiesSchema = {
   label: {

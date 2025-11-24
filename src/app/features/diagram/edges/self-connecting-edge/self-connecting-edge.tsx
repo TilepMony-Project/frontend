@@ -1,7 +1,7 @@
-import { BaseEdge, EdgeProps } from '@xyflow/react';
-import { EdgeState, useEdgeStyle } from '@synergycodes/overflow-ui';
+import { BaseEdge, type EdgeProps } from '@xyflow/react';
+import { type EdgeState, useEdgeStyle } from '@synergycodes/overflow-ui';
 import { EDGE_CURVE_RADIUS, SELF_CONNECTING_EDGE_LABEL_OFFSET } from '../edge.consts';
-import { WorkflowBuilderEdge } from '@/types/node-data';
+import type { WorkflowBuilderEdge } from '@/types/node-data';
 
 type SelfConnectingEdgeProps = EdgeProps<WorkflowBuilderEdge> & {
   nodeHeight?: number;

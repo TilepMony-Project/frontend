@@ -1,12 +1,12 @@
-import { ControlElement, ControlProps as JsonFormsControlProps } from '@jsonforms/core';
-import { Override } from './utils';
-import { UISchemaControlElement } from './uischema';
-import { InputProps, TextAreaProps } from '@synergycodes/overflow-ui';
-import { FieldSchema } from '@/types/node-schema';
-import { UISchemaRule } from './rules';
-import { ComparisonOperator, LogicalOperator } from '../utils/conditional-transform';
-import { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import { AiAgentNodeSchema } from '../../../data/nodes/ai-agent/schema';
+import type { ControlElement, ControlProps as JsonFormsControlProps } from '@jsonforms/core';
+import type { Override } from './utils';
+import type { UISchemaControlElement } from './uischema';
+import type { InputProps, TextAreaProps } from '@synergycodes/overflow-ui';
+import type { FieldSchema } from '@/types/node-schema';
+import type { UISchemaRule } from './rules';
+import type { ComparisonOperator, LogicalOperator } from '../utils/conditional-transform';
+import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
+import type { AiAgentNodeSchema } from '../../../data/nodes/ai-agent/schema';
 
 type ControlProps<D, T extends UISchemaControlElement> = Override<
   BaseControlProps,

@@ -1,5 +1,5 @@
-import { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import { NotificationNodeSchema } from './schema';
+import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
+import type { NotificationNodeSchema } from './schema';
 
 export const defaultPropertiesData: NodeDataProperties<NotificationNodeSchema> = {
   label: 'node.notification.label',

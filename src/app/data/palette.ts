@@ -1,4 +1,4 @@
-import { PaletteItem } from '@/types/common';
+import type { PaletteItem } from '@/types/common';
 // TilepMoney nodes - organized by category
 // Input Nodes
 import { depositNode } from './nodes/deposit/deposit';

@@ -1,6 +1,6 @@
-import { UISchema } from '@/features/json-form/types/uischema';
+import type { UISchema } from '@/features/json-form/types/uischema';
 import { getScope } from '@/features/json-form/utils/get-scope';
-import { AiAgentNodeSchema } from './schema';
+import type { AiAgentNodeSchema } from './schema';
 
 const scope = getScope<AiAgentNodeSchema>;
 

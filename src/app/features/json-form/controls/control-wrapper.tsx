@@ -1,5 +1,5 @@
 import { FormControlWithLabel } from '@/components/form/form-control-with-label/form-control-with-label';
-import { BaseControlProps } from '../types/controls';
+import type { BaseControlProps } from '../types/controls';
 import { IndicatorDot } from '../components/indicator-dot/indicator-dot';
 
 type Props = BaseControlProps & {

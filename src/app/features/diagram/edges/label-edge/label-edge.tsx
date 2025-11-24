@@ -1,6 +1,6 @@
 import './variables.css';
-import { EdgeProps, getSmoothStepPath, BaseEdge, useReactFlow } from '@xyflow/react';
-import { WorkflowBuilderEdge } from '@/types/node-data';
+import { type EdgeProps, getSmoothStepPath, BaseEdge, useReactFlow } from '@xyflow/react';
+import type { WorkflowBuilderEdge } from '@/types/node-data';
 import { EDGE_CURVE_RADIUS, EDGE_OFFSET, SELF_CONNECTING_EDGE_LABEL_OFFSET } from '../edge.consts';
 import { Icon } from '@/components/icons';
 import { SelfConnectingEdge } from '../self-connecting-edge/self-connecting-edge';

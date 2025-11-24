@@ -1,4 +1,4 @@
-import { DynamicCondition } from '../types/controls';
+import type { DynamicCondition } from '../types/controls';
 
 const numberComparisonsOperators = new Set([
   'isGreaterThan',

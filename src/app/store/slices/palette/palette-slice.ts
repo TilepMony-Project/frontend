@@ -1,5 +1,5 @@
-import { DraggingItem, PaletteItem, StatusType } from '@/types/common';
-import { GetDiagramState, SetDiagramState } from '@/store/store';
+import { type DraggingItem, type PaletteItem, StatusType } from '@/types/common';
+import type { GetDiagramState, SetDiagramState } from '@/store/store';
 import { paletteData } from '@/data/palette';
 
 export type PaletteState = {

@@ -1,5 +1,5 @@
 import {
-  ForwardedRef,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useEffect,
@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { Button } from '@synergycodes/overflow-ui';
 import { Icon } from '@/components/icons';
-import { DynamicCondition } from '@/features/json-form/types/controls';
+import type { DynamicCondition } from '@/features/json-form/types/controls';
 import { validateCondition } from '@/features/json-form/utils/conditional-transform';
 import { ConditionsFormField } from '../dynamic-conditions-form-field/conditions-form-field';
 

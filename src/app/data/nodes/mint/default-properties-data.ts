@@ -1,5 +1,5 @@
-import { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import { MintNodeSchema } from './schema';
+import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
+import type { MintNodeSchema } from './schema';
 
 export const defaultPropertiesData: NodeDataProperties<MintNodeSchema> = {
   label: 'Mint',

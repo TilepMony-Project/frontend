@@ -1,6 +1,6 @@
-import { PaletteItem } from '@/types/common';
+import type { PaletteItem } from '@/types/common';
 import { defaultPropertiesData } from './default-properties-data';
-import { schema, DepositNodeSchema } from './schema';
+import { schema, type DepositNodeSchema } from './schema';
 import { uischema } from './uischema';
 
 export const depositNode: PaletteItem<DepositNodeSchema> = {

@@ -5,9 +5,9 @@ import { SlidersHorizontal, Trash2 } from 'lucide-react';
 import { useCallback, useRef } from 'react';
 import {
   ConditionsForm,
-  ConditionsFormHandle,
+  type ConditionsFormHandle,
 } from '../../dynamic-conditions-control/dynamic-conditions-form/conditions-form';
-import { DecisionBranch } from '@/features/json-form/types/controls';
+import type { DecisionBranch } from '@/features/json-form/types/controls';
 import { ConditionModalFooter } from '../../dynamic-conditions-control/dynamic-condition-modal-footer/condition-modal-footer';
 import { closeModal, openModal } from '@/features/modals/stores/use-modal-store';
 

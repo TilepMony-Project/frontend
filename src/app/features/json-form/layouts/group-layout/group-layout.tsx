@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import styles from './group-layout.module.css';
 import { LayoutWrapper } from '../layout-wrapper';
-import { GroupLayoutElement, LayoutProps } from '../../types/layouts';
+import type { GroupLayoutElement, LayoutProps } from '../../types/layouts';
 import { renderElements } from '../render-elements';
 import { createLayoutRenderer } from '../../utils/rendering';
 

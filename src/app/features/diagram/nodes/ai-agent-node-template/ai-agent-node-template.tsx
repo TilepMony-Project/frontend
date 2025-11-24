@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import styles from './ai-agent-node-template.module.css';
 
 import { Handle } from '@xyflow/react';
-import { IconType, LayoutDirection } from '@/types/common';
+import type { IconType, LayoutDirection } from '@/types/common';
 import { memo, useMemo } from 'react';
 import {
   Collapsible,
@@ -14,9 +14,9 @@ import {
 import { Icon } from '@/components/icons';
 import { SettingInfo } from './components/setting-info/setting-info';
 import { ToolInfo } from './components/tool-info/tool-info';
-import { ItemOption } from '@/types/node-schema';
-import { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import { AiAgentNodeSchema } from '../../../../data/nodes/ai-agent/schema';
+import type { ItemOption } from '@/types/node-schema';
+import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
+import type { AiAgentNodeSchema } from '../../../../data/nodes/ai-agent/schema';
 import { getHandleId } from '../../handles/get-handle-id';
 import { ConnectableItem } from '../components/connectable-item/connectable-item';
 import { getHandlePosition } from '../../handles/get-handle-position';

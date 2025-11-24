@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { KeyCode } from '@xyflow/react';
+import type { KeyCode } from '@xyflow/react';
 
 type Options = {
   withControlOrMeta?: boolean;

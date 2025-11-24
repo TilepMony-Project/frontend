@@ -1,4 +1,4 @@
-import { PrimitiveFieldType } from '@/types/node-schema';
+import type { PrimitiveFieldType } from '@/types/node-schema';
 
 type TypeMap = {
   string: string;

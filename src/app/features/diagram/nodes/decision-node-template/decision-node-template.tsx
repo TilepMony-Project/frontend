@@ -1,10 +1,10 @@
-import { IconType } from '@/types/common';
-import { LayoutDirection } from '@/types/common';
+import type { IconType } from '@/types/common';
+import type { LayoutDirection } from '@/types/common';
 import { memo, useMemo } from 'react';
 import { NodeDescription, NodeIcon, NodePanel, Status } from '@synergycodes/overflow-ui';
 import { Icon } from '@/components/icons';
 import { BranchesContainer } from './components/branches-container';
-import { DecisionBranch } from '@/features/json-form/types/controls';
+import type { DecisionBranch } from '@/features/json-form/types/controls';
 
 import styles from './decision-node-template.module.css';
 import { Handle, Position } from '@xyflow/react';

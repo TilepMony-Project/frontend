@@ -1,4 +1,4 @@
-import { NodeSchema } from '@/types/node-schema';
+import type { NodeSchema } from '@/types/node-schema';
 
 export const yieldModelOptions = [
   { label: 'Conservative 3% APR', value: 'Conservative 3% APR' },

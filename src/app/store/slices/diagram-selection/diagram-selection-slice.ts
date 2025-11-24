@@ -1,7 +1,7 @@
-import { MouseEvent } from 'react';
-import { GetDiagramState, SetDiagramState } from '@/store/store';
-import { WorkflowBuilderOnSelectionChangeParams } from '@/types/common';
-import { WorkflowBuilderEdge } from '@/types/node-data';
+import type { MouseEvent } from 'react';
+import type { GetDiagramState, SetDiagramState } from '@/store/store';
+import type { WorkflowBuilderOnSelectionChangeParams } from '@/types/common';
+import type { WorkflowBuilderEdge } from '@/types/node-data';
 
 export type DiagramSelectionState = {
   hoveredElement: string | null;

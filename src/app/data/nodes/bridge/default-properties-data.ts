@@ -1,5 +1,5 @@
-import { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import { BridgeNodeSchema } from './schema';
+import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
+import type { BridgeNodeSchema } from './schema';
 
 export const defaultPropertiesData: NodeDataProperties<BridgeNodeSchema> = {
   label: 'Bridge',

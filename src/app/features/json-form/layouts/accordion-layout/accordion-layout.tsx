@@ -1,5 +1,5 @@
 import { Accordion } from '@synergycodes/overflow-ui';
-import { AccordionLayoutElement, LayoutProps } from '../../types/layouts';
+import type { AccordionLayoutElement, LayoutProps } from '../../types/layouts';
 import { LayoutWrapper } from '../layout-wrapper';
 import { createLayoutRenderer } from '../../utils/rendering';
 import { renderElements } from '../render-elements';

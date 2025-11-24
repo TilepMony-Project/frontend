@@ -1,5 +1,5 @@
-import { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import { PartitionNodeSchema } from './schema';
+import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
+import type { PartitionNodeSchema } from './schema';
 
 export const defaultPropertiesData: NodeDataProperties<PartitionNodeSchema> = {
   label: 'Partition',
