@@ -3,6 +3,4 @@
 
 export enum NodeType {
   Node = 'Node',
-  AiNode = 'AiNode',
-  DecisionNode = 'DecisionNode',
 }
