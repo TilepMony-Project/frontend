@@ -7,8 +7,9 @@ import { useRouter } from 'next/navigation';
 
 import type { WorkflowSummary } from '@/actions/workflows';
 import { Icon } from '@/components/icons';
+import { useTheme } from '@/hooks/use-theme';
 import { showSnackbar } from '@/utils/show-snackbar';
-import { Button, SnackbarType } from '@synergycodes/overflow-ui';
+import { Button, Input, Modal, SnackbarType } from '@synergycodes/overflow-ui';
 
 import styles from './workflow-dashboard.module.css';
 
@@ -97,6 +98,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | WorkflowSummary['status']>('all');
   const [pendingAction, setPendingAction] = useState<PendingAction>({ type: null });
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newWorkflowName, setNewWorkflowName] = useState('');
+  const { theme, toggleTheme } = useTheme();
 
   const filteredWorkflows = useMemo(() => {
     const lowerSearch = searchTerm.toLowerCase().trim();
@@ -114,16 +118,30 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     setPendingAction({ type: null });
   }
 
-  async function handleCreateWorkflow() {
+  function openCreateWorkflowModal() {
+    setNewWorkflowName('');
+    setIsCreateModalOpen(true);
+  }
+
+  function closeCreateWorkflowModal() {
+    if (pendingAction.type === 'create') {
+      return;
+    }
+    setIsCreateModalOpen(false);
+  }
+
+  async function createWorkflow(nameOverride?: string) {
     try {
       setPendingAction({ type: 'create' });
+      const workflowName = nameOverride?.trim() ? nameOverride.trim() : 'Untitled workflow';
+
       const response = await fetch('/api/workflows', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: 'Untitled workflow',
+          name: workflowName,
           description: 'Draft workflow created from dashboard',
           nodes: [],
           edges: [],
@@ -139,6 +157,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
 
       setWorkflows((prev) => [normalized, ...prev]);
       showSnackbar({ title: 'Workflow created', variant: SnackbarType.SUCCESS });
+      setIsCreateModalOpen(false);
       router.push(`/workspace/${normalized.id}`);
     } catch (error) {
       console.error(error);
@@ -150,6 +169,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     } finally {
       resetAction();
     }
+  }
+
+  function handleConfirmCreateWorkflow() {
+    void createWorkflow(newWorkflowName);
   }
 
   async function handleDeleteWorkflow(workflowId: string) {
@@ -228,8 +251,17 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         </div>
         <div className={styles.headerActions}>
           <Button
+            className={styles.themeButton}
+            variant="secondary"
+            size="medium"
+            onClick={toggleTheme}
+          >
+            <Icon name={theme === 'light' ? 'Moon' : 'Sun'} size={18} />
+            <span>{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
+          </Button>
+          <Button
             className={styles.ctaButton}
-            onClick={handleCreateWorkflow}
+            onClick={openCreateWorkflowModal}
             disabled={creating}
             variant="primary"
             size="large"
@@ -438,6 +470,38 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             </tbody>
           </table>
         </div>
+      )}
+      {isCreateModalOpen && (
+        <Modal
+          open={isCreateModalOpen}
+          title="Create workflow"
+          onClose={pendingAction.type === 'create' ? undefined : closeCreateWorkflowModal}
+          footer={
+            <div className={styles.modalActions}>
+              <Button variant="primary" disabled={creating} onClick={handleConfirmCreateWorkflow}>
+                {creating ? 'Creating…' : 'Create workflow'}
+              </Button>
+            </div>
+          }
+        >
+          <div className={styles.modalBody}>
+            <label htmlFor="workflow-name-input">Workflow name</label>
+            <Input
+              id="workflow-name-input"
+              value={newWorkflowName}
+              maxLength={128}
+              autoFocus
+              className={styles.modalInput}
+              onChange={(event) => setNewWorkflowName(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  handleConfirmCreateWorkflow();
+                }
+              }}
+            />
+          </div>
+        </Modal>
       )}
     </div>
   );

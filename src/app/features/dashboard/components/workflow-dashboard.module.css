@@ -34,10 +34,32 @@
 }
 
 .ctaButton {
-  min-width: 160px;
-  height: 3rem;
+  min-width: 180px;
+  height: 3.25rem;
   font-size: 1rem;
-  border-radius: var(--ax-token-radius-shell);
+  border-radius: 999px;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.modalBody label {
+  font-weight: 600;
+  color: var(--ax-txt-primary-default);
+}
+
+.modalInput {
+  width: 100%;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
 }
 
 .filters {
