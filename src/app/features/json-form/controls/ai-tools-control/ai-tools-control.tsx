@@ -1,6 +1,6 @@
 import styles from './ai-tools-control.module.css';
 
-import { PlusCircle, SlidersHorizontal } from '@phosphor-icons/react';
+import { PlusCircle, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@synergycodes/overflow-ui';
 import { createControlRenderer } from '../../utils/rendering';
 import { useCallback } from 'react';

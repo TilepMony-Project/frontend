@@ -1,5 +1,5 @@
 import { openModal } from '@/features/modals/stores/use-modal-store';
-import { Info } from '@phosphor-icons/react';
+import { Info } from 'lucide-react';
 
 export function openHelpModal() {
   openModal({

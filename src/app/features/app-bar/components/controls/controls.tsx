@@ -1,6 +1,6 @@
 import styles from '../../app-bar.module.css';
 import { NavButton, Menu, MenuItemProps } from '@synergycodes/overflow-ui';
-import { DotsThreeVertical } from '@phosphor-icons/react';
+import { MoreVertical } from 'lucide-react';
 import { useMemo } from 'react';
 import { getControlsDotsItems } from '../../functions/get-controls-dots-items';
 import { OptionalAppBarControls } from '@/features/plugins-core/components/optional-app-bar-controls';
@@ -20,7 +20,7 @@ export function Controls() {
         <div className={styles['menu-container']}>
           <Menu items={items}>
             <NavButton tooltip="Menu">
-              <DotsThreeVertical />
+              <MoreVertical />
             </NavButton>
           </Menu>
         </div>

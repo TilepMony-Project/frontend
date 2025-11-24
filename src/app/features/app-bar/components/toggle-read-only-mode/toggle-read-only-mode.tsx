@@ -1,5 +1,5 @@
 import { IconSwitch } from '@synergycodes/overflow-ui';
-import { PencilSimple, PencilSimpleSlash } from '@phosphor-icons/react';
+import { Pencil, PencilOff } from 'lucide-react';
 
 import useStore from '@/store/store';
 
@@ -11,8 +11,8 @@ export function ToggleReadyOnlyMode() {
     <IconSwitch
       checked={isReadOnlyMode}
       onChange={setToggleReadOnlyMode}
-      icon={<PencilSimple />}
-      IconChecked={<PencilSimpleSlash />}
+      icon={<Pencil />}
+      IconChecked={<PencilOff />}
     />
   );
 }

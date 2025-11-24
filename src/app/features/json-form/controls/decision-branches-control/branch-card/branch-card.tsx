@@ -1,7 +1,7 @@
 import styles from './branch-card.module.css';
 import clsx from 'clsx';
 import { NavButton } from '@synergycodes/overflow-ui';
-import { SlidersHorizontal, Trash } from '@phosphor-icons/react';
+import { SlidersHorizontal, Trash2 } from 'lucide-react';
 import { useCallback, useRef } from 'react';
 import {
   ConditionsForm,
@@ -54,10 +54,10 @@ export function BranchCard({ branch, onUpdate, onRemove }: Props) {
         <h1 className="ax-public-h10">Branch {index}</h1>
         <div className={styles['actions']}>
           <NavButton onClick={onClickEdit}>
-            <SlidersHorizontal weight="bold" />
+            <SlidersHorizontal />
           </NavButton>
           <NavButton onClick={onClickRemove}>
-            <Trash weight="bold" />
+            <Trash2 />
           </NavButton>
         </div>
       </div>

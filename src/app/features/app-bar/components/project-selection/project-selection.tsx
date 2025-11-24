@@ -2,7 +2,7 @@ import styles from '../../app-bar.module.css';
 
 import { NavButton, Menu, Input } from '@synergycodes/overflow-ui';
 import { useMemo, useState } from 'react';
-import { CaretDown } from '@phosphor-icons/react';
+import { ChevronDown } from 'lucide-react';
 import { Icon } from '@/components/icons';
 import useStore from '@/store/store';
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
@@ -54,7 +54,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
       <div className={styles['menu-container']}>
         <Menu items={items}>
           <NavButton tooltip="Pick the Project">
-            <CaretDown />
+            <ChevronDown />
           </NavButton>
         </Menu>
       </div>

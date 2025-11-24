@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './label.module.css';
 
-import { Asterisk } from '@phosphor-icons/react';
+import { Asterisk } from 'lucide-react';
 import { ItemSize } from '@synergycodes/overflow-ui';
 
 export type LabelProps = {
