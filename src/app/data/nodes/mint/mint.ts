@@ -13,4 +13,3 @@ export const mintNode: PaletteItem<MintNodeSchema> = {
   uischema,
   templateType: 'Node',
 };
-

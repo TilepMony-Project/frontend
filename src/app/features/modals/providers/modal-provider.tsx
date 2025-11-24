@@ -24,7 +24,7 @@ export function ModalProvider() {
         >
           {modal.content}
         </Modal>,
-        document.body,
+        document.body
       )}
     </>
   );

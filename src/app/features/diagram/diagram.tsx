@@ -26,7 +26,10 @@ import {
   callNodeChangedListeners,
   destroyNodeChangedListeners,
 } from '@/features/diagram/listeners/node-changed-listeners';
-import { callNodeDragStartListeners, destroyNodeDragStartListeners } from './listeners/node-drag-start-listeners';
+import {
+  callNodeDragStartListeners,
+  destroyNodeDragStartListeners,
+} from './listeners/node-drag-start-listeners';
 import { SNAP_GRID, SNAP_IS_ACTIVE } from '@/features/diagram/diagram.const';
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
 import { TemporaryEdge } from './edges/temporary-edge/temporary-edge';
@@ -71,7 +74,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
       trackFutureChange('addNode');
       onDropFromPalette(event);
     },
-    [onDropFromPalette],
+    [onDropFromPalette]
   );
 
   const onConnect: OnConnect = useCallback(
@@ -79,18 +82,18 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
       trackFutureChange('addEdge');
       onConnectAction(connection);
     },
-    [onConnectAction],
+    [onConnectAction]
   );
 
   const onConnectStart = useCallback(
     (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       _: any,
-      { nodeId, handleId }: { nodeId: string | null; handleId: string | null },
+      { nodeId, handleId }: { nodeId: string | null; handleId: string | null }
     ) => {
       setConnectionBeingDragged(nodeId, handleId);
     },
-    [setConnectionBeingDragged],
+    [setConnectionBeingDragged]
   );
 
   const onConnectEnd = useCallback(() => {
@@ -107,14 +110,14 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
       callNodeChangedListeners(changes);
       onNodesChange(changes);
     },
-    [onNodesChange],
+    [onNodesChange]
   );
 
   const handleOnSelectionChange = useCallback(
     (params: OnSelectionChangeParams) => {
       onSelectionChange(params as WorkflowBuilderOnSelectionChangeParams);
     },
-    [onSelectionChange],
+    [onSelectionChange]
   );
 
   useEffect(() => {
@@ -142,7 +145,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
         });
       });
     },
-    [isReadOnlyMode, openDeleteConfirmationModal],
+    [isReadOnlyMode, openDeleteConfirmationModal]
   );
 
   const panOnDrag = [1, 2];
@@ -188,4 +191,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
   );
 }
 
-export const DiagramContainer = withOptionalComponentPlugins(DiagramContainerComponent, 'DiagramContainer');
+export const DiagramContainer = withOptionalComponentPlugins(
+  DiagramContainerComponent,
+  'DiagramContainer'
+);

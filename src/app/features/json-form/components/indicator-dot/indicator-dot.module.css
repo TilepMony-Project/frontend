@@ -1,9 +1,8 @@
-
 .with-indicator-dot {
   position: relative;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     background: var(--wb-indicator-dot-background-color);
     border-radius: 50%;

@@ -13,4 +13,3 @@ export const swapNode: PaletteItem<SwapNodeSchema> = {
   uischema,
   templateType: 'Node',
 };
-

@@ -11,7 +11,12 @@ type PaletteItemsProps = {
   isDisabled?: boolean;
 };
 
-export function PaletteItems({ items, onDragStart, onMouseDown, isDisabled = false }: PaletteItemsProps) {
+export function PaletteItems({
+  items,
+  onDragStart,
+  onMouseDown,
+  isDisabled = false,
+}: PaletteItemsProps) {
   return (
     <div className={styles['container']}>
       {items.map((item) => (

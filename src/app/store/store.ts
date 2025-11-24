@@ -5,12 +5,18 @@ import {
   useDiagramDataModificationSlice,
 } from './slices/diagram-data-modification/diagram-data-modification-slice';
 import { PaletteState, usePaletteSlice } from './slices/palette/palette-slice';
-import { DiagramSelectionState, useDiagramSelectionSlice } from './slices/diagram-selection/diagram-selection-slice';
+import {
+  DiagramSelectionState,
+  useDiagramSelectionSlice,
+} from './slices/diagram-selection/diagram-selection-slice';
 import { DiagramState, useDiagramSlice } from './slices/diagram-slice';
 import { devtools } from 'zustand/middleware';
 import { withInterceptingMiddleware } from './middleware/middleware';
 import { shallow } from 'zustand/shallow';
-import { UserPreferencesState, useUserPreferencesSlice } from './slices/user-preferences/user-preferences-slice';
+import {
+  UserPreferencesState,
+  useUserPreferencesSlice,
+} from './slices/user-preferences/user-preferences-slice';
 
 export type WorkflowEditorState = DiagramState &
   PaletteState &
@@ -23,7 +29,7 @@ export type SetDiagramState = (
     | WorkflowEditorState
     | Partial<WorkflowEditorState>
     | ((state: WorkflowEditorState) => WorkflowEditorState | Partial<WorkflowEditorState>),
-  replace?: false | undefined,
+  replace?: false | undefined
 ) => void;
 
 export type GetDiagramState = () => WorkflowEditorState;
@@ -39,7 +45,7 @@ const useStore = createWithEqualityFn<WorkflowEditorState>()(
   devtools<WorkflowEditorState>(store, {
     enabled: process.env.NODE_ENV === 'development',
   }),
-  shallow,
+  shallow
 );
 
 export default useStore;

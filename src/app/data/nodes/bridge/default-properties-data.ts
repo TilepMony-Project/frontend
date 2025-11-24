@@ -11,4 +11,3 @@ export const defaultPropertiesData: NodeDataProperties<BridgeNodeSchema> = {
   receiverWallet: '',
   estimatedTime: '~30 seconds',
 };
-

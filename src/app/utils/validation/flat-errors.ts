@@ -3,7 +3,7 @@ import { ErrorObject } from 'ajv';
 
 export function flatErrors(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  errors: ErrorObject<string, Record<string, any>, unknown>[] | undefined | null,
+  errors: ErrorObject<string, Record<string, any>, unknown>[] | undefined | null
 ): FlatError[] {
   return errors
     ? errors.map((error) => ({

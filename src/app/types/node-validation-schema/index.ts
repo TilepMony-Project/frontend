@@ -2,4 +2,3 @@
 // TODO: Replace with proper type definitions
 
 export type IfThenElseSchema = Record<string, unknown>;
-

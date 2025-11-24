@@ -32,7 +32,10 @@ export function useSingleSelectedElement(): SingleSelectedElement | null {
   }, areDataEqual);
 }
 
-function areDataEqual(previous: SingleSelectedElement | null, next: SingleSelectedElement | null): boolean {
+function areDataEqual(
+  previous: SingleSelectedElement | null,
+  next: SingleSelectedElement | null
+): boolean {
   if (!next) {
     return false;
   }

@@ -1,5 +1,9 @@
 import { ControlProps, JsonFormsRendererRegistryEntry, rankWith, uiTypeIs } from '@jsonforms/core';
-import { UISchemaControlElementType, UISchemaElementType, UISchemaLayoutElementType } from '../types/uischema';
+import {
+  UISchemaControlElementType,
+  UISchemaElementType,
+  UISchemaLayoutElementType,
+} from '../types/uischema';
 import { BaseControlProps } from '../types/controls';
 import { withJsonFormsControlProps, withJsonFormsLayoutProps } from '@jsonforms/react';
 import { ComponentType } from 'react';
@@ -13,7 +17,7 @@ export function createTester(type: UISchemaElementType) {
 
 export function createControlRenderer<T extends BaseControlProps = BaseControlProps>(
   type: UISchemaControlElementType,
-  renderer: React.ComponentType<T>,
+  renderer: React.ComponentType<T>
 ): JsonFormsRendererRegistryEntry {
   return {
     tester: createTester(type),
@@ -23,7 +27,7 @@ export function createControlRenderer<T extends BaseControlProps = BaseControlPr
 
 export function createLayoutRenderer<T extends LayoutProps<BaseLayoutElement>>(
   type: UISchemaLayoutElementType,
-  renderer: React.ComponentType<T>,
+  renderer: React.ComponentType<T>
 ): JsonFormsRendererRegistryEntry {
   return {
     tester: createTester(type),

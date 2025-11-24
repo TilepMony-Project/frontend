@@ -5,12 +5,15 @@ import { IntegrationWrapper } from './wrapper/integration-wrapper';
 import { getStoreDataForIntegration } from '@/store/slices/diagram-slice/actions';
 
 import type { IntegrationDataFormatOptional, OnSave } from '@/features/integration/types';
-import { showSnackbarSaveErrorIfNeeded, showSnackbarSaveSuccessIfNeeded } from '../../utils/show-snackbar';
+import {
+  showSnackbarSaveErrorIfNeeded,
+  showSnackbarSaveSuccessIfNeeded,
+} from '../../utils/show-snackbar';
 
 const localStorageDiagramKey = 'workflowBuilderDiagram';
 
 export function withIntegrationThroughLocalStorage<WProps extends object>(
-  WrappedComponent: React.ComponentType<WProps>,
+  WrappedComponent: React.ComponentType<WProps>
 ) {
   function WithIntegrationComponent(props: React.ComponentProps<typeof WrappedComponent>) {
     const [isClient, setIsClient] = useState(false);
@@ -80,7 +83,13 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
     }, [isClient]);
 
     return (
-      <IntegrationWrapper name={name} layoutDirection={layoutDirection} nodes={nodes} edges={edges} onSave={handleSave}>
+      <IntegrationWrapper
+        name={name}
+        layoutDirection={layoutDirection}
+        nodes={nodes}
+        edges={edges}
+        onSave={handleSave}
+      >
         <WrappedComponent {...props} />
       </IntegrationWrapper>
     );

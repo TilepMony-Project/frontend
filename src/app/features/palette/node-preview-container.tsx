@@ -41,5 +41,13 @@ function NodePreview({ nodeDefinition }: NodePreviewProps) {
 
   const TemplateComponent = NODE_TEMPLATES[templateType];
 
-  return <TemplateComponent icon={icon} label={nodeLabel} description={nodeDescription} showHandles={false} id={''} />;
+  return (
+    <TemplateComponent
+      icon={icon}
+      label={nodeLabel}
+      description={nodeDescription}
+      showHandles={false}
+      id={''}
+    />
+  );
 }

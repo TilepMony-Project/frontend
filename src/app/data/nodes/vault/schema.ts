@@ -69,4 +69,3 @@ export const schema = {
 } satisfies NodeSchema;
 
 export type VaultNodeSchema = typeof schema;
-

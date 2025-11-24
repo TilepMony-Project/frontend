@@ -61,7 +61,10 @@ export type DynamicConditionsControlElement = Override<
   }
 >;
 
-export type DynamicConditionsControlProps = ControlProps<DynamicCondition[], DynamicConditionsControlElement>;
+export type DynamicConditionsControlProps = ControlProps<
+  DynamicCondition[],
+  DynamicConditionsControlElement
+>;
 
 export type DecisionBranchesControlElement = Override<
   BaseControlElement,
@@ -70,7 +73,10 @@ export type DecisionBranchesControlElement = Override<
   }
 >;
 
-export type DecisionBranchesControlProps = ControlProps<DecisionBranch[], DecisionBranchesControlElement>;
+export type DecisionBranchesControlProps = ControlProps<
+  DecisionBranch[],
+  DecisionBranchesControlElement
+>;
 
 export type SelectControlElement = Override<
   BaseControlElement,

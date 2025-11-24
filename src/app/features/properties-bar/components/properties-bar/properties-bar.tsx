@@ -36,7 +36,11 @@ function PropertiesBarComponent({
   const segmentPicker = {
     when: () => isExpanded && !!selection?.node && selection.node.type === 'node' && hasCustomItems,
     component: () => (
-      <SegmentPicker size="xxx-small" value={selectedTab} onChange={(_, value) => onTabChange(value)}>
+      <SegmentPicker
+        size="xxx-small"
+        value={selectedTab}
+        onChange={(_, value) => onTabChange(value)}
+      >
         {[
           <SegmentPicker.Item key="properties" value="properties">
             Properties

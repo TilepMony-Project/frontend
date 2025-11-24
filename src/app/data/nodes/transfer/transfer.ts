@@ -13,4 +13,3 @@ export const transferNode: PaletteItem<TransferNodeSchema> = {
   uischema,
   templateType: 'Node',
 };
-

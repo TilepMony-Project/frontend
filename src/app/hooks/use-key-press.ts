@@ -24,7 +24,7 @@ export function useKeyPress(keyCode: KeyCode, options?: Options): boolean {
         setKeyPressed(pressed);
       }
     },
-    [keyCode, options],
+    [keyCode, options]
   );
 
   useEffect(() => {

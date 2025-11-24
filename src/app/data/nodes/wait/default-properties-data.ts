@@ -8,4 +8,3 @@ export const defaultPropertiesData: NodeDataProperties<WaitNodeSchema> = {
   timeUnit: 'hours',
   reason: '',
 };
-

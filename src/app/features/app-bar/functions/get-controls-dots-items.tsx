@@ -21,4 +21,7 @@ function getControlsDotsItemsFunction(): MenuItemProps[] {
   ];
 }
 
-export const getControlsDotsItems = withOptionalFunctionPlugins(getControlsDotsItemsFunction, 'getControlsDotsItems');
+export const getControlsDotsItems = withOptionalFunctionPlugins(
+  getControlsDotsItemsFunction,
+  'getControlsDotsItems'
+);

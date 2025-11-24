@@ -1,4 +1,12 @@
-import { ForwardedRef, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import { Button } from '@synergycodes/overflow-ui';
 import { Icon } from '@/components/icons';
 import { DynamicCondition } from '@/features/json-form/types/controls';
@@ -28,7 +36,7 @@ export const ConditionsForm = forwardRef<ConditionsFormHandle, ConditionsFormPro
   ({ onChange, value }: ConditionsFormProps, ref: ForwardedRef<ConditionsFormHandle>) => {
     const [shouldShowValidation, setShouldShowValidation] = useState(false);
     const [conditions, setConditions] = useState<Partial<DynamicCondition>[]>(
-      value.length > 0 ? value : [emptyCondition],
+      value.length > 0 ? value : [emptyCondition]
     );
 
     const formRef = useRef<HTMLFormElement>(null);
@@ -60,7 +68,9 @@ export const ConditionsForm = forwardRef<ConditionsFormHandle, ConditionsFormPro
         return;
       }
 
-      const hasErrors = conditions.some((condition) => Object.values(validateCondition(condition)).some(Boolean));
+      const hasErrors = conditions.some((condition) =>
+        Object.values(validateCondition(condition)).some(Boolean)
+      );
       if (hasErrors) {
         setShouldShowValidation(true);
         return;
@@ -72,9 +82,13 @@ export const ConditionsForm = forwardRef<ConditionsFormHandle, ConditionsFormPro
 
     const lastIndex = conditions.length - 1;
 
-    useImperativeHandle(ref, () => {
-      return { handleConfirm };
-    }, [handleConfirm]);
+    useImperativeHandle(
+      ref,
+      () => {
+        return { handleConfirm };
+      },
+      [handleConfirm]
+    );
 
     return (
       <form ref={formRef} className={styles['form']} onSubmit={handleConfirm}>
@@ -90,10 +104,15 @@ export const ConditionsForm = forwardRef<ConditionsFormHandle, ConditionsFormPro
             />
           ))}
         </div>
-        <Button className={styles['add-button']} size="small" variant="secondary" onClick={addCondition}>
+        <Button
+          className={styles['add-button']}
+          size="small"
+          variant="secondary"
+          onClick={addCondition}
+        >
           <Icon name="PlusCircle" />
         </Button>
       </form>
     );
-  },
+  }
 );

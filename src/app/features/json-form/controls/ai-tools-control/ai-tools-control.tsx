@@ -21,14 +21,16 @@ function AiToolsControl({ path, handleChange, data }: AiToolsControlProps) {
     (change: AiAgentTool) => {
       if (hasAnyValue(change)) {
         const updated = (data ?? []).some((item) => item.id === change.id)
-          ? (data ?? []).map((item) => (item.id === change.id ? { ...item, ...change, id: item.id } : item))
+          ? (data ?? []).map((item) =>
+              item.id === change.id ? { ...item, ...change, id: item.id } : item
+            )
           : [...(data ?? []), { ...change, id: crypto.randomUUID() }];
 
         handleChange(path, updated);
       }
       closeModal();
     },
-    [data, handleChange, path],
+    [data, handleChange, path]
   );
 
   const openEditorModal = useCallback(
@@ -40,7 +42,7 @@ function AiToolsControl({ path, handleChange, data }: AiToolsControlProps) {
         footer: <AddAiToolFooter onCancelClick={closeModal} />,
       });
     },
-    [handleSubmit],
+    [handleSubmit]
   );
 
   return (

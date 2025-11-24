@@ -13,4 +13,3 @@ export const waitNode: PaletteItem<WaitNodeSchema> = {
   uischema,
   templateType: 'Node',
 };
-

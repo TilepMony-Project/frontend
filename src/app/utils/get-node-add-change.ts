@@ -6,7 +6,7 @@ export function getNodeAddChange(
   templateType: NodeType,
   position: XYPosition | undefined,
   data: NodeData,
-  id: string,
+  id: string
 ): NodeAddChange<WorkflowBuilderNode>[] {
   return [
     {

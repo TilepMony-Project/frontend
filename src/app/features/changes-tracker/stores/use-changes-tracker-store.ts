@@ -22,8 +22,8 @@ export const useChangesTrackerStore = create<ChangesTrackerStore>()(
       ({
         ...emptyStore,
       }) satisfies ChangesTrackerStore,
-    { name: 'changesTrackerStore' },
-  ),
+    { name: 'changesTrackerStore' }
+  )
 );
 
 function trackFutureChangeFunction(changeName: string, params?: object) {
@@ -34,4 +34,7 @@ function trackFutureChangeFunction(changeName: string, params?: object) {
   });
 }
 
-export const trackFutureChange = withOptionalFunctionPlugins(trackFutureChangeFunction, 'trackFutureChange');
+export const trackFutureChange = withOptionalFunctionPlugins(
+  trackFutureChangeFunction,
+  'trackFutureChange'
+);

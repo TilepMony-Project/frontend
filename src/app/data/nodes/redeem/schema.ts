@@ -33,4 +33,3 @@ export const schema = {
 } satisfies NodeSchema;
 
 export type RedeemNodeSchema = typeof schema;
-

@@ -9,7 +9,7 @@ import { SetDiagramState, GetDiagramState, WorkflowEditorState } from '@/store/s
 type DiagramStateMiddleware = (
   state: WorkflowEditorState,
   change: Partial<WorkflowEditorState>,
-  next: (change: Partial<WorkflowEditorState>) => void,
+  next: (change: Partial<WorkflowEditorState>) => void
 ) => void;
 
 /**
@@ -25,35 +25,39 @@ type DiagramStateMiddleware = (
  * is canceled and the store isn't updated (hence "intercepting"). This behavior is based on redux-style middleware.
  */
 export function withInterceptingMiddleware(
-  sliceCreator: (set: SetDiagramState, get: GetDiagramState) => WorkflowEditorState,
+  sliceCreator: (set: SetDiagramState, get: GetDiagramState) => WorkflowEditorState
 ) {
-  return (middlewareArray: DiagramStateMiddleware[]) => (set: SetDiagramState, get: GetDiagramState) => {
-    function interceptedSet(partial: Parameters<SetDiagramState>[0], replace: Parameters<SetDiagramState>[1]) {
-      const state = get();
-      /* A `set()` can be either an object or an update function, e.g:
-       * set({ property: 0 })
-       * set((state) => ({ property: state.property + 1})) */
-      let change = typeof partial === 'function' ? partial(state) : partial;
-      let finalize = true;
+  return (middlewareArray: DiagramStateMiddleware[]) =>
+    (set: SetDiagramState, get: GetDiagramState) => {
+      function interceptedSet(
+        partial: Parameters<SetDiagramState>[0],
+        replace: Parameters<SetDiagramState>[1]
+      ) {
+        const state = get();
+        /* A `set()` can be either an object or an update function, e.g:
+         * set({ property: 0 })
+         * set((state) => ({ property: state.property + 1})) */
+        let change = typeof partial === 'function' ? partial(state) : partial;
+        let finalize = true;
 
-      let nextChange: Partial<WorkflowEditorState> | null = null;
-      function next(change: Partial<WorkflowEditorState>) {
-        return (nextChange = change);
-      }
-
-      for (const middleware of middlewareArray) {
-        middleware(state, change, next);
-        if (!nextChange) {
-          finalize = false;
-          break;
+        let nextChange: Partial<WorkflowEditorState> | null = null;
+        function next(change: Partial<WorkflowEditorState>) {
+          return (nextChange = change);
         }
-        change = nextChange;
-      }
 
-      if (finalize) {
-        set(change, replace);
+        for (const middleware of middlewareArray) {
+          middleware(state, change, next);
+          if (!nextChange) {
+            finalize = false;
+            break;
+          }
+          change = nextChange;
+        }
+
+        if (finalize) {
+          set(change, replace);
+        }
       }
-    }
-    return sliceCreator(interceptedSet, get);
-  };
+      return sliceCreator(interceptedSet, get);
+    };
 }

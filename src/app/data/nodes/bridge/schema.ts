@@ -42,4 +42,3 @@ export const schema = {
 } satisfies NodeSchema;
 
 export type BridgeNodeSchema = typeof schema;
-

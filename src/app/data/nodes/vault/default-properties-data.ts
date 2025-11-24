@@ -13,4 +13,3 @@ export const defaultPropertiesData: NodeDataProperties<VaultNodeSchema> = {
   aprThreshold: 2,
   autoWithdrawDestination: 'redeem',
 };
-

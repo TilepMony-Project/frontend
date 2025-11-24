@@ -47,8 +47,7 @@ const WorkflowSchema = new Schema<IWorkflow>(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 export default mongoose.models.Workflow || mongoose.model<IWorkflow>('Workflow', WorkflowSchema);
-

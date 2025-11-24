@@ -4,7 +4,7 @@ import { TextArea } from '@synergycodes/overflow-ui';
 import type { SyntaxHighlighterProps } from './syntax-highlighter';
 
 const SyntaxHighlighter = React.lazy(() =>
-  import('./syntax-highlighter').then((module) => ({ default: module.SyntaxHighlighter })),
+  import('./syntax-highlighter').then((module) => ({ default: module.SyntaxHighlighter }))
 );
 
 type SyntaxHighlighterLazyProps = SyntaxHighlighterProps;

@@ -55,4 +55,3 @@ export const schema = {
 } satisfies NodeSchema;
 
 export type SwapNodeSchema = typeof schema;
-

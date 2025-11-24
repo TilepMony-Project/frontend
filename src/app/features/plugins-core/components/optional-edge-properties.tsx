@@ -5,4 +5,7 @@ function OptionalWrapper({ children }: PropsWithChildren) {
   return children;
 }
 
-export const OptionalEdgeProperties = withOptionalComponentPlugins(OptionalWrapper, 'OptionalEdgeProperties');
+export const OptionalEdgeProperties = withOptionalComponentPlugins(
+  OptionalWrapper,
+  'OptionalEdgeProperties'
+);

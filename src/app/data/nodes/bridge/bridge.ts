@@ -13,4 +13,3 @@ export const bridgeNode: PaletteItem<BridgeNodeSchema> = {
   uischema,
   templateType: 'Node',
 };
-

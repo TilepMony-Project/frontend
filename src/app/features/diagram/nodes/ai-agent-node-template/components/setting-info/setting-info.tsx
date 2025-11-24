@@ -16,7 +16,9 @@ export function SettingInfo({ label, actionLabel, icon, className }: SettingPlac
   return (
     <NodeInfoWrapper label={label}>
       <div className={styles['container']}>
-        <IconPlaceholder className={className}>{icon ? <Icon name={icon} /> : <Plus size={18} />}</IconPlaceholder>
+        <IconPlaceholder className={className}>
+          {icon ? <Icon name={icon} /> : <Plus size={18} />}
+        </IconPlaceholder>
         {actionLabel}
       </div>
     </NodeInfoWrapper>

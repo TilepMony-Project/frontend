@@ -42,7 +42,7 @@ export function BranchCard({ branch, onUpdate, onRemove }: Props) {
         footer: <ConditionModalFooter closeModal={closeModal} handleConfirm={handleConfirm} />,
       });
     },
-    [handleConfirm, onUpdate, index],
+    [handleConfirm, onUpdate, index]
   );
 
   const onClickEdit = useCallback(() => openEditorModal(branch), [branch, openEditorModal]);
@@ -61,7 +61,13 @@ export function BranchCard({ branch, onUpdate, onRemove }: Props) {
           </NavButton>
         </div>
       </div>
-      <div className={clsx(styles['conditions-chip'], { [styles['no-conditions']]: hasNoConditions }, 'ax-public-p11')}>
+      <div
+        className={clsx(
+          styles['conditions-chip'],
+          { [styles['no-conditions']]: hasNoConditions },
+          'ax-public-p11'
+        )}
+      >
         {conditionText}
       </div>
     </div>

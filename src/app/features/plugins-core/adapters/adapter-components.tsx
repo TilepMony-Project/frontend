@@ -16,7 +16,9 @@ type DecoratorWithContent<Props = object> = {
 
 type DecoratorWithNoContent<Props = object> = SharedDecoratorOptions<Props>;
 
-type ComponentDecoratorOptions<Props = object> = DecoratorWithContent<Props> | DecoratorWithNoContent<Props>;
+type ComponentDecoratorOptions<Props = object> =
+  | DecoratorWithContent<Props>
+  | DecoratorWithNoContent<Props>;
 
 const pluginRegistryComponents = new Map<
   string,
@@ -24,7 +26,10 @@ const pluginRegistryComponents = new Map<
   ComponentDecoratorOptions<any>[]
 >();
 
-export function registerComponentDecorator<P>(componentName: string, plugin: ComponentDecoratorOptions<P>) {
+export function registerComponentDecorator<P>(
+  componentName: string,
+  plugin: ComponentDecoratorOptions<P>
+) {
   if (!pluginRegistryComponents.has(componentName)) {
     pluginRegistryComponents.set(componentName, []);
   }
@@ -41,7 +46,7 @@ export function hasRegisteredComponentDecorator(componentName: string, pluginNam
 
 export function withOptionalComponentPlugins<TProps extends object>(
   Component: React.ComponentType<TProps>,
-  componentName: string,
+  componentName: string
 ) {
   const DecoratedComponent = memo((props: TProps) => {
     const plugins = pluginRegistryComponents.get(componentName)?.sort(sortByPriority) || [];
@@ -61,7 +66,7 @@ export function withOptionalComponentPlugins<TProps extends object>(
     }, [props]);
 
     const pluginsWithContent = plugins.filter(
-      (plugin) => (plugin as DecoratorWithContent).content,
+      (plugin) => (plugin as DecoratorWithContent).content
     ) as DecoratorWithContent[];
 
     if (pluginsWithContent.length === 0) {

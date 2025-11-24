@@ -45,8 +45,10 @@ export function validateCondition(condition: Partial<DynamicCondition>) {
     condition.comparisonOperator && numberComparisonsOperators.has(condition.comparisonOperator);
 
   if (isNumberComparison) {
-    const isRegularStringX = !condition.x || (!condition.x.startsWith('{{') && !getIsNumber(condition.x));
-    const isRegularStringY = !condition.y || (!condition.y.startsWith('{{') && !getIsNumber(condition.y));
+    const isRegularStringX =
+      !condition.x || (!condition.x.startsWith('{{') && !getIsNumber(condition.x));
+    const isRegularStringY =
+      !condition.y || (!condition.y.startsWith('{{') && !getIsNumber(condition.y));
 
     return {
       x: isRegularStringX,

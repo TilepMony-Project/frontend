@@ -9,4 +9,3 @@ export const defaultPropertiesData: NodeDataProperties<MintNodeSchema> = {
   receivingWallet: '',
   exchangeRate: 1,
 };
-

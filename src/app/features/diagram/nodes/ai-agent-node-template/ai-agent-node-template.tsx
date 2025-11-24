@@ -4,7 +4,13 @@ import styles from './ai-agent-node-template.module.css';
 import { Handle } from '@xyflow/react';
 import { IconType, LayoutDirection } from '@/types/common';
 import { memo, useMemo } from 'react';
-import { Collapsible, NodeDescription, NodeIcon, NodePanel, Status } from '@synergycodes/overflow-ui';
+import {
+  Collapsible,
+  NodeDescription,
+  NodeIcon,
+  NodePanel,
+  Status,
+} from '@synergycodes/overflow-ui';
 import { Icon } from '@/components/icons';
 import { SettingInfo } from './components/setting-info/setting-info';
 import { ToolInfo } from './components/tool-info/tool-info';
@@ -48,8 +54,14 @@ export const AiAgentNodeTemplate = memo(
     const handleTargetId = getHandleId({ nodeId: id, handleType: 'target' });
     const handleSourceId = getHandleId({ nodeId: id, handleType: 'source' });
 
-    const handleTargetPosition = getHandlePosition({ direction: layoutDirection, handleType: 'target' });
-    const handleSourcePosition = getHandlePosition({ direction: layoutDirection, handleType: 'source' });
+    const handleTargetPosition = getHandlePosition({
+      direction: layoutDirection,
+      handleType: 'target',
+    });
+    const handleSourcePosition = getHandlePosition({
+      direction: layoutDirection,
+      handleType: 'source',
+    });
 
     const iconElement = useMemo(() => <Icon name={icon} size="large" />, [icon]);
 
@@ -101,5 +113,5 @@ export const AiAgentNodeTemplate = memo(
         </NodePanel.Root>
       </Collapsible>
     );
-  },
+  }
 );

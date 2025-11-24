@@ -12,7 +12,9 @@ type DecoratorOptionsBefore = {
   callback: CallbackBefore;
 } & SharedDecoratorOptions;
 
-type CallbackAfter = (params: { params: unknown[]; returnValue: unknown }) => void | { replacedReturn: unknown };
+type CallbackAfter = (params: { params: unknown[]; returnValue: unknown }) => void | {
+  replacedReturn: unknown;
+};
 
 type DecoratorOptionsAfter = {
   place: 'after';
@@ -37,13 +39,17 @@ export function registerFunctionDecorator(functionName: string, plugin: Callback
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function withOptionalFunctionPlugins<F extends (...arguments_: any[]) => any>(
   rootFunction: F,
-  functionName: string,
+  functionName: string
 ) {
   return (...params: Parameters<F>) => {
     const plugins = pluginRegistryCallbacks.get(functionName)?.sort(sortByPriority) || [];
 
-    const pluginsBefore = plugins.filter(({ place }) => place !== 'after') as DecoratorOptionsBefore[];
-    const pluginsAfter = plugins.filter(({ place }) => place === 'after') as DecoratorOptionsAfter[];
+    const pluginsBefore = plugins.filter(
+      ({ place }) => place !== 'after'
+    ) as DecoratorOptionsBefore[];
+    const pluginsAfter = plugins.filter(
+      ({ place }) => place === 'after'
+    ) as DecoratorOptionsAfter[];
 
     // Those can modify params that wrapped function will receive
     let paramsToUse: Parameters<F> = params;

@@ -31,7 +31,7 @@ export function AddAiToolFormContent({ onSubmit, data }: ContentProps) {
       event.preventDefault();
       onSubmit(formData);
     },
-    [formData, onSubmit],
+    [formData, onSubmit]
   );
 
   const toolItems = Object.values(toolOptions).map((option) =>
@@ -40,7 +40,7 @@ export function AddAiToolFormContent({ onSubmit, data }: ContentProps) {
           ...option,
           icon: <Icon name={option.icon} size="small" />,
         }
-      : option,
+      : option
   );
 
   return (

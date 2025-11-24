@@ -49,7 +49,7 @@ export function useDiagramSlice(set: SetDiagramState, get: GetDiagramState) {
             zIndex: getEdgeZIndex(connection),
             type: 'labelEdge',
           },
-          get().edges,
+          get().edges
         ),
       });
     },

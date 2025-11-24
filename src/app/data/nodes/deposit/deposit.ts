@@ -13,4 +13,3 @@ export const depositNode: PaletteItem<DepositNodeSchema> = {
   uischema,
   templateType: 'Node',
 };
-

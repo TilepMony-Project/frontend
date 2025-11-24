@@ -3,7 +3,10 @@ import { Input, Select, NavButton, SegmentPicker } from '@synergycodes/overflow-
 import { useMemo } from 'react';
 import { Icon } from '@/components/icons';
 import styles from './conditions-form-field.module.css';
-import { comparisonsOperators, validateCondition } from '@/features/json-form/utils/conditional-transform';
+import {
+  comparisonsOperators,
+  validateCondition,
+} from '@/features/json-form/utils/conditional-transform';
 import { DynamicCondition } from '@/features/json-form/types/controls';
 
 type ConditionsFormFieldProps = {
@@ -17,7 +20,10 @@ type ConditionsFormFieldProps = {
 export function ConditionsFormField(props: ConditionsFormFieldProps) {
   const { condition, onChange, onRemove, isLast, shouldShowValidation } = props;
 
-  function handleChange(field: 'x' | 'comparisonOperator' | 'y' | 'logicalOperator', value: unknown) {
+  function handleChange(
+    field: 'x' | 'comparisonOperator' | 'y' | 'logicalOperator',
+    value: unknown
+  ) {
     onChange({
       ...condition,
       [field]: value,

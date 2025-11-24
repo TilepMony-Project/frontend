@@ -1,6 +1,6 @@
 @layer reset, ext-lib, ui;
 
-@import '@synergycodes/overflow-ui/tokens.css';
+@import "@synergycodes/overflow-ui/tokens.css";
 
 @layer ui {
   @layer base, component;
@@ -36,24 +36,24 @@
     background: var(--wb-scroll-thumb-color);
   }
 
-  input[type='number'],
-  input[type='time'] {
+  input[type="number"],
+  input[type="time"] {
     -webkit-appearance: textfield;
     -moz-appearance: textfield;
     appearance: textfield;
   }
 
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number']::-webkit-outer-spin-button {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
   }
 
-  input[type='time']::-webkit-calendar-picker-indicator {
+  input[type="time"]::-webkit-calendar-picker-indicator {
     display: none;
   }
 
   * {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
   }
 
   body {

@@ -22,4 +22,7 @@ type DidSaveStatus = 'error' | 'success' | 'alreadyStarted';
 export type OnSave = (savingParams?: OnSaveParams) => Promise<DidSaveStatus>;
 
 // Only used in through props strategy (it calls callback onDataSave={onDataSave})
-export type OnSaveExternal = (data: IntegrationDataFormat, savingParams?: OnSaveParams) => Promise<DidSaveStatus>;
+export type OnSaveExternal = (
+  data: IntegrationDataFormat,
+  savingParams?: OnSaveParams
+) => Promise<DidSaveStatus>;

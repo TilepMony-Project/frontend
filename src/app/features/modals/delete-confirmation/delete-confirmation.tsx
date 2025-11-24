@@ -9,7 +9,11 @@ type DeleteConfirmationProps = {
   onShouldShowAgainChange?: (value: boolean) => void;
 };
 
-export function DeleteConfirmation({ nodes, edges, onShouldShowAgainChange }: DeleteConfirmationProps) {
+export function DeleteConfirmation({
+  nodes,
+  edges,
+  onShouldShowAgainChange,
+}: DeleteConfirmationProps) {
   const [isChecked, setIsChecked] = useState(false);
 
   const parts = [
@@ -32,7 +36,12 @@ export function DeleteConfirmation({ nodes, edges, onShouldShowAgainChange }: De
         Are you sure you want to delete <b>{selectedText}</b> {partsText}?
       </span>
       <div className={styles['checkbox-wrapper']}>
-        <Checkbox id="dont-show-again-checkbox" size="small" checked={isChecked} onChange={handleChange} />
+        <Checkbox
+          id="dont-show-again-checkbox"
+          size="small"
+          checked={isChecked}
+          onChange={handleChange}
+        />
         <label htmlFor="dont-show-again-checkbox">Don't show me this again</label>
       </div>
     </div>
@@ -44,7 +53,10 @@ type DeleteConfirmationButtonsProps = {
   onCancelClick: () => void;
 };
 
-export function DeleteConfirmationButtons({ onDeleteClick, onCancelClick }: DeleteConfirmationButtonsProps) {
+export function DeleteConfirmationButtons({
+  onDeleteClick,
+  onCancelClick,
+}: DeleteConfirmationButtonsProps) {
   return (
     <div className={styles['buttons']}>
       <Button variant="secondary" onClick={onCancelClick}>

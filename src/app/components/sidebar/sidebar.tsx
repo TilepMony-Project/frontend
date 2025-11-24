@@ -12,7 +12,15 @@ type SidebarProps = React.HTMLAttributes<HTMLDivElement> & {
   contentClassName?: string;
 };
 
-export function Sidebar({ isExpanded, children, className, header, footer, contentClassName, ...props }: SidebarProps) {
+export function Sidebar({
+  isExpanded,
+  children,
+  className,
+  header,
+  footer,
+  contentClassName,
+  ...props
+}: SidebarProps) {
   return (
     <div className={clsx(styles.sidebar, { [styles.expanded]: isExpanded }, className)} {...props}>
       <div className={styles.header}>{header}</div>

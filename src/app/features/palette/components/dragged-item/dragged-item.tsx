@@ -25,7 +25,7 @@ export const DraggedItem = forwardRef<HTMLDivElement, PropsWithChildren<DraggedI
       <div ref={ref} className={styles['container']} style={getStyles()}>
         {children}
       </div>,
-      document.body,
+      document.body
     );
-  },
+  }
 );

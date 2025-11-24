@@ -25,13 +25,13 @@ describe('getScope', () => {
 
   it('should generate scope for a nested property', () => {
     expect(getScope<typeof _schema>('properties.metadata.properties.createdBy')).toBe(
-      '#/properties/metadata/properties/createdBy',
+      '#/properties/metadata/properties/createdBy'
     );
   });
 
   it('should generate scope for another nested property', () => {
     expect(getScope<typeof _schema>('properties.metadata.properties.updatedAt')).toBe(
-      '#/properties/metadata/properties/updatedAt',
+      '#/properties/metadata/properties/updatedAt'
     );
   });
 

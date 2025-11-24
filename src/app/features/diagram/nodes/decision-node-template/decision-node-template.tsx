@@ -41,7 +41,10 @@ export const DecisionNodeTemplate = memo(
     const handleTargetId = getHandleId({ nodeId: id, handleType: 'target' });
     const handleSourceId = getHandleId({ nodeId: id, handleType: 'source' });
 
-    const handleTargetPosition = getHandlePosition({ direction: layoutDirection, handleType: 'target' });
+    const handleTargetPosition = getHandlePosition({
+      direction: layoutDirection,
+      handleType: 'target',
+    });
 
     const isCanvasNode = showHandles;
 
@@ -55,7 +58,11 @@ export const DecisionNodeTemplate = memo(
         </NodePanel.Header>
         <NodePanel.Content>
           <Status status={isValid === false ? 'invalid' : undefined} />
-          <BranchesContainer layoutDirection={layoutDirection} nodeId={id} decisionBranches={decisionBranches ?? []} />
+          <BranchesContainer
+            layoutDirection={layoutDirection}
+            nodeId={id}
+            decisionBranches={decisionBranches ?? []}
+          />
         </NodePanel.Content>
         <NodePanel.Handles isVisible={isCanvasNode} alignment={handlesAlignment}>
           <Handle id={handleTargetId} position={handleTargetPosition} type="target" />
@@ -63,5 +70,5 @@ export const DecisionNodeTemplate = memo(
         </NodePanel.Handles>
       </NodePanel.Root>
     );
-  },
+  }
 );

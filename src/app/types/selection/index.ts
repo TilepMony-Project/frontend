@@ -5,4 +5,3 @@ export type Selection = {
   nodes: unknown[];
   edges: unknown[];
 };
-

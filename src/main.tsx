@@ -14,5 +14,5 @@ const root = ReactDOM.createRoot(document.querySelector('#root') as HTMLElement)
 root.render(
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 );

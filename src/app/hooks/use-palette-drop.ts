@@ -12,7 +12,7 @@ import { BaseNodeProperties } from '@/types/node-schema';
 export function usePaletteDrop() {
   const resetSelectedElements = useStoreApi().getState().resetSelectedElements;
   const [reactFlowInstance, onNodesChange, getNodeDefinition] = useStore(
-    useShallow((store) => [store.reactFlowInstance, store.onNodesChange, store.getNodeDefinition]),
+    useShallow((store) => [store.reactFlowInstance, store.onNodesChange, store.getNodeDefinition])
   );
 
   const translateIfPossible = useTranslateIfPossible();
@@ -28,7 +28,9 @@ export function usePaletteDrop() {
       const defaultProps = defaultPropertiesData as BaseNodeProperties;
 
       const label =
-        translateIfPossible(defaultProps.label) || translateIfPossible(nodeDefinition.label) || nodeDefinition.label;
+        translateIfPossible(defaultProps.label) ||
+        translateIfPossible(nodeDefinition.label) ||
+        nodeDefinition.label;
 
       const description =
         translateIfPossible(defaultProps.description) ||
@@ -45,7 +47,7 @@ export function usePaletteDrop() {
       resetSelectedElements();
       onNodesChange(getNodeAddChange(templateType, position, data, newNodeId));
     },
-    [getNodeDefinition, translateIfPossible, resetSelectedElements, onNodesChange],
+    [getNodeDefinition, translateIfPossible, resetSelectedElements, onNodesChange]
   );
 
   const onDropFromPalette = useCallback(
@@ -65,7 +67,7 @@ export function usePaletteDrop() {
 
       dropNode(position, type);
     },
-    [reactFlowInstance, dropNode],
+    [reactFlowInstance, dropNode]
   );
 
   return { onDropFromPalette };

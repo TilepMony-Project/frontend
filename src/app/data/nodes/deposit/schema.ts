@@ -36,4 +36,3 @@ export const schema = {
 } satisfies NodeSchema;
 
 export type DepositNodeSchema = typeof schema;
-

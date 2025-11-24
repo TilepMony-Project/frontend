@@ -32,4 +32,3 @@ export const schema = {
 } satisfies NodeSchema;
 
 export type TransferNodeSchema = typeof schema;
-

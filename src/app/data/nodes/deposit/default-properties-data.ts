@@ -8,4 +8,3 @@ export const defaultPropertiesData: NodeDataProperties<DepositNodeSchema> = {
   currency: 'USD',
   paymentGateway: 'DummyGatewayA',
 };
-

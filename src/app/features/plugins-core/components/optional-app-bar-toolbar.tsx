@@ -5,4 +5,7 @@ function OptionalWrapper({ children }: PropsWithChildren) {
   return children;
 }
 
-export const OptionalAppBarTools = withOptionalComponentPlugins(OptionalWrapper, 'OptionalAppBarTools');
+export const OptionalAppBarTools = withOptionalComponentPlugins(
+  OptionalWrapper,
+  'OptionalAppBarTools'
+);

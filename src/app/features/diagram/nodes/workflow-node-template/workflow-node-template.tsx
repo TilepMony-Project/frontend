@@ -1,7 +1,13 @@
 import { Handle } from '@xyflow/react';
 import { IconType, LayoutDirection } from '@/types/common';
 import { memo, useMemo } from 'react';
-import { Collapsible, NodeDescription, NodeIcon, NodePanel, Status } from '@synergycodes/overflow-ui';
+import {
+  Collapsible,
+  NodeDescription,
+  NodeIcon,
+  NodePanel,
+  Status,
+} from '@synergycodes/overflow-ui';
 import { Icon } from '@/components/icons';
 import { getHandleId } from '../../handles/get-handle-id';
 import { getHandlePosition } from '../../handles/get-handle-position';
@@ -39,8 +45,14 @@ const WorkflowNodeTemplateComponent = memo(
     const handleTargetId = getHandleId({ nodeId: id, handleType: 'target' });
     const handleSourceId = getHandleId({ nodeId: id, handleType: 'source' });
 
-    const handleTargetPosition = getHandlePosition({ direction: layoutDirection, handleType: 'target' });
-    const handleSourcePosition = getHandlePosition({ direction: layoutDirection, handleType: 'source' });
+    const handleTargetPosition = getHandlePosition({
+      direction: layoutDirection,
+      handleType: 'target',
+    });
+    const handleSourcePosition = getHandlePosition({
+      direction: layoutDirection,
+      handleType: 'source',
+    });
 
     const iconElement = useMemo(() => <Icon name={icon} size="large" />, [icon]);
 
@@ -69,7 +81,10 @@ const WorkflowNodeTemplateComponent = memo(
         </NodePanel.Root>
       </Collapsible>
     );
-  },
+  }
 );
 
-export const WorkflowNodeTemplate = withOptionalComponentPlugins(WorkflowNodeTemplateComponent, 'WorkflowNodeTemplate');
+export const WorkflowNodeTemplate = withOptionalComponentPlugins(
+  WorkflowNodeTemplateComponent,
+  'WorkflowNodeTemplate'
+);

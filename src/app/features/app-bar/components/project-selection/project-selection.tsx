@@ -25,7 +25,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
         onClick: onDuplicateClick,
       },
     ],
-    [onDuplicateClick],
+    [onDuplicateClick]
   );
 
   return (
@@ -62,4 +62,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
   );
 }
 
-export const ProjectSelection = withOptionalComponentPlugins(ProjectSelectionComponent, 'ProjectSelection');
+export const ProjectSelection = withOptionalComponentPlugins(
+  ProjectSelectionComponent,
+  'ProjectSelection'
+);

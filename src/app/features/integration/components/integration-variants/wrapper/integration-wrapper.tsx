@@ -11,7 +11,14 @@ type Props = PropsWithChildren<
   }
 >;
 
-export function IntegrationWrapper({ children, name, layoutDirection, nodes, edges, onSave }: Props) {
+export function IntegrationWrapper({
+  children,
+  name,
+  layoutDirection,
+  nodes,
+  edges,
+  onSave,
+}: Props) {
   useEffect(() => {
     loadData({
       name,

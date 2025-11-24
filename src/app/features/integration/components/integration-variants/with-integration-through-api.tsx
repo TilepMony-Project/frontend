@@ -5,9 +5,14 @@ import { IntegrationWrapper } from './wrapper/integration-wrapper';
 import { getStoreDataForIntegration } from '@/store/slices/diagram-slice/actions';
 
 import { IntegrationDataFormatOptional, OnSave } from '@/features/integration/types';
-import { showSnackbarSaveErrorIfNeeded, showSnackbarSaveSuccessIfNeeded } from '../../utils/show-snackbar';
+import {
+  showSnackbarSaveErrorIfNeeded,
+  showSnackbarSaveSuccessIfNeeded,
+} from '../../utils/show-snackbar';
 
-export function withIntegrationThroughApi<WProps extends object>(WrappedComponent: React.ComponentType<WProps>) {
+export function withIntegrationThroughApi<WProps extends object>(
+  WrappedComponent: React.ComponentType<WProps>
+) {
   function WithIntegrationComponent(props: React.ComponentProps<typeof WrappedComponent>) {
     const handleSave: OnSave = useCallback(async (savingParams) => {
       const data = getStoreDataForIntegration();
@@ -40,7 +45,8 @@ export function withIntegrationThroughApi<WProps extends object>(WrappedComponen
       return 'error';
     }, []);
 
-    const [{ name, layoutDirection, nodes, edges }, setData] = useState<IntegrationDataFormatOptional>({});
+    const [{ name, layoutDirection, nodes, edges }, setData] =
+      useState<IntegrationDataFormatOptional>({});
 
     useEffect(() => {
       (async () => {
@@ -54,7 +60,9 @@ export function withIntegrationThroughApi<WProps extends object>(WrappedComponen
             return;
           }
 
-          const data = (await response.json()) as unknown as IntegrationDataFormatOptional | undefined;
+          const data = (await response.json()) as unknown as
+            | IntegrationDataFormatOptional
+            | undefined;
 
           if (data) {
             setData(data);
@@ -66,7 +74,13 @@ export function withIntegrationThroughApi<WProps extends object>(WrappedComponen
     }, []);
 
     return (
-      <IntegrationWrapper name={name} layoutDirection={layoutDirection} nodes={nodes} edges={edges} onSave={handleSave}>
+      <IntegrationWrapper
+        name={name}
+        layoutDirection={layoutDirection}
+        nodes={nodes}
+        edges={edges}
+        onSave={handleSave}
+      >
         <WrappedComponent {...props} />
       </IntegrationWrapper>
     );

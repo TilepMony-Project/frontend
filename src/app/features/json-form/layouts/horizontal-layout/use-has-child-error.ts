@@ -13,8 +13,12 @@ export function useHasChildError(childElements?: UISchemaElement[]) {
     .map((element) => toDataPath((element as Scoped).scope).replace('.', '/'));
 
   const errorPaths = core.errors.map((error) =>
-    error.keyword === 'required' ? `${error.instancePath}/${error.params['missingProperty']}` : error.instancePath,
+    error.keyword === 'required'
+      ? `${error.instancePath}/${error.params['missingProperty']}`
+      : error.instancePath
   );
 
-  return errorPaths.some((errorPath) => childPaths.some((childPath) => errorPath.includes(childPath)));
+  return errorPaths.some((errorPath) =>
+    childPaths.some((childPath) => errorPath.includes(childPath))
+  );
 }

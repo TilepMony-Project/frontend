@@ -1,7 +1,17 @@
 import { Draft, produce } from 'immer';
-import { type EdgeData, type NodeData, type WorkflowBuilderEdge, type WorkflowBuilderNode } from '@/types/node-data';
+import {
+  type EdgeData,
+  type NodeData,
+  type WorkflowBuilderEdge,
+  type WorkflowBuilderNode,
+} from '@/types/node-data';
 import { type GetDiagramState, type SetDiagramState } from '@/store/store';
-import { type OnEdgesChange, type OnNodesChange, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
+import {
+  type OnEdgesChange,
+  type OnNodesChange,
+  applyEdgeChanges,
+  applyNodeChanges,
+} from '@xyflow/react';
 import { removeElements } from './remove-elements';
 
 export type DiagramDataModificationState = {
@@ -10,12 +20,15 @@ export type DiagramDataModificationState = {
   setNodeProperties: (nodeId: string, properties: NodeData['properties']) => void;
   setNodeData: <T extends WorkflowBuilderNode['data']>(nodeId: string, data: T) => void;
   setEdgeData: (edgeId: string, data: EdgeData) => void;
-  removeElements: (elements: { nodes?: WorkflowBuilderNode[]; edges?: WorkflowBuilderEdge[] }) => void;
+  removeElements: (elements: {
+    nodes?: WorkflowBuilderNode[];
+    edges?: WorkflowBuilderEdge[];
+  }) => void;
 };
 
 export function useDiagramDataModificationSlice(
   set: SetDiagramState,
-  get: GetDiagramState,
+  get: GetDiagramState
 ): DiagramDataModificationState {
   return {
     onNodesChange: (changes) => {
@@ -51,7 +64,7 @@ export function useDiagramDataModificationSlice(
 function updateNodesProperties(
   nodes: WorkflowBuilderNode[],
   updatedNodeId: string,
-  properties: Partial<NodeData['properties']>,
+  properties: Partial<NodeData['properties']>
 ) {
   return produce(nodes, (draft: Draft<WorkflowBuilderNode[]>) => {
     const node = draft.find((x) => x.id === updatedNodeId);
@@ -67,7 +80,7 @@ function updateNodesProperties(
 function updateData<T extends WorkflowBuilderNode | WorkflowBuilderEdge>(
   elements: T[],
   updatedElementId: string,
-  data: Partial<T['data']>,
+  data: Partial<T['data']>
 ) {
   return produce(elements, (draft: Draft<WorkflowBuilderNode[]>) => {
     const element = draft.find((x) => x.id === updatedElementId);

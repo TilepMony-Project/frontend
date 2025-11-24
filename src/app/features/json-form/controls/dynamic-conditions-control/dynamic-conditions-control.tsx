@@ -23,7 +23,7 @@ function DynamicConditionsControl(props: DynamicConditionsControlProps) {
     (value: DynamicCondition[]) => {
       handleChange(path, value);
     },
-    [handleChange, path],
+    [handleChange, path]
   );
 
   const handleConfirm = useCallback(() => {
@@ -47,11 +47,19 @@ function DynamicConditionsControl(props: DynamicConditionsControlProps) {
         </NavButton>
       </div>
       <ControlWrapper {...props} uischema={{ ...props.uischema, label: 'Dependencies' }}>
-        <TextArea disabled={!enabled} value={dependencies.join(' ')} onClick={openEditorModal} size="medium" />
+        <TextArea
+          disabled={!enabled}
+          value={dependencies.join(' ')}
+          onClick={openEditorModal}
+          size="medium"
+        />
         <span className={styles['tag']}>{data.length} total</span>
       </ControlWrapper>
     </div>
   );
 }
 
-export const dynamicConditionsControlRenderer = createControlRenderer('DynamicConditions', DynamicConditionsControl);
+export const dynamicConditionsControlRenderer = createControlRenderer(
+  'DynamicConditions',
+  DynamicConditionsControl
+);

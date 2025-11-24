@@ -19,11 +19,17 @@ export const DecisionNodeContainer = memo(({ id, data, selected }: Props) => {
   const isValid = getIsValidFromProperties(properties);
 
   const layoutDirection = useStore((store) => store.layoutDirection);
-  const handleTargetPosition = getHandlePosition({ direction: layoutDirection, handleType: 'target' });
+  const handleTargetPosition = getHandlePosition({
+    direction: layoutDirection,
+    handleType: 'target',
+  });
   const connectionBeingDragged = useStore((store) => store.connectionBeingDragged);
 
   return (
-    <NodeAsPortWrapper isConnecting={!!connectionBeingDragged} targetPortPosition={handleTargetPosition}>
+    <NodeAsPortWrapper
+      isConnecting={!!connectionBeingDragged}
+      targetPortPosition={handleTargetPosition}
+    >
       <DecisionNodeTemplate
         id={id}
         selected={selected}

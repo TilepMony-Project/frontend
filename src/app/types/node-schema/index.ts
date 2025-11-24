@@ -19,4 +19,3 @@ export type Option = {
 };
 
 export type ItemOption = Option;
-

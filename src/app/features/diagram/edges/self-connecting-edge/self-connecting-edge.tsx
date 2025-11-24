@@ -13,7 +13,12 @@ type Point = {
   y: number;
 };
 
-function createSelfConnectingPath(source: Point, target: Point, nodeHeight: number, radius: number) {
+function createSelfConnectingPath(
+  source: Point,
+  target: Point,
+  nodeHeight: number,
+  radius: number
+) {
   const loopHeight = nodeHeight + SELF_CONNECTING_EDGE_LABEL_OFFSET;
   const horizontalOffset = 25;
 
@@ -55,7 +60,7 @@ export function SelfConnectingEdge({
     { x: sourceX, y: sourceY },
     { x: targetX, y: targetY },
     nodeHeight,
-    EDGE_CURVE_RADIUS,
+    EDGE_CURVE_RADIUS
   );
 
   return <BaseEdge id={id} path={path} style={style} />;

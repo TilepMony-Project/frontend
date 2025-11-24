@@ -13,4 +13,3 @@ export const redeemNode: PaletteItem<RedeemNodeSchema> = {
   uischema,
   templateType: 'Node',
 };
-

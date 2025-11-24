@@ -1,4 +1,7 @@
-import { getStoreSavingStatus, setStoreSavingStatus } from '@/features/integration/stores/use-integration-store';
+import {
+  getStoreSavingStatus,
+  setStoreSavingStatus,
+} from '@/features/integration/stores/use-integration-store';
 import { OnSave } from '@/features/integration/types';
 import { createContext, PropsWithChildren, useCallback, useMemo } from 'react';
 
@@ -45,14 +48,14 @@ export function IntegrationContextWrapper({ onSave, children }: Props) {
 
       return didSaveStatus;
     },
-    [onSave],
+    [onSave]
   );
 
   const value = useMemo(
     () => ({
       onSave: handleIntegrationSave,
     }),
-    [handleIntegrationSave],
+    [handleIntegrationSave]
   );
 
   return <IntegrationContext.Provider value={value}>{children}</IntegrationContext.Provider>;

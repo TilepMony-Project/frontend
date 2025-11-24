@@ -10,4 +10,3 @@ export type EdgeData = Record<string, unknown>;
 export type WorkflowBuilderNode = Node<NodeData>;
 
 export type WorkflowBuilderEdge = Edge<EdgeData>;
-

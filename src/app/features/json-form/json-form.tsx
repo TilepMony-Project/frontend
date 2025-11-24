@@ -26,7 +26,12 @@ export function JSONForm(props: Props) {
   const { readonly, ...rest } = props;
   return (
     <div className={styles['json-form-container']}>
-      <JsonForms renderers={renderers} validationMode="ValidateAndShow" {...rest} config={{ readonly }} />
+      <JsonForms
+        renderers={renderers}
+        validationMode="ValidateAndShow"
+        {...rest}
+        config={{ readonly }}
+      />
     </div>
   );
 }

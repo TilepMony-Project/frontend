@@ -34,4 +34,3 @@ export const schema = {
 } satisfies NodeSchema;
 
 export type MintNodeSchema = typeof schema;
-

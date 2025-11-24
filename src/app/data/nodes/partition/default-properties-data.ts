@@ -11,4 +11,3 @@ export const defaultPropertiesData: NodeDataProperties<PartitionNodeSchema> = {
   ],
   autoBalance: true,
 };
-

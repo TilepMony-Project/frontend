@@ -66,8 +66,8 @@ const ExecutionSchema = new Schema<IExecution>(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-export default mongoose.models.Execution || mongoose.model<IExecution>('Execution', ExecutionSchema);
-
+export default mongoose.models.Execution ||
+  mongoose.model<IExecution>('Execution', ExecutionSchema);

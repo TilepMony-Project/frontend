@@ -14,7 +14,7 @@ function HorizontalLayout(props: LayoutProps<HorizontalLayoutElement>) {
 
   const style: CSSProperties = useMemo(
     () => (layoutColumns ? { gridAutoColumns: layoutColumns } : {}),
-    [layoutColumns],
+    [layoutColumns]
   );
 
   return (

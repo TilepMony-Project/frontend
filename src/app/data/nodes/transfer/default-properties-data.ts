@@ -10,4 +10,3 @@ export const defaultPropertiesData: NodeDataProperties<TransferNodeSchema> = {
   maxSlippage: 0.5,
   memo: '',
 };
-

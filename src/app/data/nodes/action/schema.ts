@@ -52,7 +52,9 @@ export const expectedResponseOptions = [
   { label: 'Plain Text', value: 'plainText' },
 ];
 
-export const storeResponseOptions = [{ label: 'orderUpdateResponse', value: 'orderUpdateResponse' }];
+export const storeResponseOptions = [
+  { label: 'orderUpdateResponse', value: 'orderUpdateResponse' },
+];
 
 export const assignOptions = [{ label: 'Sales Team', value: 'salesTeam' }];
 

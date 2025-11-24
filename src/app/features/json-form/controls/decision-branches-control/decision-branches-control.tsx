@@ -12,11 +12,11 @@ function DecisionBranchesControl(props: DecisionBranchesControlProps) {
   const onUpdateBranch = useCallback(
     ({ conditions, index }: DecisionBranch) => {
       const updatedBranches = decisionBranches.map((branch) =>
-        index === branch.index ? { ...branch, conditions } : branch,
+        index === branch.index ? { ...branch, conditions } : branch
       );
       handleChange(path, updatedBranches);
     },
-    [decisionBranches, handleChange, path],
+    [decisionBranches, handleChange, path]
   );
 
   function onRemoveBranch(index: number) {
@@ -36,11 +36,19 @@ function DecisionBranchesControl(props: DecisionBranchesControlProps) {
   return (
     <div>
       {decisionBranches.map((branch) => (
-        <BranchCard key={branch.index} branch={branch} onUpdate={onUpdateBranch} onRemove={onRemoveBranch} />
+        <BranchCard
+          key={branch.index}
+          branch={branch}
+          onUpdate={onUpdateBranch}
+          onRemove={onRemoveBranch}
+        />
       ))}
       <PlaceholderButton onClick={onAddBranch} label="Add Branch" />
     </div>
   );
 }
 
-export const decisionBranchesControlRenderer = createControlRenderer('DecisionBranches', DecisionBranchesControl);
+export const decisionBranchesControlRenderer = createControlRenderer(
+  'DecisionBranches',
+  DecisionBranchesControl
+);

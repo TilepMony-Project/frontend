@@ -31,4 +31,3 @@ export const schema = {
 } satisfies NodeSchema;
 
 export type WaitNodeSchema = typeof schema;
-

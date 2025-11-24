@@ -15,7 +15,7 @@ function SelectControl(props: SelectControlProps) {
       : {
           ...option,
           icon: <Icon name={option.icon} size="small" />,
-        },
+        }
   );
 
   const onChange: SelectBaseProps['onChange'] = (_event, value) => {

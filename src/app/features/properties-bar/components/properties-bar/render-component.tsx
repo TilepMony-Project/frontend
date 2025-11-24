@@ -4,7 +4,9 @@ import type { PropertiesBarItem } from './properties-bar.types';
 export function renderComponent(
   componentMap: PropertiesBarItem[],
   selection: SingleSelectedElement | null,
-  selectedTab: string,
+  selectedTab: string
 ) {
-  return componentMap.find(({ when }) => when({ selection, selectedTab }))?.component({ selection, selectedTab });
+  return componentMap
+    .find(({ when }) => when({ selection, selectedTab }))
+    ?.component({ selection, selectedTab });
 }

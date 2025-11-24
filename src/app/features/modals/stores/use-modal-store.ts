@@ -29,11 +29,15 @@ export const useModalStore = create<ModalStore>()(
       ({
         ...emptyStore,
       }) satisfies ModalStore,
-    { name: 'modalStore' },
-  ),
+    { name: 'modalStore' }
+  )
 );
 
-export function openModal({ isCloseButtonVisible = true, footerVariant = 'integrated', ...restProps }: ModalProps) {
+export function openModal({
+  isCloseButtonVisible = true,
+  footerVariant = 'integrated',
+  ...restProps
+}: ModalProps) {
   useModalStore.setState({
     isOpen: true,
     modal: {

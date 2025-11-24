@@ -13,4 +13,3 @@ export const vaultNode: PaletteItem<VaultNodeSchema> = {
   uischema,
   templateType: 'Node',
 };
-

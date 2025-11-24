@@ -25,7 +25,9 @@ type IntegrationDataValidationWithoutErrors = {
   validatedIntegrationData: IntegrationDataFormat;
 };
 
-type IntegrationDataValidation = IntegrationDataValidationWithErrors | IntegrationDataValidationWithoutErrors;
+type IntegrationDataValidation =
+  | IntegrationDataValidationWithErrors
+  | IntegrationDataValidationWithoutErrors;
 
 export function validateIntegrationData(input?: object | string): IntegrationDataValidation {
   let objectToCheck: Partial<IntegrationDataFormat> | undefined;
@@ -70,7 +72,7 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
           knownNodes: WorkflowBuilderNode[];
           unknownNodes: Node[];
         },
-        node,
+        node
       ) => {
         if (getNodeDefinition(node)) {
           stack.knownNodes.push(node);
@@ -80,7 +82,7 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
 
         return stack;
       },
-      { knownNodes: [], unknownNodes: [] },
+      { knownNodes: [], unknownNodes: [] }
     );
 
     if (unknownNodes.length > 0) {

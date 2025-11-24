@@ -9,4 +9,3 @@ export const defaultPropertiesData: NodeDataProperties<RedeemNodeSchema> = {
   recipientWallet: '',
   conversionRate: 1,
 };
-

@@ -1,4 +1,10 @@
-import { AndCondition, LeafCondition, OrCondition, RuleEffect, SchemaBasedCondition } from '@jsonforms/core';
+import {
+  AndCondition,
+  LeafCondition,
+  OrCondition,
+  RuleEffect,
+  SchemaBasedCondition,
+} from '@jsonforms/core';
 
 type UISchemaCondition = OrCondition | AndCondition | LeafCondition | SchemaBasedCondition;
 

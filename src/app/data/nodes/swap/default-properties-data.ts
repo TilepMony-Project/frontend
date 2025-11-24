@@ -11,4 +11,3 @@ export const defaultPropertiesData: NodeDataProperties<SwapNodeSchema> = {
   slippageTolerance: 0.5,
   preferredRoute: 'Direct',
 };
-

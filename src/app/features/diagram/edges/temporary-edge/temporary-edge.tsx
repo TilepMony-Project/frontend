@@ -2,7 +2,14 @@ import { EDGE_CURVE_RADIUS, EDGE_OFFSET } from '../edge.consts';
 import { useEdgeStyle } from '@synergycodes/overflow-ui';
 import { BaseEdge, ConnectionLineComponentProps, getSmoothStepPath } from '@xyflow/react';
 
-export function TemporaryEdge({ fromX, fromY, fromPosition, toX, toY, toPosition }: ConnectionLineComponentProps) {
+export function TemporaryEdge({
+  fromX,
+  fromY,
+  fromPosition,
+  toX,
+  toY,
+  toPosition,
+}: ConnectionLineComponentProps) {
   const style = useEdgeStyle({ state: 'temporary' });
   const defaultPortSize = 4;
 
@@ -15,7 +22,8 @@ export function TemporaryEdge({ fromX, fromY, fromPosition, toX, toY, toPosition
     connects to the center of the port, while the final edge connects to its edge. 
     This ensures the temporary edge follows the exact path of the final edge.
   **/
-  const hasEnoughDistance = Math.abs(fromX - toX) > EDGE_OFFSET || Math.abs(fromY - toY) > EDGE_OFFSET;
+  const hasEnoughDistance =
+    Math.abs(fromX - toX) > EDGE_OFFSET || Math.abs(fromY - toY) > EDGE_OFFSET;
   const offset = hasEnoughDistance ? EDGE_OFFSET + defaultPortSize : 0;
 
   const [edgePath] = getSmoothStepPath({

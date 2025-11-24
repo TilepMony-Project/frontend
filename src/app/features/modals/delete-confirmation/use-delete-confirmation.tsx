@@ -14,7 +14,9 @@ type Props = {
 
 export function useDeleteConfirmation() {
   const shouldSkipShowingConfirmation = useStore((state) => state.shouldSkipShowingConfirmation);
-  const setShouldSkipShowDeleteConfirmation = useStore((state) => state.setShouldSkipShowDeleteConfirmation);
+  const setShouldSkipShowDeleteConfirmation = useStore(
+    (state) => state.setShouldSkipShowDeleteConfirmation
+  );
 
   const handleDeleteClick = useCallback(
     (onDeleteClick: () => void, shouldShowAgain: boolean) => {
@@ -24,7 +26,7 @@ export function useDeleteConfirmation() {
       onDeleteClick();
       closeModal();
     },
-    [setShouldSkipShowDeleteConfirmation],
+    [setShouldSkipShowDeleteConfirmation]
   );
 
   const openDeleteConfirmationModal = useCallback(
@@ -57,7 +59,7 @@ export function useDeleteConfirmation() {
         onModalClosed: onModalClosed,
       });
     },
-    [handleDeleteClick, shouldSkipShowingConfirmation],
+    [handleDeleteClick, shouldSkipShowingConfirmation]
   );
 
   return { openDeleteConfirmationModal };

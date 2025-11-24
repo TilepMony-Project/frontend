@@ -18,7 +18,10 @@ export function SavingStatus() {
 
   if (savingStatus === 'saved') {
     return (
-      <span key={lastSaveAttemptTimestamp} className={clsx(styles['status'], styles['status--saved'])}>
+      <span
+        key={lastSaveAttemptTimestamp}
+        className={clsx(styles['status'], styles['status--saved'])}
+      >
         <Icon name="CheckCircle" />
       </span>
     );
@@ -26,7 +29,10 @@ export function SavingStatus() {
 
   if (savingStatus === 'notSaved') {
     return (
-      <span key={lastSaveAttemptTimestamp} className={clsx(styles['status'], styles['status--not-saved'])}>
+      <span
+        key={lastSaveAttemptTimestamp}
+        className={clsx(styles['status'], styles['status--not-saved'])}
+      >
         <Icon name="XCircle" />
       </span>
     );

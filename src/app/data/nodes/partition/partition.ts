@@ -13,4 +13,3 @@ export const partitionNode: PaletteItem<PartitionNodeSchema> = {
   uischema,
   templateType: 'Node',
 };
-

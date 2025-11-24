@@ -17,14 +17,19 @@ const semiTransparentOpacityVariable: CSSCustomProperties = {
 
 export const Loader = memo(({ isLoading, isSemiTransparent }: LoaderType) => {
   const visibilityClassName = isLoading ? styles['fade-in'] : styles['fade-out'];
-  const setLoaderBackgroundOpacityVariable = isSemiTransparent ? semiTransparentOpacityVariable : {};
+  const setLoaderBackgroundOpacityVariable = isSemiTransparent
+    ? semiTransparentOpacityVariable
+    : {};
 
   if (!isLoading) {
     return null;
   }
 
   return (
-    <div className={clsx(styles['container'], visibilityClassName)} style={setLoaderBackgroundOpacityVariable}>
+    <div
+      className={clsx(styles['container'], visibilityClassName)}
+      style={setLoaderBackgroundOpacityVariable}
+    >
       <div className={styles['loader']}>Loading...</div>
     </div>
   );
