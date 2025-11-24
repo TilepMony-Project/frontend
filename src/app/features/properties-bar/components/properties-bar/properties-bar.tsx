@@ -7,7 +7,7 @@ import { PropertiesBarHeader } from '../header/properties-bar-header';
 import { NodeProperties } from '../node-properties/node-properties';
 import { Sidebar } from '@/components/sidebar/sidebar';
 import { renderComponent } from './render-component';
-import { PropertiesBarItem, PropertiesBarProps } from './properties-bar.types';
+import type { PropertiesBarItem, PropertiesBarProps } from './properties-bar.types';
 
 /**
  * PropertiesBarComponent - A configurable sidebar component for displaying and editing

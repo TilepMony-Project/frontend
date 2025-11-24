@@ -1,4 +1,4 @@
-import { SingleSelectedElement } from '@/features/properties-bar/use-single-selected-element';
+import type { SingleSelectedElement } from '@/features/properties-bar/use-single-selected-element';
 
 type PropertiesBarSelection = Omit<PropertiesBarBaseProps, 'selection'> & {
   selection: SingleSelectedElement;
@@ -24,8 +24,10 @@ export type PropertiesBarProps = PropertiesBarBaseProps & {
   headerLabel: string;
   deleteNodeLabel: string;
   deleteEdgeLabel: string;
+  runNodeLabel: string;
   tabs?: PropertiesBarTab[];
   onTabChange: (tab: string) => void;
   onMenuHeaderClick?: () => void;
   onDeleteClick: () => void;
+  onRunNodeClick: () => void;
 };

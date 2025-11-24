@@ -1,7 +1,7 @@
 import { Draft, produce } from 'immer';
-import { EdgeData, NodeData, WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
-import { GetDiagramState, SetDiagramState } from '@/store/store';
-import { OnEdgesChange, OnNodesChange, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
+import { type EdgeData, type NodeData, type WorkflowBuilderEdge, type WorkflowBuilderNode } from '@/types/node-data';
+import { type GetDiagramState, type SetDiagramState } from '@/store/store';
+import { type OnEdgesChange, type OnNodesChange, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
 import { removeElements } from './remove-elements';
 
 export type DiagramDataModificationState = {

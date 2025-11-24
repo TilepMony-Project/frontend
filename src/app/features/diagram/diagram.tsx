@@ -1,24 +1,25 @@
-import { DragEventHandler, useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
+import type { DragEventHandler } from 'react';
 import useStore from '@/store/store';
 import { diagramStateSelector } from './selectors';
 import styles from './diagram.module.css';
-import { DragEvent } from 'react';
+import type { DragEvent } from 'react';
 import { getNodeTypesObject } from './get-node-types-object';
 import {
   ReactFlow,
   Background,
-  FitViewOptions,
-  NodeChange,
-  OnConnect,
-  OnNodeDrag,
-  OnBeforeDelete,
-  EdgeTypes,
+  type FitViewOptions,
+  type NodeChange,
+  type OnConnect,
+  type OnNodeDrag,
+  type OnBeforeDelete,
+  type EdgeTypes,
   SelectionMode,
-  OnSelectionChangeParams,
+  type OnSelectionChangeParams,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { WorkflowBuilderOnSelectionChangeParams } from '@/types/common';
-import { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
+import type { WorkflowBuilderOnSelectionChangeParams } from '@/types/common';
+import type { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
 import { LabelEdge } from './edges/label-edge/label-edge';
 import { usePaletteDrop } from '@/hooks/use-palette-drop';
 import {

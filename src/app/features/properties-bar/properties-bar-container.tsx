@@ -1,6 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useRemoveElements } from '@/hooks/use-remove-elements';
+import { SnackbarType } from '@synergycodes/overflow-ui';
+import { useEffect, useState } from 'react';
+
 import { useSingleSelectedElement } from '@/features/properties-bar/use-single-selected-element';
+import { useRemoveElements } from '@/hooks/use-remove-elements';
+import { showSnackbar } from '@/utils/show-snackbar';
 import { PropertiesBar } from './components/properties-bar/properties-bar';
 
 export function PropertiesBarContainer() {
@@ -9,11 +12,11 @@ export function PropertiesBarContainer() {
   const [selectedTab, setSelectedTab] = useState('properties');
 
   const selection = useSingleSelectedElement();
-  const selectionId = useMemo(() => selection?.node?.id, [selection]);
-
   useEffect(() => {
-    setSelectedTab('properties');
-  }, [selectionId]);
+    if (selection?.node || selection?.edge || selection === null) {
+      setSelectedTab('properties');
+    }
+  }, [selection]);
 
   function handleDeleteClick() {
     if (selection) {
@@ -21,13 +24,29 @@ export function PropertiesBarContainer() {
     }
   }
 
+  function handleRunNodeClick() {
+    if (!selection?.node) {
+      return;
+    }
+
+    const nodeLabel = selection.node.data?.properties?.label ?? 'Selected node';
+
+    showSnackbar({
+      title: `${nodeLabel} execution coming soon`,
+      subtitle: 'Node-level execution preview will be available soon.',
+      variant: SnackbarType.INFO,
+    });
+  }
+
   return (
     <PropertiesBar
       selection={selection}
       onDeleteClick={handleDeleteClick}
+      onRunNodeClick={handleRunNodeClick}
       headerLabel="Properties"
       deleteNodeLabel="Delete Node"
       deleteEdgeLabel="Delete Edge"
+      runNodeLabel="Run Node"
       selectedTab={selectedTab}
       onTabChange={setSelectedTab}
     />
