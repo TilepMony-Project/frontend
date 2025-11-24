@@ -36,6 +36,7 @@ const TERMINAL_STATUSES: ExecutionStatus[] = ['finished', 'failed', 'stopped'];
 
 export function ExecutionMonitor() {
   const nodes = useStore((state) => state.nodes);
+  const setExecutionMonitorActive = useStore((state) => state.setExecutionMonitorActive);
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [execution, setExecution] = useState<ExecutionResponse['execution'] | null>(null);
   const [isExpanded, setIsExpanded] = useState(true);
@@ -158,8 +159,21 @@ export function ExecutionMonitor() {
 
   const statusLabel = execution ? getStatusLabel(execution.status) : 'No runs yet';
 
+  useEffect(() => {
+    if (!execution || hasTerminalStatus) {
+      setExecutionMonitorActive(false);
+      return;
+    }
+    setExecutionMonitorActive(true);
+    return () => setExecutionMonitorActive(false);
+  }, [execution, hasTerminalStatus, setExecutionMonitorActive]);
+
+  if (!execution || hasTerminalStatus || isReadOnlyMode) {
+    return null;
+  }
+
   return (
-    <aside className={clsx(styles.panel, { [styles.collapsed]: !isExpanded })}>
+    <aside className={styles.panel}>
       <header className={styles.header}>
         <div className={styles.title}>
           <strong>Execution Monitor</strong>

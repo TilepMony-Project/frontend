@@ -1,20 +1,10 @@
 .panel {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  width: min(420px, calc(100% - 32px));
-  background: var(--surface-primary, #0f172a);
-  color: #e2e8f0;
-  border-radius: 16px;
-  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.35);
-  padding: 16px 20px 20px;
-  z-index: 30;
-  transition: transform 160ms ease, opacity 160ms ease;
-}
-
-.collapsed {
-  transform: translateY(calc(100% - 56px));
-  opacity: 0.88;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-panel, #f8fafc);
+  color: var(--foreground-primary, #0f172a);
+  border-left: 1px solid var(--border-subtle, rgba(15, 23, 42, 0.07));
 }
 
 .header {

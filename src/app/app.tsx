@@ -4,6 +4,8 @@
 import '@/features/plugins-core/index';
 import type { PropsWithChildren } from 'react';
 
+import useStore from '@/store/store';
+
 import styles from './app.module.css';
 import { AppBarContainerLazy } from './features/app-bar/app-bar-container-lazy';
 import { DiagramContainer as Diagram } from './features/diagram/diagram';
@@ -17,6 +19,14 @@ import { PropertiesBarContainerLazy } from './features/properties-bar/properties
 import { SnackbarContainer } from './features/snackbar/snackbar-container';
 
 function AppComponent(_props: PropsWithChildren) {
+  const selectedNodesCount = useStore((state) => state.selectedNodesIds.length);
+  const selectedEdgesCount = useStore((state) => state.selectedEdgesIds.length);
+  const hasSingleSelection = selectedNodesCount + selectedEdgesCount === 1;
+  const isExecutionMonitorActive = useStore((state) => state.isExecutionMonitorActive);
+
+  const shouldShowPropertiesPanel = hasSingleSelection && !isExecutionMonitorActive;
+  const shouldShowRightPanel = isExecutionMonitorActive || shouldShowPropertiesPanel;
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -26,17 +36,19 @@ function AppComponent(_props: PropsWithChildren) {
         <div className={styles.panel}>
           <PaletteContainerLazy />
         </div>
-        <div className={styles.panel}>
-          <div className={styles['right-panel']}>
-            <PropertiesBarContainerLazy />
+        {shouldShowRightPanel && (
+          <div className={styles.panel}>
+            <div className={styles['right-panel']}>
+              {isExecutionMonitorActive ? <ExecutionMonitor /> : null}
+              {shouldShowPropertiesPanel ? <PropertiesBarContainerLazy /> : null}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <DiagramWrapper>
         <Diagram />
       </DiagramWrapper>
       <SnackbarContainer />
-      <ExecutionMonitor />
       <AppLoaderContainer />
       <OptionalHooks />
     </div>
