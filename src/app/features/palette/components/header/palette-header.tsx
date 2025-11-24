@@ -1,7 +1,6 @@
 import styles from './palette-header.module.css';
 import { NavButton } from '@synergycodes/overflow-ui';
 import { Icon } from '@/components/icons';
-import { useTranslation } from 'react-i18next';
 
 type PaletteHeaderProps = {
   onClick: () => void;
@@ -9,15 +8,13 @@ type PaletteHeaderProps = {
 };
 
 export function PaletteHeader({ onClick, isSidebarExpanded }: PaletteHeaderProps) {
-  const { t } = useTranslation();
-
   return (
     <div className={styles['container']}>
-      <span className="ax-public-h7">{t('palette.nodesLibrary')}</span>
+      <span className="ax-public-h7">Nodes Library</span>
       <NavButton
         size="small"
         onClick={onClick}
-        tooltip={isSidebarExpanded ? t('tooltips.closePalette') : t('tooltips.openPalette')}
+        tooltip={isSidebarExpanded ? 'Close Palette' : 'Open Palette'}
       >
         <Icon name="SidebarSimple" />
       </NavButton>

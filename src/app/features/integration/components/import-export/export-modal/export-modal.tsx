@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button, SnackbarType } from '@synergycodes/overflow-ui';
 
 import { showSnackbar } from '@/utils/show-snackbar';
@@ -13,8 +12,6 @@ import { noop } from '@/utils/noop';
 import styles from '../import-export-modal.module.css';
 
 export function ExportModal() {
-  const { t } = useTranslation();
-
   const storeData = useMemo(() => {
     return JSON.stringify(getStoreDataForIntegration(), null, 2);
   }, []);
@@ -23,7 +20,7 @@ export function ExportModal() {
     copy(storeData);
 
     showSnackbar({
-      title: 'contentCopied',
+      title: 'Content copied to clipboard',
       variant: SnackbarType.SUCCESS,
     });
   }, [storeData]);
@@ -34,7 +31,7 @@ export function ExportModal() {
       <div className={styles['actions']}>
         <Button variant="primary" onClick={handleCopy}>
           <Icon name="Copy" />
-          {t('tooltips.copy')}
+          Copy
         </Button>
       </div>
     </div>

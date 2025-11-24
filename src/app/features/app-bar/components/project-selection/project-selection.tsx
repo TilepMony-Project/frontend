@@ -4,7 +4,6 @@ import { NavButton, Menu, Input } from '@synergycodes/overflow-ui';
 import { useMemo, useState } from 'react';
 import { CaretDown } from '@phosphor-icons/react';
 import { Icon } from '@/components/icons';
-import { useTranslation } from 'react-i18next';
 import useStore from '@/store/store';
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
 
@@ -18,22 +17,20 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
   const setDocumentName = useStore((state) => state.setDocumentName);
   const [editName, setEditName] = useState<boolean>(false);
 
-  const { t } = useTranslation();
-
   const items = useMemo(
     () => [
       {
-        label: t('header.projectSelection.duplicateToDrafts'),
+        label: 'Duplicate to Drafts',
         icon: <Icon name="Cards" />,
         onClick: onDuplicateClick,
       },
     ],
-    [onDuplicateClick, t],
+    [onDuplicateClick],
   );
 
   return (
     <div className={styles['project-selection']}>
-      <span className={styles['folder-name']}>{t('header.folderName')} /</span>
+      <span className={styles['folder-name']}>Drafts /</span>
       {editName && !isReadOnlyMode ? (
         <Input
           value={documentName}
@@ -56,7 +53,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
       )}
       <div className={styles['menu-container']}>
         <Menu items={items}>
-          <NavButton tooltip={t('tooltips.pickTheProject')}>
+          <NavButton tooltip="Pick the Project">
             <CaretDown />
           </NavButton>
         </Menu>

@@ -1,4 +1,3 @@
-import i18n from 'i18next';
 import { Icon } from '@/components/icons';
 import useStore from '@/store/store';
 import { openModal } from '@/features/modals/stores/use-modal-store';
@@ -8,7 +7,7 @@ export function openTemplateSelectorModal() {
   openModal({
     content: <TemplateSelector />,
     icon: <Icon name="Cube" />,
-    title: i18n.t('plugins.help.header'),
+    title: 'Select Template',
     onModalClosed: () => useStore.getState().setDiagramModel(undefined, { skipIfNotEmpty: true }),
   });
 }

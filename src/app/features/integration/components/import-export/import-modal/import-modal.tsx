@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button, SnackbarType } from '@synergycodes/overflow-ui';
 
 import { Icon } from '@/components/icons';
@@ -23,7 +22,6 @@ export function ImportModal() {
     errors: [],
     warnings: [],
   });
-  const { t } = useTranslation();
 
   const handleImport = useCallback(
     ({ shouldIgnoreWarnings }: { shouldIgnoreWarnings: boolean }) => {
@@ -48,7 +46,7 @@ export function ImportModal() {
         closeModal();
 
         showSnackbar({
-          title: 'loadDiagramSuccess',
+          title: 'Diagram loaded successfully',
           variant: SnackbarType.SUCCESS,
         });
       }
@@ -58,12 +56,12 @@ export function ImportModal() {
 
   return (
     <div className={styles['container']}>
-      <p className={clsx('ax-public-p10', styles['tip'])}>{t('importExport.importTip')}</p>
+      <p className={clsx('ax-public-p10', styles['tip'])}>Paste your workflow JSON data below</p>
       <SyntaxHighlighterLazy value={jsonToParse} onChange={(json) => setJsonToParse(json || '{}')} />
       {(errors.length > 0 || warnings.length > 0) && (
         <div className={clsx('ax-public-p10', styles['error'])}>
           {[...errors, ...warnings].map(({ message, messageParams }) => (
-            <div key={message}>{t(message, messageParams)}</div>
+            <div key={message}>{message}</div>
           ))}
         </div>
       )}
@@ -71,12 +69,12 @@ export function ImportModal() {
         {warnings.length > 0 && errors.length === 0 && (
           <Button variant="warning" onClick={() => handleImport({ shouldIgnoreWarnings: true })}>
             <Icon name="DownloadSimple" />
-            {t('importExport.ignoreAndImport')}
+            Ignore Warnings & Import
           </Button>
         )}
         <Button variant="primary" onClick={() => handleImport({ shouldIgnoreWarnings: false })}>
           <Icon name="DownloadSimple" />
-          {t('importExport.import')}
+          Import
         </Button>
       </div>
     </div>

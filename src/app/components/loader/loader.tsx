@@ -1,7 +1,6 @@
 import { CSSProperties, memo } from 'react';
 import { clsx } from 'clsx';
 import styles from './loader.module.css';
-import { useTranslation } from 'react-i18next';
 
 type LoaderType = {
   isLoading?: boolean;
@@ -17,8 +16,6 @@ const semiTransparentOpacityVariable: CSSCustomProperties = {
 };
 
 export const Loader = memo(({ isLoading, isSemiTransparent }: LoaderType) => {
-  const { t } = useTranslation();
-
   const visibilityClassName = isLoading ? styles['fade-in'] : styles['fade-out'];
   const setLoaderBackgroundOpacityVariable = isSemiTransparent ? semiTransparentOpacityVariable : {};
 
@@ -28,7 +25,7 @@ export const Loader = memo(({ isLoading, isSemiTransparent }: LoaderType) => {
 
   return (
     <div className={clsx(styles['container'], visibilityClassName)} style={setLoaderBackgroundOpacityVariable}>
-      <div className={styles['loader']}>{t('loader.text')}</div>
+      <div className={styles['loader']}>Loading...</div>
     </div>
   );
 });

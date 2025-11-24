@@ -4,7 +4,6 @@ import { StrictMode, useEffect } from 'react';
 import TagManager from 'react-gtm-module';
 import { setAutoFreeze } from 'immer';
 import { ReactFlowProvider } from '@xyflow/react';
-import '@/features/i18n';
 
 // Disable immer's automatic object freezing because ReactFlow mutates objects under the hood
 // and requires this to be turned off to function properly, especially when node size is updated

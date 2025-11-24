@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRemoveElements } from '@/hooks/use-remove-elements';
-import { useTranslation } from 'react-i18next';
 import { useSingleSelectedElement } from '@/features/properties-bar/use-single-selected-element';
 import { PropertiesBar } from './components/properties-bar/properties-bar';
 
 export function PropertiesBarContainer() {
   const { removeElements } = useRemoveElements();
-  const { t } = useTranslation();
 
   const [selectedTab, setSelectedTab] = useState('properties');
 
@@ -27,9 +25,9 @@ export function PropertiesBarContainer() {
     <PropertiesBar
       selection={selection}
       onDeleteClick={handleDeleteClick}
-      headerLabel={t('propertiesBar.label')}
-      deleteNodeLabel={t('propertiesBar.deleteNode')}
-      deleteEdgeLabel={t('propertiesBar.deleteEdge')}
+      headerLabel="Properties"
+      deleteNodeLabel="Delete Node"
+      deleteEdgeLabel="Delete Edge"
       selectedTab={selectedTab}
       onTabChange={setSelectedTab}
     />

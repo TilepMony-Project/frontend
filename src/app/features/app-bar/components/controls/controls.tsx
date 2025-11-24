@@ -1,5 +1,4 @@
 import styles from '../../app-bar.module.css';
-import { useTranslation } from 'react-i18next';
 import { NavButton, Menu, MenuItemProps } from '@synergycodes/overflow-ui';
 import { DotsThreeVertical } from '@phosphor-icons/react';
 import { useMemo } from 'react';
@@ -9,10 +8,7 @@ import { ToggleReadyOnlyMode } from '../toggle-read-only-mode/toggle-read-only-m
 import { ToggleDarkMode } from '../toggle-dark-mode/toggle-dark-mode';
 
 export function Controls() {
-  const { t } = useTranslation();
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const items: MenuItemProps[] = useMemo(() => getControlsDotsItems(), [t]);
+  const items: MenuItemProps[] = useMemo(() => getControlsDotsItems(), []);
 
   return (
     <div className={styles['controls']}>
@@ -23,7 +19,7 @@ export function Controls() {
       {items.length > 0 && (
         <div className={styles['menu-container']}>
           <Menu items={items}>
-            <NavButton tooltip={t('tooltips.menu')}>
+            <NavButton tooltip="Menu">
               <DotsThreeVertical />
             </NavButton>
           </Menu>

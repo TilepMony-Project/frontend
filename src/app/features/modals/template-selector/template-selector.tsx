@@ -1,7 +1,6 @@
 import { Tile } from './components/tile';
 import { DiagramModel } from '@/types/common';
 import clsx from 'clsx';
-import { Trans, useTranslation } from 'react-i18next';
 import styles from './template-selector.module.css';
 import useStore from '@/store/store';
 import { templates } from '@/data/templates';
@@ -10,7 +9,6 @@ import { closeModal } from '../stores/use-modal-store';
 import { useFitView } from '@/hooks/use-fit-view';
 
 export function TemplateSelector() {
-  const { t } = useTranslation();
   const setDiagramModel = useStore((store) => store.setDiagramModel);
   const fitView = useFitView();
 
@@ -27,7 +25,7 @@ export function TemplateSelector() {
     <div className={styles['container']}>
       <section className={styles['header']}>
         <span className={clsx('ax-public-p10', styles['sub-title'])}>
-          <Trans i18nKey="templateSelector.description" components={{ br: <br /> }} />
+          Select a template to get started or start with an empty canvas.
         </span>
       </section>
       <section className={styles['content']}>
@@ -41,7 +39,7 @@ export function TemplateSelector() {
               onClick={() => selectTemplate(value)}
             />
           ))}
-          <Tile icon="CornersOut" title={t('templateSelector.emptyCanvas')} outlined={true} onClick={selectTemplate} />
+          <Tile icon="CornersOut" title="Empty Canvas" outlined={true} onClick={selectTemplate} />
         </div>
       </section>
     </div>

@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import styles from './branch-card.module.css';
 import clsx from 'clsx';
 import { NavButton } from '@synergycodes/overflow-ui';
@@ -20,7 +19,6 @@ type Props = {
 
 export function BranchCard({ branch, onUpdate, onRemove }: Props) {
   const formRef = useRef<ConditionsFormHandle>(null);
-  const { t } = useTranslation();
   const { conditions, index } = branch;
   const conditionCount = conditions.length;
   const conditionText = getConditionText();
@@ -40,11 +38,11 @@ export function BranchCard({ branch, onUpdate, onRemove }: Props) {
             value={conditions}
           />
         ),
-        title: t('conditions.title'),
+        title: 'Conditions',
         footer: <ConditionModalFooter closeModal={closeModal} handleConfirm={handleConfirm} />,
       });
     },
-    [t, handleConfirm, onUpdate, index],
+    [handleConfirm, onUpdate, index],
   );
 
   const onClickEdit = useCallback(() => openEditorModal(branch), [branch, openEditorModal]);
@@ -53,7 +51,7 @@ export function BranchCard({ branch, onUpdate, onRemove }: Props) {
   return (
     <div className={styles['branch-card']}>
       <div className={styles['header']}>
-        <h1 className="ax-public-h10">{t('decisionBranches.branch', { index })}</h1>
+        <h1 className="ax-public-h10">Branch {index}</h1>
         <div className={styles['actions']}>
           <NavButton onClick={onClickEdit}>
             <SlidersHorizontal weight="bold" />
@@ -71,11 +69,11 @@ export function BranchCard({ branch, onUpdate, onRemove }: Props) {
 
   function getConditionText() {
     if (conditionCount === 1) {
-      return t('decisionBranches.singleCondition');
+      return '1 condition';
     } else if (conditionCount > 1) {
-      return t('decisionBranches.manyConditions', { count: conditionCount });
+      return `${conditionCount} conditions`;
     } else {
-      return t('decisionBranches.noConditions');
+      return 'No conditions';
     }
   }
 }

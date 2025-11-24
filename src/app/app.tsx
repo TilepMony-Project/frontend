@@ -12,13 +12,10 @@ import { DiagramContainer as Diagram } from './features/diagram/diagram';
 import { PaletteContainerLazy } from './features/palette/palette-container-lazy';
 import { DiagramWrapper } from './features/diagram/diagram-wrapper';
 import { SnackbarContainer } from './features/snackbar/snackbar-container';
-import { useDetectLanguageChange } from './features/i18n/use-detect-language-change';
 
-import './features/i18n/index';
 import { withIntegration } from './features/integration/components/with-integration';
 
 function AppComponent(_props: PropsWithChildren) {
-  useDetectLanguageChange();
 
   return (
     <div className={styles['container']}>

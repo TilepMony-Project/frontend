@@ -1,4 +1,3 @@
-import i18n from 'i18next';
 import { MenuItemProps } from '@synergycodes/overflow-ui';
 import { Icon } from '@/components/icons';
 import { openNoAccessModal } from './open-no-access-modal';
@@ -12,7 +11,7 @@ export function addItemsToDots({ returnValue }: { returnValue: unknown }) {
 
   const newItems: MenuItemProps[] = [
     {
-      label: i18n.t('header.controls.saveAsImage'),
+      label: 'Save as Image',
       icon: <Icon name="Image" />,
       onClick: openNoAccessModal,
     },
@@ -20,7 +19,7 @@ export function addItemsToDots({ returnValue }: { returnValue: unknown }) {
       type: 'separator',
     },
     {
-      label: i18n.t('header.controls.archive'),
+      label: 'Archive',
       icon: <Icon name="Archive" />,
       destructive: true,
       onClick: openNoAccessModal,

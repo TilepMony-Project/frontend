@@ -1,4 +1,3 @@
-import i18n from 'i18next';
 import { withOptionalFunctionPlugins } from '@/features/plugins-core/adapters/adapter-functions';
 
 import { MenuItemProps } from '@synergycodes/overflow-ui';
@@ -10,12 +9,12 @@ import { openImportModal } from '@/features/integration/components/import-export
 function getControlsDotsItemsFunction(): MenuItemProps[] {
   return [
     {
-      label: i18n.t('importExport.export'),
+      label: 'Export',
       icon: <Icon name="Export" />,
       onClick: openExportModal,
     },
     {
-      label: i18n.t('importExport.import'),
+      label: 'Import',
       icon: <Icon name="DownloadSimple" />,
       onClick: openImportModal,
     },

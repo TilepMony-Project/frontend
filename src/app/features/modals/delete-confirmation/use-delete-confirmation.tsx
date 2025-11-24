@@ -3,7 +3,6 @@ import { Node, Edge } from '@xyflow/react';
 import { DeleteConfirmation, DeleteConfirmationButtons } from './delete-confirmation';
 import { MinusCircle } from '@phosphor-icons/react';
 import useStore from '@/store/store';
-import { useTranslation } from 'react-i18next';
 import { closeModal, openModal } from '../stores/use-modal-store';
 
 type Props = {
@@ -16,7 +15,6 @@ type Props = {
 export function useDeleteConfirmation() {
   const shouldSkipShowingConfirmation = useStore((state) => state.shouldSkipShowingConfirmation);
   const setShouldSkipShowDeleteConfirmation = useStore((state) => state.setShouldSkipShowDeleteConfirmation);
-  const { t } = useTranslation();
 
   const handleDeleteClick = useCallback(
     (onDeleteClick: () => void, shouldShowAgain: boolean) => {
@@ -55,11 +53,11 @@ export function useDeleteConfirmation() {
           />
         ),
         icon: <MinusCircle />,
-        title: t('deleteConfirmation.deleteSelection'),
+        title: 'Delete Selection',
         onModalClosed: onModalClosed,
       });
     },
-    [handleDeleteClick, t, shouldSkipShowingConfirmation],
+    [handleDeleteClick, shouldSkipShowingConfirmation],
   );
 
   return { openDeleteConfirmationModal };

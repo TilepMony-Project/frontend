@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
 import { Input, Select, NavButton, SegmentPicker } from '@synergycodes/overflow-ui';
 import { useMemo } from 'react';
 import { Icon } from '@/components/icons';
@@ -17,8 +16,6 @@ type ConditionsFormFieldProps = {
 
 export function ConditionsFormField(props: ConditionsFormFieldProps) {
   const { condition, onChange, onRemove, isLast, shouldShowValidation } = props;
-
-  const { t } = useTranslation();
 
   function handleChange(field: 'x' | 'comparisonOperator' | 'y' | 'logicalOperator', value: unknown) {
     onChange({
@@ -46,7 +43,7 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
           [styles['container-error']]: shouldShowValidation && (!condition.x || !condition.y),
         })}
       >
-        <NavButton onClick={() => {}} tooltip={t('tooltips.menu')}>
+        <NavButton onClick={() => {}} tooltip="Menu">
           <Icon name="DotsSixVertical" />
         </NavButton>
         <div className={styles['inputs-container']}>
@@ -60,7 +57,7 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
             className={styles['input']}
             value={condition.comparisonOperator}
             items={comparisonsOperators.map((operator) => ({
-              label: t(`conditions.compare.${operator}`) as string,
+              label: operator,
               value: operator,
             }))}
             onChange={(_, value) => handleChange('comparisonOperator', value)}
@@ -73,7 +70,7 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
             error={errors.y}
           />
         </div>
-        <NavButton onClick={onRemove} tooltip={t('tooltips.menu')}>
+        <NavButton onClick={onRemove} tooltip="Remove">
           <Icon name="X" />
         </NavButton>
       </div>
@@ -85,8 +82,8 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
             value={condition.logicalOperator || 'AND'}
             onChange={(_, value) => handleChange('logicalOperator', value)}
           >
-            <SegmentPicker.Item value="AND">{t('conditions.compare.and')}</SegmentPicker.Item>
-            <SegmentPicker.Item value="OR">{t('conditions.compare.or')}</SegmentPicker.Item>
+            <SegmentPicker.Item value="AND">AND</SegmentPicker.Item>
+            <SegmentPicker.Item value="OR">OR</SegmentPicker.Item>
           </SegmentPicker>
         </div>
       )}

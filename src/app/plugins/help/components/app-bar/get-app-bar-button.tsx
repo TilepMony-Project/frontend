@@ -1,12 +1,11 @@
-import i18n from 'i18next';
 import { Icon, WBIcon } from '@/components/icons';
 import { NavButton } from '@synergycodes/overflow-ui';
 import { openNoAccessModal } from '../../functions/open-no-access-modal';
 
-export function getAppBarButton(icon: WBIcon, tooltip?: Parameters<typeof i18n.t>[0]) {
+export function getAppBarButton(icon: WBIcon, tooltip?: string) {
   return function mockAppBarButton() {
     return (
-      <NavButton onClick={openNoAccessModal} tooltip={tooltip ? i18n.t(tooltip) : undefined}>
+      <NavButton onClick={openNoAccessModal} tooltip={tooltip}>
         <Icon name={icon} />
       </NavButton>
     );

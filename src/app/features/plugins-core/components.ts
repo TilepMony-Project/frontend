@@ -1,7 +1,6 @@
 /* eslint-disable no-restricted-imports */
 
 // Features using plugins mechanic
-import '@/features/i18n/plugin-components';
 import '@/features/modals/plugin-components';
 
 // The plugin used to manage switching between other plugins that usually don't work together

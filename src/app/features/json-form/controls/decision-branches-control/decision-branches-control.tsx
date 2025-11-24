@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { DecisionBranchesControlProps, DecisionBranch } from '../../types/controls';
-import { useTranslation } from 'react-i18next';
 import { PlaceholderButton } from '@/features/diagram/nodes/components/placeholder-button/placeholder-button';
 import { createControlRenderer } from '../../utils/rendering';
 import { BranchCard } from './branch-card/branch-card';
@@ -9,8 +8,6 @@ function DecisionBranchesControl(props: DecisionBranchesControlProps) {
   const { data = [], handleChange, path } = props;
 
   const decisionBranches = data as DecisionBranch[];
-
-  const { t } = useTranslation();
 
   const onUpdateBranch = useCallback(
     ({ conditions, index }: DecisionBranch) => {
@@ -41,7 +38,7 @@ function DecisionBranchesControl(props: DecisionBranchesControlProps) {
       {decisionBranches.map((branch) => (
         <BranchCard key={branch.index} branch={branch} onUpdate={onUpdateBranch} onRemove={onRemoveBranch} />
       ))}
-      <PlaceholderButton onClick={onAddBranch} label={t('decisionBranches.addBranch')} />
+      <PlaceholderButton onClick={onAddBranch} label="Add Branch" />
     </div>
   );
 }
