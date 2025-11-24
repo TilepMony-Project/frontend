@@ -105,7 +105,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   // Node icons - TilepMoney (Lucide React)
   CurrencyDollar: DollarSign, // Deposit
   Coins: Coins, // Mint
-  ArrowsClockwise: ArrowsClockwise, // Swap
+  ArrowsClockwise: ArrowLeftRight, // Swap
   Bridge: Link2, // Bridge (using Link2 as bridge icon)
   Bank: Building2, // Redeem
   PaperPlaneRight: Send, // Transfer
