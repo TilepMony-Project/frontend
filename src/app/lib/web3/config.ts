@@ -1,5 +1,5 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { mantleTestnet } from 'viem/chains';
+import { mantleSepoliaTestnet } from 'viem/chains';
 import { http, createConfig } from 'wagmi';
 import { injected, walletConnect } from 'wagmi/connectors';
 
@@ -7,13 +7,13 @@ import { injected, walletConnect } from 'wagmi/connectors';
 export const rainbowKitConfig = getDefaultConfig({
   appName: 'TilepMoney',
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'your-project-id',
-  chains: [mantleTestnet],
+  chains: [mantleSepoliaTestnet],
   ssr: true,
 });
 
 // Wagmi config (for direct use if needed)
 export const wagmiConfig = createConfig({
-  chains: [mantleTestnet],
+  chains: [mantleSepoliaTestnet],
   connectors: [
     injected(),
     walletConnect({
@@ -21,8 +21,8 @@ export const wagmiConfig = createConfig({
     }),
   ],
   transports: {
-    [mantleTestnet.id]: http(
-      process.env.NEXT_PUBLIC_MANTLE_RPC_URL || 'https://rpc.testnet.mantle.xyz'
+    [mantleSepoliaTestnet.id]: http(
+      process.env.NEXT_PUBLIC_MANTLE_RPC_URL || 'https://rpc.sepolia.mantle.xyz'
     ),
   },
 });
@@ -31,9 +31,9 @@ export const config = rainbowKitConfig;
 
 // Mantle Testnet configuration
 export const mantleConfig = {
-  chainId: 5001,
-  rpcUrl: process.env.NEXT_PUBLIC_MANTLE_RPC_URL || 'https://rpc.testnet.mantle.xyz',
-  blockExplorer: 'https://explorer.testnet.mantle.xyz',
+  chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID || 5003),
+  rpcUrl: process.env.NEXT_PUBLIC_MANTLE_RPC_URL || 'https://rpc.sepolia.mantle.xyz',
+  blockExplorer: 'https://explorer.sepolia.mantle.xyz/',
 };
 
 // Smart Contract Addresses (to be deployed)

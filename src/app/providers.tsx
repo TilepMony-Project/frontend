@@ -31,21 +31,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Prevent hydration mismatch by only rendering Web3 providers on client
-  if (!mounted) {
-    return (
-      <StrictMode>
-        <ReactFlowProvider>{children}</ReactFlowProvider>
-      </StrictMode>
-    );
-  }
-
   return (
     <StrictMode>
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider>
+          {mounted ? (
+            <RainbowKitProvider>
+              <ReactFlowProvider>{children}</ReactFlowProvider>
+            </RainbowKitProvider>
+          ) : (
             <ReactFlowProvider>{children}</ReactFlowProvider>
-          </RainbowKitProvider>
+          )}
         </QueryClientProvider>
       </WagmiProvider>
     </StrictMode>

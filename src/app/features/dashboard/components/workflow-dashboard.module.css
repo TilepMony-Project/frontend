@@ -31,12 +31,20 @@
 .headerActions {
   display: flex;
   gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .ctaButton {
   min-width: 180px;
   height: 3.25rem;
   font-size: 1rem;
+  border-radius: 999px;
+}
+
+.themeButton {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   border-radius: 999px;
 }
 
