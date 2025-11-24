@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@workflow-builder/icons', '@workflow-builder/types'],
+  transpilePackages: [],
   webpack: (config, { isServer }) => {
     // Handle SVG imports
     config.module.rules.push({
