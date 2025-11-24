@@ -29,10 +29,6 @@
   --wb-saving-status--saved-color: var(--ax-input-stroke-primary-success); /* missing token */
   --wb-saving-status--not-saved-color: var(--ax-input-stroke-primary-error); /* missing token */
 
-  /* Sales contact variables */
-  --wb-sales-contact-color: var(--ax-txt-primary-default);
-  --wb-sales-contact-position-color: var(--ax-txt-secondary-default);
-
   /* No access variables */
   --wb-no-access-color: var(--ax-txt-primary-default);
   --wb-no-access-sub-title-color: var(--ax-txt-secondary-default);

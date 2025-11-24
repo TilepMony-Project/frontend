@@ -7,7 +7,6 @@ import { DiagramContainer } from '@/features/diagram/diagram';
 import { ProjectSelection } from '@/features/app-bar/components/project-selection/project-selection';
 import { PropertiesBar } from '@/features/properties-bar/components/properties-bar/properties-bar';
 
-import { Watermark } from './components/watermark/watermark';
 import { openNoAccessModal } from './functions/open-no-access-modal';
 import { FooterSupportButton } from './components/footer-support-button';
 import { getAppBarButton } from './components/app-bar/get-app-bar-button';
@@ -17,12 +16,6 @@ import { addItemsToDots } from './functions/add-items-to-dots';
 registerComponentDecorator('OptionalFooterContent', {
   content: FooterSupportButton,
   place: 'after',
-});
-
-type DiagramContainerProps = React.ComponentProps<typeof DiagramContainer>;
-
-registerComponentDecorator<DiagramContainerProps>('DiagramContainer', {
-  content: Watermark,
 });
 
 registerFunctionDecorator('getControlsDotsItems', {
