@@ -8,7 +8,7 @@ export const depositNode: PaletteItem<DepositNodeSchema> = {
   description: 'Simulates receiving fiat funding from corporate client or treasury',
   type: 'deposit',
   icon: 'CurrencyDollar',
-  defaultPropertiesData,
+  defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
   templateType: 'Node',

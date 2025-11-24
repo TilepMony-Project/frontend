@@ -1,9 +1,0 @@
-.branches-container {
-  display: flex;
-  justify-content: center;
-  gap: var(--wb-branches-container-gap);
-
-  &.vertical {
-    flex-direction: column;
-  }
-}

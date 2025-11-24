@@ -37,10 +37,16 @@ export const uischema: UISchema = {
         },
         {
           type: 'Text',
+          label: 'Gas Fee Estimate',
+          scope: scope('properties.gasFee' as any),
+          readOnly: true,
+        } as any,
+        {
+          type: 'Text',
           label: 'Network',
           scope: scope('properties.network'),
           readOnly: true,
-        },
+        } as any,
         {
           type: 'Text',
           label: 'Max Slippage (%)',

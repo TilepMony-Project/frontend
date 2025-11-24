@@ -8,7 +8,7 @@ export const mintNode: PaletteItem<MintNodeSchema> = {
   description: 'Convert fiat to stablecoin via dummy issuer',
   type: 'mint',
   icon: 'Coins',
-  defaultPropertiesData,
+  defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
   templateType: 'Node',

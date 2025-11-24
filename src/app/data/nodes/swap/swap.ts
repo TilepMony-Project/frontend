@@ -8,7 +8,7 @@ export const swapNode: PaletteItem<SwapNodeSchema> = {
   description: 'Exchange one token for another via dummy DEX',
   type: 'swap',
   icon: 'ArrowsClockwise',
-  defaultPropertiesData,
+  defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
   templateType: 'Node',

@@ -8,7 +8,7 @@ export const waitNode: PaletteItem<WaitNodeSchema> = {
   description: 'Delay workflow execution for specified time period',
   type: 'wait',
   icon: 'Clock',
-  defaultPropertiesData,
+  defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
   templateType: 'Node',
