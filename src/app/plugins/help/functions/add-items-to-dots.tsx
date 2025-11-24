@@ -1,6 +1,5 @@
 import { MenuItemProps } from '@synergycodes/overflow-ui';
 import { Icon } from '@/components/icons';
-import { openNoAccessModal } from './open-no-access-modal';
 
 export function addItemsToDots({ returnValue }: { returnValue: unknown }) {
   if (!Array.isArray(returnValue)) {
@@ -13,7 +12,9 @@ export function addItemsToDots({ returnValue }: { returnValue: unknown }) {
     {
       label: 'Save as Image',
       icon: <Icon name="Image" />,
-      onClick: openNoAccessModal,
+      onClick: () => {
+        // TODO: Implement save as image functionality
+      },
     },
     {
       type: 'separator',
@@ -22,7 +23,9 @@ export function addItemsToDots({ returnValue }: { returnValue: unknown }) {
       label: 'Archive',
       icon: <Icon name="Archive" />,
       destructive: true,
-      onClick: openNoAccessModal,
+      onClick: () => {
+        // TODO: Implement archive functionality
+      },
     },
   ];
 

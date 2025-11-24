@@ -29,10 +29,6 @@
   --wb-saving-status--saved-color: var(--ax-input-stroke-primary-success); /* missing token */
   --wb-saving-status--not-saved-color: var(--ax-input-stroke-primary-error); /* missing token */
 
-  /* No access variables */
-  --wb-no-access-color: var(--ax-txt-primary-default);
-  --wb-no-access-sub-title-color: var(--ax-txt-secondary-default);
-
   /* Conditions form variables */
   --wb-conditions-form-border-color: var(--ax-ui-stroke-primary-default); /* missing token */
   --wb-conditions-form-border-radius: 0.75rem; /* missing token */

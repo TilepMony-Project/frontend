@@ -1,8 +1,6 @@
-# Commercial License Notice
+# Help Plugin
 
-If you have been granted a **commercial license** for this software, you are permitted to remove the directory: `plugins/no-access`.
-
-Doing so will result in an application without the "_Unlock Full Product Access_" popup and watermark in the corner.
+This plugin provides help and support functionality for the TilepMoney application.
 
 ## Plugins in Workflow Builder
 

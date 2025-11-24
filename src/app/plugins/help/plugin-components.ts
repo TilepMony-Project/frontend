@@ -7,7 +7,6 @@ import { DiagramContainer } from '@/features/diagram/diagram';
 import { ProjectSelection } from '@/features/app-bar/components/project-selection/project-selection';
 import { PropertiesBar } from '@/features/properties-bar/components/properties-bar/properties-bar';
 
-import { openNoAccessModal } from './functions/open-no-access-modal';
 import { FooterSupportButton } from './components/footer-support-button';
 import { getAppBarButton } from './components/app-bar/get-app-bar-button';
 import { registerFunctionDecorator } from '@/features/plugins-core/adapters/adapter-functions';
@@ -22,24 +21,6 @@ registerFunctionDecorator('getControlsDotsItems', {
   callback: addItemsToDots,
   place: 'after',
   priority: 10,
-});
-
-type ProjectSelectionProps = React.ComponentProps<typeof ProjectSelection>;
-
-registerComponentDecorator<ProjectSelectionProps>('ProjectSelection', {
-  modifyProps: (props) => ({
-    ...props,
-    onDuplicateClick: openNoAccessModal,
-  }),
-});
-
-type PropertiesBarProps = React.ComponentProps<typeof PropertiesBar>;
-
-registerComponentDecorator<PropertiesBarProps>('PropertiesBar', {
-  modifyProps: (props) => ({
-    ...props,
-    onMenuHeaderClick: openNoAccessModal,
-  }),
 });
 
 registerComponentDecorator('OptionalAppBarTools', {

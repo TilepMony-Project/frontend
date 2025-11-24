@@ -179,6 +179,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
         selectionOnDrag
         panOnDrag={panOnDrag}
         selectionMode={SelectionMode.Partial}
+        proOptions={{ hideAttribution: true }}
       >
         <Background />
       </ReactFlow>

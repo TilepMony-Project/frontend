@@ -55,7 +55,7 @@ export type WBIconProps = IconProps;
 
 // Icon name mapping to actual icon components
 // Uses Lucide React as primary icon library
-const iconMap: Record<string, ComponentType<any>> = {
+const iconMap: Record<string, ComponentType<IconProps>> = {
   // Common UI icons (Lucide React)
   FloppyDisk: Save,
   Export: Upload,
@@ -112,7 +112,7 @@ const iconMap: Record<string, ComponentType<any>> = {
 };
 
 // Try to get icon from mapping
-function getIconComponent(name?: string): ComponentType<any> | null {
+function getIconComponent(name?: string): ComponentType<IconProps> | null {
   if (!name) return null;
 
   // Check icon map first
