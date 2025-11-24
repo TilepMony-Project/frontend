@@ -21,22 +21,6 @@ registerFunctionDecorator('getControlsDotsItems', {
   priority: 10,
 });
 
-/*
-  This plugin checks whether those buttons are already registered
-  to avoid rendering hints about features that have been added to the project.
-*/
-if (hasRegisteredComponentDecorator('OptionalAppBarTools', 'UndoRedo') === false) {
-  registerComponentDecorator('OptionalAppBarTools', {
-    content: getAppBarButton('ArrowUUpLeft', 'plugins.help.tooltipUndo'),
-    place: 'after',
-  });
-
-  registerComponentDecorator('OptionalAppBarTools', {
-    content: getAppBarButton('ArrowUUpRight', 'plugins.help.tooltipRedo'),
-    place: 'after',
-  });
-}
-
 if (hasRegisteredComponentDecorator('OptionalAppBarControls', 'ElkLayout') === false) {
   registerComponentDecorator('OptionalAppBarControls', {
     content: getAppBarButton('TreeStructureDown', 'plugins.help.tooltipElk'),
