@@ -8,7 +8,7 @@ export const conditional: PaletteItem<ConditionalNodeSchema> = {
   description: 'node.conditional.description',
   type: 'conditional',
   icon: 'ListChecks',
-  defaultPropertiesData,
+  defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
 };

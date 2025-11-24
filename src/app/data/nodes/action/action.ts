@@ -8,7 +8,7 @@ export const action: PaletteItem<ActionNodeSchema> = {
   icon: 'PlayCircle',
   label: 'node.action.label',
   description: 'node.action.description',
-  defaultPropertiesData,
+  defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
 };

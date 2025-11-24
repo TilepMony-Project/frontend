@@ -376,7 +376,7 @@ export const uischema: UISchema = {
       type: 'Select',
       scope: scope('properties.type'),
     },
-    ...(generalInformation ? [generalInformation] : []),
+    ...(generalInformation ? [generalInformation as any] : []),
     sendEmailProperties,
     updateRecordProperties,
     makeApiCallProperties,

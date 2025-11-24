@@ -8,7 +8,7 @@ export const bridgeNode: PaletteItem<BridgeNodeSchema> = {
   description: 'Transfer tokens to Mantle testnet from simulated source chain',
   type: 'bridge',
   icon: 'Bridge',
-  defaultPropertiesData,
+  defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
   templateType: 'Node',

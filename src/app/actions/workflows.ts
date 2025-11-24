@@ -17,7 +17,7 @@ export type WorkflowSummary = {
   edgesCount: number;
 };
 
-function serializeWorkflow(workflow: typeof Workflow extends infer T ? T : never): WorkflowSummary {
+function serializeWorkflow(workflow: any): WorkflowSummary {
   // Using any because Workflow lean() returns plain objects at runtime.
   const plainWorkflow = workflow as unknown as {
     _id: string;
