@@ -1,11 +1,10 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import { IntegrationDataFormat } from '../types';
 import { setStoreDataFromIntegration } from '@/store/slices/diagram-slice/actions';
 import { showSnackbar } from '@/utils/show-snackbar';
 import { SnackbarType } from '@synergycodes/overflow-ui';
-import { openTemplateSelectorModal } from '@/features/modals/template-selector/open-template-selector-modal';
+import type { IntegrationDataFormat } from '../types';
 
 type IntegrationSavingStatus = 'disabled' | 'waiting' | 'saving' | 'saved' | 'notSaved';
 
@@ -21,8 +20,8 @@ export const useIntegrationStore = create<IntegrationStore>()(
         savingStatus: 'disabled',
         lastSaveAttemptTimestamp: Date.now(),
       }) satisfies IntegrationStore,
-    { name: 'integrationStore' },
-  ),
+    { name: 'integrationStore' }
+  )
 );
 
 export function loadData(loadData: Partial<IntegrationDataFormat>) {
@@ -34,9 +33,6 @@ export function loadData(loadData: Partial<IntegrationDataFormat>) {
       title: 'Workflow restored successfully',
       variant: SnackbarType.SUCCESS,
     });
-  } else {
-    // Welcome modal for no data
-    openTemplateSelectorModal();
   }
 
   useIntegrationStore.setState({
@@ -52,6 +48,7 @@ export function getStoreSavingStatus() {
 export function setStoreSavingStatus(savingStatus: IntegrationSavingStatus) {
   return useIntegrationStore.setState((state) => ({
     savingStatus,
-    lastSaveAttemptTimestamp: savingStatus === 'saved' ? Date.now() : state.lastSaveAttemptTimestamp,
+    lastSaveAttemptTimestamp:
+      savingStatus === 'saved' ? Date.now() : state.lastSaveAttemptTimestamp,
   }));
 }

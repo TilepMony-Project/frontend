@@ -1,6 +1,6 @@
 @layer reset, ext-lib, ui;
 
-@import '@synergycodes/overflow-ui/tokens.css';
+@import "@synergycodes/overflow-ui/tokens.css";
 
 @layer ui {
   @layer base, component;
@@ -86,23 +86,13 @@
   /* Import export modal variables */
   --wb-import-error-color: var(--ax-public-snackbar-title-color);
   --wb-import-error-background-color: var(--ax-public-snackbar-error-background);
-  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid var(--ax-public-snackbar-error-border);
+  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid
+    var(--ax-public-snackbar-error-border);
   --wb-import-error-border-radius: var(--ax-public-snackbar-border-radius);
-
-  /* Template selector variables */
-  --wb-template-tile-background: var(--ax-ui-bg-secondary-default); /* missing token */
-  --wb-template-tile-subtitle-color: var(--ax-colors-gray-500); /* missing token */
-  --wb-template-tile-outline-color: var(--ax-colors-gray-400); /* missing token */
-  --wb-template-tile-outline-hover-color: var(--ax-colors-acc1-500); /* missing token */
-  --wb-template-tile-color: var(--ax-txt-primary-default); /* missing token */
-  --wb-template-icon-color: var(--ax-txt-primary-default); /* missing token */
-  --wb-template-title-width: 116px;
-  --wb-template-title-padding: 12px;
-  --wb-template-subtitle-color: var(--ax-colors-gray-500); /* missing token */
 }
 
 /* Syntax highlighter theme-specific variables */
-html[data-theme='light'] {
+html[data-theme="light"] {
   --wb-syntax-highlighter-color: var(--ax-colors-gray-600);
   --wb-syntax-highlighter-color-variable-key: var(--ax-colors-acc5-700);
   --wb-syntax-highlighter-color-variable-value: var(--ax-colors-acc1-600);
@@ -110,7 +100,7 @@ html[data-theme='light'] {
   --wb-syntax-highlighter-color-cursor: var(--ax-txt-secondary-default);
 }
 
-html[data-theme='dark'] {
+html[data-theme="dark"] {
   --wb-syntax-highlighter-color: var(--ax-colors-gray-200);
   --wb-syntax-highlighter-color-variable-key: var(--ax-colors-orange-300);
   --wb-syntax-highlighter-color-variable-value: var(--ax-colors-acc1-400);
@@ -142,24 +132,24 @@ html[data-theme='dark'] {
     background: var(--wb-scroll-thumb-color);
   }
 
-  input[type='number'],
-  input[type='time'] {
+  input[type="number"],
+  input[type="time"] {
     -webkit-appearance: textfield;
     -moz-appearance: textfield;
     appearance: textfield;
   }
 
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number']::-webkit-outer-spin-button {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
   }
 
-  input[type='time']::-webkit-calendar-picker-indicator {
+  input[type="time"]::-webkit-calendar-picker-indicator {
     display: none;
   }
 
   * {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
   }
 
   body {
@@ -176,4 +166,3 @@ html[data-theme='dark'] {
     cursor: copy;
   }
 }
-

@@ -1,7 +1,7 @@
 // Type definitions for common types
 // TODO: Replace with proper type definitions
 
-import type { ReactFlowInstance, Node, Edge } from '@xyflow/react';
+import type { Edge, Node, ReactFlowInstance } from '@xyflow/react';
 
 export type LayoutDirection = 'horizontal' | 'vertical';
 
@@ -40,14 +40,6 @@ export type DiagramModel = {
   [key: string]: unknown;
 };
 
-export type TemplateModel = {
-  name: string;
-  description?: string;
-  icon?: string;
-  diagram: DiagramModel;
-  [key: string]: unknown;
-};
-
 export type WorkflowBuilderReactFlowInstance = ReactFlowInstance<Node, Edge>;
 
 export type ConnectionBeingDragged = {
@@ -59,4 +51,3 @@ export type WorkflowBuilderOnSelectionChangeParams = {
   nodes: unknown[];
   edges: unknown[];
 };
-

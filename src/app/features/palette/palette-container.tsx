@@ -1,15 +1,13 @@
 import styles from './palette-container.module.css';
 import './variables.css';
-import { useEffect } from 'react';
-import useStore from '@/store/store';
 import { Sidebar } from '@/components/sidebar/sidebar';
+import useStore from '@/store/store';
+import { useEffect } from 'react';
 import { DraggedItem } from './components/dragged-item/dragged-item';
-import { NodePreviewContainer } from './node-preview-container';
 import { PaletteHeader } from './components/header/palette-header';
-import { PaletteFooter } from './components/footer/palette-footer';
 import { PaletteItems } from './components/items/palette-items';
 import { usePaletteDragAndDrop } from './hooks/use-palette-drag-and-drop';
-import { openTemplateSelectorModal } from '../modals/template-selector/open-template-selector-modal';
+import { NodePreviewContainer } from './node-preview-container';
 
 export function PaletteContainer() {
   const toggleSidebar = useStore((state) => state.toggleSidebar);
@@ -19,7 +17,9 @@ export function PaletteContainer() {
   const paletteItems = useStore((state) => state.data);
   const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
 
-  const { draggedItem, zoom, ref, onMouseDown, onDragStart } = usePaletteDragAndDrop(!isReadOnlyMode);
+  const { draggedItem, zoom, ref, onMouseDown, onDragStart } = usePaletteDragAndDrop(
+    !isReadOnlyMode
+  );
 
   useEffect(() => {
     fetchData();
@@ -27,10 +27,11 @@ export function PaletteContainer() {
 
   return (
     <Sidebar
-      className={styles['sidebar']}
+      className={styles.sidebar}
       isExpanded={isSidebarExpanded}
-      header={<PaletteHeader onClick={() => toggleSidebar()} isSidebarExpanded={isSidebarExpanded} />}
-      footer={<PaletteFooter onTemplateClick={openTemplateSelectorModal} />}
+      header={
+        <PaletteHeader onClick={() => toggleSidebar()} isSidebarExpanded={isSidebarExpanded} />
+      }
     >
       <PaletteItems
         items={paletteItems}

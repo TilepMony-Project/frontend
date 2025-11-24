@@ -12,5 +12,3 @@ import '@/plugins/elk-layout/plugin-components';
 import '@/plugins/reshapable-edges/plugin-components';
 import '@/plugins/undo-redo/plugin-components';
 import '@/plugins/widgets/plugin-components';
-
-import '@/plugins/help/plugin-components';
