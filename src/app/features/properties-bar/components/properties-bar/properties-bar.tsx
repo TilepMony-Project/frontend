@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { SegmentPicker } from '@/components/ui/segment-picker';
+import { Icon } from '@/components/icons';
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
 import { EdgeProperties } from '../edge-properties/edge-properties';
 import { PropertiesBarHeader } from '../header/properties-bar-header';
@@ -28,6 +29,8 @@ function PropertiesBarComponent({
   deleteEdgeLabel,
   selectedTab,
   onTabChange,
+  onRunNodeClick,
+  runNodeLabel,
   tabs = [],
 }: PropertiesBarProps) {
   const name = selection?.node?.data?.properties?.label ?? selection?.edge?.data?.label;
@@ -85,9 +88,26 @@ function PropertiesBarComponent({
       }
       footer={
         isExpanded && (
-          <Button onClick={onDeleteClick} variant="ghost" className="text-destructive hover:text-destructive hover:bg-destructive/10">
-            {selection?.node ? deleteNodeLabel : deleteEdgeLabel}
-          </Button>
+          <div className="flex flex-col gap-2 w-full">
+            {selection?.node && (
+              <Button
+                onClick={onRunNodeClick}
+                variant="default"
+                className="bg-green-600 hover:bg-green-700 text-white dark:bg-green-600 dark:hover:bg-green-700"
+              >
+                <Icon name="Play" size={16} />
+                {runNodeLabel}
+              </Button>
+            )}
+            <Button
+              onClick={onDeleteClick}
+              variant="outline"
+              className="border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50"
+            >
+              <Icon name="Trash2" size={16} />
+              {selection?.node ? deleteNodeLabel : deleteEdgeLabel}
+            </Button>
+          </div>
         )
       }
     >
