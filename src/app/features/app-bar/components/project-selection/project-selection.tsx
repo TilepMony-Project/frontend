@@ -4,7 +4,9 @@ import { Icon } from '@/components/icons';
 import { IntegrationContext } from '@/features/integration/components/integration-variants/context/integration-context-wrapper';
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
 import useStore from '@/store/store';
-import { Input, Menu, NavButton } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Menu } from '@/components/ui/menu';
 import { ChevronDown } from 'lucide-react';
 import { useContext, useMemo, useState } from 'react';
 
@@ -83,9 +85,9 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
       )}
       <div className="relative">
         <Menu items={items}>
-          <NavButton tooltip="Pick the Project">
+          <Button variant="ghost" size="icon">
             <ChevronDown />
-          </NavButton>
+          </Button>
         </Menu>
       </div>
     </div>

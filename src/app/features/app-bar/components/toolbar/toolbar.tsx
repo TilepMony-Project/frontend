@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 
 import { Icon } from '@/components/icons';
@@ -21,7 +21,7 @@ export function Toolbar() {
         <Button
           className="flex items-center gap-[0.35rem] rounded-full px-[0.85rem] py-[0.35rem] font-semibold"
           variant="secondary"
-          size="small"
+          size="sm"
           onClick={handleNavigateToDashboard}
         >
           <Icon name="ArrowLeft" size={16} />

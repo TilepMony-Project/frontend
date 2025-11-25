@@ -1,4 +1,5 @@
-import { NavButton, Menu, type MenuItemProps } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
+import { Menu, type MenuItemProps } from '@/components/ui/menu';
 import { MoreVertical } from 'lucide-react';
 import { useMemo } from 'react';
 import { getControlsDotsItems } from '../../functions/get-controls-dots-items';
@@ -18,9 +19,9 @@ export function Controls() {
       {items.length > 0 && (
         <div className="relative">
           <Menu items={items}>
-            <NavButton tooltip="Menu">
+            <Button variant="ghost" size="icon">
               <MoreVertical />
-            </NavButton>
+            </Button>
           </Menu>
         </div>
       )}

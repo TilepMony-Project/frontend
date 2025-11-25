@@ -1,4 +1,4 @@
-import { IconSwitch } from '@synergycodes/overflow-ui';
+import { IconSwitch } from '@/components/ui/icon-switch';
 import { Pencil, PencilOff } from 'lucide-react';
 
 import useStore from '@/store/store';

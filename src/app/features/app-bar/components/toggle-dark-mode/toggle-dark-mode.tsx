@@ -1,4 +1,4 @@
-import { IconSwitch } from '@synergycodes/overflow-ui';
+import { IconSwitch } from '@/components/ui/icon-switch';
 import { Moon, Sun } from 'lucide-react';
 
 import { useTheme } from '@/hooks/use-theme';
