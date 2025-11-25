@@ -16,7 +16,7 @@ import { withIntegration } from './features/integration/components/with-integrat
 import { PaletteContainerLazy } from './features/palette/palette-container-lazy';
 import { OptionalHooks } from './features/plugins-core/components/optional-hooks';
 import { PropertiesBarContainerLazy } from './features/properties-bar/properties-bar-container-lazy';
-import { SnackbarContainer } from './features/snackbar/snackbar-container';
+
 
 type AppComponentProps = PropsWithChildren<{
   workflowId?: string | null;
@@ -52,7 +52,7 @@ function AppComponent(_props: AppComponentProps) {
       <DiagramWrapper>
         <Diagram />
       </DiagramWrapper>
-      <SnackbarContainer />
+
       <AppLoaderContainer />
       <OptionalHooks />
     </div>

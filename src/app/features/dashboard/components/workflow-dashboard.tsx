@@ -8,8 +8,11 @@ import { useRouter } from 'next/navigation';
 import type { WorkflowSummary } from '@/actions/workflows';
 import { Icon } from '@/components/icons';
 import { useTheme } from '@/hooks/use-theme';
-import { showSnackbar } from '@/utils/show-snackbar';
-import { Button, Input, Modal, SnackbarType } from '@synergycodes/overflow-ui';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Modal } from '@/components/ui/modal';
+import { showToast, ToastType } from '@/utils/toast-utils';
 
 
 
@@ -165,15 +168,15 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       const normalized = normalizeWorkflow(workflow);
 
       setWorkflows((prev) => [normalized, ...prev]);
-      showSnackbar({ title: 'Workflow created', variant: SnackbarType.SUCCESS });
+      showToast({ title: 'Workflow created', variant: ToastType.SUCCESS });
       setIsCreateModalOpen(false);
       router.push(`/workspace/${normalized.id}`);
     } catch (error) {
       console.error(error);
-      showSnackbar({
+      showToast({
         title: 'Unable to create workflow',
         subtitle: error instanceof Error ? error.message : 'Please try again.',
-        variant: SnackbarType.ERROR,
+        variant: ToastType.ERROR,
       });
     } finally {
       resetAction();
@@ -201,13 +204,13 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       }
 
       setWorkflows((prev) => prev.filter((workflow) => workflow.id !== workflowId));
-      showSnackbar({ title: 'Workflow deleted', variant: SnackbarType.SUCCESS });
+      showToast({ title: 'Workflow deleted', variant: ToastType.SUCCESS });
     } catch (error) {
       console.error(error);
-      showSnackbar({
+      showToast({
         title: 'Unable to delete workflow',
         subtitle: error instanceof Error ? error.message : 'Please try again.',
-        variant: SnackbarType.ERROR,
+        variant: ToastType.ERROR,
       });
     } finally {
       resetAction();
@@ -228,16 +231,16 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       const { workflow } = await response.json();
       const normalized = normalizeWorkflow(workflow);
       setWorkflows((prev) => [normalized, ...prev]);
-      showSnackbar({
+      showToast({
         title: 'Workflow duplicated',
-        variant: SnackbarType.SUCCESS,
+        variant: ToastType.SUCCESS,
       });
     } catch (error) {
       console.error(error);
-      showSnackbar({
+      showToast({
         title: 'Unable to duplicate workflow',
         subtitle: error instanceof Error ? error.message : 'Please try again.',
-        variant: SnackbarType.ERROR,
+        variant: ToastType.ERROR,
       });
     } finally {
       resetAction();
@@ -262,7 +265,6 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           <Button
             className="flex items-center gap-1.5 rounded-full"
             variant="secondary"
-            size="medium"
             onClick={toggleTheme}
           >
             <Icon name={theme === 'light' ? 'Moon' : 'Sun'} size={18} />
@@ -272,8 +274,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             className="min-w-[180px] h-13 text-base rounded-full"
             onClick={openCreateWorkflowModal}
             disabled={creating}
-            variant="primary"
-            size="large"
+            variant="default"
+            size="lg"
           >
             {creating ? 'Creating...' : 'New workflow'}
           </Button>
@@ -497,7 +499,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           onClose={pendingAction.type === 'create' ? undefined : closeCreateWorkflowModal}
           footer={
             <div className="flex justify-end gap-3">
-              <Button variant="primary" disabled={creating} onClick={handleConfirmCreateWorkflow}>
+              <Button variant="default" disabled={creating} onClick={handleConfirmCreateWorkflow}>
                 {creating ? 'Creating…' : 'Create workflow'}
               </Button>
             </div>

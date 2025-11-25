@@ -1,9 +1,10 @@
+
 import clsx from 'clsx';
 import { useCallback, useState } from 'react';
-import { Button, SnackbarType } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
 
 import { Icon } from '@/components/icons';
-import { showSnackbar } from '@/utils/show-snackbar';
+import { showToast, ToastType } from '@/utils/toast-utils';
 
 import { setStoreDataFromIntegration } from '@/store/slices/diagram-slice/actions';
 import { SyntaxHighlighterLazy } from '@/features/syntax-highlighter/components/syntax-highlighter-lazy';
@@ -48,9 +49,9 @@ export function ImportModal() {
         setStoreDataFromIntegration(validatedIntegrationData);
         closeModal();
 
-        showSnackbar({
+        showToast({
           title: 'Diagram loaded successfully',
-          variant: SnackbarType.SUCCESS,
+          variant: ToastType.SUCCESS,
         });
       }
     },
@@ -73,12 +74,12 @@ export function ImportModal() {
       )}
       <div className="flex gap-2 justify-end">
         {warnings.length > 0 && errors.length === 0 && (
-          <Button variant="warning" onClick={() => handleImport({ shouldIgnoreWarnings: true })}>
+          <Button variant="secondary" onClick={() => handleImport({ shouldIgnoreWarnings: true })}>
             <Icon name="DownloadSimple" />
             Ignore Warnings & Import
           </Button>
         )}
-        <Button variant="primary" onClick={() => handleImport({ shouldIgnoreWarnings: false })}>
+        <Button variant="default" onClick={() => handleImport({ shouldIgnoreWarnings: false })}>
           <Icon name="DownloadSimple" />
           Import
         </Button>

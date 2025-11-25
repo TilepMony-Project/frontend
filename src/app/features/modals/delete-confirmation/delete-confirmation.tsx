@@ -1,6 +1,7 @@
 import type { Node, Edge } from '@xyflow/react';
 
-import { Checkbox, Button } from '@synergycodes/overflow-ui';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 type DeleteConfirmationProps = {
@@ -38,9 +39,8 @@ export function DeleteConfirmation({
       <div className="flex items-center gap-2">
         <Checkbox
           id="dont-show-again-checkbox"
-          size="small"
           checked={isChecked}
-          onChange={handleChange}
+          onCheckedChange={handleChange}
         />
         <label htmlFor="dont-show-again-checkbox">Don't show me this again</label>
       </div>
@@ -62,7 +62,7 @@ export function DeleteConfirmationButtons({
       <Button variant="secondary" onClick={onCancelClick}>
         Cancel
       </Button>
-      <Button onClick={onDeleteClick} size="medium" variant="error" autoFocus>
+      <Button onClick={onDeleteClick} variant="destructive" autoFocus>
         Delete
       </Button>
     </div>

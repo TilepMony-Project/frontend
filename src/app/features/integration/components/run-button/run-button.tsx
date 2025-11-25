@@ -1,19 +1,20 @@
 import { Icon } from '@/components/icons';
-import { showSnackbar } from '@/utils/show-snackbar';
-import { NavButton, SnackbarType } from '@synergycodes/overflow-ui';
+
+import { Button } from '@/components/ui/button';
+import { showToast, ToastType } from '@/utils/toast-utils';
 
 export function RunButton() {
   function handleRun() {
-    showSnackbar({
+    showToast({
       title: 'Workflow execution coming soon',
       subtitle: 'Backend + smart contract integration is in progress.',
-      variant: SnackbarType.INFO,
+      variant: ToastType.INFO,
     });
   }
 
   return (
-    <NavButton onClick={handleRun} tooltip="Run workflow">
+    <Button variant="ghost" size="icon" onClick={handleRun}>
       <Icon name="Play" />
-    </NavButton>
+    </Button>
   );
 }

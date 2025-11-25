@@ -1,5 +1,5 @@
 
-import { NavButton } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/icons';
 
 type PaletteHeaderProps = {
@@ -11,13 +11,13 @@ export function PaletteHeader({ onClick, isSidebarExpanded }: PaletteHeaderProps
   return (
     <div className="flex items-center justify-between gap-3">
       <span className="ax-public-h7">Nodes Library</span>
-      <NavButton
-        size="small"
+      <Button
+        size="sm"
+        variant="ghost"
         onClick={onClick}
-        tooltip={isSidebarExpanded ? 'Close Palette' : 'Open Palette'}
       >
         <Icon name="PanelLeft" />
-      </NavButton>
+      </Button>
     </div>
   );
 }

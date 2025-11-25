@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 import { setStoreDataFromIntegration } from '@/store/slices/diagram-slice/actions';
-import { showSnackbar } from '@/utils/show-snackbar';
-import { SnackbarType } from '@synergycodes/overflow-ui';
+
+import { showToast, ToastType } from '@/utils/toast-utils';
 import type { IntegrationDataFormat } from '../types';
 
 type IntegrationSavingStatus = 'disabled' | 'waiting' | 'saving' | 'saved' | 'notSaved';
@@ -29,9 +29,9 @@ export function loadData(loadData: Partial<IntegrationDataFormat>) {
   if (hasAnyData) {
     setStoreDataFromIntegration(loadData);
 
-    showSnackbar({
-      title: 'Workflow restored successfully',
-      variant: SnackbarType.SUCCESS,
+    showToast({
+      title: 'Failed to load workflow',
+      variant: ToastType.ERROR,
     });
   }
 

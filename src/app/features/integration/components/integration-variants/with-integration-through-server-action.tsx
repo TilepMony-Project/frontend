@@ -7,8 +7,8 @@ import { IntegrationWrapper } from './wrapper/integration-wrapper';
 import { autoSaveWorkflow } from '@/actions/workflows';
 import type { IntegrationDataFormatOptional, OnSave } from '@/features/integration/types';
 import { getStoreDataForIntegration } from '@/store/slices/diagram-slice/actions';
-import { showSnackbar } from '@/utils/show-snackbar';
-import { SnackbarType } from '@synergycodes/overflow-ui';
+import { showToast as showSnackbar } from '@/utils/toast-utils';
+import { showToast, ToastType } from '@/utils/toast-utils';
 import {
   showSnackbarSaveErrorIfNeeded,
   showSnackbarSaveSuccessIfNeeded,
@@ -95,10 +95,10 @@ export function withIntegrationThroughServerAction<WProps extends object>(
           console.error('Error loading workflow:', error);
           if (!cancelled) {
             setInitialData({});
-            showSnackbar({
-              title: 'Unable to load workflow',
+            showToast({
+              title: 'Failed to save workflow',
               subtitle: error instanceof Error ? error.message : 'Please try again.',
-              variant: SnackbarType.ERROR,
+              variant: ToastType.ERROR,
             });
           }
         }

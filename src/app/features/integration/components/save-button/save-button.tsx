@@ -1,4 +1,4 @@
-import { NavButton } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/icons';
 import { useContext } from 'react';
 import { IntegrationContext } from '../integration-variants/context/integration-context-wrapper';
@@ -17,11 +17,11 @@ export function SaveButton() {
   useAutoSaveOnClose();
 
   return (
-    <NavButton onClick={handleSave} tooltip="Save">
+    <Button onClick={handleSave} variant="ghost" size="icon">
       <>
         <SavingStatus />
         <Icon name="Save" />
       </>
-    </NavButton>
+    </Button>
   );
 }

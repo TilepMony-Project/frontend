@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { TextArea } from '@synergycodes/overflow-ui';
+import { Textarea } from '@/components/ui/textarea';
 
 import type { SyntaxHighlighterProps } from './syntax-highlighter';
 
@@ -15,10 +15,9 @@ export function SyntaxHighlighterLazy(props: SyntaxHighlighterLazyProps) {
   return (
     <Suspense
       fallback={
-        <TextArea
+        <Textarea
           value={value}
           onChange={(event) => (onChange ? onChange(event.target.value) : undefined)}
-          maxRows={10}
           disabled={isDisabled}
         />
       }

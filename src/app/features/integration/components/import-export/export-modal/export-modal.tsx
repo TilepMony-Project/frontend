@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
-import { Button, SnackbarType } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
 
-import { showSnackbar } from '@/utils/show-snackbar';
+import { showToast, ToastType } from '@/utils/toast-utils';
 import { Icon } from '@/components/icons';
 
 import { getStoreDataForIntegration } from '@/store/slices/diagram-slice/actions';
@@ -19,9 +19,9 @@ export function ExportModal() {
   const handleCopy = useCallback(() => {
     copy(storeData);
 
-    showSnackbar({
+    showToast({
       title: 'Content copied to clipboard',
-      variant: SnackbarType.SUCCESS,
+      variant: ToastType.SUCCESS,
     });
   }, [storeData]);
 
@@ -29,7 +29,7 @@ export function ExportModal() {
     <div className="flex flex-col gap-3 w-full">
       <SyntaxHighlighterLazy value={storeData} onChange={noop} isDisabled />
       <div className="flex gap-2 justify-end">
-        <Button variant="primary" onClick={handleCopy}>
+        <Button variant="default" onClick={handleCopy}>
           <Icon name="Copy" />
           Copy
         </Button>

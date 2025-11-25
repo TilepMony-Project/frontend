@@ -1,5 +1,4 @@
-import { showSnackbar } from '@/utils/show-snackbar';
-import { SnackbarType } from '@synergycodes/overflow-ui';
+import { showToast, ToastType } from '@/utils/toast-utils';
 import type { OnSaveParams } from '../types';
 
 export function showSnackbarSaveSuccessIfNeeded(savingParams?: OnSaveParams) {
@@ -7,9 +6,9 @@ export function showSnackbarSaveSuccessIfNeeded(savingParams?: OnSaveParams) {
     return;
   }
 
-  showSnackbar({
+  showToast({
     title: 'Workflow saved successfully',
-    variant: SnackbarType.SUCCESS,
+    variant: ToastType.SUCCESS,
   });
 }
 
@@ -18,8 +17,8 @@ export function showSnackbarSaveErrorIfNeeded(savingParams?: OnSaveParams) {
     return;
   }
 
-  showSnackbar({
+  showToast({
     title: 'Failed to save workflow',
-    variant: SnackbarType.ERROR,
+    variant: ToastType.ERROR,
   });
 }
