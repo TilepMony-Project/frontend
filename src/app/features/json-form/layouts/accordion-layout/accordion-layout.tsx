@@ -23,6 +23,7 @@ function AccordionLayout(props: LayoutProps<AccordionLayoutElement>) {
           <AccordionTrigger className="px-5 py-4 text-left text-base font-semibold text-gray-900 transition-all duration-200 [&[data-state=open]>svg]:rotate-180 dark:text-white">
             {uischema.label}
           </AccordionTrigger>
+          <div className="border-t border-gray-100 dark:border-gray-800" />
           <AccordionContent className="px-5 pb-5 text-gray-600 dark:text-gray-300">
             <div className="flex flex-col gap-4 [&>div:not([class])]:flex [&>div:not([class])]:flex-col [&>div:not([class])]:gap-4">
               {renderElements(props)}

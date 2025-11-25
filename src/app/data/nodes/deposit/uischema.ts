@@ -8,15 +8,21 @@ export const uischema: UISchema = {
   type: 'VerticalLayout',
   elements: [
     {
-      type: 'Text',
-      label: 'Label',
-      scope: scope('properties.label'),
-    },
-    {
-      type: 'TextArea',
-      label: 'Description',
-      scope: scope('properties.description'),
-      placeholder: 'Optional description for this deposit',
+      type: 'Group',
+      label: 'General Details',
+      elements: [
+        {
+          type: 'Text',
+          label: 'Label',
+          scope: scope('properties.label'),
+        },
+        {
+          type: 'TextArea',
+          label: 'Description',
+          scope: scope('properties.description'),
+          placeholder: 'Optional description for this deposit',
+        },
+      ],
     },
     {
       type: 'Accordion',
@@ -24,6 +30,7 @@ export const uischema: UISchema = {
       elements: [
         {
           type: 'HorizontalLayout',
+          layoutColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           elements: [
             {
               type: 'Text',

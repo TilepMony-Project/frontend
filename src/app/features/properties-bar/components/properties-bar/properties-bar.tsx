@@ -1,15 +1,15 @@
+import clsx from 'clsx';
 
-
+import { Icon } from '@/components/icons';
+import { Sidebar } from '@/components/sidebar/sidebar';
 import { Button } from '@/components/ui/button';
 import { SegmentPicker } from '@/components/ui/segment-picker';
-import { Icon } from '@/components/icons';
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
 import { EdgeProperties } from '../edge-properties/edge-properties';
 import { PropertiesBarHeader } from '../header/properties-bar-header';
 import { NodeProperties } from '../node-properties/node-properties';
-import { Sidebar } from '@/components/sidebar/sidebar';
-import { renderComponent } from './render-component';
 import type { PropertiesBarItem, PropertiesBarProps } from './properties-bar.types';
+import { renderComponent } from './render-component';
 
 /**
  * PropertiesBarComponent - A configurable sidebar component for displaying and editing
@@ -62,17 +62,20 @@ function PropertiesBarComponent({
   const contentComponents: PropertiesBarItem[] = [
     {
       when: ({ selection, selectedTab }) => !!selection.node && selectedTab === 'properties',
-      component: ({ selection }) => <NodeProperties node={selection.node!} />,
+      component: ({ selection }) =>
+        selection?.node ? <NodeProperties node={selection.node} /> : null,
     },
     {
       when: ({ selection }) => !!selection.edge,
-      component: ({ selection }) => <EdgeProperties edge={selection.edge!} />,
+      component: ({ selection }) =>
+        selection?.edge ? <EdgeProperties edge={selection.edge} /> : null,
     },
     ...tabs.flatMap((tab) => tab.components),
   ];
 
   return (
     <Sidebar
+      className={clsx(isExpanded && '!w-[420px]')}
       isExpanded={isExpanded}
       contentClassName="-ml-4 w-[calc(100%+1rem)] [&>*]:pl-4"
       header={
@@ -93,7 +96,7 @@ function PropertiesBarComponent({
               <Button
                 onClick={onRunNodeClick}
                 variant="default"
-                className="bg-green-600 hover:bg-green-700 text-white dark:bg-green-600 dark:hover:bg-green-700"
+                className="bg-green-500 hover:bg-green-600 text-white dark:bg-green-500 dark:hover:bg-green-600"
               >
                 <Icon name="Play" size={16} />
                 {runNodeLabel}
