@@ -7,7 +7,7 @@ export const vaultNode: PaletteItem<VaultNodeSchema> = {
   label: 'Vault',
   description: 'Deposit into yield-generating vault with automated stop conditions',
   type: 'vault',
-  icon: 'Vault',
+  icon: 'ShieldCheck',
   defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,

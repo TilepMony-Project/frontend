@@ -37,7 +37,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
     () => [
       {
         label: 'Duplicate to Drafts',
-        icon: <Icon name="Cards" />,
+        icon: <Icon name="LayoutGrid" />,
         onClick: onDuplicateClick,
       },
     ],

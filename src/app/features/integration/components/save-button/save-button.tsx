@@ -20,7 +20,7 @@ export function SaveButton() {
     <NavButton onClick={handleSave} tooltip="Save">
       <>
         <SavingStatus />
-        <Icon name="FloppyDisk" />
+        <Icon name="Save" />
       </>
     </NavButton>
   );

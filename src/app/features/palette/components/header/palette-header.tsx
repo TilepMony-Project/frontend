@@ -16,7 +16,7 @@ export function PaletteHeader({ onClick, isSidebarExpanded }: PaletteHeaderProps
         onClick={onClick}
         tooltip={isSidebarExpanded ? 'Close Palette' : 'Open Palette'}
       >
-        <Icon name="SidebarSimple" />
+        <Icon name="PanelLeft" />
       </NavButton>
     </div>
   );

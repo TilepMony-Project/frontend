@@ -7,7 +7,7 @@ export const redeemNode: PaletteItem<RedeemNodeSchema> = {
   label: 'Redeem',
   description: 'Convert stablecoin back to fiat (database simulation)',
   type: 'redeem',
-  icon: 'Bank',
+  icon: 'Building2',
   defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,

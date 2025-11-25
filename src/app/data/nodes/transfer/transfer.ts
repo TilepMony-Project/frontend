@@ -7,7 +7,7 @@ export const transferNode: PaletteItem<TransferNodeSchema> = {
   label: 'Transfer',
   description: 'Send stablecoins to business wallet or external address',
   type: 'transfer',
-  icon: 'PaperPlaneRight',
+  icon: 'Send',
   defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,

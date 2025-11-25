@@ -61,60 +61,55 @@ export type WBIconProps = IconProps;
 // Uses Lucide React as primary icon library
 const iconMap: Record<string, ComponentType<IconProps>> = {
   // Common UI icons (Lucide React)
-  FloppyDisk: Save,
-  Export: Upload,
-  DownloadSimple: Download,
-  ArrowUUpLeft: Undo2,
-  ArrowUUpRight: Redo2,
-  TreeStructureDown: Network,
-  Cards: LayoutGrid,
+  Save: Save,
+  Upload: Upload,
+  Download: Download,
+  Undo2: Undo2,
+  Redo2: Redo2,
+  Network: Network,
+  LayoutGrid: LayoutGrid,
   ArrowLeft: ArrowLeft,
   Search: Search,
   List: List,
   Copy: Copy,
 
   // Modal and form icons
-  LockSimpleOpen: Lock,
+  Lock: Lock,
   Image: Image,
   Archive: Archive,
-  DotsThreeVertical: MoreVertical,
-  SidebarSimple: PanelLeft,
-  Cube: Box,
+  MoreVertical: MoreVertical,
+  PanelLeft: PanelLeft,
+  Box: Box,
   PlusCircle: PlusCircle,
-  DotsSixVertical: GripVertical,
+  GripVertical: GripVertical,
   X: X,
-  FrameCorners: Maximize2,
-  Spinner: Loader2,
-  CheckCircle: CheckCircle2,
+  Maximize2: Maximize2,
+  Loader2: Loader2,
+  CheckCircle2: CheckCircle2,
   XCircle: XCircle,
 
   // Additional icons used in components
   Pencil: Pencil,
-  PencilSimple: Pencil,
-  PencilSimpleSlash: PencilOff,
   PencilOff: PencilOff,
   Moon: Moon,
-  MoonStars: Moon,
   Sun: Sun,
   ChevronDown: ChevronDown,
-  CaretDown: ChevronDown,
   Info: Info,
   MinusCircle: MinusCircle,
   SlidersHorizontal: SlidersHorizontal,
-  Trash: Trash2,
   Trash2: Trash2,
   Play: Play,
   Plus: Plus,
   Asterisk: Asterisk,
 
   // Node icons - TilepMoney (Lucide React)
-  CurrencyDollar: DollarSign, // Deposit
+  DollarSign: DollarSign, // Deposit
   Coins: Coins, // Mint
-  ArrowsClockwise: ArrowLeftRight, // Swap
-  Bridge: Link2, // Bridge (using Link2 as bridge icon)
-  Bank: Building2, // Redeem
-  PaperPlaneRight: Send, // Transfer
-  Vault: ShieldCheck, // Vault (using ShieldCheck as vault icon)
+  ArrowLeftRight: ArrowLeftRight, // Swap
+  Link2: Link2, // Bridge
+  Building2: Building2, // Redeem
+  Send: Send, // Transfer
+  ShieldCheck: ShieldCheck, // Vault
   Clock: Clock, // Wait
   GitBranch: GitBranch, // Partition
 };
@@ -150,7 +145,7 @@ export const Icon: ComponentType<IconProps> = ({ size = 24, className, name, ...
 
     // Add spinning animation for Spinner icon
     const spinnerClassName =
-      name === 'Spinner' ? `${className || ''} animate-spin`.trim() : className;
+      name === 'Loader2' ? `${className || ''} animate-spin`.trim() : className;
 
     return <IconComponent size={iconSize} className={spinnerClassName} {...props} />;
   }
