@@ -1,9 +1,9 @@
-import { SnackbarType } from '@synergycodes/overflow-ui';
+import { showToast, ToastType } from '@/utils/toast-utils';
 import { useEffect, useState } from 'react';
 
 import { useSingleSelectedElement } from '@/features/properties-bar/use-single-selected-element';
 import { useRemoveElements } from '@/hooks/use-remove-elements';
-import { showSnackbar } from '@/utils/show-snackbar';
+
 import { PropertiesBar } from './components/properties-bar/properties-bar';
 
 export function PropertiesBarContainer() {
@@ -31,10 +31,10 @@ export function PropertiesBarContainer() {
 
     const nodeLabel = selection.node.data?.properties?.label ?? 'Selected node';
 
-    showSnackbar({
+    showToast({
       title: `${nodeLabel} execution coming soon`,
       subtitle: 'Node-level execution preview will be available soon.',
-      variant: SnackbarType.INFO,
+      variant: ToastType.INFO,
     });
   }
 

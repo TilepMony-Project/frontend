@@ -1,6 +1,6 @@
 import type { WorkflowBuilderEdge } from '@/types/node-data';
 import useStore from '@/store/store';
-import { Input } from '@synergycodes/overflow-ui';
+import { Input } from '@/components/ui/input';
 
 import { useEffect, useState } from 'react';
 import { FormControlWithLabel } from '@/components/form/form-control-with-label/form-control-with-label';

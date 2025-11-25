@@ -1,6 +1,6 @@
 
 
-import { NavButton } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/icons';
 
 type Props = {
@@ -18,9 +18,9 @@ export function PropertiesBarHeader({ isExpanded, header, name, onDotsClick }: P
         {isExpanded && <p className="ax-public-p11">{name}</p>}
       </div>
       {onDotsClick && (
-        <NavButton size="small" onClick={onDotsClick}>
+        <Button size="sm" variant="ghost" onClick={onDotsClick}>
           <Icon name="DotsThreeVertical" />
-        </NavButton>
+        </Button>
       )}
     </div>
   );

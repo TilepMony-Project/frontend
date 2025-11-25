@@ -1,6 +1,7 @@
 
 
-import { SegmentPicker, Button } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
+import { SegmentPicker } from '@/components/ui/segment-picker';
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
 import { EdgeProperties } from '../edge-properties/edge-properties';
 import { PropertiesBarHeader } from '../header/properties-bar-header';
@@ -84,7 +85,7 @@ function PropertiesBarComponent({
       }
       footer={
         isExpanded && (
-          <Button onClick={onDeleteClick} variant="ghost-destructive">
+          <Button onClick={onDeleteClick} variant="ghost" className="text-destructive hover:text-destructive hover:bg-destructive/10">
             {selection?.node ? deleteNodeLabel : deleteEdgeLabel}
           </Button>
         )
