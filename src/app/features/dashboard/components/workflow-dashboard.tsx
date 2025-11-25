@@ -361,12 +361,22 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           variant="default"
           size="lg"
         >
-          {creating ? 'Creating...' : 'New workflow'}
+          {creating ? (
+            <>
+              <Icon name="Loader2" size={18} className="animate-spin" />
+              Creating...
+            </>
+          ) : (
+            <>
+              <Icon name="Plus" size={18} />
+              New workflow
+            </>
+          )}
         </Button>
       </section>
 
       {filteredWorkflows.length === 0 ? (
-        <div className="border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl py-10 px-4 text-center bg-white dark:bg-[#27282b] text-gray-600 dark:text-gray-400">
+        <div className="border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl py-8 px-2 text-center bg-white dark:bg-[#27282b] text-gray-600 dark:text-gray-400">
           <h3 className="m-0 mb-2 text-gray-900 dark:text-white text-lg font-semibold">
             No workflows found
           </h3>
@@ -377,7 +387,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           {filteredWorkflows.map((workflow) => (
             <article
               key={workflow.id}
-              className="group bg-white dark:bg-[#27282b] rounded-2xl p-10 border border-gray-200 dark:border-gray-700 flex flex-col gap-5 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/50"
+              className="group bg-white dark:bg-[#27282b] rounded-2xl p-8 border border-gray-200 dark:border-gray-700 flex flex-col gap-5 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/50"
             >
               <div className="flex justify-between gap-3 items-start">
                 <div className="flex-1">
@@ -428,7 +438,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                       Loading...
                     </div>
                   ) : (
-                    'Edit'
+                    <div className="flex items-center justify-center gap-2">
+                      <Icon name="Pencil" size={16} />
+                      Edit
+                    </div>
                   )}
                 </button>
                 <button
