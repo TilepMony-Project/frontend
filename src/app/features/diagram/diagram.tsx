@@ -66,6 +66,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
   const fitViewOptions: FitViewOptions = useMemo(() => ({ maxZoom: 1 }), []);
 
   const onNodeDragStart: OnNodeDrag = useCallback((event, node, nodes) => {
+    trackFutureChange('nodeDragStart');
     callNodeDragStartListeners(event, node, nodes);
   }, []);
 
@@ -98,10 +99,6 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
   const onConnectEnd = useCallback(() => {
     setConnectionBeingDragged(null, null);
   }, [setConnectionBeingDragged]);
-
-  const onNodeDragStop = useCallback(() => {
-    trackFutureChange('nodeDragStop');
-  }, []);
 
   const handleOnNodesChange = useCallback(
     (changes: NodeChange<WorkflowBuilderNode>[]) => {
@@ -174,7 +171,6 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
         onEdgeMouseLeave={onEdgeMouseLeave}
         onNodesChange={handleOnNodesChange}
         onNodeDragStart={onNodeDragStart}
-        onNodeDragStop={onNodeDragStop}
         onBeforeDelete={onBeforeDelete}
         onSelectionChange={handleOnSelectionChange}
         minZoom={0.1}
