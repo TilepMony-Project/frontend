@@ -20,7 +20,7 @@ export function ConnectableItem({
   canHaveBottomHandle = true,
 }: Props) {
   const layoutDirection = useStore(({ layoutDirection }) => layoutDirection);
-  const isVertical = layoutDirection === 'DOWN' && canHaveBottomHandle;
+  const isVertical = layoutDirection === 'vertical' && canHaveBottomHandle;
   const position = isVertical ? Position.Bottom : Position.Right;
 
   const handleId = getHandleId({ nodeId, innerId, handleType });

@@ -37,6 +37,7 @@ const TERMINAL_STATUSES: ExecutionStatus[] = ['finished', 'failed', 'stopped'];
 export function ExecutionMonitor() {
   const nodes = useStore((state) => state.nodes);
   const setExecutionMonitorActive = useStore((state) => state.setExecutionMonitorActive);
+  const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [execution, setExecution] = useState<ExecutionResponse['execution'] | null>(null);
   const [isExpanded, setIsExpanded] = useState(true);
@@ -44,7 +45,7 @@ export function ExecutionMonitor() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const fetchStatusRef = useRef<() => Promise<void>>();
+  const fetchStatusRef = useRef<() => Promise<void>>(undefined);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -147,7 +148,7 @@ export function ExecutionMonitor() {
           : 'pending');
       return {
         id: node.id,
-        label: (node.data?.properties?.label as string) ?? node.type ?? 'Node',
+        label: ((node.data as any)?.properties?.label as string) ?? node.type ?? 'Node',
         type: node.type ?? 'node',
         status,
       };

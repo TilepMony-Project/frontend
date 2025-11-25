@@ -9,7 +9,7 @@ import { Icon } from '@/components/icons';
 function SelectControl(props: SelectControlProps) {
   const { data, handleChange, path, enabled, schema } = props;
 
-  const items = (schema as PrimitiveFieldSchema).options?.map((option) =>
+  const items = ((schema as PrimitiveFieldSchema).options as any[])?.map((option) =>
     option.type === 'separator' || !option.icon
       ? option
       : {

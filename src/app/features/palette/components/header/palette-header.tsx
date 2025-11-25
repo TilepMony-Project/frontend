@@ -1,4 +1,4 @@
-import styles from './palette-header.module.css';
+
 import { NavButton } from '@synergycodes/overflow-ui';
 import { Icon } from '@/components/icons';
 
@@ -9,7 +9,7 @@ type PaletteHeaderProps = {
 
 export function PaletteHeader({ onClick, isSidebarExpanded }: PaletteHeaderProps) {
   return (
-    <div className={styles['container']}>
+    <div className="flex items-center justify-between gap-3">
       <span className="ax-public-h7">Nodes Library</span>
       <NavButton
         size="small"

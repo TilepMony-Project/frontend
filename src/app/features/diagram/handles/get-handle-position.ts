@@ -6,10 +6,10 @@ export function getHandlePosition({ handleType, direction }: GetHandlePositionOp
 }
 
 const HANDLE_POSITION_MAP: Record<`${HandleType}-${LayoutDirection}`, Position> = {
-  'source-DOWN': Position.Bottom,
-  'source-RIGHT': Position.Right,
-  'target-DOWN': Position.Top,
-  'target-RIGHT': Position.Left,
+  'source-vertical': Position.Bottom,
+  'source-horizontal': Position.Right,
+  'target-vertical': Position.Top,
+  'target-horizontal': Position.Left,
 };
 
 type GetHandlePositionOptions = {

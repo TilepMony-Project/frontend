@@ -36,7 +36,7 @@ const WorkflowNodeTemplateComponent = memo(
     icon,
     label,
     description,
-    layoutDirection = 'RIGHT',
+    layoutDirection = 'horizontal',
     selected = false,
     showHandles = true,
     isValid,
@@ -58,7 +58,7 @@ const WorkflowNodeTemplateComponent = memo(
 
     const hasContent = !!children;
 
-    const handlesAlignment = hasContent && layoutDirection === 'RIGHT' ? 'header' : 'center';
+    const handlesAlignment = hasContent && layoutDirection === 'horizontal' ? 'header' : 'center';
 
     return (
       <Collapsible>
