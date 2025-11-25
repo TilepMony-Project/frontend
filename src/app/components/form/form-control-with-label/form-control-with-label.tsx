@@ -19,7 +19,7 @@ export function FormControlWithLabel({
   children,
 }: PropsWithChildren<Props>) {
   return (
-    <div className={clsx('flex flex-col gap-1', { [className || '']: className })}>
+    <div className={clsx('flex flex-col gap-2', { [className || '']: className })}>
       <Label label={label} required={required} size={size} />
       {children}
     </div>

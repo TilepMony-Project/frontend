@@ -10,17 +10,11 @@ type WalletGuardProps = PropsWithChildren<{
 }>;
 
 const defaultFallback = (
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '50vh',
-      fontSize: '1rem',
-      color: 'var(--ax-txt-secondary-default, #6c6c6c)',
-    }}
-  >
-    Checking wallet connection…
+  <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    <p className="text-base text-gray-600 dark:text-gray-400">
+      Checking wallet connection…
+    </p>
   </div>
 );
 

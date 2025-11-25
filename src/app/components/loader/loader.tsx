@@ -32,8 +32,9 @@ export const Loader = memo(({ isLoading, isSemiTransparent }: LoaderType) => {
       )}
       style={setLoaderBackgroundOpacityVariable}
     >
-      <div className="flex content-center justify-center items-center w-full h-full text-xl">
-        Loading...
+      <div className="flex flex-col items-center justify-center w-full h-full gap-4">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        <p className="text-lg text-gray-600 dark:text-gray-400">Loading...</p>
       </div>
     </div>
   );

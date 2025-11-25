@@ -22,9 +22,11 @@ export function Sidebar({
   return (
     <div
       className={clsx(
-        'h-min w-auto relative items-center justify-between pointer-events-auto rounded-xl bg-[var(--ax-ui-bg-primary-default)] text-[var(--ax-txt-primary-default)] flex flex-col py-3 border border-[var(--ax-ui-stroke-primary-default)]',
+        'h-min w-auto relative items-center justify-between pointer-events-auto rounded-xl flex flex-col py-3',
+        'bg-white dark:bg-[#27282b] text-gray-900 dark:text-white',
+        'border border-gray-200 dark:border-gray-700',
         'transition-all duration-300 shadow-lg',
-        { 'h-full w-[420px] box-border': isExpanded },
+        { 'h-full w-[440px] box-border': isExpanded },
         className
       )}
       {...props}
