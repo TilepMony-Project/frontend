@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import type { DragEventHandler } from 'react';
 import useStore from '@/store/store';
 import { diagramStateSelector } from './selectors';
-import styles from './diagram.module.css';
+
 import type { DragEvent } from 'react';
 import { getNodeTypesObject } from './get-node-types-object';
 import {
@@ -151,7 +151,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
   const panOnDrag = [1, 2];
 
   return (
-    <div className={styles['container']}>
+    <div className="w-screen h-screen [&_.react-flow__edgelabel-renderer]:z-[1001]">
       <ReactFlow<WorkflowBuilderNode, WorkflowBuilderEdge>
         edges={edges}
         edgeTypes={diagramEdgeTypes}

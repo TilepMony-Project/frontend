@@ -1,5 +1,5 @@
 import { Button } from '@synergycodes/overflow-ui';
-import styles from './placeholder-button.module.css';
+
 import { PlusCircle } from 'lucide-react';
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 
 export function PlaceholderButton({ label, size = 'extra-small', ...props }: Props) {
   return (
-    <Button className={styles['placeholder-button']} size={size} variant="secondary" {...props}>
+    <Button className="border-dashed" size={size} variant="secondary" {...props}>
       <PlusCircle />
       {label}
     </Button>
