@@ -6,9 +6,9 @@ const TRACKED_EVENTS = new Set([
   'addEdge',
   'delete',
   'nodeDragStart',
+  'nodeDragStop',
   'dataUpdate',
   'setDiagramModel',
-  'import',
 ]);
 
 registerFunctionDecorator('trackFutureChange', {
