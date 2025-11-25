@@ -1,6 +1,6 @@
 @layer reset, ext-lib, ui;
 
-@import "@synergycodes/overflow-ui/tokens.css";
+
 
 @layer ui {
   @layer base, component;
@@ -13,7 +13,8 @@
   --wb-scroll-width: 0.375rem;
   --wb-scroll-radius: 0.625rem;
   --wb-scroll-thumb-color: var(--ax-scrollbar-bg-default);
-  --wb-scroll-thumb-hover-color: var(--colors-gray-gray-500); /* missing token */
+  --wb-scroll-thumb-hover-color: var(--colors-gray-gray-500);
+  /* missing token */
   --wb-scroll-track-color: transparent;
 }
 
