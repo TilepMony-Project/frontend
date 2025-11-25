@@ -1,4 +1,4 @@
-import styles from './vertical-layout.module.css';
+
 import { LayoutWrapper } from '../layout-wrapper';
 import { renderElements } from '../render-elements';
 import type { LayoutProps, VerticalLayoutElement } from '../../types/layouts';
@@ -7,7 +7,7 @@ import { createLayoutRenderer } from '../../utils/rendering';
 function VerticalLayout(props: LayoutProps<VerticalLayoutElement>) {
   return (
     <LayoutWrapper {...props}>
-      <div className={styles['horizontal-layout']}>{renderElements(props)}</div>
+      <div className="flex flex-col gap-2">{renderElements(props)}</div>
     </LayoutWrapper>
   );
 }

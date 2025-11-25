@@ -10,7 +10,7 @@ import { labelRenderer } from './controls/label-control/label-control';
 import { selectControlRenderer } from './controls/select-control/select-control';
 import { switchControlRenderer } from './controls/switch-control/switch-control';
 import { textAreaControlRenderer } from './controls/text-area-control/text-area-control';
-import styles from './json-form.module.css';
+
 import { accordionLayoutRenderer } from './layouts/accordion-layout/accordion-layout';
 import { horizontalLayoutRenderer } from './layouts/horizontal-layout/horizontal-layout';
 import { verticalLayoutRenderer } from './layouts/vertical-layout/vertical-layout';
@@ -23,7 +23,7 @@ type Props = Pick<ComponentProps<typeof JsonForms>, 'onChange' | 'data' | 'uisch
 export function JSONForm(props: Props) {
   const { readonly, ...rest } = props;
   return (
-    <div className={styles['json-form-container']}>
+    <div className="[&>div]:flex [&>div]:flex-col [&>div]:gap-4 [&_hr]:w-[calc(100%+2rem)]">
       <JsonForms
         renderers={renderers}
         validationMode="ValidateAndShow"
