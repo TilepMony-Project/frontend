@@ -7,7 +7,7 @@ export function WorkflowLoadingOverlay() {
           Loading workflow...
         </p>
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Please wait while we fetch your workflow data
+          Please wait while fetching workflow data
         </p>
       </div>
     </div>

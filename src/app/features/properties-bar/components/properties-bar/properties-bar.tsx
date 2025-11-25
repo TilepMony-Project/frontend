@@ -32,9 +32,12 @@ function PropertiesBarComponent({
   onRunNodeClick,
   runNodeLabel,
   tabs = [],
+  isSidebarExpanded,
+  onToggleSidebar,
 }: PropertiesBarProps) {
   const name = selection?.node?.data?.properties?.label ?? selection?.edge?.data?.label;
-  const isExpanded = !!selection;
+  const hasSelection = !!selection;
+  const isExpanded = hasSelection && isSidebarExpanded;
   const hasCustomItems = tabs.length > 0;
 
   const segmentPicker = {
@@ -85,6 +88,8 @@ function PropertiesBarComponent({
             header={headerLabel}
             name={name ?? ''}
             onDotsClick={onMenuHeaderClick}
+            onToggleExpand={hasSelection ? onToggleSidebar : undefined}
+            isSidebarExpanded={isSidebarExpanded}
           />
           {isExpanded && renderComponent([segmentPicker], selection, selectedTab)}
         </>

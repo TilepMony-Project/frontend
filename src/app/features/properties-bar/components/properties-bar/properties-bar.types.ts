@@ -25,6 +25,8 @@ export type PropertiesBarProps = PropertiesBarBaseProps & {
   deleteNodeLabel: string;
   deleteEdgeLabel: string;
   runNodeLabel: string;
+  isSidebarExpanded: boolean;
+  onToggleSidebar: (value?: boolean) => void;
   tabs?: PropertiesBarTab[];
   onTabChange: (tab: string) => void;
   onMenuHeaderClick?: () => void;

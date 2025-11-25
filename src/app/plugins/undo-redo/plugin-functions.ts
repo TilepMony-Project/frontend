@@ -5,14 +5,13 @@ const TRACKED_EVENTS = new Set([
   'addNode',
   'addEdge',
   'delete',
-  'nodeDragStart',
   'nodeDragStop',
   'dataUpdate',
   'setDiagramModel',
 ]);
 
 registerFunctionDecorator('trackFutureChange', {
-  place: 'before',
+  place: 'after',
   name: 'UndoRedoHistory',
   callback: ({ params }) => {
     const [changeName] = params as [string];

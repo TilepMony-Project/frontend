@@ -1,13 +1,16 @@
-import { showToast, ToastType } from '@/utils/toast-utils';
+import { ToastType, showToast } from '@/utils/toast-utils';
 import { useEffect, useState } from 'react';
 
 import { useSingleSelectedElement } from '@/features/properties-bar/use-single-selected-element';
 import { useRemoveElements } from '@/hooks/use-remove-elements';
+import useStore from '@/store/store';
 
 import { PropertiesBar } from './components/properties-bar/properties-bar';
 
 export function PropertiesBarContainer() {
   const { removeElements } = useRemoveElements();
+  const isPropertiesBarExpanded = useStore((state) => state.isPropertiesBarExpanded);
+  const togglePropertiesBar = useStore((state) => state.togglePropertiesBar);
 
   const [selectedTab, setSelectedTab] = useState('properties');
 
@@ -49,6 +52,8 @@ export function PropertiesBarContainer() {
       runNodeLabel="Run Node"
       selectedTab={selectedTab}
       onTabChange={setSelectedTab}
+      isSidebarExpanded={isPropertiesBarExpanded}
+      onToggleSidebar={togglePropertiesBar}
     />
   );
 }

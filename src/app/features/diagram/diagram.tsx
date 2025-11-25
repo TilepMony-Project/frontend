@@ -66,7 +66,6 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
   const fitViewOptions: FitViewOptions = useMemo(() => ({ maxZoom: 1 }), []);
 
   const onNodeDragStart: OnNodeDrag = useCallback((event, node, nodes) => {
-    trackFutureChange('nodeDragStart');
     callNodeDragStartListeners(event, node, nodes);
   }, []);
 
