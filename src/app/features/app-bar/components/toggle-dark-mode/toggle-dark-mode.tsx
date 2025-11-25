@@ -10,9 +10,10 @@ export function ToggleDarkMode() {
     <IconSwitch
       checked={theme === 'dark'}
       onChange={toggleTheme}
-      icon={<Sun />}
-      IconChecked={<Moon />}
+      icon={<Sun size={16} />}
+      IconChecked={<Moon size={16} />}
       variant="secondary"
+      className="p-1.5 h-8 w-8"
     />
   );
 }

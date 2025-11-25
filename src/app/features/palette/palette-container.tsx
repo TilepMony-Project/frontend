@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 
 import { Sidebar } from '@/components/sidebar/sidebar';
 import useStore from '@/store/store';
@@ -26,7 +27,7 @@ export function PaletteContainer() {
 
   return (
     <Sidebar
-      className="w-auto"
+      className={clsx('w-auto', isSidebarExpanded && '!w-[300px]')}
       isExpanded={isSidebarExpanded}
       header={
         <PaletteHeader onClick={() => toggleSidebar()} isSidebarExpanded={isSidebarExpanded} />

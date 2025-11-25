@@ -11,8 +11,9 @@ export function ToggleReadyOnlyMode() {
     <IconSwitch
       checked={isReadOnlyMode}
       onChange={setToggleReadOnlyMode}
-      icon={<Pencil />}
-      IconChecked={<PencilOff />}
+      icon={<Pencil size={16} />}
+      IconChecked={<PencilOff size={16} />}
+      className="p-1.5 h-8 w-8"
     />
   );
 }

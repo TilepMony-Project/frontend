@@ -62,7 +62,7 @@ const WorkflowNodeTemplateComponent = memo(
 
     return (
       <Collapsible>
-        <NodePanel.Root selected={selected} className="[--ax-public-node-gap:0]">
+        <NodePanel.Root selected={selected} className="[--ax-public-node-gap:0] workflow-node-with-border">
           <NodePanel.Header>
             <NodeIcon icon={iconElement} />
             <NodeDescription label={label} description={description} />

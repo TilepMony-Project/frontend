@@ -7,14 +7,22 @@ import { useRouter } from 'next/navigation';
 
 import type { WorkflowSummary } from '@/actions/workflows';
 import { Icon } from '@/components/icons';
+import { IconSwitch } from '@/components/ui/icon-switch';
 import { useTheme } from '@/hooks/use-theme';
+import { Moon, Sun } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/ui/modal';
-import { showToast, ToastType } from '@/utils/toast-utils';
-
-
+import { ToastType, showToast } from '@/utils/toast-utils';
 
 type ViewMode = 'grid' | 'list';
 
@@ -248,38 +256,36 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   }
 
   function handleOpenWorkflow(workflowId: string) {
-    router.push(`/workspace/${workflowId}`);
+    setIsOpeningWorkflow(workflowId);
+    // Small delay to show loading state before navigation
+    setTimeout(() => {
+      router.push(`/workspace/${workflowId}`);
+    }, 100);
   }
 
+  const [isOpeningWorkflow, setIsOpeningWorkflow] = useState<string | null>(null);
   const creating = pendingAction.type === 'create';
   const mutatingWorkflowId = pendingAction.workflowId;
 
   return (
     <div className="min-h-screen p-8 flex flex-col gap-6 bg-[#eeeff3] dark:bg-[#151516]">
-      <section className="flex flex-wrap justify-between gap-4 items-start">
+      <section className="flex flex-wrap justify-between gap-4 items-center">
         <div className="titleGroup">
-          <h1 className="m-0 text-3xl font-semibold text-gray-900 dark:text-white">Workflow Dashboard</h1>
-          <p className="mt-1 text-gray-600 dark:text-gray-400 text-sm">Review, filter, and jump into any orchestration workspace.</p>
+          <h1 className="m-0 text-3xl font-semibold text-gray-900 dark:text-white">
+            Workflow Dashboard
+          </h1>
+          <p className="mt-1 text-gray-600 dark:text-gray-400 text-sm">
+            Review, filter, and jump into any orchestration workspace.
+          </p>
         </div>
-        <div className="flex gap-3 flex-wrap">
-          <Button
-            className="flex items-center gap-1.5 rounded-full"
-            variant="secondary"
-            onClick={toggleTheme}
-          >
-            <Icon name={theme === 'light' ? 'Moon' : 'Sun'} size={18} />
-            {theme === 'light' ? 'Dark mode' : 'Light mode'}
-          </Button>
-          <Button
-            className="min-w-[180px] h-13 text-base rounded-full"
-            onClick={openCreateWorkflowModal}
-            disabled={creating}
-            variant="default"
-            size="lg"
-          >
-            {creating ? 'Creating...' : 'New workflow'}
-          </Button>
-        </div>
+        <IconSwitch
+          checked={theme === 'dark'}
+          onChange={toggleTheme}
+          icon={<Sun size={18} />}
+          IconChecked={<Moon size={18} />}
+          variant="secondary"
+          className="h-12 w-12 bg-white dark:bg-[#27282b] border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-[#323336] shadow-sm p-0 flex items-center justify-center"
+        />
       </section>
 
       <section className="flex flex-wrap gap-4 items-center bg-white dark:bg-[#27282b] rounded-2xl p-4 shadow-sm">
@@ -290,44 +296,56 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             value={searchTerm}
             placeholder="Search workflows"
             onChange={(event) => setSearchTerm(event.target.value)}
-            className="border-none outline-none bg-transparent text-inherit w-full"
+            className="border-none outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:border-none focus:ring-0 focus:outline-none focus:border-none bg-transparent text-inherit w-full"
           />
         </div>
 
-        <select
-          className="rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white p-3 min-w-[180px]"
-          value={statusFilter}
-          onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}
-        >
-          {STATUS_OPTIONS.map((status) => (
-            <option key={status.value} value={status.value}>
-              {status.label}
-            </option>
-          ))}
-        </select>
-
-        <div className="flex rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white px-4 min-w-[200px] flex items-center justify-between"
+            >
+              {STATUS_OPTIONS.find((option) => option.value === statusFilter)?.label ??
+                'All statuses'}
+              <Icon name="ChevronDown" size={16} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuRadioGroup
+              value={statusFilter}
+              onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}
+            >
+              {STATUS_OPTIONS.map((status) => (
+                <DropdownMenuRadioItem key={status.value} value={status.value}>
+                  {status.label}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <div className="flex rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden h-12">
           <button
             className={clsx(
-              'bg-transparent border-none py-2 px-4 flex items-center gap-1.5 text-gray-600 dark:text-gray-400 cursor-pointer font-medium',
+              'h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer',
               viewMode === 'grid' && 'bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white'
             )}
             type="button"
             onClick={() => setViewMode('grid')}
+            aria-label="Grid view"
           >
-            <Icon name="LayoutGrid" size={16} />
-            Grid
+            <Icon name="LayoutGrid" size={18} />
           </button>
           <button
             className={clsx(
-              'bg-transparent border-none py-2 px-4 flex items-center gap-1.5 text-gray-600 dark:text-gray-400 cursor-pointer font-medium',
+              'h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer',
               viewMode === 'list' && 'bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white'
             )}
             type="button"
             onClick={() => setViewMode('list')}
+            aria-label="List view"
           >
-            <Icon name="List" size={16} />
-            List
+            <Icon name="List" size={18} />
           </button>
         </div>
       </section>
@@ -336,97 +354,130 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         <span>
           Showing {filteredWorkflows.length} of {workflows.length} workflows
         </span>
-        {searchTerm && <span className="text-gray-600 dark:text-gray-400 text-sm">Filtered by "{searchTerm}"</span>}
+        <Button
+          className="min-w-[180px] px-6 py-3 text-base rounded-full"
+          onClick={openCreateWorkflowModal}
+          disabled={creating}
+          variant="default"
+          size="lg"
+        >
+          {creating ? 'Creating...' : 'New workflow'}
+        </Button>
       </section>
 
       {filteredWorkflows.length === 0 ? (
-        <div className="border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl py-12 px-6 text-center bg-white dark:bg-[#27282b] text-gray-600 dark:text-gray-400">
-          <h3 className="m-0 mb-2 text-gray-900 dark:text-white text-lg font-semibold">No workflows found</h3>
+        <div className="border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl py-10 px-4 text-center bg-white dark:bg-[#27282b] text-gray-600 dark:text-gray-400">
+          <h3 className="m-0 mb-2 text-gray-900 dark:text-white text-lg font-semibold">
+            No workflows found
+          </h3>
           <p>Try adjusting your filters or create a new workflow to get started.</p>
         </div>
       ) : viewMode === 'grid' ? (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
           {filteredWorkflows.map((workflow) => (
-            <article key={workflow.id} className="bg-white dark:bg-[#27282b] rounded-2xl p-5 border border-gray-200 dark:border-gray-700 flex flex-col gap-3.5 shadow-sm">
+            <article
+              key={workflow.id}
+              className="group bg-white dark:bg-[#27282b] rounded-2xl p-10 border border-gray-200 dark:border-gray-700 flex flex-col gap-5 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/50"
+            >
               <div className="flex justify-between gap-3 items-start">
-                <div>
-                  <h3 className="m-0 text-lg font-semibold text-gray-900 dark:text-white">{workflow.name}</h3>
-                  {workflow.description ? (
-                    <p className="m-0 text-gray-600 dark:text-gray-400 text-sm">{workflow.description}</p>
-                  ) : (
-                    <p className="m-0 text-gray-600 dark:text-gray-400 text-sm">No description provided</p>
-                  )}
+                <div className="flex-1">
+                  <h3 className="m-0 text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                    {workflow.name}
+                  </h3>
+                  <p className="m-0 text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
+                    {workflow.description || 'No description provided'}
+                  </p>
                 </div>
                 <span
                   className={clsx(
-                    'px-3 py-1 rounded-full text-xs font-semibold capitalize border border-gray-200 dark:border-gray-700',
-                    STATUS_STYLES[workflow.status] || 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                    'px-3 py-1.5 rounded-full text-xs font-semibold capitalize border shrink-0',
+                    STATUS_STYLES[workflow.status] ||
+                      'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'
                   )}
                 >
                   {STATUS_LABELS[workflow.status]}
                 </span>
               </div>
 
-              <div className="flex gap-4 text-gray-600 dark:text-gray-400 text-sm">
-                <span>{workflow.nodesCount} nodes</span>
-                <span>•</span>
-                <span>{workflow.edgesCount} edges</span>
+              <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm mt-6">
+                <div className="flex items-center gap-1.5">
+                  <Icon name="Box" size={16} />
+                  <span>{workflow.nodesCount} nodes</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Icon name="GitBranch" size={16} />
+                  <span>{workflow.edgesCount} edges</span>
+                </div>
               </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Updated {formatDate(workflow.updatedAt)}</p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Last executed: {formatDate(workflow.lastExecutedAt)}</p>
+              
+              <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-500 text-xs">
+                <Icon name="Clock" size={14} />
+                <span>Updated {formatDate(workflow.updatedAt)}</span>
+              </div>
 
-              <div className="mt-auto flex gap-2 flex-wrap">
+              <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 flex gap-2">
                 <button
                   type="button"
-                  className={clsx(
-                    'flex-1 min-w-[120px] text-center rounded-xl p-2.5 border cursor-pointer font-semibold',
-                    'border-transparent bg-[#1296e7] text-white hover:bg-[#0d7ac4]'
-                  )}
+                  className="flex-1 text-center rounded-xl py-3 px-4 border-none cursor-pointer font-semibold bg-primary text-white hover:bg-primary/90 transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={() => handleOpenWorkflow(workflow.id)}
+                  disabled={isOpeningWorkflow === workflow.id}
                 >
-                  Open workspace
+                  {isOpeningWorkflow === workflow.id ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Loading...
+                    </div>
+                  ) : (
+                    'Edit'
+                  )}
                 </button>
                 <button
                   type="button"
-                  className="flex-1 min-w-[120px] text-center rounded-xl p-2.5 border border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white cursor-pointer font-semibold hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 cursor-pointer font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={() => handleDuplicateWorkflow(workflow.id)}
                   disabled={
                     pendingAction.type === 'duplicate' && mutatingWorkflowId === workflow.id
                   }
+                  title="Duplicate workflow"
                 >
-                  {pendingAction.type === 'duplicate' && mutatingWorkflowId === workflow.id
-                    ? 'Duplicating…'
-                    : 'Duplicate'}
+                  <Icon name="Copy" size={18} />
                 </button>
                 <button
                   type="button"
-                  className={clsx(
-                    'flex-1 min-w-[120px] text-center rounded-xl p-2.5 border cursor-pointer font-semibold',
-                    'text-red-600 dark:text-red-400 border-red-300 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-950'
-                  )}
+                  className="px-4 py-3 rounded-xl border border-red-200 dark:border-red-900/50 bg-transparent text-red-600 dark:text-red-400 cursor-pointer font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={() => handleDeleteWorkflow(workflow.id)}
                   disabled={pendingAction.type === 'delete' && mutatingWorkflowId === workflow.id}
+                  title="Delete workflow"
                 >
-                  {pendingAction.type === 'delete' && mutatingWorkflowId === workflow.id
-                    ? 'Deleting…'
-                    : 'Delete'}
+                  <Icon name="Trash2" size={18} />
                 </button>
               </div>
             </article>
           ))}
         </div>
       ) : (
-
         <div className="rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-[#27282b]">
           <table className="w-full border-collapse">
             <thead className="bg-[#eeeff3] dark:bg-[#151516]">
               <tr>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Name</th>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Status</th>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Updated</th>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Nodes</th>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Edges</th>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">Actions</th>
+                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                  Name
+                </th>
+                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                  Status
+                </th>
+                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                  Updated
+                </th>
+                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                  Nodes
+                </th>
+                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                  Edges
+                </th>
+                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -435,30 +486,47 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                     <div>
                       <strong>{workflow.name}</strong>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">{workflow.description || 'No description'}</p>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">
+                        {workflow.description || 'No description'}
+                      </p>
                     </div>
                   </td>
                   <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                     <span
                       className={clsx(
                         'px-3 py-1 rounded-full text-xs font-semibold capitalize border border-gray-200 dark:border-gray-700',
-                        STATUS_STYLES[workflow.status] || 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                        STATUS_STYLES[workflow.status] ||
+                          'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
                       )}
                     >
                       {STATUS_LABELS[workflow.status]}
                     </span>
                   </td>
-                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{formatDate(workflow.updatedAt)}</td>
-                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{workflow.nodesCount}</td>
-                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{workflow.edgesCount}</td>
+                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                    {formatDate(workflow.updatedAt)}
+                  </td>
+                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                    {workflow.nodesCount}
+                  </td>
+                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                    {workflow.edgesCount}
+                  </td>
                   <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                     <div className="flex gap-2 flex-wrap">
                       <button
                         type="button"
                         className="rounded-lg border-transparent bg-[#1296e7] text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-[#0d7ac4]"
                         onClick={() => handleOpenWorkflow(workflow.id)}
+                        disabled={isOpeningWorkflow === workflow.id}
                       >
-                        Open
+                        {isOpeningWorkflow === workflow.id ? (
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            Loading...
+                          </div>
+                        ) : (
+                          'Edit'
+                        )}
                       </button>
                       <button
                         type="button"
@@ -506,7 +574,12 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           }
         >
           <div className="flex flex-col gap-3 w-full">
-            <label htmlFor="workflow-name-input" className="font-semibold text-gray-900 dark:text-white">Workflow name</label>
+            <label
+              htmlFor="workflow-name-input"
+              className="font-semibold text-gray-900 dark:text-white"
+            >
+              Workflow name
+            </label>
             <Input
               id="workflow-name-input"
               value={newWorkflowName}
