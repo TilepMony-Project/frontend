@@ -4,7 +4,7 @@
 
 @layer reset, ext-lib, ui;
 
-
+@import "@synergycodes/overflow-ui/tokens.css";
 
 @layer ui {
   @layer base, component;
@@ -17,7 +17,8 @@
   --wb-scroll-width: 0.375rem;
   --wb-scroll-radius: 0.625rem;
   --wb-scroll-thumb-color: var(--ax-scrollbar-bg-default);
-  --wb-scroll-thumb-hover-color: var(--colors-gray-gray-500); /* missing token */
+  --wb-scroll-thumb-hover-color: var(--colors-gray-gray-500);
+  /* missing token */
   --wb-scroll-track-color: transparent;
 
   /* Form label variables */
@@ -29,18 +30,26 @@
   --wb-panel-background-color: var(--ax-ui-bg-primary-default);
 
   /* Saving status variables */
-  --wb-saving-status--in-progress-color: var(--ax-colors-acc1-500); /* missing token */
-  --wb-saving-status--saved-color: var(--ax-input-stroke-primary-success); /* missing token */
-  --wb-saving-status--not-saved-color: var(--ax-input-stroke-primary-error); /* missing token */
+  --wb-saving-status--in-progress-color: var(--ax-colors-acc1-500);
+  /* missing token */
+  --wb-saving-status--saved-color: var(--ax-input-stroke-primary-success);
+  /* missing token */
+  --wb-saving-status--not-saved-color: var(--ax-input-stroke-primary-error);
+  /* missing token */
 
   /* Conditions form variables */
-  --wb-conditions-form-border-color: var(--ax-ui-stroke-primary-default); /* missing token */
-  --wb-conditions-form-border-radius: 0.75rem; /* missing token */
+  --wb-conditions-form-border-color: var(--ax-ui-stroke-primary-default);
+  /* missing token */
+  --wb-conditions-form-border-radius: 0.75rem;
+  /* missing token */
   --wb-conditions-form-header-color: var(--ax-public-form-label-color);
   --wb-conditions-form-tag-bg-color: var(--ax-chips-neutral-bg);
-  --wb-conditions-form-inputs-background: var(--ax-ui-bg-secondary-default); /* missing token */
-  --wb-conditions-form-input-background: var(--ax-ui-bg-primary-default); /* missing token */
-  --wb-conditions-form-input-background-destructive: var(--ax-colors-red-400-10); /* missing token */
+  --wb-conditions-form-inputs-background: var(--ax-ui-bg-secondary-default);
+  /* missing token */
+  --wb-conditions-form-input-background: var(--ax-ui-bg-primary-default);
+  /* missing token */
+  --wb-conditions-form-input-background-destructive: var(--ax-colors-red-400-10);
+  /* missing token */
 
   /* Branch card variables */
   --wb-branch-card-padding: 0.5rem;
@@ -59,7 +68,8 @@
   /* Indicator dot variables */
   --wb-indicator-dot-size: 0.75rem;
   --wb-indicator-dot-radius: calc(var(--wb-indicator-dot-size) / 2);
-  --wb-indicator-dot-background-color: var(--ax-colors-orange-400); /* missing token */
+  --wb-indicator-dot-background-color: var(--ax-colors-orange-400);
+  /* missing token */
   --wb-indicator-dot-pulse-radius-size: 0.625rem;
 
   /* Syntax highlighter variables */
@@ -90,8 +100,7 @@
   /* Import export modal variables */
   --wb-import-error-color: var(--ax-public-snackbar-title-color);
   --wb-import-error-background-color: var(--ax-public-snackbar-error-background);
-  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid
-    var(--ax-public-snackbar-error-border);
+  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid var(--ax-public-snackbar-error-border);
   --wb-import-error-border-radius: var(--ax-public-snackbar-border-radius);
 }
 
@@ -175,53 +184,80 @@ html[data-theme="dark"] {
 
 @layer base {
   :root {
+    /* Light mode - white: #ffffff, gray: #eeeff3, blue: #1296e7 */
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    /* #ffffff */
+    --foreground: 0 0% 9%;
+    /* dark text */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    /* #ffffff */
+    --card-foreground: 0 0% 9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
+    /* #ffffff */
+    --popover-foreground: 0 0% 9%;
+    --primary: 199 87% 49%;
+    /* #1296e7 - main blue */
+    --primary-foreground: 0 0% 100%;
+    /* white text on blue */
+    --secondary: 228 11% 94%;
+    /* #eeeff3 - light gray */
     --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
+    --muted: 228 11% 94%;
+    /* #eeeff3 */
+    --muted-foreground: 0 0% 45%;
+    --accent: 228 11% 94%;
+    /* #eeeff3 */
     --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 228 11% 94%;
+    /* #eeeff3 */
+    --input: 228 11% 94%;
+    /* #eeeff3 */
+    --ring: 199 87% 49%;
+    /* #1296e7 - focus ring */
+    --chart-1: 199 87% 49%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
-    --background: 0 0% 3.9%;
+    /* Dark mode - black: #151516, gray: #27282b, blue: #1296e7 */
+    --background: 0 0% 8%;
+    /* #151516 - dark black */
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    /* light text */
+    --card: 0 2% 15%;
+    /* #27282b - dark gray */
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
+    --popover: 0 2% 15%;
+    /* #27282b */
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
+    --primary: 199 87% 49%;
+    /* #1296e7 - main blue */
+    --primary-foreground: 0 0% 100%;
+    /* white text on blue */
+    --secondary: 0 2% 15%;
+    /* #27282b - dark gray */
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
+    --muted: 0 2% 15%;
+    /* #27282b */
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 2% 15%;
+    /* #27282b */
     --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
+    --border: 0 2% 15%;
+    /* #27282b */
+    --input: 0 2% 15%;
+    /* #27282b */
+    --ring: 199 87% 49%;
+    /* #1296e7 - focus ring */
+    --chart-1: 199 87% 49%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
@@ -235,7 +271,51 @@ html[data-theme="dark"] {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Consistent hover and focus effects */
+  button:not(:disabled) {
+    @apply transition-all duration-200;
+  }
+
+  button:not(:disabled):hover {
+    @apply shadow-md;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply ring-2 ring-ring ring-offset-2 transition-all duration-200;
+  }
+
+  /* Card and panel hover effects */
+  [role="dialog"],
+  [role="menu"],
+  [role="listbox"] {
+    @apply shadow-xl transition-all duration-300;
+  }
+
+  /* Workflow node borders */
+  .workflow-node-with-border {
+    border: 2px solid #e5e7eb;
+    /* gray-200 */
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+
+  .dark .workflow-node-with-border {
+    border-color: #3f4144;
+    /* gray-700 dark */
+  }
+
+  /* Remove all focus styles from inputs with these classes */
+  input.border-none:focus,
+  input.border-none:focus-visible {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 }
