@@ -38,7 +38,7 @@ export function useDiagramSlice(set: SetDiagramState, get: GetDiagramState) {
     reactFlowInstance: null,
     documentName: null,
     isReadOnlyMode: false,
-    layoutDirection: 'RIGHT' as LayoutDirection,
+    layoutDirection: 'horizontal' as LayoutDirection,
     connectionBeingDragged: null,
     draggedSegmentDestinationId: null,
     onConnect: (connection: Connection) => {
@@ -71,7 +71,7 @@ export function useDiagramSlice(set: SetDiagramState, get: GetDiagramState) {
       const nodes = model?.diagram.nodes.map(getNodeWithErrors) || [];
       const edges = model?.diagram.edges || [];
       const documentName = model?.name || 'Untitled';
-      const layoutDirection = model?.layoutDirection || 'RIGHT';
+      const layoutDirection = model?.layoutDirection || 'horizontal';
 
       trackFutureChange('setDiagramModel');
 
