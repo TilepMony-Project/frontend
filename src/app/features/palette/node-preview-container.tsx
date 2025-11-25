@@ -3,13 +3,10 @@ import { useTranslateIfPossible } from '@/hooks/use-translate-if-possible';
 import { WorkflowNodeTemplate } from '../diagram/nodes/workflow-node-template/workflow-node-template';
 import type { PaletteItem } from '@/types/common';
 import { NodeType } from '@/types/node-types';
-import { AiAgentNodeTemplate } from '../diagram/nodes/ai-agent-node-template/ai-agent-node-template';
-import { DecisionNodeTemplate } from '../diagram/nodes/decision-node-template/decision-node-template';
+
 
 const NODE_TEMPLATES = {
   [NodeType.Node]: WorkflowNodeTemplate,
-  [NodeType.AiNode]: AiAgentNodeTemplate,
-  [NodeType.DecisionNode]: DecisionNodeTemplate,
 } as const;
 
 type NodePreviewContainerProps = {

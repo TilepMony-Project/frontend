@@ -8,7 +8,7 @@ export const partitionNode: PaletteItem<PartitionNodeSchema> = {
   description: 'Split incoming amount into multiple branches with percentage allocation',
   type: 'partition',
   icon: 'GitBranch',
-  defaultPropertiesData,
+  defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
   templateType: 'Node',

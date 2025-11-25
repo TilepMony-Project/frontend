@@ -1,4 +1,4 @@
-import styles from './properties-bar.module.css';
+
 
 import { SegmentPicker, Button } from '@synergycodes/overflow-ui';
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
@@ -70,7 +70,7 @@ function PropertiesBarComponent({
   return (
     <Sidebar
       isExpanded={isExpanded}
-      contentClassName={styles['extend-bounds']}
+      contentClassName="-ml-4 w-[calc(100%+1rem)] [&>*]:pl-4"
       header={
         <>
           <PropertiesBarHeader

@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { Input, Select, NavButton, SegmentPicker } from '@synergycodes/overflow-ui';
 import { useMemo } from 'react';
 import { Icon } from '@/components/icons';
-import styles from './conditions-form-field.module.css';
+
 import {
   comparisonsOperators,
   validateCondition,
@@ -45,22 +45,23 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
   return (
     <>
       <div
-        className={clsx(styles['container'], {
-          [styles['container-error']]: shouldShowValidation && (!condition.x || !condition.y),
-        })}
+        className={clsx(
+          'flex items-center gap-0.5 py-1 px-1.5 rounded-lg bg-[var(--wb-conditions-form-inputs-background)]',
+          shouldShowValidation && (!condition.x || !condition.y) && 'bg-[var(--wb-conditions-form-input-background-destructive)]'
+        )}
       >
         <NavButton onClick={() => {}} tooltip="Menu">
           <Icon name="DotsSixVertical" />
         </NavButton>
-        <div className={styles['inputs-container']}>
+        <div className="flex flex-col gap-0.5 w-full">
           <Input
-            className={styles['input']}
+            className="bg-[var(--wb-conditions-form-input-background)]"
             onChange={(event) => handleChange('x', event.target.value)}
             value={condition.x}
             error={errors.x}
           />
           <Select
-            className={styles['input']}
+            className="bg-[var(--wb-conditions-form-input-background)]"
             value={condition.comparisonOperator}
             items={comparisonsOperators.map((operator) => ({
               label: operator,
@@ -70,7 +71,7 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
             error={errors.comparisonOperator}
           />
           <Input
-            className={styles['input']}
+            className="bg-[var(--wb-conditions-form-input-background)]"
             onChange={(event) => handleChange('y', event.target.value)}
             value={condition.y}
             error={errors.y}
@@ -81,9 +82,9 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
         </NavButton>
       </div>
       {!isLast && (
-        <div className={styles['segment-picker-container']}>
+        <div className="flex justify-center items-center">
           <SegmentPicker
-            className={styles['segment-picker']}
+            className="w-[150px]"
             size="xx-small"
             value={condition.logicalOperator || 'AND'}
             onChange={(_, value) => handleChange('logicalOperator', value)}

@@ -49,7 +49,7 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
 
   const validatedIntegrationData: IntegrationDataFormat = {
     name: '',
-    layoutDirection: 'RIGHT',
+    layoutDirection: 'horizontal',
     nodes: [],
     edges: [],
   };
@@ -96,7 +96,7 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
 
     const nodesIdsWithErrors = validatedIntegrationData.nodes
       .filter((node) => {
-        const errors = node?.data?.properties?.errors;
+        const errors = (node?.data as any)?.properties?.errors;
 
         return Array.isArray(errors) && errors.length > 0;
       })

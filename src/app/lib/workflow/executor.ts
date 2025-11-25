@@ -22,18 +22,18 @@ type ExecutionContext = {
 
 type ExecutionResult =
   | {
-      status: 'success';
-      transaction?: TransactionPayload;
-      metadata?: Record<string, unknown>;
-    }
+    status: 'success';
+    transaction?: TransactionPayload;
+    metadata?: Record<string, unknown>;
+  }
   | {
-      status: 'waiting';
-      waitDurationMs: number;
-    }
+    status: 'waiting';
+    waitDurationMs: number;
+  }
   | {
-      status: 'failed';
-      error: string;
-    };
+    status: 'failed';
+    error: string;
+  };
 
 type TransactionPayload = {
   hash: string;
@@ -46,7 +46,7 @@ type TransactionPayload = {
 /**
  * Starts workflow execution in the background so the API route can respond immediately.
  */
-export function startWorkflowExecution(workflow: WorkflowDocument, execution: IExecution) {
+export async function startWorkflowExecution(workflow: WorkflowDocument, execution: IExecution) {
   const workflowSnapshot = workflow.toObject();
   const executionId = execution._id.toString();
 

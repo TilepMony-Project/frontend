@@ -1,6 +1,5 @@
 import { type CSSProperties, memo } from 'react';
 import { clsx } from 'clsx';
-import styles from './loader.module.css';
 
 type LoaderType = {
   isLoading?: boolean;
@@ -16,7 +15,7 @@ const semiTransparentOpacityVariable: CSSCustomProperties = {
 };
 
 export const Loader = memo(({ isLoading, isSemiTransparent }: LoaderType) => {
-  const visibilityClassName = isLoading ? styles['fade-in'] : styles['fade-out'];
+  const visibilityClassName = isLoading ? 'animate-fade-in' : 'animate-fade-out';
   const setLoaderBackgroundOpacityVariable = isSemiTransparent
     ? semiTransparentOpacityVariable
     : {};
@@ -27,10 +26,15 @@ export const Loader = memo(({ isLoading, isSemiTransparent }: LoaderType) => {
 
   return (
     <div
-      className={clsx(styles['container'], visibilityClassName)}
+      className={clsx(
+        'absolute w-full h-full bg-[var(--wb-panel-background-color)] z-[100]',
+        visibilityClassName
+      )}
       style={setLoaderBackgroundOpacityVariable}
     >
-      <div className={styles['loader']}>Loading...</div>
+      <div className="flex content-center justify-center items-center w-full h-full text-xl">
+        Loading...
+      </div>
     </div>
   );
 });

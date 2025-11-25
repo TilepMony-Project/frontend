@@ -1,4 +1,4 @@
-import './variables.css';
+
 import { type EdgeProps, getSmoothStepPath, BaseEdge, useReactFlow } from '@xyflow/react';
 import type { WorkflowBuilderEdge } from '@/types/node-data';
 import { EDGE_CURVE_RADIUS, EDGE_OFFSET, SELF_CONNECTING_EDGE_LABEL_OFFSET } from '../edge.consts';
@@ -38,14 +38,14 @@ export function LabelEdge({
   });
 
   const { label, icon } = data;
-  const content = icon ? <Icon name={icon} /> : label;
+  const content = icon ? <Icon name={icon as any} /> : label;
 
   const labelProps = {
     id,
-    content,
+    content: content as any,
     hovered,
     selected,
-    icon,
+    icon: icon as any,
     onMouseEnter,
     onMouseLeave,
   };

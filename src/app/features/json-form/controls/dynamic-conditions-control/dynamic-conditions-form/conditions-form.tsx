@@ -13,7 +13,7 @@ import type { DynamicCondition } from '@/features/json-form/types/controls';
 import { validateCondition } from '@/features/json-form/utils/conditional-transform';
 import { ConditionsFormField } from '../dynamic-conditions-form-field/conditions-form-field';
 
-import styles from './conditions-form.module.css';
+
 import { closeModal } from '@/features/modals/stores/use-modal-store';
 
 type ConditionsFormProps = {
@@ -91,8 +91,8 @@ export const ConditionsForm = forwardRef<ConditionsFormHandle, ConditionsFormPro
     );
 
     return (
-      <form ref={formRef} className={styles['form']} onSubmit={handleConfirm}>
-        <div key={lastIndex} className={styles['controls-container']}>
+      <form ref={formRef} className="w-full" onSubmit={handleConfirm}>
+        <div key={lastIndex} className="flex flex-col gap-1.5">
           {conditions.map((condition, index) => (
             <ConditionsFormField
               key={index}
@@ -105,7 +105,7 @@ export const ConditionsForm = forwardRef<ConditionsFormHandle, ConditionsFormPro
           ))}
         </div>
         <Button
-          className={styles['add-button']}
+          className="mt-4 w-full"
           size="small"
           variant="secondary"
           onClick={addCondition}

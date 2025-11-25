@@ -1,4 +1,4 @@
-import styles from './horizontal-layout.module.css';
+
 import { LayoutWrapper } from '../layout-wrapper';
 import type { HorizontalLayoutElement, LayoutProps } from '../../types/layouts';
 import { renderElements } from '../render-elements';
@@ -19,7 +19,7 @@ function HorizontalLayout(props: LayoutProps<HorizontalLayoutElement>) {
 
   return (
     <LayoutWrapper hasErrors={hasErrors} {...props}>
-      <div style={style} className={styles['horizontal-layout']}>
+      <div style={style} className="grid grid-flow-col auto-cols-fr gap-2 [&>*:last-child]:justify-self-end">
         {renderElements(props)}
       </div>
     </LayoutWrapper>

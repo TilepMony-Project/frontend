@@ -8,7 +8,7 @@ import { showSnackbar } from '@/utils/show-snackbar';
 import { setStoreDataFromIntegration } from '@/store/slices/diagram-slice/actions';
 import { SyntaxHighlighterLazy } from '@/features/syntax-highlighter/components/syntax-highlighter-lazy';
 
-import styles from '../import-export-modal.module.css';
+
 import {
   type IntegrationDataError,
   validateIntegrationData,
@@ -58,20 +58,20 @@ export function ImportModal() {
   );
 
   return (
-    <div className={styles['container']}>
-      <p className={clsx('ax-public-p10', styles['tip'])}>Paste your workflow JSON data below</p>
+    <div className="flex flex-col gap-3 w-full">
+      <p className={clsx('ax-public-p10', 'text-[var(--ax-txt-secondary-default)]')}>Paste your workflow JSON data below</p>
       <SyntaxHighlighterLazy
         value={jsonToParse}
         onChange={(json) => setJsonToParse(json || '{}')}
       />
       {(errors.length > 0 || warnings.length > 0) && (
-        <div className={clsx('ax-public-p10', styles['error'])}>
+        <div className={clsx('ax-public-p10', 'p-[var(--ax-public-snackbar-padding)] text-[var(--wb-import-error-color)] bg-[var(--wb-import-error-background-color)] border-[var(--wb-import-error-border)] rounded-[var(--wb-import-error-border-radius)]')}>
           {[...errors, ...warnings].map(({ message, messageParams }) => (
             <div key={message}>{message}</div>
           ))}
         </div>
       )}
-      <div className={styles['actions']}>
+      <div className="flex gap-2 justify-end">
         {warnings.length > 0 && errors.length === 0 && (
           <Button variant="warning" onClick={() => handleImport({ shouldIgnoreWarnings: true })}>
             <Icon name="DownloadSimple" />

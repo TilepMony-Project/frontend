@@ -16,7 +16,7 @@ function UndoButton() {
 
   return (
     <NavButton tooltip="Undo" disabled={!hasPast} onClick={handleUndo}>
-      <Icon name="ArrowUUpLeft" />
+      <Icon name="Undo2" />
     </NavButton>
   );
 }
@@ -26,7 +26,7 @@ function RedoButton() {
 
   return (
     <NavButton tooltip="Redo" disabled={!hasFuture} onClick={handleRedo}>
-      <Icon name="ArrowUUpRight" />
+      <Icon name="Redo2" />
     </NavButton>
   );
 }

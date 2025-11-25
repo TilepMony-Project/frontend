@@ -9,7 +9,7 @@ import {
   type ConditionsFormHandle,
 } from './dynamic-conditions-form/conditions-form';
 import { Icon } from '@/components/icons';
-import styles from './dynamic-conditions-control.module.css';
+
 import { conditionsToDependencies } from '../../utils/conditional-transform';
 import { ConditionModalFooter } from './dynamic-condition-modal-footer/condition-modal-footer';
 import { closeModal, openModal } from '@/features/modals/stores/use-modal-store';
@@ -42,9 +42,9 @@ function DynamicConditionsControl(props: DynamicConditionsControlProps) {
   }, [data, onChange, formRef, handleConfirm]);
 
   return (
-    <div className={styles['container']}>
-      <div className={styles['header']}>
-        <span className={clsx('ax-public-h10', styles['title'])}>Conditions</span>
+    <div className="p-2 border border-[var(--wb-conditions-form-border-color)] rounded-[var(--wb-conditions-form-border-radius)]">
+      <div className="flex justify-between items-center gap-1.5 mb-3 font-semibold text-[var(--wb-conditions-form-header-color)]">
+        <span className={clsx('ax-public-h10', 'leading-none')}>Conditions</span>
         <NavButton size="small" onClick={openEditorModal} tooltip="Conditions">
           <Icon name="FrameCorners" size="small" />
         </NavButton>
@@ -56,7 +56,7 @@ function DynamicConditionsControl(props: DynamicConditionsControlProps) {
           onClick={openEditorModal}
           size="medium"
         />
-        <span className={styles['tag']}>{data.length} total</span>
+        <span className="ax-public-p10 py-1 px-2 rounded bg-[var(--wb-conditions-form-tag-bg-color)] mr-auto">{data.length} total</span>
       </ControlWrapper>
     </div>
   );

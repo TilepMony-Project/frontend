@@ -15,7 +15,17 @@ export function useTheme() {
     if (typeof window === 'undefined' || !window.document) {
       return;
     }
+
+    // Update class for Tailwind dark mode
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    // Keep data-theme for backward compatibility
     document.documentElement.dataset.theme = theme;
+
     if (window.localStorage) {
       localStorage.setItem(THEME_KEY, theme);
     }

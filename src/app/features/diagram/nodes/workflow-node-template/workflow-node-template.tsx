@@ -12,7 +12,7 @@ import { Icon } from '@/components/icons';
 import { getHandleId } from '../../handles/get-handle-id';
 import { getHandlePosition } from '../../handles/get-handle-position';
 
-import styles from './workflow-node-template.module.css';
+
 import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
 import type { NodeData } from '@/types/node-data';
 
@@ -36,7 +36,7 @@ const WorkflowNodeTemplateComponent = memo(
     icon,
     label,
     description,
-    layoutDirection = 'RIGHT',
+    layoutDirection = 'horizontal',
     selected = false,
     showHandles = true,
     isValid,
@@ -58,11 +58,11 @@ const WorkflowNodeTemplateComponent = memo(
 
     const hasContent = !!children;
 
-    const handlesAlignment = hasContent && layoutDirection === 'RIGHT' ? 'header' : 'center';
+    const handlesAlignment = hasContent && layoutDirection === 'horizontal' ? 'header' : 'center';
 
     return (
       <Collapsible>
-        <NodePanel.Root selected={selected} className={styles['content']}>
+        <NodePanel.Root selected={selected} className="[--ax-public-node-gap:0]">
           <NodePanel.Header>
             <NodeIcon icon={iconElement} />
             <NodeDescription label={label} description={description} />
@@ -71,7 +71,7 @@ const WorkflowNodeTemplateComponent = memo(
           <NodePanel.Content>
             <Status status={isValid === false ? 'invalid' : undefined} />
             <Collapsible.Content>
-              <div className={styles['collapsible']}>{children}</div>
+              <div className="pt-2">{children}</div>
             </Collapsible.Content>
           </NodePanel.Content>
           <NodePanel.Handles isVisible={showHandles} alignment={handlesAlignment}>

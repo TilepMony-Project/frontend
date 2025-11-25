@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from './palette-items.module.css';
+
 import { NodePreviewContainer } from '../../node-preview-container';
 import type { PaletteItem } from '@/types/common';
 import type { DragEvent } from 'react';
@@ -18,14 +18,15 @@ export function PaletteItems({
   isDisabled = false,
 }: PaletteItemsProps) {
   return (
-    <div className={styles['container']}>
+    <div className="flex flex-col gap-2 box-border">
       {items.map((item) => (
         <div
           key={item.type}
           draggable={!isDisabled}
-          className={clsx(styles['item'], {
-            [styles['disabled']]: isDisabled,
-          })}
+          className={clsx(
+            'rounded-xl cursor-grab outline-offset-[-1px] outline outline-1 outline-transparent',
+            isDisabled && 'cursor-default select-none opacity-50'
+          )}
           onMouseDown={() => onMouseDown(item.type)}
           onDragStart={onDragStart}
         >

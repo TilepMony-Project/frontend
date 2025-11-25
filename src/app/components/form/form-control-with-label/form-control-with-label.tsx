@@ -1,4 +1,4 @@
-import styles from './form-control-with-label.module.css';
+
 import clsx from 'clsx';
 import { Label } from '../label/label';
 import type { PropsWithChildren } from 'react';
@@ -19,7 +19,7 @@ export function FormControlWithLabel({
   children,
 }: PropsWithChildren<Props>) {
   return (
-    <div className={clsx(styles['container'], { [className || '']: className })}>
+    <div className={clsx('flex flex-col gap-1', { [className || '']: className })}>
       <Label label={label} required={required} size={size} />
       {children}
     </div>

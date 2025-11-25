@@ -5,7 +5,7 @@ import { ExportModal } from './export-modal';
 export function openExportModal() {
   openModal({
     content: <ExportModal />,
-    icon: <Icon name="Export" />,
+    icon: <Icon name="Upload" />,
     title: 'Export',
   });
 }

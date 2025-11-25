@@ -1,12 +1,10 @@
-import type { ControlElement, ControlProps as JsonFormsControlProps } from '@jsonforms/core';
-import type { Override } from './utils';
-import type { UISchemaControlElement } from './uischema';
-import type { InputProps, TextAreaProps } from '@synergycodes/overflow-ui';
 import type { FieldSchema } from '@/types/node-schema';
-import type { UISchemaRule } from './rules';
+import type { ControlElement, ControlProps as JsonFormsControlProps } from '@jsonforms/core';
+import type { InputProps, TextAreaProps } from '@synergycodes/overflow-ui';
 import type { ComparisonOperator, LogicalOperator } from '../utils/conditional-transform';
-import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import type { AiAgentNodeSchema } from '../../../data/nodes/ai-agent/schema';
+import type { UISchemaRule } from './rules';
+import type { UISchemaControlElement } from './uischema';
+import type { Override } from './utils';
 
 type ControlProps<D, T extends UISchemaControlElement> = Override<
   BaseControlProps,
@@ -49,11 +47,6 @@ export type DynamicCondition = {
   logicalOperator: LogicalOperator;
 };
 
-export type DecisionBranch = {
-  index: number;
-  conditions: DynamicCondition[];
-};
-
 export type DynamicConditionsControlElement = Override<
   BaseControlElement,
   {
@@ -64,18 +57,6 @@ export type DynamicConditionsControlElement = Override<
 export type DynamicConditionsControlProps = ControlProps<
   DynamicCondition[],
   DynamicConditionsControlElement
->;
-
-export type DecisionBranchesControlElement = Override<
-  BaseControlElement,
-  {
-    type: 'DecisionBranches';
-  }
->;
-
-export type DecisionBranchesControlProps = ControlProps<
-  DecisionBranch[],
-  DecisionBranchesControlElement
 >;
 
 export type SelectControlElement = Override<
@@ -100,15 +81,5 @@ export type BaseControlProps = Override<
     uischema: UISchemaControlElement;
   }
 >;
-
-export type AiAgentTool = NonNullable<NodeDataProperties<AiAgentNodeSchema>['tools']>[number];
-
-export type AiToolsControlElement = Override<
-  BaseControlElement,
-  {
-    type: 'AiTools';
-  }
->;
-export type AiToolsControlProps = ControlProps<AiAgentTool[], AiToolsControlElement>;
 
 type BaseControlElement = Override<ControlElement, { rule?: UISchemaRule }>;

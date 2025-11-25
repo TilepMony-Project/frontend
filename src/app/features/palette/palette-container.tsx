@@ -1,5 +1,4 @@
-import styles from './palette-container.module.css';
-import './variables.css';
+
 import { Sidebar } from '@/components/sidebar/sidebar';
 import useStore from '@/store/store';
 import { useEffect } from 'react';
@@ -27,7 +26,7 @@ export function PaletteContainer() {
 
   return (
     <Sidebar
-      className={styles.sidebar}
+      className="w-auto"
       isExpanded={isSidebarExpanded}
       header={
         <PaletteHeader onClick={() => toggleSidebar()} isSidebarExpanded={isSidebarExpanded} />

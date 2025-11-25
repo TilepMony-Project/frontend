@@ -1,8 +1,0 @@
-.extend-bounds {
-  margin-left: -1rem;
-  width: calc(100% + 1rem);
-
-  & > * {
-    padding-left: 1rem;
-  }
-}

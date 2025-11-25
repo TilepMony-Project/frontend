@@ -1,4 +1,3 @@
-import styles from '../../app-bar.module.css';
 import { NavButton, Menu, type MenuItemProps } from '@synergycodes/overflow-ui';
 import { MoreVertical } from 'lucide-react';
 import { useMemo } from 'react';
@@ -11,13 +10,13 @@ export function Controls() {
   const items: MenuItemProps[] = useMemo(() => getControlsDotsItems(), []);
 
   return (
-    <div className={styles['controls']}>
+    <div className="flex justify-end items-center gap-2">
       <OptionalAppBarControls>
         <ToggleReadyOnlyMode />
         <ToggleDarkMode />
       </OptionalAppBarControls>
       {items.length > 0 && (
-        <div className={styles['menu-container']}>
+        <div className="relative">
           <Menu items={items}>
             <NavButton tooltip="Menu">
               <MoreVertical />

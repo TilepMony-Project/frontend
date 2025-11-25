@@ -45,7 +45,7 @@ export const uischema: UISchema = {
           label: 'Conversion Rate',
           scope: scope('properties.conversionRate'),
           readOnly: true,
-        },
+        } as any,
       ],
     },
   ],

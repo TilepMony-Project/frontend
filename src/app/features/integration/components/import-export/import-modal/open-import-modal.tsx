@@ -5,7 +5,7 @@ import { ImportModal } from './import-modal';
 export function openImportModal() {
   openModal({
     content: <ImportModal />,
-    icon: <Icon name="DownloadSimple" />,
+    icon: <Icon name="Download" />,
     title: 'Import',
   });
 }

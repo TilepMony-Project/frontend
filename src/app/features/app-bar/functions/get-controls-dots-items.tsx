@@ -10,12 +10,12 @@ function getControlsDotsItemsFunction(): MenuItemProps[] {
   return [
     {
       label: 'Export',
-      icon: <Icon name="Export" />,
+      icon: <Icon name="Upload" />,
       onClick: openExportModal,
     },
     {
       label: 'Import',
-      icon: <Icon name="DownloadSimple" />,
+      icon: <Icon name="Download" />,
       onClick: openImportModal,
     },
   ];

@@ -6,7 +6,7 @@ import type { PropsWithChildren } from 'react';
 
 import useStore from '@/store/store';
 
-import styles from './app.module.css';
+
 import { AppBarContainerLazy } from './features/app-bar/app-bar-container-lazy';
 import { DiagramContainer as Diagram } from './features/diagram/diagram';
 import { DiagramWrapper } from './features/diagram/diagram-wrapper';
@@ -32,17 +32,17 @@ function AppComponent(_props: AppComponentProps) {
   const shouldShowRightPanel = isExecutionMonitorActive || shouldShowPropertiesPanel;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
+    <div className="absolute flex flex-col h-full w-full overflow-hidden">
+      <div className="flex justify-between box-border w-full p-4 z-10 gap-4 pointer-events-none">
         <AppBarContainerLazy />
       </div>
-      <div className={styles.content}>
-        <div className={styles.panel}>
+      <div className="relative w-full h-full px-4 pb-4 box-border flex justify-between overflow-hidden">
+        <div className="h-full flex z-[1] pointer-events-none">
           <PaletteContainerLazy />
         </div>
         {shouldShowRightPanel && (
-          <div className={styles.panel}>
-            <div className={styles['right-panel']}>
+          <div className="h-full flex z-[1] pointer-events-none">
+            <div className="flex flex-col gap-4 items-end justify-between">
               {isExecutionMonitorActive ? <ExecutionMonitor /> : null}
               {shouldShowPropertiesPanel ? <PropertiesBarContainerLazy /> : null}
             </div>

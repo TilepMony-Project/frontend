@@ -45,7 +45,7 @@ export const uischema: UISchema = {
           label: 'Exchange Rate',
           scope: scope('properties.exchangeRate'),
           readOnly: true,
-        },
+        } as any,
       ],
     },
   ],
