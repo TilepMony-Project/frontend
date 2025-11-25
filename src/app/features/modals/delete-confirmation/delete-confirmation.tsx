@@ -1,5 +1,5 @@
 import type { Node, Edge } from '@xyflow/react';
-import styles from './delete-confirmation.module.css';
+
 import { Checkbox, Button } from '@synergycodes/overflow-ui';
 import { useState } from 'react';
 
@@ -31,11 +31,11 @@ export function DeleteConfirmation({
   const selectedText = nodes.length > 1 ? 'selected' : 'selected';
 
   return (
-    <div className={styles['content']}>
+    <div className="flex flex-col gap-4">
       <span>
         Are you sure you want to delete <b>{selectedText}</b> {partsText}?
       </span>
-      <div className={styles['checkbox-wrapper']}>
+      <div className="flex items-center gap-2">
         <Checkbox
           id="dont-show-again-checkbox"
           size="small"
@@ -58,7 +58,7 @@ export function DeleteConfirmationButtons({
   onCancelClick,
 }: DeleteConfirmationButtonsProps) {
   return (
-    <div className={styles['buttons']}>
+    <div className="flex gap-2 justify-end">
       <Button variant="secondary" onClick={onCancelClick}>
         Cancel
       </Button>

@@ -8,7 +8,7 @@ import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-github_light_default';
 
-import styles from './syntax-highlighter.module.css';
+
 
 export type SyntaxHighlighterProps = {
   value: string;
@@ -20,7 +20,7 @@ export function SyntaxHighlighter(props: SyntaxHighlighterProps) {
   const { value, onChange, isDisabled } = props;
 
   return (
-    <div className={clsx(styles['container'])}>
+    <div className={clsx('border border-[var(--wb-syntax-highlighter-border-color)] rounded-[var(--wb-syntax-highlighter-border-radius)] overflow-hidden')}>
       <AceEditor
         name="field"
         value={value}

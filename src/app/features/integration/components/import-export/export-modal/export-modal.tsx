@@ -9,7 +9,7 @@ import { SyntaxHighlighterLazy } from '@/features/syntax-highlighter/components/
 import { copy } from '@/utils/copy';
 import { noop } from '@/utils/noop';
 
-import styles from '../import-export-modal.module.css';
+
 
 export function ExportModal() {
   const storeData = useMemo(() => {
@@ -26,9 +26,9 @@ export function ExportModal() {
   }, [storeData]);
 
   return (
-    <div className={styles['container']}>
+    <div className="flex flex-col gap-3 w-full">
       <SyntaxHighlighterLazy value={storeData} onChange={noop} isDisabled />
-      <div className={styles['actions']}>
+      <div className="flex gap-2 justify-end">
         <Button variant="primary" onClick={handleCopy}>
           <Icon name="Copy" />
           Copy

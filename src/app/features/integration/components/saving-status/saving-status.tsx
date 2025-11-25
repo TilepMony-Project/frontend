@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Icon } from '@/components/icons';
-import styles from './saving-status.module.css';
+
 import { useIntegrationStore } from '../../stores/use-integration-store';
 
 export function SavingStatus() {
@@ -10,7 +10,7 @@ export function SavingStatus() {
 
   if (savingStatus === 'saving') {
     return (
-      <span className={clsx(styles['status'], styles['status--saving'])}>
+      <span className="flex items-center justify-center p-1.5 rounded-lg text-[var(--wb-saving-status-color)] bg-[var(--wb-saving-status-background-color)]">
         <Icon name="Spinner" />
       </span>
     );
@@ -20,7 +20,7 @@ export function SavingStatus() {
     return (
       <span
         key={lastSaveAttemptTimestamp}
-        className={clsx(styles['status'], styles['status--saved'])}
+        className="flex items-center justify-center p-1.5 rounded-lg text-[var(--wb-saving-status-success-color)] bg-[var(--wb-saving-status-success-background-color)] animate-[fadeOut_2s_ease-in-out_forwards]"
       >
         <Icon name="CheckCircle" />
       </span>
@@ -31,7 +31,7 @@ export function SavingStatus() {
     return (
       <span
         key={lastSaveAttemptTimestamp}
-        className={clsx(styles['status'], styles['status--not-saved'])}
+        className="flex items-center justify-center p-1.5 rounded-lg text-[var(--wb-saving-status-error-color)] bg-[var(--wb-saving-status-error-background-color)]"
       >
         <Icon name="XCircle" />
       </span>
