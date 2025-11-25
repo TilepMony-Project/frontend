@@ -1,5 +1,8 @@
 import clsx from 'clsx';
-import { Input, Select, NavButton, SegmentPicker } from '@synergycodes/overflow-ui';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { SelectWrapper as Select } from '@/components/ui/select-wrapper';
+import { SegmentPicker } from '@/components/ui/segment-picker';
 import { useMemo } from 'react';
 import { Icon } from '@/components/icons';
 
@@ -50,9 +53,9 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
           shouldShowValidation && (!condition.x || !condition.y) && 'bg-[var(--wb-conditions-form-input-background-destructive)]'
         )}
       >
-        <NavButton onClick={() => {}} tooltip="Menu">
+        <Button variant="ghost" size="icon" onClick={() => {}}>
           <Icon name="DotsSixVertical" />
-        </NavButton>
+        </Button>
         <div className="flex flex-col gap-0.5 w-full">
           <Input
             className="bg-[var(--wb-conditions-form-input-background)]"
@@ -77,9 +80,9 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
             error={errors.y}
           />
         </div>
-        <NavButton onClick={onRemove} tooltip="Remove">
+        <Button variant="ghost" size="icon" onClick={onRemove}>
           <Icon name="X" />
-        </NavButton>
+        </Button>
       </div>
       {!isLast && (
         <div className="flex justify-center items-center">

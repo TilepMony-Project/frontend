@@ -1,4 +1,4 @@
-import { Button } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
 
 type Props = {
   closeModal: () => void;

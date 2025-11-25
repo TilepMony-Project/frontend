@@ -1,7 +1,7 @@
 import type { SelectControlProps } from '../../types/controls';
 
 import { createControlRenderer } from '../../utils/rendering';
-import { Select, type SelectBaseProps } from '@synergycodes/overflow-ui';
+import { SelectWrapper as Select, type SelectProps } from '@/components/ui/select-wrapper';
 import { ControlWrapper } from '../control-wrapper';
 import type { PrimitiveFieldSchema } from '@/types/node-schema';
 import { Icon } from '@/components/icons';
@@ -18,7 +18,7 @@ function SelectControl(props: SelectControlProps) {
         }
   );
 
-  const onChange: SelectBaseProps['onChange'] = (_event, value) => {
+  const onChange: SelectProps['onChange'] = (_event, value) => {
     handleChange(path, value);
   };
 

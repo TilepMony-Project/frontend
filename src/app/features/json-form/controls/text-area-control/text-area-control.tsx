@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { TextAreaControlProps } from '../../types/controls';
 import { createControlRenderer } from '../../utils/rendering';
 import { ControlWrapper } from '../control-wrapper';
-import { TextArea } from '@synergycodes/overflow-ui';
+import { Textarea } from '@/components/ui/textarea';
 
 function TextAreaControl(props: TextAreaControlProps) {
   const { data, handleChange, path, enabled, uischema } = props;
@@ -24,14 +24,12 @@ function TextAreaControl(props: TextAreaControlProps) {
 
   return (
     <ControlWrapper {...props}>
-      <TextArea
+      <Textarea
         disabled={!enabled}
         value={inputValue}
-        minRows={minRows}
         placeholder={placeholder}
         onChange={onChange}
         onBlur={onBlur}
-        size="medium"
       />
     </ControlWrapper>
   );

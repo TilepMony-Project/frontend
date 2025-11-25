@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Button } from '@synergycodes/overflow-ui';
+import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/icons';
 import type { DynamicCondition } from '@/features/json-form/types/controls';
 import { validateCondition } from '@/features/json-form/utils/conditional-transform';
@@ -106,7 +106,7 @@ export const ConditionsForm = forwardRef<ConditionsFormHandle, ConditionsFormPro
         </div>
         <Button
           className="mt-4 w-full"
-          size="small"
+          size="sm"
           variant="secondary"
           onClick={addCondition}
         >

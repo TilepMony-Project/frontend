@@ -1,6 +1,7 @@
 import type { FieldSchema } from '@/types/node-schema';
 import type { ControlElement, ControlProps as JsonFormsControlProps } from '@jsonforms/core';
-import type { InputProps, TextAreaProps } from '@synergycodes/overflow-ui';
+import type { InputProps } from '@/components/ui/input';
+import type { TextareaProps } from '@/components/ui/textarea';
 import type { ComparisonOperator, LogicalOperator } from '../utils/conditional-transform';
 import type { UISchemaRule } from './rules';
 import type { UISchemaControlElement } from './uischema';
@@ -36,7 +37,7 @@ export type TextAreaControlElement = Override<
   BaseControlElement,
   {
     type: 'TextArea';
-  } & Pick<TextAreaProps, 'placeholder' | 'minRows'>
+  } & Pick<TextareaProps, 'placeholder'>
 >;
 export type TextAreaControlProps = ControlProps<string, TextAreaControlElement>;
 

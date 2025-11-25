@@ -1,4 +1,4 @@
-import { Switch } from '@synergycodes/overflow-ui';
+import { Switch } from '@/components/ui/switch';
 import type { SwitchControlProps } from '../../types/controls';
 import { createControlRenderer } from '../../utils/rendering';
 import { ControlWrapper } from '../control-wrapper';
@@ -6,13 +6,13 @@ import { ControlWrapper } from '../control-wrapper';
 function SwitchControl(props: SwitchControlProps) {
   const { data, handleChange, path, enabled } = props;
 
-  function onChange(checked: boolean, _event: React.ChangeEvent<HTMLInputElement>) {
+  function onCheckedChange(checked: boolean) {
     handleChange(path, checked);
   }
 
   return (
     <ControlWrapper {...props}>
-      <Switch disabled={!enabled} size="medium" checked={data ?? false} onChange={onChange} />
+      <Switch disabled={!enabled} checked={data ?? false} onCheckedChange={onCheckedChange} />
     </ControlWrapper>
   );
 }

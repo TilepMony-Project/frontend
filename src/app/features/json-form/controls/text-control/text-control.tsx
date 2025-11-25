@@ -1,4 +1,4 @@
-import { Input } from '@synergycodes/overflow-ui';
+import { Input } from '@/components/ui/input';
 import { ControlWrapper } from '../control-wrapper';
 import type { TextControlProps } from '../../types/controls';
 
