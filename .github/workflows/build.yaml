@@ -1,79 +1,79 @@
-name: frontend-ci
+# name: frontend-ci
 
-on:
-  deployment_status:
+# on:
+#   deployment_status:
 
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+# jobs:
+#   notify:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
 
-      - name: Extract deployment info
-        id: info
-        run: |
-          echo "STATE=${{ github.event.deployment_status.state }}" >> $GITHUB_ENV
-          echo "URL=${{ github.event.deployment_status.target_url }}" >> $GITHUB_ENV
-          echo "DESC=${{ github.event.deployment_status.description }}" >> $GITHUB_ENV
+#       - name: Extract deployment info
+#         id: info
+#         run: |
+#           echo "STATE=${{ github.event.deployment_status.state }}" >> $GITHUB_ENV
+#           echo "URL=${{ github.event.deployment_status.target_url }}" >> $GITHUB_ENV
+#           echo "DESC=${{ github.event.deployment_status.description }}" >> $GITHUB_ENV
 
-      - name: Get Commit Messages
-        id: get_commits
-        run: |
-          LAST_COMMIT=$(git log -1 --pretty=format:"- [%s](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/%H)")
-          echo "COMMITS<<EOF" >> $GITHUB_ENV
-          echo "$LAST_COMMIT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-      - name: Notify Telegram (Success)
-        if: env.STATE == 'success'
-        run: |
-          TEXT=$(cat <<'EOF'
-          ✅ *Frontend Deploy Success!*
+#       - name: Get Commit Messages
+#         id: get_commits
+#         run: |
+#           LAST_COMMIT=$(git log -1 --pretty=format:"- [%s](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/%H)")
+#           echo "COMMITS<<EOF" >> $GITHUB_ENV
+#           echo "$LAST_COMMIT" >> $GITHUB_ENV
+#           echo "EOF" >> $GITHUB_ENV
+#       - name: Notify Telegram (Success)
+#         if: env.STATE == 'success'
+#         run: |
+#           TEXT=$(cat <<'EOF'
+#           ✅ *Frontend Deploy Success!*
           
-          Repository: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
-          Branch: [${{ github.event.deployment.ref }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.deployment.ref }})
-          By: [${{ github.actor }}](${{ github.server_url }}/${{ github.actor }})
+#           Repository: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
+#           Branch: [${{ github.event.deployment.ref }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.deployment.ref }})
+#           By: [${{ github.actor }}](${{ github.server_url }}/${{ github.actor }})
                     
-          *Commits:*
-          ${{ env.COMMITS }}
+#           *Commits:*
+#           ${{ env.COMMITS }}
 
-          🌐 *URL:* ${{ env.URL }}
-          📝 *Description:* ${{ env.DESC }}
+#           🌐 *URL:* ${{ env.URL }}
+#           📝 *Description:* ${{ env.DESC }}
           
-          🧩 [View Workflow Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          EOF
-          )
-          TEXT_URLENCODED=$(echo "$TEXT" | jq -s -R -r @uri)
-          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d message_thread_id="${{ secrets.TELEGRAM_TOPIC_ID }}" \
-            -d text="$TEXT_URLENCODED" \
-            -d parse_mode="Markdown" \
-            -d disable_web_page_preview="true"
+#           🧩 [View Workflow Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+#           EOF
+#           )
+#           TEXT_URLENCODED=$(echo "$TEXT" | jq -s -R -r @uri)
+#           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+#             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+#             -d message_thread_id="${{ secrets.TELEGRAM_TOPIC_ID }}" \
+#             -d text="$TEXT_URLENCODED" \
+#             -d parse_mode="Markdown" \
+#             -d disable_web_page_preview="true"
 
-      - name: Notify Telegram (Failed)
-        if: env.STATE == 'failure'
-        run: |
-          TEXT=$(cat <<'EOF'
-          ❌ *Frontend Deploy Failed*
+#       - name: Notify Telegram (Failed)
+#         if: env.STATE == 'failure'
+#         run: |
+#           TEXT=$(cat <<'EOF'
+#           ❌ *Frontend Deploy Failed*
           
-          Repository: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
-          Branch: [${{ github.event.deployment.ref }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.deployment.ref }})
-          By: [${{ github.actor }}](${{ github.server_url }}/${{ github.actor }})
+#           Repository: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
+#           Branch: [${{ github.event.deployment.ref }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.deployment.ref }})
+#           By: [${{ github.actor }}](${{ github.server_url }}/${{ github.actor }})
 
-          *Commits:*
-          ${{ env.COMMITS }}
+#           *Commits:*
+#           ${{ env.COMMITS }}
 
-          📝 *Description:* ${{ env.DESC }}
+#           📝 *Description:* ${{ env.DESC }}
           
-          🧩 [View Workflow Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          EOF
-          )
-          TEXT_URLENCODED=$(echo "$TEXT" | jq -s -R -r @uri)
-          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d message_thread_id="${{ secrets.TELEGRAM_TOPIC_ID }}" \
-            -d text="$TEXT_URLENCODED" \
-            -d parse_mode="Markdown" \
-            -d disable_web_page_preview="true"
+#           🧩 [View Workflow Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+#           EOF
+#           )
+#           TEXT_URLENCODED=$(echo "$TEXT" | jq -s -R -r @uri)
+#           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+#             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+#             -d message_thread_id="${{ secrets.TELEGRAM_TOPIC_ID }}" \
+#             -d text="$TEXT_URLENCODED" \
+#             -d parse_mode="Markdown" \
+#             -d disable_web_page_preview="true"
