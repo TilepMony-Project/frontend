@@ -1,0 +1,56 @@
+'use client'
+
+import * as React from 'react'
+import { cn } from '@/lib/utils'
+
+export interface IconSwitchProps {
+  checked?: boolean
+  onChange?: (checked: boolean) => void
+  icon?: React.ReactNode
+  IconChecked?: React.ReactNode
+  variant?: 'default' | 'secondary' | 'ghost'
+  className?: string
+  disabled?: boolean
+}
+
+const variantStyles = {
+  default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+  ghost: 'hover:bg-accent hover:text-accent-foreground',
+}
+
+export function IconSwitch({
+  checked = false,
+  onChange,
+  icon,
+  IconChecked,
+  variant = 'default',
+  className,
+  disabled = false,
+}: IconSwitchProps) {
+  const handleClick = () => {
+    if (!disabled && onChange) {
+      onChange(!checked)
+    }
+  }
+
+  const currentIcon = checked ? IconChecked : icon
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={disabled}
+      className={cn(
+        'inline-flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        'disabled:pointer-events-none disabled:opacity-50',
+        variantStyles[variant],
+        className
+      )}
+      aria-pressed={checked}
+    >
+      {currentIcon}
+    </button>
+  )
+}

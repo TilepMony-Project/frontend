@@ -2,7 +2,8 @@ import clsx from 'clsx';
 
 
 import { Asterisk } from 'lucide-react';
-import type { ItemSize } from '@synergycodes/overflow-ui';
+// Define ItemSize type locally to replace SynergyCode type
+export type ItemSize = 'small' | 'medium' | 'large';
 
 export type LabelProps = {
   label: string;

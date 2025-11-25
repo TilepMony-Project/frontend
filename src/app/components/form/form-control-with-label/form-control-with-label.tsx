@@ -2,7 +2,7 @@
 import clsx from 'clsx';
 import { Label } from '../label/label';
 import type { PropsWithChildren } from 'react';
-import type { ItemSize } from '@synergycodes/overflow-ui';
+import type { ItemSize } from '../label/label';
 
 type Props = {
   label: string;

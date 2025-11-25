@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { Separator } from '@synergycodes/overflow-ui';
+import { Separator } from '@/components/ui/separator';
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement> & {
   isExpanded: boolean;
