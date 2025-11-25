@@ -40,12 +40,12 @@ function CanvasToolToggle() {
           aria-pressed={mode === tool.id}
           aria-label={tool.label}
           className={clsx(
-            'flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 transition-colors dark:text-gray-300',
+            'flex items-center gap-1 px-3 py-1.5 text-sm transition-colors',
             index === 0 && 'rounded-l-full',
             index === tools.length - 1 && 'rounded-r-full',
             mode === tool.id
-              ? 'bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900'
-              : 'hover:bg-gray-100 dark:hover:bg-[#2c2d31]'
+              ? 'bg-[#1296e7] text-white shadow-sm'
+              : 'text-gray-600 hover:bg-[#eeeff3] dark:text-gray-300 dark:hover:bg-[#2c2d31]'
           )}
         >
           <Icon name={tool.icon} size={16} />
