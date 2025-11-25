@@ -23,7 +23,8 @@ export function Sidebar({
     <div
       className={clsx(
         'h-min w-auto relative items-center justify-between pointer-events-auto rounded-xl bg-[var(--ax-ui-bg-primary-default)] text-[var(--ax-txt-primary-default)] flex flex-col py-3 border border-[var(--ax-ui-stroke-primary-default)]',
-        { 'h-full w-80 box-border': isExpanded },
+        'transition-all duration-300 shadow-lg',
+        { 'h-full w-[420px] box-border': isExpanded },
         className
       )}
       {...props}

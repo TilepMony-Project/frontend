@@ -43,7 +43,7 @@ export function SelectWrapper({
 
   return (
     <Select value={value || undefined} onValueChange={handleValueChange} disabled={disabled}>
-      <SelectTrigger className={cn(error && "border-destructive", className)}>
+      <SelectTrigger className={cn("transition-all duration-200 hover:border-ring/50", error && "border-destructive", className)}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

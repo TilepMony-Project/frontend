@@ -7,6 +7,7 @@ import {
   Asterisk,
   Box,
   Building2,
+  Check,
   CheckCircle2,
   ChevronDown,
   Clock,
@@ -85,6 +86,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   X: X,
   Maximize2: Maximize2,
   Loader2: Loader2,
+  Check: Check,
   CheckCircle2: CheckCircle2,
   XCircle: XCircle,
 
