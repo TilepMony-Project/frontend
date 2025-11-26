@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
-import { Icon } from '@/components/icons';
-import { RunButton } from '@/features/integration/components/run-button/run-button';
-import { SaveButton } from '@/features/integration/components/save-button/save-button';
-import { OptionalAppBarTools } from '@/features/plugins-core/components/optional-app-bar-toolbar';
+import { Icon } from "@/components/icons";
+import { RunButton } from "@/features/integration/components/run-button/run-button";
+import { SaveButton } from "@/features/integration/components/save-button/save-button";
+import { OptionalAppBarTools } from "@/features/plugins-core/components/optional-app-bar-toolbar";
 
 export function Toolbar() {
   const router = useRouter();
 
   function handleNavigateToDashboard() {
-    router.push('/dashboard');
+    router.push("/dashboard");
   }
 
   return (

@@ -1,13 +1,13 @@
-import clsx from 'clsx';
+import clsx from "clsx";
 
-import { Sidebar } from '@/components/sidebar/sidebar';
-import useStore from '@/store/store';
-import { useEffect } from 'react';
-import { DraggedItem } from './components/dragged-item/dragged-item';
-import { PaletteHeader } from './components/header/palette-header';
-import { PaletteItems } from './components/items/palette-items';
-import { usePaletteDragAndDrop } from './hooks/use-palette-drag-and-drop';
-import { NodePreviewContainer } from './node-preview-container';
+import { Sidebar } from "@/components/sidebar/sidebar";
+import useStore from "@/store/store";
+import { useEffect } from "react";
+import { DraggedItem } from "./components/dragged-item/dragged-item";
+import { PaletteHeader } from "./components/header/palette-header";
+import { PaletteItems } from "./components/items/palette-items";
+import { usePaletteDragAndDrop } from "./hooks/use-palette-drag-and-drop";
+import { NodePreviewContainer } from "./node-preview-container";
 
 export function PaletteContainer() {
   const toggleSidebar = useStore((state) => state.toggleSidebar);
@@ -27,7 +27,7 @@ export function PaletteContainer() {
 
   return (
     <Sidebar
-      className={clsx('w-auto', isSidebarExpanded && '!w-[300px]')}
+      className={clsx("w-auto", isSidebarExpanded && "!w-[300px]")}
       isExpanded={isSidebarExpanded}
       header={<PaletteHeader onClick={() => toggleSidebar()} />}
     >

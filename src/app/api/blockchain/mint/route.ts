@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from "next/server";
 
 // POST /api/blockchain/mint - Mint tokens via dummy issuer
 export async function POST(request: NextRequest) {
@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
     // Validate inputs
     if (!amount || !currency || !issuer || !walletAddress) {
-      return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
+      return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
     }
 
     // TODO: Implement actual smart contract call
@@ -25,10 +25,10 @@ export async function POST(request: NextRequest) {
     // 3. Wait for transaction confirmation
     // 4. Return transaction hash
 
-    const mockTransactionHash = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`;
+    const mockTransactionHash = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}`;
 
     // Determine output token based on currency
-    const outputToken = currency === 'USD' ? 'USDX' : 'IDRX';
+    const outputToken = currency === "USD" ? "USDX" : "IDRX";
 
     return NextResponse.json(
       {
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error minting tokens:', error);
-    return NextResponse.json({ error: 'Failed to mint tokens' }, { status: 500 });
+    console.error("Error minting tokens:", error);
+    return NextResponse.json({ error: "Failed to mint tokens" }, { status: 500 });
   }
 }

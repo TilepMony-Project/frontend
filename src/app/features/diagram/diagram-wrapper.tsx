@@ -1,7 +1,7 @@
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from "react";
 
-import { useCommandHandler } from '@/hooks/use-command-handler';
-import { useCommandHandlerKeyboard } from '@/hooks/use-command-handler-keyboard';
+import { useCommandHandler } from "@/hooks/use-command-handler";
+import { useCommandHandlerKeyboard } from "@/hooks/use-command-handler-keyboard";
 
 export function DiagramWrapper({ children }: PropsWithChildren) {
   const commandHandler = useCommandHandler();

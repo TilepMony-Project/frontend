@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 
-import { IntegrationWrapper } from './wrapper/integration-wrapper';
+import { IntegrationWrapper } from "./wrapper/integration-wrapper";
 
-import { getStoreDataForIntegration } from '@/store/slices/diagram-slice/actions';
+import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
 
-import type { IntegrationDataFormatOptional, OnSave } from '@/features/integration/types';
+import type { IntegrationDataFormatOptional, OnSave } from "@/features/integration/types";
 import {
   showSnackbarSaveErrorIfNeeded,
   showSnackbarSaveSuccessIfNeeded,
-} from '../../utils/show-snackbar';
+} from "../../utils/show-snackbar";
 
 export function withIntegrationThroughApi<WProps extends object>(
   WrappedComponent: React.ComponentType<WProps>
@@ -21,11 +21,11 @@ export function withIntegrationThroughApi<WProps extends object>(
         /*
           You can replace this fetch call with your own implementation.
         */
-        const response = await fetch(location.origin + '/fake-api', {
+        const response = await fetch(location.origin + "/fake-api", {
           body: JSON.stringify(data),
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         });
 
@@ -34,7 +34,7 @@ export function withIntegrationThroughApi<WProps extends object>(
         if (didSaved) {
           showSnackbarSaveSuccessIfNeeded(savingParams);
 
-          return 'success';
+          return "success";
         }
       } catch {
         //
@@ -42,7 +42,7 @@ export function withIntegrationThroughApi<WProps extends object>(
 
       showSnackbarSaveErrorIfNeeded(savingParams);
 
-      return 'error';
+      return "error";
     }, []);
 
     const [{ name, layoutDirection, nodes, edges }, setData] =
@@ -54,7 +54,7 @@ export function withIntegrationThroughApi<WProps extends object>(
           /*
             You can replace this fetch call with your own implementation.
           */
-          const response = await fetch(location.origin + '/fake-api');
+          const response = await fetch(location.origin + "/fake-api");
 
           if (!response.ok) {
             return;

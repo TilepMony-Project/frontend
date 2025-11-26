@@ -1,7 +1,7 @@
-import clsx from 'clsx';
-import type { PropsWithChildren } from 'react';
-import { Label } from '../label/label';
-import type { ItemSize } from '../label/label';
+import clsx from "clsx";
+import type { PropsWithChildren } from "react";
+import { Label } from "../label/label";
+import type { ItemSize } from "../label/label";
 
 type Props = {
   label: string;
@@ -14,11 +14,11 @@ export function FormControlWithLabel({
   label,
   className,
   required,
-  size = 'medium',
+  size = "medium",
   children,
 }: PropsWithChildren<Props>) {
   return (
-    <div className={clsx('flex flex-col gap-2.5', { [className || '']: className })}>
+    <div className={clsx("flex flex-col gap-2.5", { [className || ""]: className })}>
       <Label label={label} required={required} size={size} />
       {children}
     </div>

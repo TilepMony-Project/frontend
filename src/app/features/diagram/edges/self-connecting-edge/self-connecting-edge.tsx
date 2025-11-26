@@ -1,7 +1,7 @@
-import { BaseEdge, type EdgeProps } from '@xyflow/react';
-import { type EdgeState, useEdgeStyle } from '@synergycodes/overflow-ui';
-import { EDGE_CURVE_RADIUS, SELF_CONNECTING_EDGE_LABEL_OFFSET } from '../edge.consts';
-import type { WorkflowBuilderEdge } from '@/types/node-data';
+import { BaseEdge, type EdgeProps } from "@xyflow/react";
+import { type EdgeState, useEdgeStyle } from "@synergycodes/overflow-ui";
+import { EDGE_CURVE_RADIUS, SELF_CONNECTING_EDGE_LABEL_OFFSET } from "../edge.consts";
+import type { WorkflowBuilderEdge } from "@/types/node-data";
 
 type SelfConnectingEdgeProps = EdgeProps<WorkflowBuilderEdge> & {
   nodeHeight?: number;
@@ -53,7 +53,7 @@ export function SelfConnectingEdge({
   hovered,
   nodeHeight = 0,
 }: SelfConnectingEdgeProps) {
-  const edgeState: EdgeState = selected ? 'selected' : 'default';
+  const edgeState: EdgeState = selected ? "selected" : "default";
   const style = useEdgeStyle({ state: edgeState, isHovered: hovered });
 
   const path = createSelfConnectingPath(

@@ -1,21 +1,19 @@
-
-
-import { Icon } from '@/components/icons';
-import { IntegrationContext } from '@/features/integration/components/integration-variants/context/integration-context-wrapper';
-import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
-import useStore from '@/store/store';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Menu } from '@/components/ui/menu';
-import { ChevronDown } from 'lucide-react';
-import { useContext, useMemo, useState } from 'react';
+import { Icon } from "@/components/icons";
+import { IntegrationContext } from "@/features/integration/components/integration-variants/context/integration-context-wrapper";
+import { withOptionalComponentPlugins } from "@/features/plugins-core/adapters/adapter-components";
+import useStore from "@/store/store";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Menu } from "@/components/ui/menu";
+import { ChevronDown } from "lucide-react";
+import { useContext, useMemo, useState } from "react";
 
 type ProjectSelectionProps = {
   onDuplicateClick?: () => void;
 };
 
 function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) {
-  const documentName = useStore((state) => state.documentName || '');
+  const documentName = useStore((state) => state.documentName || "");
   const isReadOnlyMode = useStore((store) => store.isReadOnlyMode);
   const setDocumentName = useStore((state) => state.setDocumentName);
   const [editName, setEditName] = useState<boolean>(false);
@@ -38,7 +36,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
   const items = useMemo(
     () => [
       {
-        label: 'Duplicate to Drafts',
+        label: "Duplicate to Drafts",
         icon: <Icon name="LayoutGrid" />,
         onClick: onDuplicateClick,
       },
@@ -58,7 +56,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
           }}
           onBlur={handleCommitName}
           onKeyDown={(event) => {
-            if (event.key === 'Enter') {
+            if (event.key === "Enter") {
               event.currentTarget.blur();
             }
           }}
@@ -74,7 +72,7 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
             if (isReadOnlyMode) {
               return;
             }
-            if (event.key === 'Enter' || event.key === ' ') {
+            if (event.key === "Enter" || event.key === " ") {
               event.preventDefault();
               setEditName(true);
             }
@@ -96,5 +94,5 @@ function ProjectSelectionComponent({ onDuplicateClick }: ProjectSelectionProps) 
 
 export const ProjectSelection = withOptionalComponentPlugins(
   ProjectSelectionComponent,
-  'ProjectSelection'
+  "ProjectSelection"
 );

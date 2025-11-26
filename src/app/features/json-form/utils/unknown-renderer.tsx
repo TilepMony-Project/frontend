@@ -6,12 +6,12 @@ import {
   type LayoutProps,
   or,
   rankWith,
-} from '@jsonforms/core';
-import { withJsonFormsControlProps } from '@jsonforms/react';
+} from "@jsonforms/core";
+import { withJsonFormsControlProps } from "@jsonforms/react";
 
 function UnknownRenderer({ uischema: { type } }: ControlProps | LayoutProps) {
   return (
-    <div className="ax-public-p10" style={{ color: 'red' }}>
+    <div className="ax-public-p10" style={{ color: "red" }}>
       No renderer provided for type: {type}
     </div>
   );

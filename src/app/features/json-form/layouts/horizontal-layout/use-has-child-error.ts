@@ -1,6 +1,6 @@
-import { useJsonForms } from '@jsonforms/react';
-import type { UISchemaElement } from '../../types/uischema';
-import { type Scopable, type Scoped, toDataPath } from '@jsonforms/core';
+import { useJsonForms } from "@jsonforms/react";
+import type { UISchemaElement } from "../../types/uischema";
+import { type Scopable, type Scoped, toDataPath } from "@jsonforms/core";
 
 export function useHasChildError(childElements?: UISchemaElement[]) {
   const { core } = useJsonForms();
@@ -10,11 +10,11 @@ export function useHasChildError(childElements?: UISchemaElement[]) {
 
   const childPaths = childElements
     .filter((element) => (element as Scopable).scope)
-    .map((element) => toDataPath((element as Scoped).scope).replace('.', '/'));
+    .map((element) => toDataPath((element as Scoped).scope).replace(".", "/"));
 
   const errorPaths = core.errors.map((error) =>
-    error.keyword === 'required'
-      ? `${error.instancePath}/${error.params['missingProperty']}`
+    error.keyword === "required"
+      ? `${error.instancePath}/${error.params["missingProperty"]}`
       : error.instancePath
   );
 

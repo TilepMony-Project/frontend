@@ -1,4 +1,4 @@
-import type { SetDiagramState, GetDiagramState, WorkflowEditorState } from '@/store/store';
+import type { SetDiagramState, GetDiagramState, WorkflowEditorState } from "@/store/store";
 
 /**
  * @param state - current state of the store, this property should not be modified.
@@ -37,7 +37,7 @@ export function withInterceptingMiddleware(
         /* A `set()` can be either an object or an update function, e.g:
          * set({ property: 0 })
          * set((state) => ({ property: state.property + 1})) */
-        let change = typeof partial === 'function' ? partial(state) : partial;
+        let change = typeof partial === "function" ? partial(state) : partial;
         let finalize = true;
 
         let nextChange: Partial<WorkflowEditorState> | null = null;

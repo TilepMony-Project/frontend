@@ -1,38 +1,38 @@
-import type { NodeSchema } from '@/types/node-schema';
+import type { NodeSchema } from "@/types/node-schema";
 
 export const paymentGatewayOptions = [
-  { label: 'DummyGatewayA', value: 'DummyGatewayA' },
-  { label: 'DummyGatewayB', value: 'DummyGatewayB' },
-  { label: 'DummyGatewayC', value: 'DummyGatewayC' },
+  { label: "DummyGatewayA", value: "DummyGatewayA" },
+  { label: "DummyGatewayB", value: "DummyGatewayB" },
+  { label: "DummyGatewayC", value: "DummyGatewayC" },
 ];
 
 export const currencyOptions = [
-  { label: 'USD', value: 'USD' },
-  { label: 'IDR', value: 'IDR' },
+  { label: "USD", value: "USD" },
+  { label: "IDR", value: "IDR" },
 ];
 
 export const schema = {
   properties: {
     label: {
-      type: 'string',
+      type: "string",
     },
     description: {
-      type: 'string',
+      type: "string",
     },
     amount: {
-      type: 'number',
+      type: "number",
       minimum: 100,
       maximum: 100000000,
     },
     currency: {
-      type: 'string',
+      type: "string",
       options: currencyOptions,
-      placeholder: 'Select currency',
+      placeholder: "Select currency",
     },
     paymentGateway: {
-      type: 'string',
+      type: "string",
       options: paymentGatewayOptions,
-      placeholder: 'Choose payment processor',
+      placeholder: "Choose payment processor",
     },
   },
 } satisfies NodeSchema;

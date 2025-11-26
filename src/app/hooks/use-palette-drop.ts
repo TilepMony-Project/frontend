@@ -1,13 +1,13 @@
-import { useShallow } from 'zustand/shallow';
-import { type DragEvent, useCallback } from 'react';
-import { useStoreApi, type XYPosition } from '@xyflow/react';
-import useStore from '@/store/store';
-import type { DraggingItem } from '@/types/common';
-import { getNodeAddChange } from '@/utils/get-node-add-change';
-import { dataFormat } from '@/utils/consts';
-import { useTranslateIfPossible } from './use-translate-if-possible';
-import { NodeType } from '@/types/node-types';
-import type { BaseNodeProperties } from '@/types/node-schema';
+import { useShallow } from "zustand/shallow";
+import { type DragEvent, useCallback } from "react";
+import { useStoreApi, type XYPosition } from "@xyflow/react";
+import useStore from "@/store/store";
+import type { DraggingItem } from "@/types/common";
+import { getNodeAddChange } from "@/utils/get-node-add-change";
+import { dataFormat } from "@/utils/consts";
+import { useTranslateIfPossible } from "./use-translate-if-possible";
+import { NodeType } from "@/types/node-types";
+import type { BaseNodeProperties } from "@/types/node-schema";
 
 export function usePaletteDrop() {
   const resetSelectedElements = useStoreApi().getState().resetSelectedElements;

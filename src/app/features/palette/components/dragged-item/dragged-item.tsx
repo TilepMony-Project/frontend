@@ -1,7 +1,7 @@
-import { type PropsWithChildren, forwardRef } from 'react';
-import { createPortal } from 'react-dom';
+import { type PropsWithChildren, forwardRef } from "react";
+import { createPortal } from "react-dom";
 
-import { isChrome, isFirefox, isOpera, isSafari } from '@/utils/browser';
+import { isChrome, isFirefox, isOpera, isSafari } from "@/utils/browser";
 
 type DraggedItemProps = {
   zoom: number;
@@ -22,7 +22,11 @@ export const DraggedItem = forwardRef<HTMLDivElement, PropsWithChildren<DraggedI
     }
 
     return createPortal(
-      <div ref={ref} className="absolute bg-transparent origin-top-left z-[2] top-full" style={getStyles()}>
+      <div
+        ref={ref}
+        className="absolute bg-transparent origin-top-left z-[2] top-full"
+        style={getStyles()}
+      >
         {children}
       </div>,
       document.body

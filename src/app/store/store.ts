@@ -1,22 +1,22 @@
-import { createWithEqualityFn } from 'zustand/traditional';
-import type { StateCreator } from 'zustand/vanilla';
+import { createWithEqualityFn } from "zustand/traditional";
+import type { StateCreator } from "zustand/vanilla";
 import {
   type DiagramDataModificationState,
   useDiagramDataModificationSlice,
-} from './slices/diagram-data-modification/diagram-data-modification-slice';
-import { type PaletteState, usePaletteSlice } from './slices/palette/palette-slice';
+} from "./slices/diagram-data-modification/diagram-data-modification-slice";
+import { type PaletteState, usePaletteSlice } from "./slices/palette/palette-slice";
 import {
   type DiagramSelectionState,
   useDiagramSelectionSlice,
-} from './slices/diagram-selection/diagram-selection-slice';
-import { type DiagramState, useDiagramSlice } from './slices/diagram-slice';
-import { devtools } from 'zustand/middleware';
-import { withInterceptingMiddleware } from './middleware/middleware';
-import { shallow } from 'zustand/shallow';
+} from "./slices/diagram-selection/diagram-selection-slice";
+import { type DiagramState, useDiagramSlice } from "./slices/diagram-slice";
+import { devtools } from "zustand/middleware";
+import { withInterceptingMiddleware } from "./middleware/middleware";
+import { shallow } from "zustand/shallow";
 import {
   type UserPreferencesState,
   useUserPreferencesSlice,
-} from './slices/user-preferences/user-preferences-slice';
+} from "./slices/user-preferences/user-preferences-slice";
 
 export type WorkflowEditorState = DiagramState &
   PaletteState &
@@ -43,7 +43,7 @@ const store: StateCreator<WorkflowEditorState> = withInterceptingMiddleware((set
 }))([]);
 const useStore = createWithEqualityFn<WorkflowEditorState>()(
   devtools<WorkflowEditorState>(store, {
-    enabled: process.env.NODE_ENV === 'development',
+    enabled: process.env.NODE_ENV === "development",
   }),
   shallow
 );

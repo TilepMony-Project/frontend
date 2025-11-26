@@ -1,6 +1,6 @@
-import type { HandleType } from '@xyflow/react';
+import type { HandleType } from "@xyflow/react";
 
-export const INNER_HANDLE_MARKER = 'inner';
+export const INNER_HANDLE_MARKER = "inner";
 
 type InnerHandleMarker = typeof INNER_HANDLE_MARKER;
 type NodeId = string;

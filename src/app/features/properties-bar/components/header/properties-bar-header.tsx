@@ -1,7 +1,7 @@
-import clsx from 'clsx';
+import clsx from "clsx";
 
-import { Icon } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { Icon } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   header: string;
@@ -37,8 +37,8 @@ export function PropertiesBarHeader({
             <Icon
               name="PanelLeft"
               className={clsx(
-                'h-4 w-4 transition-transform duration-200 ease-in-out',
-                !isSidebarExpanded && 'rotate-180'
+                "h-4 w-4 transition-transform duration-200 ease-in-out",
+                !isSidebarExpanded && "rotate-180"
               )}
             />
           </Button>

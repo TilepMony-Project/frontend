@@ -1,11 +1,10 @@
-
-import { type EdgeProps, getSmoothStepPath, BaseEdge, useReactFlow } from '@xyflow/react';
-import type { WorkflowBuilderEdge } from '@/types/node-data';
-import { EDGE_CURVE_RADIUS, EDGE_OFFSET, SELF_CONNECTING_EDGE_LABEL_OFFSET } from '../edge.consts';
-import { Icon } from '@/components/icons';
-import { SelfConnectingEdge } from '../self-connecting-edge/self-connecting-edge';
-import { EdgeLabel } from '../edge-label-renderer/edge-label-renderer';
-import { useLabelEdgeHover } from './use-label-edge-hover';
+import { type EdgeProps, getSmoothStepPath, BaseEdge, useReactFlow } from "@xyflow/react";
+import type { WorkflowBuilderEdge } from "@/types/node-data";
+import { EDGE_CURVE_RADIUS, EDGE_OFFSET, SELF_CONNECTING_EDGE_LABEL_OFFSET } from "../edge.consts";
+import { Icon } from "@/components/icons";
+import { SelfConnectingEdge } from "../self-connecting-edge/self-connecting-edge";
+import { EdgeLabel } from "../edge-label-renderer/edge-label-renderer";
+import { useLabelEdgeHover } from "./use-label-edge-hover";
 
 export function LabelEdge({
   id,

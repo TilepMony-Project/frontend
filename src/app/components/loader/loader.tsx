@@ -1,5 +1,5 @@
-import { type CSSProperties, memo } from 'react';
-import { clsx } from 'clsx';
+import { type CSSProperties, memo } from "react";
+import { clsx } from "clsx";
 
 type LoaderType = {
   isLoading?: boolean;
@@ -7,15 +7,15 @@ type LoaderType = {
 };
 
 interface CSSCustomProperties extends CSSProperties {
-  '--wb-loader-background-opacity': number;
+  "--wb-loader-background-opacity": number;
 }
 
 const semiTransparentOpacityVariable: CSSCustomProperties = {
-  '--wb-loader-background-opacity': 0.8,
+  "--wb-loader-background-opacity": 0.8,
 };
 
 export const Loader = memo(({ isLoading, isSemiTransparent }: LoaderType) => {
-  const visibilityClassName = isLoading ? 'animate-fade-in' : 'animate-fade-out';
+  const visibilityClassName = isLoading ? "animate-fade-in" : "animate-fade-out";
   const setLoaderBackgroundOpacityVariable = isSemiTransparent
     ? semiTransparentOpacityVariable
     : {};
@@ -27,7 +27,7 @@ export const Loader = memo(({ isLoading, isSemiTransparent }: LoaderType) => {
   return (
     <div
       className={clsx(
-        'absolute w-full h-full bg-[var(--wb-panel-background-color)] z-[100]',
+        "absolute w-full h-full bg-[var(--wb-panel-background-color)] z-[100]",
         visibilityClassName
       )}
       style={setLoaderBackgroundOpacityVariable}

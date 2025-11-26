@@ -1,8 +1,8 @@
-import type { WorkflowBuilderNode } from '@/types/node-data';
+import type { WorkflowBuilderNode } from "@/types/node-data";
 
 export const mockNodeDelay: WorkflowBuilderNode = {
-  id: 'delay-1',
-  type: 'node',
+  id: "delay-1",
+  type: "node",
   position: {
     x: 0,
     y: 0,
@@ -10,20 +10,20 @@ export const mockNodeDelay: WorkflowBuilderNode = {
   data: {
     segments: [],
     properties: {
-      label: 'Delay',
-      description: 'Pause the workflow',
-      status: 'draft',
+      label: "Delay",
+      description: "Pause the workflow",
+      status: "draft",
       duration: {
-        timeUnits: 'none',
+        timeUnits: "none",
         delayAmount: 3,
-        maxWaitTime: '24',
-        expression: 'order.processing_time * 2',
+        maxWaitTime: "24",
+        expression: "order.processing_time * 2",
       },
       errors: [],
-      type: 'fixedDelay',
+      type: "fixedDelay",
     },
-    type: 'delay',
-    icon: 'Timer',
+    type: "delay",
+    icon: "Timer",
   },
   selected: false,
   measured: {

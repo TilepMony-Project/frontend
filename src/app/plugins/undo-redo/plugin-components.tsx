@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
-import { Icon } from '@/components/icons';
-import { registerComponentDecorator } from '@/features/plugins-core/adapters/adapter-components';
+import { Icon } from "@/components/icons";
+import { registerComponentDecorator } from "@/features/plugins-core/adapters/adapter-components";
 
 import {
   canRedo,
@@ -9,7 +9,7 @@ import {
   redoWorkflowStep,
   undoWorkflowStep,
   useUndoRedoHistoryStore,
-} from './history-store';
+} from "./history-store";
 
 function UndoButton() {
   const hasPast = useUndoRedoHistoryStore((state) => state.past.length > 0);
@@ -45,16 +45,16 @@ function handleRedo() {
   redoWorkflowStep();
 }
 
-registerComponentDecorator('OptionalAppBarTools', {
-  name: 'UndoButton',
+registerComponentDecorator("OptionalAppBarTools", {
+  name: "UndoButton",
   content: UndoButton,
-  place: 'after',
+  place: "after",
   priority: 5,
 });
 
-registerComponentDecorator('OptionalAppBarTools', {
-  name: 'RedoButton',
+registerComponentDecorator("OptionalAppBarTools", {
+  name: "RedoButton",
   content: RedoButton,
-  place: 'after',
+  place: "after",
   priority: 4,
 });

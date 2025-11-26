@@ -1,4 +1,4 @@
-import { sortByPriority } from './utils/sort-by-priority';
+import { sortByPriority } from "./utils/sort-by-priority";
 
 type CallbackBefore = (params: { params: unknown[] }) => void | { replacedParams: unknown[] };
 
@@ -8,7 +8,7 @@ type SharedDecoratorOptions = {
 };
 
 type DecoratorOptionsBefore = {
-  place?: 'before';
+  place?: "before";
   callback: CallbackBefore;
 } & SharedDecoratorOptions;
 
@@ -17,7 +17,7 @@ type CallbackAfter = (params: { params: unknown[]; returnValue: unknown }) => vo
 };
 
 type DecoratorOptionsAfter = {
-  place: 'after';
+  place: "after";
   callback: CallbackAfter;
 } & SharedDecoratorOptions;
 
@@ -45,10 +45,10 @@ export function withOptionalFunctionPlugins<F extends (...arguments_: any[]) => 
     const plugins = pluginRegistryCallbacks.get(functionName)?.sort(sortByPriority) || [];
 
     const pluginsBefore = plugins.filter(
-      ({ place }) => place !== 'after'
+      ({ place }) => place !== "after"
     ) as DecoratorOptionsBefore[];
     const pluginsAfter = plugins.filter(
-      ({ place }) => place === 'after'
+      ({ place }) => place === "after"
     ) as DecoratorOptionsAfter[];
 
     // Those can modify params that wrapped function will receive

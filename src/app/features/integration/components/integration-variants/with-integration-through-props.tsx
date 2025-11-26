@@ -1,17 +1,17 @@
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import { IntegrationWrapper } from './wrapper/integration-wrapper';
+import { IntegrationWrapper } from "./wrapper/integration-wrapper";
 
-import { getStoreDataForIntegration } from '@/store/slices/diagram-slice/actions';
+import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
 
-import type { OnSave, OnSaveExternal } from '@/features/integration/types';
+import type { OnSave, OnSaveExternal } from "@/features/integration/types";
 import {
   showSnackbarSaveErrorIfNeeded,
   showSnackbarSaveSuccessIfNeeded,
-} from '../../utils/show-snackbar';
-import type { Prettify } from '@/utils/typescript';
+} from "../../utils/show-snackbar";
+import type { Prettify } from "@/utils/typescript";
 
-type Props = Omit<React.ComponentProps<typeof IntegrationWrapper>, 'onSave'> & {
+type Props = Omit<React.ComponentProps<typeof IntegrationWrapper>, "onSave"> & {
   onDataSave: OnSaveExternal;
 };
 
@@ -34,7 +34,7 @@ export function withIntegrationThroughProps<WProps extends object>(
           if (didSave) {
             showSnackbarSaveSuccessIfNeeded(savingParams);
 
-            return 'success';
+            return "success";
           }
         } catch {
           //
@@ -42,7 +42,7 @@ export function withIntegrationThroughProps<WProps extends object>(
 
         showSnackbarSaveErrorIfNeeded(savingParams);
 
-        return 'error';
+        return "error";
       },
       [onDataSave]
     );

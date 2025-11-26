@@ -1,20 +1,20 @@
-import { withOptionalFunctionPlugins } from '@/features/plugins-core/adapters/adapter-functions';
+import { withOptionalFunctionPlugins } from "@/features/plugins-core/adapters/adapter-functions";
 
-import type { MenuItemProps } from '@/components/ui/menu';
-import { Icon } from '@/components/icons';
+import type { MenuItemProps } from "@/components/ui/menu";
+import { Icon } from "@/components/icons";
 
-import { openExportModal } from '@/features/integration/components/import-export/export-modal/open-export-modal';
-import { openImportModal } from '@/features/integration/components/import-export/import-modal/open-import-modal';
+import { openExportModal } from "@/features/integration/components/import-export/export-modal/open-export-modal";
+import { openImportModal } from "@/features/integration/components/import-export/import-modal/open-import-modal";
 
 function getControlsDotsItemsFunction(): MenuItemProps[] {
   return [
     {
-      label: 'Export',
+      label: "Export",
       icon: <Icon name="Upload" />,
       onClick: openExportModal,
     },
     {
-      label: 'Import',
+      label: "Import",
       icon: <Icon name="Download" />,
       onClick: openImportModal,
     },
@@ -23,5 +23,5 @@ function getControlsDotsItemsFunction(): MenuItemProps[] {
 
 export const getControlsDotsItems = withOptionalFunctionPlugins(
   getControlsDotsItemsFunction,
-  'getControlsDotsItems'
+  "getControlsDotsItems"
 );

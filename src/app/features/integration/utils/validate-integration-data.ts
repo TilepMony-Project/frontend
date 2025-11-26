@@ -1,10 +1,10 @@
-import type { Node } from '@xyflow/react';
-import type { WorkflowBuilderNode } from '@/types/node-data';
-import { getIsValidJson } from '@/utils/validation/get-is-valid-json';
-import { getNodeWithErrors } from '@/utils/validation/get-node-errors';
-import { getIsValidLayoutDirections } from '@/utils/validation/get-is-valid-layout-directions';
-import type { IntegrationDataFormat } from '../types';
-import { getNodeDefinition } from '@/utils/validation/get-node-definition';
+import type { Node } from "@xyflow/react";
+import type { WorkflowBuilderNode } from "@/types/node-data";
+import { getIsValidJson } from "@/utils/validation/get-is-valid-json";
+import { getNodeWithErrors } from "@/utils/validation/get-node-errors";
+import { getIsValidLayoutDirections } from "@/utils/validation/get-is-valid-layout-directions";
+import type { IntegrationDataFormat } from "../types";
+import { getNodeDefinition } from "@/utils/validation/get-node-definition";
 
 export type IntegrationDataError = {
   message: string;
@@ -32,24 +32,24 @@ type IntegrationDataValidation =
 export function validateIntegrationData(input?: object | string): IntegrationDataValidation {
   let objectToCheck: Partial<IntegrationDataFormat> | undefined;
 
-  if (typeof input === 'string' && getIsValidJson(input)) {
+  if (typeof input === "string" && getIsValidJson(input)) {
     objectToCheck = JSON.parse(input);
-  } else if (typeof input === 'object') {
+  } else if (typeof input === "object") {
     objectToCheck = input;
   }
 
   if (!objectToCheck) {
     return {
       hasErrors: true,
-      errors: [{ message: 'validation.error.notJSONObject' }],
+      errors: [{ message: "validation.error.notJSONObject" }],
       warnings: [],
       validatedIntegrationData: undefined,
     };
   }
 
   const validatedIntegrationData: IntegrationDataFormat = {
-    name: '',
-    layoutDirection: 'horizontal',
+    name: "",
+    layoutDirection: "horizontal",
     nodes: [],
     edges: [],
   };
@@ -57,7 +57,7 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
   const errors: IntegrationDataError[] = [];
   const warnings: IntegrationDataError[] = [];
 
-  if (objectToCheck?.name && typeof objectToCheck.name === 'string') {
+  if (objectToCheck?.name && typeof objectToCheck.name === "string") {
     validatedIntegrationData.name = objectToCheck.name;
   }
 
@@ -87,8 +87,8 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
 
     if (unknownNodes.length > 0) {
       errors.push({
-        message: 'validation.error.nodesWithoutDefinition',
-        messageParams: { nodesIds: unknownNodes.map((node) => node?.id || '?').join(', ') },
+        message: "validation.error.nodesWithoutDefinition",
+        messageParams: { nodesIds: unknownNodes.map((node) => node?.id || "?").join(", ") },
       });
     }
 
@@ -100,12 +100,12 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
 
         return Array.isArray(errors) && errors.length > 0;
       })
-      .map((node) => node?.id || '?');
+      .map((node) => node?.id || "?");
 
     if (nodesIdsWithErrors.length > 0) {
       warnings.push({
-        message: 'validation.error.nodesWithErrors',
-        messageParams: { nodesIds: nodesIdsWithErrors.join(', ') },
+        message: "validation.error.nodesWithErrors",
+        messageParams: { nodesIds: nodesIdsWithErrors.join(", ") },
       });
     }
   }

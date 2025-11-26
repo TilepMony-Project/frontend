@@ -1,19 +1,19 @@
 // Type definitions for common types
 // TODO: Replace with proper type definitions
 
-import type { Edge, Node, ReactFlowInstance } from '@xyflow/react';
+import type { Edge, Node, ReactFlowInstance } from "@xyflow/react";
 
-export type LayoutDirection = 'horizontal' | 'vertical';
+export type LayoutDirection = "horizontal" | "vertical";
 
-export const layoutDirections: LayoutDirection[] = ['horizontal', 'vertical'];
+export const layoutDirections: LayoutDirection[] = ["horizontal", "vertical"];
 
 export enum StatusType {
-  Idle = 'idle',
-  Loading = 'loading',
-  Success = 'success',
-  Error = 'error',
-  Warning = 'warning',
-  Info = 'info',
+  Idle = "idle",
+  Loading = "loading",
+  Success = "success",
+  Error = "error",
+  Warning = "warning",
+  Info = "info",
 }
 
 export type IconType = string;

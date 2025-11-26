@@ -1,15 +1,15 @@
-import clsx from 'clsx';
+import clsx from "clsx";
 
-import { Icon } from '@/components/icons';
-import { Sidebar } from '@/components/sidebar/sidebar';
-import { Button } from '@/components/ui/button';
-import { SegmentPicker } from '@/components/ui/segment-picker';
-import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
-import { EdgeProperties } from '../edge-properties/edge-properties';
-import { PropertiesBarHeader } from '../header/properties-bar-header';
-import { NodeProperties } from '../node-properties/node-properties';
-import type { PropertiesBarItem, PropertiesBarProps } from './properties-bar.types';
-import { renderComponent } from './render-component';
+import { Icon } from "@/components/icons";
+import { Sidebar } from "@/components/sidebar/sidebar";
+import { Button } from "@/components/ui/button";
+import { SegmentPicker } from "@/components/ui/segment-picker";
+import { withOptionalComponentPlugins } from "@/features/plugins-core/adapters/adapter-components";
+import { EdgeProperties } from "../edge-properties/edge-properties";
+import { PropertiesBarHeader } from "../header/properties-bar-header";
+import { NodeProperties } from "../node-properties/node-properties";
+import type { PropertiesBarItem, PropertiesBarProps } from "./properties-bar.types";
+import { renderComponent } from "./render-component";
 
 /**
  * PropertiesBarComponent - A configurable sidebar component for displaying and editing
@@ -41,7 +41,7 @@ function PropertiesBarComponent({
   const hasCustomItems = tabs.length > 0;
 
   const segmentPicker = {
-    when: () => isExpanded && !!selection?.node && selection.node.type === 'node' && hasCustomItems,
+    when: () => isExpanded && !!selection?.node && selection.node.type === "node" && hasCustomItems,
     component: () => (
       <SegmentPicker
         size="xxx-small"
@@ -64,7 +64,7 @@ function PropertiesBarComponent({
 
   const contentComponents: PropertiesBarItem[] = [
     {
-      when: ({ selection, selectedTab }) => !!selection.node && selectedTab === 'properties',
+      when: ({ selection, selectedTab }) => !!selection.node && selectedTab === "properties",
       component: ({ selection }) =>
         selection?.node ? <NodeProperties node={selection.node} /> : null,
     },
@@ -78,7 +78,7 @@ function PropertiesBarComponent({
 
   return (
     <Sidebar
-      className={clsx(isExpanded && '!w-[420px]')}
+      className={clsx(isExpanded && "!w-[420px]")}
       isExpanded={isExpanded}
       contentClassName="-ml-4 w-[calc(100%+1rem)] [&>*]:pl-4"
       header={
@@ -86,7 +86,7 @@ function PropertiesBarComponent({
           <PropertiesBarHeader
             isExpanded={isExpanded}
             header={headerLabel}
-            name={name ?? ''}
+            name={name ?? ""}
             onDotsClick={onMenuHeaderClick}
             onToggleExpand={hasSelection ? onToggleSidebar : undefined}
             isSidebarExpanded={isSidebarExpanded}
@@ -124,4 +124,4 @@ function PropertiesBarComponent({
   );
 }
 
-export const PropertiesBar = withOptionalComponentPlugins(PropertiesBarComponent, 'PropertiesBar');
+export const PropertiesBar = withOptionalComponentPlugins(PropertiesBarComponent, "PropertiesBar");

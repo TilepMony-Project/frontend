@@ -1,41 +1,41 @@
-import type { NodeSchema } from '@/types/node-schema';
+import type { NodeSchema } from "@/types/node-schema";
 
 export const bridgeProviderOptions = [
-  { label: 'DummyLayerZero', value: 'DummyLayerZero' },
-  { label: 'DummyOrbiter', value: 'DummyOrbiter' },
-  { label: 'DummyHyperlane', value: 'DummyHyperlane' },
+  { label: "DummyLayerZero", value: "DummyLayerZero" },
+  { label: "DummyOrbiter", value: "DummyOrbiter" },
+  { label: "DummyHyperlane", value: "DummyHyperlane" },
 ];
 
 export const schema = {
   properties: {
     label: {
-      type: 'string',
+      type: "string",
     },
     description: {
-      type: 'string',
+      type: "string",
     },
     amount: {
-      type: 'number',
+      type: "number",
       minimum: 0,
     },
     bridgeProvider: {
-      type: 'string',
+      type: "string",
       options: bridgeProviderOptions,
     },
     sourceChain: {
-      type: 'string',
+      type: "string",
       readOnly: true,
     },
     destinationChain: {
-      type: 'string',
+      type: "string",
       readOnly: true,
     },
     receiverWallet: {
-      type: 'string',
-      pattern: '^0x[a-fA-F0-9]{40}$',
+      type: "string",
+      pattern: "^0x[a-fA-F0-9]{40}$",
     },
     estimatedTime: {
-      type: 'string',
+      type: "string",
       readOnly: true,
     },
   },

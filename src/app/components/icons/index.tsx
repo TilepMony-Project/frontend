@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Archive,
@@ -49,8 +49,8 @@ import {
   Upload,
   X,
   XCircle,
-} from 'lucide-react';
-import type { ComponentType, SVGProps } from 'react';
+} from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
 
 export type IconProps = SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -142,23 +142,23 @@ export const Icon: ComponentType<IconProps> = ({ size = 24, className, name, ...
   if (IconComponent) {
     // Convert size to number if it's a string like "large" or "small"
     let iconSize: number | string = size;
-    if (typeof size === 'string') {
-      if (size === 'large') iconSize = 32;
-      else if (size === 'small') iconSize = 16;
-      else if (size === 'medium') iconSize = 24;
+    if (typeof size === "string") {
+      if (size === "large") iconSize = 32;
+      else if (size === "small") iconSize = 16;
+      else if (size === "medium") iconSize = 24;
       else iconSize = Number.parseInt(size, 10) || 24;
     }
 
     // Add spinning animation for Spinner icon
     const spinnerClassName =
-      name === 'Loader2' ? `${className || ''} animate-spin`.trim() : className;
+      name === "Loader2" ? `${className || ""} animate-spin`.trim() : className;
 
     return <IconComponent size={iconSize} className={spinnerClassName} {...props} />;
   }
 
   // Final fallback: show placeholder with icon name
   const iconSize =
-    typeof size === 'string' ? (size === 'large' ? 32 : size === 'small' ? 16 : 24) : size;
+    typeof size === "string" ? (size === "large" ? 32 : size === "small" ? 16 : 24) : size;
 
   return (
     <svg

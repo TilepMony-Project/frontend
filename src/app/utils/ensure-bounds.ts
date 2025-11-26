@@ -1,8 +1,8 @@
-import type { NodeChange, Node } from '@xyflow/react';
+import type { NodeChange, Node } from "@xyflow/react";
 import {
   addNodeChangedListener,
   removeNodeChangedListener,
-} from '../features/diagram/listeners/node-changed-listeners';
+} from "../features/diagram/listeners/node-changed-listeners";
 
 const FALLBACK_TIMEOUT = 1000;
 
@@ -22,7 +22,7 @@ export function ensureBounds(nodes: Node[], finishCallback?: () => void) {
 
     function callback(changes: NodeChange[]) {
       for (const change of changes) {
-        if (change.type !== 'dimensions') {
+        if (change.type !== "dimensions") {
           continue;
         }
 

@@ -1,7 +1,7 @@
-import { withIntegrationThroughApi } from './integration-variants/with-integration-through-api';
-import { withIntegrationThroughLocalStorage } from './integration-variants/with-integration-through-local-storage';
-import { withIntegrationThroughProps } from './integration-variants/with-integration-through-props';
-import { withIntegrationThroughServerAction } from './integration-variants/with-integration-through-server-action';
+import { withIntegrationThroughApi } from "./integration-variants/with-integration-through-api";
+import { withIntegrationThroughLocalStorage } from "./integration-variants/with-integration-through-local-storage";
+import { withIntegrationThroughProps } from "./integration-variants/with-integration-through-props";
+import { withIntegrationThroughServerAction } from "./integration-variants/with-integration-through-server-action";
 
 const hocByStrategy = {
   API: withIntegrationThroughApi,

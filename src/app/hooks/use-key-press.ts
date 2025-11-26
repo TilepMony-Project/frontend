@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import type { KeyCode } from '@xyflow/react';
+import { useCallback, useEffect, useState } from "react";
+import type { KeyCode } from "@xyflow/react";
 
 type Options = {
   withControlOrMeta?: boolean;
@@ -53,14 +53,14 @@ export function useKeyPress(keyCode: KeyCode, options?: Options): boolean {
       return setKeyPressed(false);
     }
 
-    document.addEventListener('keydown', downHandler);
-    document.addEventListener('keyup', upHandler);
-    window.addEventListener('blur', resetHandler);
+    document.addEventListener("keydown", downHandler);
+    document.addEventListener("keyup", upHandler);
+    window.addEventListener("blur", resetHandler);
 
     return () => {
-      document.removeEventListener('keydown', downHandler);
-      document.removeEventListener('keyup', upHandler);
-      window.removeEventListener('blur', resetHandler);
+      document.removeEventListener("keydown", downHandler);
+      document.removeEventListener("keyup", upHandler);
+      window.removeEventListener("blur", resetHandler);
     };
   }, [setKeyPressed, keyHandler]);
 
@@ -73,8 +73,8 @@ function isReactFlowDiagramTarget(target: EventTarget | null) {
   }
   const targetElement = target as Element;
   return (
-    targetElement.tagName === 'BODY' ||
-    targetElement.classList.contains('react-flow__edge') ||
-    targetElement.classList.contains('react-flow__node')
+    targetElement.tagName === "BODY" ||
+    targetElement.classList.contains("react-flow__edge") ||
+    targetElement.classList.contains("react-flow__node")
   );
 }

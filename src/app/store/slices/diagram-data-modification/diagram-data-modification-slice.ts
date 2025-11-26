@@ -1,25 +1,25 @@
-import { type Draft, produce } from 'immer';
+import { type Draft, produce } from "immer";
 import type {
   EdgeData,
   NodeData,
   WorkflowBuilderEdge,
   WorkflowBuilderNode,
-} from '@/types/node-data';
-import type { GetDiagramState, SetDiagramState } from '@/store/store';
+} from "@/types/node-data";
+import type { GetDiagramState, SetDiagramState } from "@/store/store";
 import {
   type OnEdgesChange,
   type OnNodesChange,
   applyEdgeChanges,
   applyNodeChanges,
-} from '@xyflow/react';
-import { removeElements } from './remove-elements';
-import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';
+} from "@xyflow/react";
+import { removeElements } from "./remove-elements";
+import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
 
 export type DiagramDataModificationState = {
   onNodesChange: OnNodesChange<WorkflowBuilderNode>;
   onEdgesChange: OnEdgesChange<WorkflowBuilderEdge>;
-  setNodeProperties: (nodeId: string, properties: NodeData['properties']) => void;
-  setNodeData: <T extends WorkflowBuilderNode['data']>(nodeId: string, data: T) => void;
+  setNodeProperties: (nodeId: string, properties: NodeData["properties"]) => void;
+  setNodeData: <T extends WorkflowBuilderNode["data"]>(nodeId: string, data: T) => void;
   setEdgeData: (edgeId: string, data: EdgeData) => void;
   removeElements: (elements: {
     nodes?: WorkflowBuilderNode[];
@@ -43,19 +43,19 @@ export function useDiagramDataModificationSlice(
       });
     },
     setNodeProperties: (nodeId, properties) => {
-      trackFutureChange('dataUpdate');
+      trackFutureChange("dataUpdate");
       set({
         nodes: updateNodesProperties(get().nodes, nodeId, properties),
       });
     },
     setNodeData: (nodeId, data) => {
-      trackFutureChange('dataUpdate');
+      trackFutureChange("dataUpdate");
       set({
         nodes: updateData(get().nodes, nodeId, data),
       });
     },
     setEdgeData: (edgeId, data) => {
-      trackFutureChange('dataUpdate');
+      trackFutureChange("dataUpdate");
       set({
         edges: updateData(get().edges, edgeId, data),
       });
@@ -68,7 +68,7 @@ export function useDiagramDataModificationSlice(
 function updateNodesProperties(
   nodes: WorkflowBuilderNode[],
   updatedNodeId: string,
-  properties: Partial<NodeData['properties']>
+  properties: Partial<NodeData["properties"]>
 ) {
   return produce(nodes, (draft: Draft<WorkflowBuilderNode[]>) => {
     const node = draft.find((x) => x.id === updatedNodeId);
@@ -84,7 +84,7 @@ function updateNodesProperties(
 function updateData<T extends WorkflowBuilderNode | WorkflowBuilderEdge>(
   elements: T[],
   updatedElementId: string,
-  data: Partial<T['data']>
+  data: Partial<T["data"]>
 ) {
   return produce(elements, (draft: Draft<WorkflowBuilderNode[]>) => {
     const element = draft.find((x) => x.id === updatedElementId);

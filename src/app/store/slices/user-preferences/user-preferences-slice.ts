@@ -1,4 +1,4 @@
-import type { GetDiagramState, SetDiagramState } from '@/store/store';
+import type { GetDiagramState, SetDiagramState } from "@/store/store";
 
 export type UserPreferencesState = {
   shouldSkipShowingConfirmation: boolean;

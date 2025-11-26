@@ -1,4 +1,4 @@
-import type { PrimitiveFieldType } from '@/types/node-schema';
+import type { PrimitiveFieldType } from "@/types/node-schema";
 
 type TypeMap = {
   string: string;
@@ -8,9 +8,9 @@ type TypeMap = {
 
 type Convert<T> = T extends PrimitiveFieldType ? TypeMap[T] : unknown;
 
-type ExtractProperties<T> = T extends { type: 'object'; properties: infer P }
+type ExtractProperties<T> = T extends { type: "object"; properties: infer P }
   ? { [K in keyof P]: ExtractProperties<P[K]> }
-  : T extends { type: 'array'; items: infer I }
+  : T extends { type: "array"; items: infer I }
     ? ExtractProperties<I>[]
     : T extends { type: infer X }
       ? Convert<X>

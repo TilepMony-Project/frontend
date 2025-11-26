@@ -20,9 +20,7 @@ export type MenuProps = {
 export function Menu({ items, children }: MenuProps) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        {children}
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {items.map((item, index) => (
           <DropdownMenuItem
@@ -31,7 +29,9 @@ export function Menu({ items, children }: MenuProps) {
             disabled={item.disabled}
             className="gap-2 cursor-pointer"
           >
-            {item.icon && <span className="w-4 h-4 flex items-center justify-center">{item.icon}</span>}
+            {item.icon && (
+              <span className="w-4 h-4 flex items-center justify-center">{item.icon}</span>
+            )}
             {item.label}
           </DropdownMenuItem>
         ))}

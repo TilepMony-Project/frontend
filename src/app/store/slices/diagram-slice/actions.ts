@@ -1,9 +1,9 @@
 // About actions: apps/frontend/src/app/store/README.md
-import type { IntegrationDataFormat } from '@/features/integration/types';
-import useStore from '@/store/store';
-import { getNodeWithErrors } from '@/utils/validation/get-node-errors';
-import type { LayoutDirection } from '@/types/common';
-import type { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
+import type { IntegrationDataFormat } from "@/features/integration/types";
+import useStore from "@/store/store";
+import { getNodeWithErrors } from "@/utils/validation/get-node-errors";
+import type { LayoutDirection } from "@/types/common";
+import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
 
 export function getStoreNodes() {
   return useStore.getState().nodes;
@@ -37,7 +37,7 @@ export function getStoreDataForIntegration(): IntegrationDataFormat {
   const state = useStore.getState();
 
   return {
-    name: state.documentName || '',
+    name: state.documentName || "",
     nodes: state.nodes,
     edges: state.edges,
     layoutDirection: state.layoutDirection,

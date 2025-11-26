@@ -1,13 +1,13 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-import type { ComponentProps } from 'react';
-import type { FooterVariant, Modal } from '@/components/ui/modal';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
+import type { ComponentProps } from "react";
+import type { FooterVariant, Modal } from "@/components/ui/modal";
 
 type ModalProps = {
-  content: ComponentProps<typeof Modal>['children'];
-  icon?: ComponentProps<typeof Modal>['icon'];
+  content: ComponentProps<typeof Modal>["children"];
+  icon?: ComponentProps<typeof Modal>["icon"];
   title: string;
-  footer?: ComponentProps<typeof Modal>['footer'];
+  footer?: ComponentProps<typeof Modal>["footer"];
   isCloseButtonVisible?: boolean;
   footerVariant?: FooterVariant;
   onModalClosed?: () => void;
@@ -29,13 +29,13 @@ export const useModalStore = create<ModalStore>()(
       ({
         ...emptyStore,
       }) satisfies ModalStore,
-    { name: 'modalStore' }
+    { name: "modalStore" }
   )
 );
 
 export function openModal({
   isCloseButtonVisible = true,
-  footerVariant = 'integrated',
+  footerVariant = "integrated",
   ...restProps
 }: ModalProps) {
   useModalStore.setState({

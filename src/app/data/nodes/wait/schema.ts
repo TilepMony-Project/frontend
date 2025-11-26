@@ -1,31 +1,31 @@
-import type { NodeSchema } from '@/types/node-schema';
+import type { NodeSchema } from "@/types/node-schema";
 
 export const timeUnitOptions = [
-  { label: 'Seconds', value: 'seconds' },
-  { label: 'Minutes', value: 'minutes' },
-  { label: 'Hours', value: 'hours' },
-  { label: 'Days', value: 'days' },
+  { label: "Seconds", value: "seconds" },
+  { label: "Minutes", value: "minutes" },
+  { label: "Hours", value: "hours" },
+  { label: "Days", value: "days" },
 ];
 
 export const schema = {
   properties: {
     label: {
-      type: 'string',
+      type: "string",
     },
     description: {
-      type: 'string',
+      type: "string",
     },
     delayDuration: {
-      type: 'number',
+      type: "number",
       minimum: 1,
       maximum: 31536000, // 365 days in seconds (max)
     },
     timeUnit: {
-      type: 'string',
+      type: "string",
       options: timeUnitOptions,
     },
     reason: {
-      type: 'string',
+      type: "string",
     },
   },
 } satisfies NodeSchema;

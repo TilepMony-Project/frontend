@@ -1,38 +1,38 @@
-import type { DynamicCondition } from '../types/controls';
+import type { DynamicCondition } from "../types/controls";
 
 const numberComparisonsOperators = new Set([
-  'isGreaterThan',
-  'isLessThan',
-  'isLessThanOrEqual',
-  'isGreaterThanOrEqual',
+  "isGreaterThan",
+  "isLessThan",
+  "isLessThanOrEqual",
+  "isGreaterThanOrEqual",
 ]);
 
 function getIsNumber(variable: string) {
-  return !Number.isNaN(Number(variable)) && variable.trim() !== '';
+  return !Number.isNaN(Number(variable)) && variable.trim() !== "";
 }
 
-export type LogicalOperator = 'OR' | 'AND';
+export type LogicalOperator = "OR" | "AND";
 
 export const comparisonsOperators = [
-  'isEqual',
-  'isNotEqual',
-  'isGreaterThan',
-  'isLessThan',
-  'isLessThanOrEqual',
-  'isGreaterThanOrEqual',
-  'isContaining',
-  'isNotContaining',
+  "isEqual",
+  "isNotEqual",
+  "isGreaterThan",
+  "isLessThan",
+  "isLessThanOrEqual",
+  "isGreaterThanOrEqual",
+  "isContaining",
+  "isNotContaining",
 ] as const;
 
 export type ComparisonOperator = (typeof comparisonsOperators)[number];
 
 export function conditionsToDependencies(conditions: DynamicCondition[]): string[] {
   return conditions.reduce((stack: string[], condition) => {
-    if (condition.x.startsWith('{{') && !stack.includes(condition.x)) {
+    if (condition.x.startsWith("{{") && !stack.includes(condition.x)) {
       stack.push(condition.x);
     }
 
-    if (condition.y.startsWith('{{') && !stack.includes(condition.y)) {
+    if (condition.y.startsWith("{{") && !stack.includes(condition.y)) {
       stack.push(condition.y);
     }
 
@@ -46,9 +46,9 @@ export function validateCondition(condition: Partial<DynamicCondition>) {
 
   if (isNumberComparison) {
     const isRegularStringX =
-      !condition.x || (!condition.x.startsWith('{{') && !getIsNumber(condition.x));
+      !condition.x || (!condition.x.startsWith("{{") && !getIsNumber(condition.x));
     const isRegularStringY =
-      !condition.y || (!condition.y.startsWith('{{') && !getIsNumber(condition.y));
+      !condition.y || (!condition.y.startsWith("{{") && !getIsNumber(condition.y));
 
     return {
       x: isRegularStringX,

@@ -1,8 +1,8 @@
-import React from 'react';
-import { Suspense } from 'react';
+import React from "react";
+import { Suspense } from "react";
 
 const PropertiesBarContainer = React.lazy(() =>
-  import('./properties-bar-container').then((module) => ({
+  import("./properties-bar-container").then((module) => ({
     default: module.PropertiesBarContainer,
   }))
 );

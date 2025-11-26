@@ -1,8 +1,8 @@
-import { noop } from '@/utils/noop';
+import { noop } from "@/utils/noop";
 
-import { Toolbar } from './components/toolbar/toolbar';
-import { ProjectSelection } from './components/project-selection/project-selection';
-import { Controls } from './components/controls/controls';
+import { Toolbar } from "./components/toolbar/toolbar";
+import { ProjectSelection } from "./components/project-selection/project-selection";
+import { Controls } from "./components/controls/controls";
 
 export function AppBarContainer() {
   return (

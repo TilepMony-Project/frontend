@@ -1,15 +1,15 @@
-'use server';
+"use server";
 
-import type { IntegrationDataFormat } from '@/features/integration/types';
-import connectDB from '@/lib/mongodb';
-import Workflow from '@/models/Workflow';
-import { revalidatePath } from 'next/cache';
+import type { IntegrationDataFormat } from "@/features/integration/types";
+import connectDB from "@/lib/mongodb";
+import Workflow from "@/models/Workflow";
+import { revalidatePath } from "next/cache";
 
 export type WorkflowSummary = {
   id: string;
   name: string;
   description?: string;
-  status: 'draft' | 'running' | 'running_waiting' | 'stopped' | 'finished' | 'failed';
+  status: "draft" | "running" | "running_waiting" | "stopped" | "finished" | "failed";
   createdAt: string;
   updatedAt: string;
   lastExecutedAt: string | null;
@@ -23,7 +23,7 @@ function serializeWorkflow(workflow: unknown): WorkflowSummary {
     id?: string;
     name: string;
     description?: string;
-    status: WorkflowSummary['status'];
+    status: WorkflowSummary["status"];
     createdAt: Date;
     updatedAt: Date;
     lastExecutedAt?: Date | null;
@@ -32,7 +32,7 @@ function serializeWorkflow(workflow: unknown): WorkflowSummary {
   };
 
   return {
-    id: plainWorkflow._id?.toString() ?? plainWorkflow.id ?? '',
+    id: plainWorkflow._id?.toString() ?? plainWorkflow.id ?? "",
     name: plainWorkflow.name,
     description: plainWorkflow.description,
     status: plainWorkflow.status,
@@ -47,10 +47,10 @@ function serializeWorkflow(workflow: unknown): WorkflowSummary {
 }
 
 function revalidateWorkflowPaths() {
-  const paths = ['/', '/dashboard', '/workspace', '/workspace/[workflowId]'];
+  const paths = ["/", "/dashboard", "/workspace", "/workspace/[workflowId]"];
   for (const path of paths) {
-    if (path.includes('[')) {
-      revalidatePath(path, 'page');
+    if (path.includes("[")) {
+      revalidatePath(path, "page");
     } else {
       revalidatePath(path);
     }
@@ -64,7 +64,7 @@ function revalidateWorkflowPaths() {
 export async function autoSaveWorkflow(
   workflowId: string | null,
   data: IntegrationDataFormat,
-  userId = 'default-user'
+  userId = "default-user"
 ): Promise<{ success: boolean; workflowId: string; error?: string }> {
   try {
     await connectDB();
@@ -76,17 +76,17 @@ export async function autoSaveWorkflow(
       const workflow = await Workflow.findByIdAndUpdate(
         workflowId,
         {
-          name: name || 'Untitled Workflow',
+          name: name || "Untitled Workflow",
           description: data.layoutDirection ? `Layout: ${data.layoutDirection}` : undefined,
           nodes,
           edges,
-          status: 'draft',
+          status: "draft",
         },
         { new: true, runValidators: true }
       );
 
       if (!workflow) {
-        return { success: false, workflowId: '', error: 'Workflow not found' };
+        return { success: false, workflowId: "", error: "Workflow not found" };
       }
 
       revalidateWorkflowPaths();
@@ -95,22 +95,22 @@ export async function autoSaveWorkflow(
 
     // Otherwise, create a new workflow
     const workflow = await Workflow.create({
-      name: name || 'Untitled Workflow',
+      name: name || "Untitled Workflow",
       description: data.layoutDirection ? `Layout: ${data.layoutDirection}` : undefined,
       userId,
       nodes,
       edges,
-      status: 'draft',
+      status: "draft",
     });
 
     revalidateWorkflowPaths();
     return { success: true, workflowId: workflow._id.toString() };
   } catch (error) {
-    console.error('Error auto-saving workflow:', error);
+    console.error("Error auto-saving workflow:", error);
     return {
       success: false,
-      workflowId: workflowId || '',
-      error: error instanceof Error ? error.message : 'Failed to save workflow',
+      workflowId: workflowId || "",
+      error: error instanceof Error ? error.message : "Failed to save workflow",
     };
   }
 }
@@ -121,13 +121,13 @@ export async function autoSaveWorkflow(
 export async function saveWorkflow(
   workflowId: string | null,
   data: IntegrationDataFormat,
-  userId = 'default-user'
+  userId = "default-user"
 ): Promise<{ success: boolean; workflowId: string; error?: string }> {
   // Same implementation as auto-save, but can be extended with additional logic
   return autoSaveWorkflow(workflowId, data, userId);
 }
 
-export async function getWorkflowsForUser(userId = 'default-user'): Promise<WorkflowSummary[]> {
+export async function getWorkflowsForUser(userId = "default-user"): Promise<WorkflowSummary[]> {
   await connectDB();
   const workflows = await Workflow.find({ userId }).sort({ updatedAt: -1 }).lean();
   return workflows.map((workflow) => serializeWorkflow(workflow));

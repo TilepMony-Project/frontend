@@ -1,11 +1,11 @@
-import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import type { RedeemNodeSchema } from './schema';
+import type { NodeDataProperties } from "@/features/json-form/types/default-properties";
+import type { RedeemNodeSchema } from "./schema";
 
 export const defaultPropertiesData: NodeDataProperties<RedeemNodeSchema> = {
-  label: 'Redeem',
-  description: '',
+  label: "Redeem",
+  description: "",
   amount: 1000,
-  currency: 'USD',
-  recipientWallet: '',
+  currency: "USD",
+  recipientWallet: "",
   conversionRate: 1,
 };

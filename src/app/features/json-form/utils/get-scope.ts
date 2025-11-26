@@ -8,8 +8,8 @@
  * Returns:
  * '#/properties/label'
  */
-export function getScope<T extends object>(path: PropertyPath<T> | ''): string {
-  return `#/${path.split('.').join('/')}`;
+export function getScope<T extends object>(path: PropertyPath<T> | ""): string {
+  return `#/${path.split(".").join("/")}`;
 }
 
 // Get all possible paths in an object type, treating arrays as terminal properties

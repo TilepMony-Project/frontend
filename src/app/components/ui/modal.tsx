@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
-export type FooterVariant = 'integrated' | 'sticky' | 'separated';
+export type FooterVariant = "integrated" | "sticky" | "separated";
 
 export type ModalProps = {
   open: boolean;
@@ -15,7 +15,7 @@ export type ModalProps = {
   title: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
-  size?: 'small' | 'medium' | 'large' | 'extra-large' | 'full-screen';
+  size?: "small" | "medium" | "large" | "extra-large" | "full-screen";
   icon?: React.ReactNode;
   footerVariant?: FooterVariant;
   className?: string;
@@ -27,7 +27,7 @@ export function Modal({
   title,
   children,
   footer,
-  size = 'medium',
+  size = "medium",
   icon,
   className,
 }: ModalProps) {
@@ -47,16 +47,16 @@ export function Modal({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className={cn(sizeClasses[size], "shadow-2xl", className, !onClose && "[&>button]:hidden")}>
+      <DialogContent
+        className={cn(sizeClasses[size], "shadow-2xl", className, !onClose && "[&>button]:hidden")}
+      >
         <DialogHeader>
           <div className="flex items-center gap-2">
             {icon && <div className="flex-shrink-0">{icon}</div>}
             <DialogTitle>{title}</DialogTitle>
           </div>
         </DialogHeader>
-        <div className="py-4">
-          {children}
-        </div>
+        <div className="py-4">{children}</div>
         {footer && <DialogFooter>{footer}</DialogFooter>}
       </DialogContent>
     </Dialog>

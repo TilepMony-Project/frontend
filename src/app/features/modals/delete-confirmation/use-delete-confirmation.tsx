@@ -1,9 +1,9 @@
-import { useCallback } from 'react';
-import type { Node, Edge } from '@xyflow/react';
-import { DeleteConfirmation, DeleteConfirmationButtons } from './delete-confirmation';
-import { MinusCircle } from 'lucide-react';
-import useStore from '@/store/store';
-import { closeModal, openModal } from '../stores/use-modal-store';
+import { useCallback } from "react";
+import type { Node, Edge } from "@xyflow/react";
+import { DeleteConfirmation, DeleteConfirmationButtons } from "./delete-confirmation";
+import { MinusCircle } from "lucide-react";
+import useStore from "@/store/store";
+import { closeModal, openModal } from "../stores/use-modal-store";
 
 type Props = {
   nodes: Node[];
@@ -55,7 +55,7 @@ export function useDeleteConfirmation() {
           />
         ),
         icon: <MinusCircle />,
-        title: 'Delete Selection',
+        title: "Delete Selection",
         onModalClosed: onModalClosed,
       });
     },

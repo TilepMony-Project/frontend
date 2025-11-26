@@ -1,7 +1,7 @@
-import type { LayoutProps, VerticalLayoutElement } from '../../types/layouts';
-import { createLayoutRenderer } from '../../utils/rendering';
-import { LayoutWrapper } from '../layout-wrapper';
-import { renderElements } from '../render-elements';
+import type { LayoutProps, VerticalLayoutElement } from "../../types/layouts";
+import { createLayoutRenderer } from "../../utils/rendering";
+import { LayoutWrapper } from "../layout-wrapper";
+import { renderElements } from "../render-elements";
 
 function VerticalLayout(props: LayoutProps<VerticalLayoutElement>) {
   return (
@@ -11,4 +11,4 @@ function VerticalLayout(props: LayoutProps<VerticalLayoutElement>) {
   );
 }
 
-export const verticalLayoutRenderer = createLayoutRenderer('VerticalLayout', VerticalLayout);
+export const verticalLayoutRenderer = createLayoutRenderer("VerticalLayout", VerticalLayout);

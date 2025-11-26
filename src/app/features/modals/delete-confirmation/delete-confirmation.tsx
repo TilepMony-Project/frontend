@@ -1,8 +1,8 @@
-import type { Node, Edge } from '@xyflow/react';
+import type { Node, Edge } from "@xyflow/react";
 
-import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 type DeleteConfirmationProps = {
   nodes: Node[];
@@ -18,8 +18,8 @@ export function DeleteConfirmation({
   const [isChecked, setIsChecked] = useState(false);
 
   const parts = [
-    nodes.length > 0 ? (nodes.length > 1 ? 'nodes' : 'node') : '',
-    edges.length > 0 ? (edges.length > 1 ? 'edges' : 'edge') : '',
+    nodes.length > 0 ? (nodes.length > 1 ? "nodes" : "node") : "",
+    edges.length > 0 ? (edges.length > 1 ? "edges" : "edge") : "",
   ].filter(Boolean);
 
   function handleChange() {
@@ -28,8 +28,8 @@ export function DeleteConfirmation({
     onShouldShowAgainChange?.(newValue);
   }
 
-  const partsText = parts.join(' and connected ');
-  const selectedText = nodes.length > 1 ? 'selected' : 'selected';
+  const partsText = parts.join(" and connected ");
+  const selectedText = nodes.length > 1 ? "selected" : "selected";
 
   return (
     <div className="flex flex-col gap-4">

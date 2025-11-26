@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
 export function useTranslateIfPossible() {
-  const translateIfPossible = useCallback((value = '') => {
+  const translateIfPossible = useCallback((value = "") => {
     // i18n removed - return value as-is
     return value || undefined;
   }, []);

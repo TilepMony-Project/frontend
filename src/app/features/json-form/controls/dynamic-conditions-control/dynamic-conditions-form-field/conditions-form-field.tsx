@@ -1,16 +1,16 @@
-import clsx from 'clsx';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { SelectWrapper as Select } from '@/components/ui/select-wrapper';
-import { SegmentPicker } from '@/components/ui/segment-picker';
-import { useMemo } from 'react';
-import { Icon } from '@/components/icons';
+import clsx from "clsx";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { SelectWrapper as Select } from "@/components/ui/select-wrapper";
+import { SegmentPicker } from "@/components/ui/segment-picker";
+import { useMemo } from "react";
+import { Icon } from "@/components/icons";
 
 import {
   comparisonsOperators,
   validateCondition,
-} from '@/features/json-form/utils/conditional-transform';
-import type { DynamicCondition } from '@/features/json-form/types/controls';
+} from "@/features/json-form/utils/conditional-transform";
+import type { DynamicCondition } from "@/features/json-form/types/controls";
 
 type ConditionsFormFieldProps = {
   condition: Partial<DynamicCondition>;
@@ -24,7 +24,7 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
   const { condition, onChange, onRemove, isLast, shouldShowValidation } = props;
 
   function handleChange(
-    field: 'x' | 'comparisonOperator' | 'y' | 'logicalOperator',
+    field: "x" | "comparisonOperator" | "y" | "logicalOperator",
     value: unknown
   ) {
     onChange({
@@ -49,8 +49,10 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
     <>
       <div
         className={clsx(
-          'flex items-center gap-0.5 py-1 px-1.5 rounded-lg bg-[var(--wb-conditions-form-inputs-background)]',
-          shouldShowValidation && (!condition.x || !condition.y) && 'bg-[var(--wb-conditions-form-input-background-destructive)]'
+          "flex items-center gap-0.5 py-1 px-1.5 rounded-lg bg-[var(--wb-conditions-form-inputs-background)]",
+          shouldShowValidation &&
+            (!condition.x || !condition.y) &&
+            "bg-[var(--wb-conditions-form-input-background-destructive)]"
         )}
       >
         <Button variant="ghost" size="icon" onClick={() => {}}>
@@ -59,7 +61,7 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
         <div className="flex flex-col gap-0.5 w-full">
           <Input
             className="bg-[var(--wb-conditions-form-input-background)]"
-            onChange={(event) => handleChange('x', event.target.value)}
+            onChange={(event) => handleChange("x", event.target.value)}
             value={condition.x}
             error={errors.x}
           />
@@ -70,12 +72,12 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
               label: operator,
               value: operator,
             }))}
-            onChange={(_, value) => handleChange('comparisonOperator', value)}
+            onChange={(_, value) => handleChange("comparisonOperator", value)}
             error={errors.comparisonOperator}
           />
           <Input
             className="bg-[var(--wb-conditions-form-input-background)]"
-            onChange={(event) => handleChange('y', event.target.value)}
+            onChange={(event) => handleChange("y", event.target.value)}
             value={condition.y}
             error={errors.y}
           />
@@ -89,8 +91,8 @@ export function ConditionsFormField(props: ConditionsFormFieldProps) {
           <SegmentPicker
             className="w-[150px]"
             size="xx-small"
-            value={condition.logicalOperator || 'AND'}
-            onChange={(_, value) => handleChange('logicalOperator', value)}
+            value={condition.logicalOperator || "AND"}
+            onChange={(_, value) => handleChange("logicalOperator", value)}
           >
             <SegmentPicker.Item value="AND">AND</SegmentPicker.Item>
             <SegmentPicker.Item value="OR">OR</SegmentPicker.Item>

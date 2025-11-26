@@ -1,11 +1,11 @@
-import { Icon } from '@/components/icons';
-import { openModal } from '@/features/modals/stores/use-modal-store';
-import { ExportModal } from './export-modal';
+import { Icon } from "@/components/icons";
+import { openModal } from "@/features/modals/stores/use-modal-store";
+import { ExportModal } from "./export-modal";
 
 export function openExportModal() {
   openModal({
     content: <ExportModal />,
     icon: <Icon name="Upload" />,
-    title: 'Export',
+    title: "Export",
   });
 }

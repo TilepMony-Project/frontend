@@ -1,6 +1,6 @@
-import clsx from 'clsx';
+import clsx from "clsx";
 
-import { Separator } from '@/components/ui/separator';
+import { Separator } from "@/components/ui/separator";
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement> & {
   isExpanded: boolean;
@@ -18,17 +18,17 @@ export function Sidebar({
   header,
   footer,
   contentClassName,
-  maxHeightClass = 'max-h-[80vh]',
+  maxHeightClass = "max-h-[80vh]",
   ...props
 }: SidebarProps) {
   return (
     <div
       className={clsx(
-        'h-min w-auto relative items-center justify-between pointer-events-auto rounded-xl flex flex-col py-3',
-        'bg-white dark:bg-[#27282b] text-gray-900 dark:text-white',
-        'border border-gray-200 dark:border-gray-700',
-        'transition-all duration-300 ease-in-out shadow-lg',
-        isExpanded && ['h-full w-[440px] box-border', maxHeightClass],
+        "h-min w-auto relative items-center justify-between pointer-events-auto rounded-xl flex flex-col py-3",
+        "bg-white dark:bg-[#27282b] text-gray-900 dark:text-white",
+        "border border-gray-200 dark:border-gray-700",
+        "transition-all duration-300 ease-in-out shadow-lg",
+        isExpanded && ["h-full w-[440px] box-border", maxHeightClass],
         className
       )}
       {...props}
@@ -39,8 +39,8 @@ export function Sidebar({
           <Separator className="my-0" />
           <div
             className={clsx(
-              'box-border w-full flex flex-col px-4 flex-1 overflow-y-auto overflow-x-hidden',
-              'py-4',
+              "box-border w-full flex flex-col px-4 flex-1 overflow-y-auto overflow-x-hidden",
+              "py-4",
               contentClassName
             )}
           >

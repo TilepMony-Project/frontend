@@ -1,7 +1,7 @@
-import { useContext, useEffect, useRef } from 'react';
-import { IntegrationContext } from '../components/integration-variants/context/integration-context-wrapper';
-import { useChangesTrackerStore } from '@/features/changes-tracker/stores/use-changes-tracker-store';
-import { useIntegrationStore } from '../stores/use-integration-store';
+import { useContext, useEffect, useRef } from "react";
+import { IntegrationContext } from "../components/integration-variants/context/integration-context-wrapper";
+import { useChangesTrackerStore } from "@/features/changes-tracker/stores/use-changes-tracker-store";
+import { useIntegrationStore } from "../stores/use-integration-store";
 
 export function useAutoSaveOnClose() {
   const onSaveRef = useRef<null | (() => void)>(null);
@@ -10,7 +10,7 @@ export function useAutoSaveOnClose() {
 
   useEffect(() => {
     if (onSaveRef.current) {
-      window.removeEventListener('beforeunload', onSaveRef.current);
+      window.removeEventListener("beforeunload", onSaveRef.current);
     }
 
     onSaveRef.current = () => {
@@ -26,11 +26,11 @@ export function useAutoSaveOnClose() {
       }
     };
 
-    window.removeEventListener('beforeunload', onSaveRef.current);
+    window.removeEventListener("beforeunload", onSaveRef.current);
 
     return () => {
       if (onSaveRef.current) {
-        window.removeEventListener('beforeunload', onSaveRef.current);
+        window.removeEventListener("beforeunload", onSaveRef.current);
       }
     };
   }, [onSave]);

@@ -1,23 +1,23 @@
-import { ToastType, showToast } from '@/utils/toast-utils';
-import { useEffect, useState } from 'react';
+import { ToastType, showToast } from "@/utils/toast-utils";
+import { useEffect, useState } from "react";
 
-import { useSingleSelectedElement } from '@/features/properties-bar/use-single-selected-element';
-import { useRemoveElements } from '@/hooks/use-remove-elements';
-import useStore from '@/store/store';
+import { useSingleSelectedElement } from "@/features/properties-bar/use-single-selected-element";
+import { useRemoveElements } from "@/hooks/use-remove-elements";
+import useStore from "@/store/store";
 
-import { PropertiesBar } from './components/properties-bar/properties-bar';
+import { PropertiesBar } from "./components/properties-bar/properties-bar";
 
 export function PropertiesBarContainer() {
   const { removeElements } = useRemoveElements();
   const isPropertiesBarExpanded = useStore((state) => state.isPropertiesBarExpanded);
   const togglePropertiesBar = useStore((state) => state.togglePropertiesBar);
 
-  const [selectedTab, setSelectedTab] = useState('properties');
+  const [selectedTab, setSelectedTab] = useState("properties");
 
   const selection = useSingleSelectedElement();
   useEffect(() => {
     if (selection?.node || selection?.edge || selection === null) {
-      setSelectedTab('properties');
+      setSelectedTab("properties");
     }
   }, [selection]);
 
@@ -32,11 +32,11 @@ export function PropertiesBarContainer() {
       return;
     }
 
-    const nodeLabel = selection.node.data?.properties?.label ?? 'Selected node';
+    const nodeLabel = selection.node.data?.properties?.label ?? "Selected node";
 
     showToast({
       title: `${nodeLabel} execution coming soon`,
-      subtitle: 'Node-level execution preview will be available soon.',
+      subtitle: "Node-level execution preview will be available soon.",
       variant: ToastType.INFO,
     });
   }

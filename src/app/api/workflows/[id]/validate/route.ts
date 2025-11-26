@@ -1,19 +1,19 @@
-import connectDB from '@/lib/mongodb';
-import Workflow from '@/models/Workflow';
-import type { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
-import { type NextRequest, NextResponse } from 'next/server';
+import connectDB from "@/lib/mongodb";
+import Workflow from "@/models/Workflow";
+import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
+import { type NextRequest, NextResponse } from "next/server";
 
 const ETH_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 
 type ValidationMessage = {
-  section: 'graph' | 'configuration' | 'wallet';
+  section: "graph" | "configuration" | "wallet";
   message: string;
 };
 
 type ValidationChecklistItem = {
   id: string;
   label: string;
-  status: 'pass' | 'fail' | 'warning';
+  status: "pass" | "fail" | "warning";
   details?: string;
 };
 
@@ -26,7 +26,7 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
     const workflow = await Workflow.findById(id);
 
     if (!workflow) {
-      return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
+      return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
     }
 
     const nodes = (workflow.nodes || []) as WorkflowNode[];
@@ -50,8 +50,8 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error validating workflow:', error);
-    return NextResponse.json({ error: 'Failed to validate workflow' }, { status: 500 });
+    console.error("Error validating workflow:", error);
+    return NextResponse.json({ error: "Failed to validate workflow" }, { status: 500 });
   }
 }
 
@@ -68,23 +68,23 @@ function validateGraphStructure(nodes: WorkflowNode[], edges: WorkflowEdge[]) {
   const warnings: ValidationMessage[] = [];
   const checks: ValidationChecklistItem[] = [];
 
-  const depositNodes = nodes.filter((node) => node.type === 'deposit');
+  const depositNodes = nodes.filter((node) => node.type === "deposit");
   if (depositNodes.length === 0) {
     errors.push({
-      section: 'graph',
-      message: 'Workflow must include at least one Deposit node.',
+      section: "graph",
+      message: "Workflow must include at least one Deposit node.",
     });
     checks.push({
-      id: 'entry-node',
-      label: 'Entry node present',
-      status: 'fail',
-      details: 'Add a Deposit node to start the workflow.',
+      id: "entry-node",
+      label: "Entry node present",
+      status: "fail",
+      details: "Add a Deposit node to start the workflow.",
     });
   } else {
     checks.push({
-      id: 'entry-node',
-      label: 'Entry node present',
-      status: 'pass',
+      id: "entry-node",
+      label: "Entry node present",
+      status: "pass",
     });
   }
 
@@ -123,20 +123,20 @@ function validateGraphStructure(nodes: WorkflowNode[], edges: WorkflowEdge[]) {
 
   if (visited.size !== nodes.length) {
     errors.push({
-      section: 'graph',
-      message: 'Graph contains circular dependencies or unreachable nodes.',
+      section: "graph",
+      message: "Graph contains circular dependencies or unreachable nodes.",
     });
     checks.push({
-      id: 'graph-acyclic',
-      label: 'No cycles detected',
-      status: 'fail',
-      details: 'Ensure the workflow graph has no circular connections.',
+      id: "graph-acyclic",
+      label: "No cycles detected",
+      status: "fail",
+      details: "Ensure the workflow graph has no circular connections.",
     });
   } else {
     checks.push({
-      id: 'graph-acyclic',
-      label: 'No cycles detected',
-      status: 'pass',
+      id: "graph-acyclic",
+      label: "No cycles detected",
+      status: "pass",
     });
   }
 
@@ -156,40 +156,40 @@ function validateGraphStructure(nodes: WorkflowNode[], edges: WorkflowEdge[]) {
   const disconnected = nodes.filter((node) => !reachable.has(node.id));
   if (disconnected.length > 0) {
     warnings.push({
-      section: 'graph',
+      section: "graph",
       message: `Found ${disconnected.length} disconnected node(s).`,
     });
     checks.push({
-      id: 'graph-connected',
-      label: 'All nodes reachable',
-      status: 'warning',
-      details: 'Ensure every node is connected downstream from a Deposit node.',
+      id: "graph-connected",
+      label: "All nodes reachable",
+      status: "warning",
+      details: "Ensure every node is connected downstream from a Deposit node.",
     });
   } else {
     checks.push({
-      id: 'graph-connected',
-      label: 'All nodes reachable',
-      status: 'pass',
+      id: "graph-connected",
+      label: "All nodes reachable",
+      status: "pass",
     });
   }
 
   const invalidEdges = edges.filter((edge) => !edge.source || !edge.target);
   if (invalidEdges.length > 0) {
     errors.push({
-      section: 'graph',
-      message: 'Found edges with missing source or target.',
+      section: "graph",
+      message: "Found edges with missing source or target.",
     });
     checks.push({
-      id: 'edges-valid',
-      label: 'Edges properly connected',
-      status: 'fail',
-      details: 'Remove edges without both source and target nodes.',
+      id: "edges-valid",
+      label: "Edges properly connected",
+      status: "fail",
+      details: "Remove edges without both source and target nodes.",
     });
   } else {
     checks.push({
-      id: 'edges-valid',
-      label: 'Edges properly connected',
-      status: 'pass',
+      id: "edges-valid",
+      label: "Edges properly connected",
+      status: "pass",
     });
   }
 
@@ -212,98 +212,98 @@ function validateNodeConfigurations(nodes: WorkflowNode[]) {
     }
 
     switch (node.type) {
-      case 'deposit': {
+      case "deposit": {
         const amount = toNumber(props.amount);
         if (amount < 100 || amount > 100_000_000) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Deposit node "${getNodeLabel(node)}" amount must be between 100 and 100,000,000.`,
           });
         }
         if (!props.currency) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Deposit node "${getNodeLabel(node)}" must have a currency selected.`,
           });
         }
         break;
       }
-      case 'mint': {
+      case "mint": {
         const wallet = props.receivingWallet as string | undefined;
         if (!wallet || !ETH_ADDRESS_REGEX.test(wallet)) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Mint node "${getNodeLabel(node)}" requires a valid receiving wallet address.`,
           });
         }
         if (toNumber(props.amount) <= 0) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Mint node "${getNodeLabel(node)}" must have a positive amount.`,
           });
         }
         break;
       }
-      case 'swap': {
+      case "swap": {
         const inputToken = props.inputToken as string | undefined;
         const outputToken = props.outputToken as string | undefined;
         const slippage = toNumber(props.slippageTolerance);
         if (inputToken && outputToken && inputToken === outputToken) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Swap node "${getNodeLabel(node)}" input and output tokens must differ.`,
           });
         }
         if (slippage < 0.1 || slippage > 5) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Swap node "${getNodeLabel(node)}" slippage tolerance must be between 0.1% and 5%.`,
           });
         }
         break;
       }
-      case 'transfer': {
+      case "transfer": {
         const wallet = props.recipientWallet as string | undefined;
         if (!wallet || !ETH_ADDRESS_REGEX.test(wallet)) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Transfer node "${getNodeLabel(node)}" requires a valid recipient wallet address.`,
           });
         }
         if (toNumber(props.amount) <= 0) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Transfer node "${getNodeLabel(node)}" amount must be greater than zero.`,
           });
         }
         break;
       }
-      case 'bridge': {
+      case "bridge": {
         const wallet = props.receiverWallet as string | undefined;
         if (!wallet || !ETH_ADDRESS_REGEX.test(wallet)) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Bridge node "${getNodeLabel(node)}" requires a valid receiver wallet address.`,
           });
         }
         if (toNumber(props.amount) <= 0) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Bridge node "${getNodeLabel(node)}" amount must be greater than zero.`,
           });
         }
         break;
       }
-      case 'vault': {
+      case "vault": {
         if (!props.stopCondition) {
           warnings.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Vault node "${getNodeLabel(node)}" should define a stop condition.`,
           });
         }
         break;
       }
-      case 'partition': {
+      case "partition": {
         const branches = Array.isArray(props.branches)
           ? (props.branches as Array<{ percentage: number }>)
           : [];
@@ -313,11 +313,11 @@ function validateNodeConfigurations(nodes: WorkflowNode[]) {
         }
         break;
       }
-      case 'wait': {
+      case "wait": {
         const duration = toNumber(props.delayDuration);
         if (duration <= 0) {
           errors.push({
-            section: 'configuration',
+            section: "configuration",
             message: `Wait node "${getNodeLabel(node)}" must have a positive delay duration.`,
           });
         }
@@ -330,53 +330,53 @@ function validateNodeConfigurations(nodes: WorkflowNode[]) {
 
   if (missingConfigs.length > 0) {
     errors.push({
-      section: 'configuration',
-      message: 'Some nodes are missing configuration data. Please fill in required fields.',
+      section: "configuration",
+      message: "Some nodes are missing configuration data. Please fill in required fields.",
     });
     checks.push({
-      id: 'config-complete',
-      label: 'Node configuration completeness',
-      status: 'fail',
+      id: "config-complete",
+      label: "Node configuration completeness",
+      status: "fail",
       details: `Incomplete nodes: ${missingConfigs.length}`,
     });
   } else {
     checks.push({
-      id: 'config-complete',
-      label: 'Node configuration completeness',
-      status: 'pass',
+      id: "config-complete",
+      label: "Node configuration completeness",
+      status: "pass",
     });
   }
 
   if (partitionIssues.length > 0) {
     errors.push({
-      section: 'configuration',
-      message: 'Partition nodes must allocate exactly 100% across branches.',
+      section: "configuration",
+      message: "Partition nodes must allocate exactly 100% across branches.",
     });
     checks.push({
-      id: 'partition-percent',
-      label: 'Partition allocations sum to 100%',
-      status: 'fail',
+      id: "partition-percent",
+      label: "Partition allocations sum to 100%",
+      status: "fail",
     });
   } else {
     checks.push({
-      id: 'partition-percent',
-      label: 'Partition allocations sum to 100%',
-      status: 'pass',
+      id: "partition-percent",
+      label: "Partition allocations sum to 100%",
+      status: "pass",
     });
   }
 
-  if (errors.filter((e) => e.section === 'configuration').length === 0) {
+  if (errors.filter((e) => e.section === "configuration").length === 0) {
     checks.push({
-      id: 'config-valid',
-      label: 'Node inputs valid',
-      status: 'pass',
+      id: "config-valid",
+      label: "Node inputs valid",
+      status: "pass",
     });
   } else {
     checks.push({
-      id: 'config-valid',
-      label: 'Node inputs valid',
-      status: 'fail',
-      details: 'Fix invalid amounts and tokens before execution.',
+      id: "config-valid",
+      label: "Node inputs valid",
+      status: "fail",
+      details: "Fix invalid amounts and tokens before execution.",
     });
   }
 
@@ -389,7 +389,7 @@ function validateWalletAndAddresses(nodes: WorkflowNode[]) {
   const checks: ValidationChecklistItem[] = [];
 
   const nodesWithWallets = nodes.filter((node) =>
-    ['mint', 'transfer', 'bridge'].includes(node.type)
+    ["mint", "transfer", "bridge"].includes(node.type)
   );
 
   let invalidAddresses = 0;
@@ -406,7 +406,7 @@ function validateWalletAndAddresses(nodes: WorkflowNode[]) {
     if (!address || !ETH_ADDRESS_REGEX.test(address)) {
       invalidAddresses += 1;
       errors.push({
-        section: 'wallet',
+        section: "wallet",
         message: `Node "${getNodeLabel(node)}" must have a valid Ethereum address.`,
       });
     }
@@ -414,36 +414,36 @@ function validateWalletAndAddresses(nodes: WorkflowNode[]) {
 
   if (invalidAddresses === 0) {
     checks.push({
-      id: 'wallet-addresses',
-      label: 'Wallet addresses valid',
-      status: 'pass',
+      id: "wallet-addresses",
+      label: "Wallet addresses valid",
+      status: "pass",
     });
   } else {
     checks.push({
-      id: 'wallet-addresses',
-      label: 'Wallet addresses valid',
-      status: 'fail',
+      id: "wallet-addresses",
+      label: "Wallet addresses valid",
+      status: "fail",
       details: `${invalidAddresses} node(s) contain invalid wallet addresses.`,
     });
   }
 
-  if (errors.filter((e) => e.section === 'wallet').length === 0) {
+  if (errors.filter((e) => e.section === "wallet").length === 0) {
     warnings.push({
-      section: 'wallet',
+      section: "wallet",
       message:
-        'Wallet connection verification is not yet implemented. Ensure your wallet is connected before running.',
+        "Wallet connection verification is not yet implemented. Ensure your wallet is connected before running.",
     });
     checks.push({
-      id: 'wallet-connection',
-      label: 'Wallet connected',
-      status: 'warning',
-      details: 'Wallet connectivity check is not automated yet.',
+      id: "wallet-connection",
+      label: "Wallet connected",
+      status: "warning",
+      details: "Wallet connectivity check is not automated yet.",
     });
   } else {
     checks.push({
-      id: 'wallet-connection',
-      label: 'Wallet connected',
-      status: 'fail',
+      id: "wallet-connection",
+      label: "Wallet connected",
+      status: "fail",
     });
   }
 
@@ -460,6 +460,6 @@ function getNodeLabel(node: WorkflowNode) {
 }
 
 function toNumber(value: unknown) {
-  const parsed = typeof value === 'number' ? value : Number(value);
+  const parsed = typeof value === "number" ? value : Number(value);
   return Number.isFinite(parsed) ? parsed : 0;
 }

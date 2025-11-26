@@ -1,4 +1,4 @@
-import mongoose, { Schema, type Document } from 'mongoose';
+import mongoose, { Schema, type Document } from "mongoose";
 
 export interface IUser extends Document {
   walletAddress: string;
@@ -42,4 +42,4 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+export default mongoose.models.User || mongoose.model<IUser>("User", UserSchema);

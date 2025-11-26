@@ -1,5 +1,5 @@
-import type { LayoutDirection } from '@/types/common';
-import type { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
+import type { LayoutDirection } from "@/types/common";
+import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
 
 export type IntegrationDataFormat = {
   name: string;
@@ -12,7 +12,7 @@ export type IntegrationDataFormatOptional = Partial<IntegrationDataFormat>;
 
 export type OnSaveParams = { isAutoSave?: boolean };
 
-type DidSaveStatus = 'error' | 'success' | 'alreadyStarted';
+type DidSaveStatus = "error" | "success" | "alreadyStarted";
 
 /*
   The OnSave function is used throughout the Workflow Builder application.

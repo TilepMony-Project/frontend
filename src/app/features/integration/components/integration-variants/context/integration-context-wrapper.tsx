@@ -1,9 +1,9 @@
 import {
   getStoreSavingStatus,
   setStoreSavingStatus,
-} from '@/features/integration/stores/use-integration-store';
-import type { OnSave } from '@/features/integration/types';
-import { createContext, type PropsWithChildren, useCallback, useMemo } from 'react';
+} from "@/features/integration/stores/use-integration-store";
+import type { OnSave } from "@/features/integration/types";
+import { createContext, type PropsWithChildren, useCallback, useMemo } from "react";
 
 /*
   Context is really only used for onSave, because if we are integrating through
@@ -17,7 +17,7 @@ type IntegrationContextType = {
 
 export const IntegrationContext = createContext<IntegrationContextType>({
   // Unset context doesn't save.
-  onSave: async () => 'error',
+  onSave: async () => "error",
 });
 
 type Props = PropsWithChildren<IntegrationContextType>;
@@ -31,19 +31,19 @@ export function IntegrationContextWrapper({ onSave, children }: Props) {
     async (savingParams) => {
       const savingStatus = getStoreSavingStatus();
 
-      if (savingStatus === 'saving') {
-        return 'alreadyStarted';
+      if (savingStatus === "saving") {
+        return "alreadyStarted";
       }
 
-      setStoreSavingStatus('saving');
+      setStoreSavingStatus("saving");
 
       const didSaveStatus = await onSave(savingParams);
 
-      if (didSaveStatus === 'success') {
-        setStoreSavingStatus('saved');
+      if (didSaveStatus === "success") {
+        setStoreSavingStatus("saved");
       } else {
         // It doesn't show errors for autosaving, but you can make it do so if you wish.
-        setStoreSavingStatus(savingParams?.isAutoSave ? 'waiting' : 'notSaved');
+        setStoreSavingStatus(savingParams?.isAutoSave ? "waiting" : "notSaved");
       }
 
       return didSaveStatus;

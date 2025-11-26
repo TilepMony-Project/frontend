@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from "next/server";
 
 // POST /api/blockchain/bridge - Bridge tokens via dummy bridge
 export async function POST(request: NextRequest) {
@@ -8,13 +8,13 @@ export async function POST(request: NextRequest) {
 
     // Validate inputs
     if (!amount || !bridgeProvider || !receiverWallet || !token) {
-      return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
+      return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
     }
 
     // TODO: Implement actual smart contract call to DummyBridge
     // For now, simulate the bridge operation
 
-    const mockTransactionHash = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`;
+    const mockTransactionHash = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}`;
     const mockBridgeId = `bridge-${Date.now()}`;
 
     return NextResponse.json(
@@ -24,16 +24,16 @@ export async function POST(request: NextRequest) {
         bridgeId: mockBridgeId,
         amount: amount.toString(),
         inputToken: token,
-        outputToken: 'mUSDT', // Always outputs mUSDT on Mantle
-        sourceChain: 'Ethereum Testnet',
-        destinationChain: 'Mantle Testnet',
+        outputToken: "mUSDT", // Always outputs mUSDT on Mantle
+        sourceChain: "Ethereum Testnet",
+        destinationChain: "Mantle Testnet",
         receiverWallet,
-        estimatedTime: '~30 seconds',
+        estimatedTime: "~30 seconds",
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error bridging tokens:', error);
-    return NextResponse.json({ error: 'Failed to bridge tokens' }, { status: 500 });
+    console.error("Error bridging tokens:", error);
+    return NextResponse.json({ error: "Failed to bridge tokens" }, { status: 500 });
   }
 }

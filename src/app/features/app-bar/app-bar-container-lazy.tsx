@@ -1,14 +1,14 @@
-import React from 'react';
-import { Suspense } from 'react';
+import React from "react";
+import { Suspense } from "react";
 
 const AppBarContainer = React.lazy(() =>
-  import('./app-bar-container').then((module) => ({ default: module.AppBarContainer }))
+  import("./app-bar-container").then((module) => ({ default: module.AppBarContainer }))
 );
 
 /*
   It prevents the sidebars from moving if they loaded earlier.
 */
-const expectedAppBarHeight = '62px';
+const expectedAppBarHeight = "62px";
 
 export function AppBarContainerLazy() {
   return (

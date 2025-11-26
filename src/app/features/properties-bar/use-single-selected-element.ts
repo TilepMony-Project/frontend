@@ -1,6 +1,6 @@
-import useStore from '@/store/store';
-import type { WorkflowBuilderNode, WorkflowBuilderEdge } from '@/types/node-data';
-import type { WorkflowEditorState } from '@/store/store';
+import useStore from "@/store/store";
+import type { WorkflowBuilderNode, WorkflowBuilderEdge } from "@/types/node-data";
+import type { WorkflowEditorState } from "@/store/store";
 
 export type SingleSelectedElement = {
   node: WorkflowBuilderNode | null;

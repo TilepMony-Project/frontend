@@ -1,4 +1,4 @@
-import { SNAP_GRID, SNAP_IS_ACTIVE } from '@/features/diagram/diagram.const';
+import { SNAP_GRID, SNAP_IS_ACTIVE } from "@/features/diagram/diagram.const";
 
 export function snapToGridIfNeeded(node?: { x?: number; y?: number }) {
   const { x = 0, y = 0 } = node || {};

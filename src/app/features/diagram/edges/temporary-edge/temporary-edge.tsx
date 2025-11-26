@@ -1,6 +1,6 @@
-import { EDGE_CURVE_RADIUS, EDGE_OFFSET } from '../edge.consts';
-import { useEdgeStyle } from '@synergycodes/overflow-ui';
-import { BaseEdge, type ConnectionLineComponentProps, getSmoothStepPath } from '@xyflow/react';
+import { EDGE_CURVE_RADIUS, EDGE_OFFSET } from "../edge.consts";
+import { useEdgeStyle } from "@synergycodes/overflow-ui";
+import { BaseEdge, type ConnectionLineComponentProps, getSmoothStepPath } from "@xyflow/react";
 
 export function TemporaryEdge({
   fromX,
@@ -10,7 +10,7 @@ export function TemporaryEdge({
   toY,
   toPosition,
 }: ConnectionLineComponentProps) {
-  const style = useEdgeStyle({ state: 'temporary' });
+  const style = useEdgeStyle({ state: "temporary" });
   const defaultPortSize = 4;
 
   /**

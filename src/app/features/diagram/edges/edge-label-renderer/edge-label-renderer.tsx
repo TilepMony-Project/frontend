@@ -1,6 +1,6 @@
-import { EdgeLabelRenderer } from '@xyflow/react';
-import { EdgeLabel as Label } from '@synergycodes/overflow-ui';
-import type { CSSProperties } from 'react';
+import { EdgeLabelRenderer } from "@xyflow/react";
+import { EdgeLabel as Label } from "@synergycodes/overflow-ui";
+import type { CSSProperties } from "react";
 
 type EdgeLabelProps = {
   id: string;
@@ -24,7 +24,7 @@ export function EdgeLabel({
   selected,
   onMouseEnter,
   onMouseLeave,
-  centeringTransform = 'translate(-50%, -50%)',
+  centeringTransform = "translate(-50%, -50%)",
 }: EdgeLabelProps) {
   const style: CSSProperties = {
     transform: `${centeringTransform} translate(${labelX}px,${labelY}px)`,
@@ -37,8 +37,8 @@ export function EdgeLabel({
         <span
           style={{
             ...style,
-            display: 'inline-block',
-            height: '2rem', // Height of label in WB
+            display: "inline-block",
+            height: "2rem", // Height of label in WB
           }}
           data-edge-label-id={id}
         ></span>
@@ -52,7 +52,7 @@ export function EdgeLabel({
         data-edge-label-id={id}
         style={style}
         isHovered={hovered}
-        state={selected ? 'selected' : 'default'}
+        state={selected ? "selected" : "default"}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >

@@ -1,13 +1,13 @@
-import { Icon } from '@/components/icons';
+import { Icon } from "@/components/icons";
 
-import { useIntegrationStore } from '../../stores/use-integration-store';
+import { useIntegrationStore } from "../../stores/use-integration-store";
 
 export function SavingStatus() {
   // lastSaveAttemptTimestamp is used here as a key to reset the animation on each save
   const lastSaveAttemptTimestamp = useIntegrationStore((state) => state.lastSaveAttemptTimestamp);
   const savingStatus = useIntegrationStore((state) => state.savingStatus);
 
-  if (savingStatus === 'saving') {
+  if (savingStatus === "saving") {
     return (
       <span className="flex items-center justify-center p-1.5 rounded-lg text-[var(--wb-saving-status-color)] bg-[var(--wb-saving-status-background-color)]">
         <Icon name="Loader2" />
@@ -15,7 +15,7 @@ export function SavingStatus() {
     );
   }
 
-  if (savingStatus === 'saved') {
+  if (savingStatus === "saved") {
     return (
       <span
         key={lastSaveAttemptTimestamp}
@@ -26,7 +26,7 @@ export function SavingStatus() {
     );
   }
 
-  if (savingStatus === 'notSaved') {
+  if (savingStatus === "notSaved") {
     return (
       <span
         key={lastSaveAttemptTimestamp}

@@ -4,7 +4,7 @@ import type {
   OrCondition,
   RuleEffect,
   SchemaBasedCondition,
-} from '@jsonforms/core';
+} from "@jsonforms/core";
 
 type UISchemaCondition = OrCondition | AndCondition | LeafCondition | SchemaBasedCondition;
 

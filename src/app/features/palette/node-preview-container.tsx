@@ -1,9 +1,8 @@
-import useStore from '@/store/store';
-import { useTranslateIfPossible } from '@/hooks/use-translate-if-possible';
-import { WorkflowNodeTemplate } from '../diagram/nodes/workflow-node-template/workflow-node-template';
-import type { PaletteItem } from '@/types/common';
-import { NodeType } from '@/types/node-types';
-
+import useStore from "@/store/store";
+import { useTranslateIfPossible } from "@/hooks/use-translate-if-possible";
+import { WorkflowNodeTemplate } from "../diagram/nodes/workflow-node-template/workflow-node-template";
+import type { PaletteItem } from "@/types/common";
+import { NodeType } from "@/types/node-types";
 
 const NODE_TEMPLATES = {
   [NodeType.Node]: WorkflowNodeTemplate,
@@ -44,7 +43,7 @@ function NodePreview({ nodeDefinition }: NodePreviewProps) {
       label={nodeLabel}
       description={nodeDescription}
       showHandles={false}
-      id={''}
+      id={""}
     />
   );
 }

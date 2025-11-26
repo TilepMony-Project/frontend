@@ -1,7 +1,7 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import useStore from '@/store/store';
-import type { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
+import useStore from "@/store/store";
+import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
 
 type DiagramSnapshot = {
   nodes: WorkflowBuilderNode[];
@@ -23,7 +23,7 @@ export const useUndoRedoHistoryStore = create<UndoRedoHistoryState>(() => ({
 }));
 
 function deepCloneSnapshot(snapshot: DiagramSnapshot): DiagramSnapshot {
-  if (typeof structuredClone === 'function') {
+  if (typeof structuredClone === "function") {
     return structuredClone(snapshot);
   }
   return JSON.parse(JSON.stringify(snapshot)) as DiagramSnapshot;

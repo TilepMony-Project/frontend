@@ -1,5 +1,5 @@
-import { Icon } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { Icon } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 
 type PaletteHeaderProps = {
   onClick: () => void;

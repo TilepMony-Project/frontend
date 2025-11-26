@@ -1,8 +1,8 @@
-import type { JsonFormsRendererRegistryEntry, LabelProps } from '@jsonforms/core';
-import type { LabelElement } from '../../types/label';
-import { withJsonFormsLabelProps } from '@jsonforms/react';
-import { createTester } from '../../utils/rendering';
-import { Label } from '@/components/form/label/label';
+import type { JsonFormsRendererRegistryEntry, LabelProps } from "@jsonforms/core";
+import type { LabelElement } from "../../types/label";
+import { withJsonFormsLabelProps } from "@jsonforms/react";
+import { createTester } from "../../utils/rendering";
+import { Label } from "@/components/form/label/label";
 
 function LabelRendererComponent({ uischema }: LabelProps) {
   const { text, size, required } = uischema as LabelElement;
@@ -12,5 +12,5 @@ function LabelRendererComponent({ uischema }: LabelProps) {
 
 export const labelRenderer: JsonFormsRendererRegistryEntry = {
   renderer: withJsonFormsLabelProps(LabelRendererComponent),
-  tester: createTester('Label'),
+  tester: createTester("Label"),
 };

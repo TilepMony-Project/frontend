@@ -1,4 +1,4 @@
-import type { PaletteItem } from '@/types/common';
+import type { PaletteItem } from "@/types/common";
 
 type NodesDefinitionsBySubType = {
   [subType: string]: PaletteItem;

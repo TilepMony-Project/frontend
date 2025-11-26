@@ -1,6 +1,6 @@
-import { withOptionalFunctionPlugins } from '@/features/plugins-core/adapters/adapter-functions';
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { withOptionalFunctionPlugins } from "@/features/plugins-core/adapters/adapter-functions";
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 const initTimestamp = Date.now();
 
@@ -11,7 +11,7 @@ type ChangesTrackerStore = {
 };
 
 const emptyStore: ChangesTrackerStore = {
-  lastChangeName: '',
+  lastChangeName: "",
   lastChangeParams: {},
   lastChangeTimestamp: initTimestamp,
 };
@@ -22,7 +22,7 @@ export const useChangesTrackerStore = create<ChangesTrackerStore>()(
       ({
         ...emptyStore,
       }) satisfies ChangesTrackerStore,
-    { name: 'changesTrackerStore' }
+    { name: "changesTrackerStore" }
   )
 );
 
@@ -36,5 +36,5 @@ function trackFutureChangeFunction(changeName: string, params?: object) {
 
 export const trackFutureChange = withOptionalFunctionPlugins(
   trackFutureChangeFunction,
-  'trackFutureChange'
+  "trackFutureChange"
 );

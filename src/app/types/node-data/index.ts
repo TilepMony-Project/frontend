@@ -1,7 +1,7 @@
 // Type definitions for node-data
 // TODO: Replace with proper type definitions
 
-import type { Node, Edge } from '@xyflow/react';
+import type { Node, Edge } from "@xyflow/react";
 
 export type NodeData = Record<string, unknown>;
 

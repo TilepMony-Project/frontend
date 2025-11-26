@@ -1,32 +1,32 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import clsx from 'clsx';
-import { useRouter } from 'next/navigation';
+import clsx from "clsx";
+import { useRouter } from "next/navigation";
 
-import type { WorkflowSummary } from '@/actions/workflows';
-import { Icon } from '@/components/icons';
-import { IconSwitch } from '@/components/ui/icon-switch';
-import { useTheme } from '@/hooks/use-theme';
-import { Moon, Sun } from 'lucide-react';
+import type { WorkflowSummary } from "@/actions/workflows";
+import { Icon } from "@/components/icons";
+import { IconSwitch } from "@/components/ui/icon-switch";
+import { useTheme } from "@/hooks/use-theme";
+import { Moon, Sun } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { Modal } from '@/components/ui/modal';
-import { ToastType, showToast } from '@/utils/toast-utils';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Modal } from "@/components/ui/modal";
+import { ToastType, showToast } from "@/utils/toast-utils";
 
-type ViewMode = 'grid' | 'list';
+type ViewMode = "grid" | "list";
 
 type PendingAction = {
-  type: 'create' | 'duplicate' | 'delete' | null;
+  type: "create" | "duplicate" | "delete" | null;
   workflowId?: string;
 };
 
@@ -39,7 +39,7 @@ type WorkflowApiPayload = {
   id?: string;
   name?: string;
   description?: string;
-  status?: WorkflowSummary['status'];
+  status?: WorkflowSummary["status"];
   createdAt?: string | Date;
   updatedAt?: string | Date;
   lastExecutedAt?: string | Date | null;
@@ -49,40 +49,40 @@ type WorkflowApiPayload = {
   edgesCount?: number;
 };
 
-const STATUS_OPTIONS: Array<{ label: string; value: WorkflowSummary['status'] | 'all' }> = [
-  { label: 'All statuses', value: 'all' },
-  { label: 'Draft', value: 'draft' },
-  { label: 'Running', value: 'running' },
-  { label: 'Running (Waiting)', value: 'running_waiting' },
-  { label: 'Stopped', value: 'stopped' },
-  { label: 'Finished', value: 'finished' },
-  { label: 'Failed', value: 'failed' },
+const STATUS_OPTIONS: Array<{ label: string; value: WorkflowSummary["status"] | "all" }> = [
+  { label: "All statuses", value: "all" },
+  { label: "Draft", value: "draft" },
+  { label: "Running", value: "running" },
+  { label: "Running (Waiting)", value: "running_waiting" },
+  { label: "Stopped", value: "stopped" },
+  { label: "Finished", value: "finished" },
+  { label: "Failed", value: "failed" },
 ];
 
-const STATUS_LABELS: Record<WorkflowSummary['status'], string> = {
-  draft: 'Draft',
-  running: 'Running',
-  running_waiting: 'Running (Waiting)',
-  stopped: 'Stopped',
-  finished: 'Finished',
-  failed: 'Failed',
+const STATUS_LABELS: Record<WorkflowSummary["status"], string> = {
+  draft: "Draft",
+  running: "Running",
+  running_waiting: "Running (Waiting)",
+  stopped: "Stopped",
+  finished: "Finished",
+  failed: "Failed",
 };
 
-const STATUS_STYLES: Record<WorkflowSummary['status'], string> = {
-  draft: 'bg-gray-100 text-gray-700',
-  running: 'bg-green-100 text-green-800',
-  running_waiting: 'bg-green-100 text-green-800',
-  stopped: 'bg-yellow-100 text-yellow-900',
-  finished: 'bg-blue-100 text-blue-800',
-  failed: 'bg-red-100 text-red-800',
+const STATUS_STYLES: Record<WorkflowSummary["status"], string> = {
+  draft: "bg-gray-100 text-gray-700",
+  running: "bg-green-100 text-green-800",
+  running_waiting: "bg-green-100 text-green-800",
+  stopped: "bg-yellow-100 text-yellow-900",
+  finished: "bg-blue-100 text-blue-800",
+  failed: "bg-red-100 text-red-800",
 };
 
 function normalizeWorkflow(workflow: WorkflowApiPayload): WorkflowSummary {
   return {
-    id: workflow._id?.toString?.() ?? workflow.id ?? '',
-    name: workflow.name ?? 'Untitled workflow',
-    description: workflow.description ?? '',
-    status: workflow.status ?? 'draft',
+    id: workflow._id?.toString?.() ?? workflow.id ?? "",
+    name: workflow.name ?? "Untitled workflow",
+    description: workflow.description ?? "",
+    status: workflow.status ?? "draft",
     createdAt: workflow.createdAt
       ? new Date(workflow.createdAt).toISOString()
       : new Date().toISOString(),
@@ -99,10 +99,10 @@ function normalizeWorkflow(workflow: WorkflowApiPayload): WorkflowSummary {
 
 function formatDate(value?: string | null) {
   if (!value) {
-    return 'Not executed yet';
+    return "Not executed yet";
   }
   try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(
+    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(
       new Date(value)
     );
   } catch {
@@ -114,22 +114,22 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const router = useRouter();
   const [workflows, setWorkflows] = useState<WorkflowSummary[]>(initialWorkflows ?? []);
   const [isLoading, setIsLoading] = useState(!initialWorkflows);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | WorkflowSummary['status']>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | WorkflowSummary["status"]>("all");
   const [pendingAction, setPendingAction] = useState<PendingAction>({ type: null });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [newWorkflowName, setNewWorkflowName] = useState('');
+  const [newWorkflowName, setNewWorkflowName] = useState("");
   const { theme, toggleTheme } = useTheme();
 
   // Function to fetch workflows from API
   const fetchWorkflows = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/workflows');
-      
+      const response = await fetch("/api/workflows");
+
       if (!response.ok) {
-        throw new Error('Failed to fetch workflows');
+        throw new Error("Failed to fetch workflows");
       }
 
       const { workflows: fetchedWorkflows } = await response.json();
@@ -138,10 +138,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       );
       setWorkflows(normalized);
     } catch (error) {
-      console.error('Error fetching workflows:', error);
+      console.error("Error fetching workflows:", error);
       showToast({
-        title: 'Failed to load workflows',
-        subtitle: error instanceof Error ? error.message : 'Please try refreshing the page',
+        title: "Failed to load workflows",
+        subtitle: error instanceof Error ? error.message : "Please try refreshing the page",
         variant: ToastType.ERROR,
       });
     } finally {
@@ -161,11 +161,11 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const filteredWorkflows = useMemo(() => {
     const lowerSearch = searchTerm.toLowerCase().trim();
     return workflows.filter((workflow) => {
-      const matchesStatus = statusFilter === 'all' || workflow.status === statusFilter;
+      const matchesStatus = statusFilter === "all" || workflow.status === statusFilter;
       const matchesSearch =
         lowerSearch.length === 0 ||
         workflow.name.toLowerCase().includes(lowerSearch) ||
-        (workflow.description ?? '').toLowerCase().includes(lowerSearch);
+        (workflow.description ?? "").toLowerCase().includes(lowerSearch);
       return matchesStatus && matchesSearch;
     });
   }, [statusFilter, searchTerm, workflows]);
@@ -175,12 +175,12 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   }
 
   function openCreateWorkflowModal() {
-    setNewWorkflowName('');
+    setNewWorkflowName("");
     setIsCreateModalOpen(true);
   }
 
   function closeCreateWorkflowModal() {
-    if (pendingAction.type === 'create') {
+    if (pendingAction.type === "create") {
       return;
     }
     setIsCreateModalOpen(false);
@@ -188,38 +188,38 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
 
   async function createWorkflow(nameOverride?: string) {
     try {
-      setPendingAction({ type: 'create' });
-      const workflowName = nameOverride?.trim() ? nameOverride.trim() : 'Untitled workflow';
+      setPendingAction({ type: "create" });
+      const workflowName = nameOverride?.trim() ? nameOverride.trim() : "Untitled workflow";
 
-      const response = await fetch('/api/workflows', {
-        method: 'POST',
+      const response = await fetch("/api/workflows", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: workflowName,
-          description: 'Draft workflow created from dashboard',
+          description: "Draft workflow created from dashboard",
           nodes: [],
           edges: [],
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create workflow');
+        throw new Error("Failed to create workflow");
       }
 
       const { workflow } = await response.json();
       const normalized = normalizeWorkflow(workflow);
 
       setWorkflows((prev) => [normalized, ...prev]);
-      showToast({ title: 'Workflow created', variant: ToastType.SUCCESS });
+      showToast({ title: "Workflow created", variant: ToastType.SUCCESS });
       setIsCreateModalOpen(false);
       router.push(`/workspace/${normalized.id}`);
     } catch (error) {
       console.error(error);
       showToast({
-        title: 'Unable to create workflow',
-        subtitle: error instanceof Error ? error.message : 'Please try again.',
+        title: "Unable to create workflow",
+        subtitle: error instanceof Error ? error.message : "Please try again.",
         variant: ToastType.ERROR,
       });
     } finally {
@@ -232,23 +232,23 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   }
 
   async function handleDeleteWorkflow(workflowId: string) {
-    const confirmed = window.confirm('Delete this workflow? This action cannot be undone.');
+    const confirmed = window.confirm("Delete this workflow? This action cannot be undone.");
     if (!confirmed) {
       return;
     }
 
     try {
-      setPendingAction({ type: 'delete', workflowId });
+      setPendingAction({ type: "delete", workflowId });
       const response = await fetch(`/api/workflows/${workflowId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete workflow');
+        throw new Error("Failed to delete workflow");
       }
 
       setWorkflows((prev) => prev.filter((workflow) => workflow.id !== workflowId));
-      showToast({ title: 'Workflow deleted', variant: ToastType.SUCCESS });
+      showToast({ title: "Workflow deleted", variant: ToastType.SUCCESS });
       // Refresh workflows to ensure consistency
       if (!initialWorkflows) {
         void fetchWorkflows();
@@ -256,8 +256,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     } catch (error) {
       console.error(error);
       showToast({
-        title: 'Unable to delete workflow',
-        subtitle: error instanceof Error ? error.message : 'Please try again.',
+        title: "Unable to delete workflow",
+        subtitle: error instanceof Error ? error.message : "Please try again.",
         variant: ToastType.ERROR,
       });
     } finally {
@@ -267,20 +267,20 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
 
   async function handleDuplicateWorkflow(workflowId: string) {
     try {
-      setPendingAction({ type: 'duplicate', workflowId });
+      setPendingAction({ type: "duplicate", workflowId });
       const response = await fetch(`/api/workflows/${workflowId}/duplicate`, {
-        method: 'POST',
+        method: "POST",
       });
 
       if (!response.ok) {
-        throw new Error('Failed to duplicate workflow');
+        throw new Error("Failed to duplicate workflow");
       }
 
       const { workflow } = await response.json();
       const normalized = normalizeWorkflow(workflow);
       setWorkflows((prev) => [normalized, ...prev]);
       showToast({
-        title: 'Workflow duplicated',
+        title: "Workflow duplicated",
         variant: ToastType.SUCCESS,
       });
       // Refresh workflows to ensure consistency
@@ -290,8 +290,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     } catch (error) {
       console.error(error);
       showToast({
-        title: 'Unable to duplicate workflow',
-        subtitle: error instanceof Error ? error.message : 'Please try again.',
+        title: "Unable to duplicate workflow",
+        subtitle: error instanceof Error ? error.message : "Please try again.",
         variant: ToastType.ERROR,
       });
     } finally {
@@ -308,7 +308,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   }
 
   const [isOpeningWorkflow, setIsOpeningWorkflow] = useState<string | null>(null);
-  const creating = pendingAction.type === 'create';
+  const creating = pendingAction.type === "create";
   const mutatingWorkflowId = pendingAction.workflowId;
 
   return (
@@ -323,7 +323,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           </p>
         </div>
         <IconSwitch
-          checked={theme === 'dark'}
+          checked={theme === "dark"}
           onChange={toggleTheme}
           icon={<Sun size={18} />}
           IconChecked={<Moon size={18} />}
@@ -353,7 +353,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
               className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white px-4 min-w-[200px] flex items-center justify-between disabled:opacity-50"
             >
               {STATUS_OPTIONS.find((option) => option.value === statusFilter)?.label ??
-                'All statuses'}
+                "All statuses"}
               <Icon name="ChevronDown" size={16} />
             </Button>
           </DropdownMenuTrigger>
@@ -373,11 +373,11 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         <div className="flex rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden h-12">
           <button
             className={clsx(
-              'h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed',
-              viewMode === 'grid' && 'bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white'
+              "h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+              viewMode === "grid" && "bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white"
             )}
             type="button"
-            onClick={() => setViewMode('grid')}
+            onClick={() => setViewMode("grid")}
             disabled={isLoading}
             aria-label="Grid view"
           >
@@ -385,11 +385,11 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           </button>
           <button
             className={clsx(
-              'h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed',
-              viewMode === 'list' && 'bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white'
+              "h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+              viewMode === "list" && "bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white"
             )}
             type="button"
-            onClick={() => setViewMode('list')}
+            onClick={() => setViewMode("list")}
             disabled={isLoading}
             aria-label="List view"
           >
@@ -464,7 +464,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           </h3>
           <p>Try adjusting your filters or create a new workflow to get started.</p>
         </div>
-      ) : viewMode === 'grid' ? (
+      ) : viewMode === "grid" ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
           {filteredWorkflows.map((workflow) => (
             <article
@@ -477,14 +477,14 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                     {workflow.name}
                   </h3>
                   <p className="m-0 text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
-                    {workflow.description || 'No description provided'}
+                    {workflow.description || "No description provided"}
                   </p>
                 </div>
                 <span
                   className={clsx(
-                    'px-3 py-1.5 rounded-full text-xs font-semibold capitalize border shrink-0',
+                    "px-3 py-1.5 rounded-full text-xs font-semibold capitalize border shrink-0",
                     STATUS_STYLES[workflow.status] ||
-                      'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'
+                      "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700"
                   )}
                 >
                   {STATUS_LABELS[workflow.status]}
@@ -501,7 +501,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   <span>{workflow.edgesCount} edges</span>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-500 text-xs">
                 <Icon name="Clock" size={14} />
                 <span>Updated {formatDate(workflow.updatedAt)}</span>
@@ -531,7 +531,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   className="px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 cursor-pointer font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={() => handleDuplicateWorkflow(workflow.id)}
                   disabled={
-                    pendingAction.type === 'duplicate' && mutatingWorkflowId === workflow.id
+                    pendingAction.type === "duplicate" && mutatingWorkflowId === workflow.id
                   }
                   title="Duplicate workflow"
                 >
@@ -541,7 +541,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   type="button"
                   className="px-4 py-3 rounded-xl border border-red-200 dark:border-red-900/50 bg-transparent text-red-600 dark:text-red-400 cursor-pointer font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={() => handleDeleteWorkflow(workflow.id)}
-                  disabled={pendingAction.type === 'delete' && mutatingWorkflowId === workflow.id}
+                  disabled={pendingAction.type === "delete" && mutatingWorkflowId === workflow.id}
                   title="Delete workflow"
                 >
                   <Icon name="Trash2" size={18} />
@@ -582,16 +582,16 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                     <div>
                       <strong>{workflow.name}</strong>
                       <p className="text-gray-600 dark:text-gray-400 text-sm">
-                        {workflow.description || 'No description'}
+                        {workflow.description || "No description"}
                       </p>
                     </div>
                   </td>
                   <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                     <span
                       className={clsx(
-                        'px-3 py-1 rounded-full text-xs font-semibold capitalize border border-gray-200 dark:border-gray-700',
+                        "px-3 py-1 rounded-full text-xs font-semibold capitalize border border-gray-200 dark:border-gray-700",
                         STATUS_STYLES[workflow.status] ||
-                          'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                          "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
                       )}
                     >
                       {STATUS_LABELS[workflow.status]}
@@ -620,7 +620,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                             Loading...
                           </div>
                         ) : (
-                          'Edit'
+                          "Edit"
                         )}
                       </button>
                       <button
@@ -628,24 +628,24 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                         className="rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800"
                         onClick={() => handleDuplicateWorkflow(workflow.id)}
                         disabled={
-                          pendingAction.type === 'duplicate' && mutatingWorkflowId === workflow.id
+                          pendingAction.type === "duplicate" && mutatingWorkflowId === workflow.id
                         }
                       >
-                        {pendingAction.type === 'duplicate' && mutatingWorkflowId === workflow.id
-                          ? 'Duplicating…'
-                          : 'Duplicate'}
+                        {pendingAction.type === "duplicate" && mutatingWorkflowId === workflow.id
+                          ? "Duplicating…"
+                          : "Duplicate"}
                       </button>
                       <button
                         type="button"
                         className="rounded-lg border border-red-300 dark:border-red-700 bg-transparent text-red-600 dark:text-red-400 px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950"
                         onClick={() => handleDeleteWorkflow(workflow.id)}
                         disabled={
-                          pendingAction.type === 'delete' && mutatingWorkflowId === workflow.id
+                          pendingAction.type === "delete" && mutatingWorkflowId === workflow.id
                         }
                       >
-                        {pendingAction.type === 'delete' && mutatingWorkflowId === workflow.id
-                          ? 'Deleting…'
-                          : 'Delete'}
+                        {pendingAction.type === "delete" && mutatingWorkflowId === workflow.id
+                          ? "Deleting…"
+                          : "Delete"}
                       </button>
                     </div>
                   </td>
@@ -659,11 +659,11 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         <Modal
           open={isCreateModalOpen}
           title="Create workflow"
-          onClose={pendingAction.type === 'create' ? undefined : closeCreateWorkflowModal}
+          onClose={pendingAction.type === "create" ? undefined : closeCreateWorkflowModal}
           footer={
             <div className="flex justify-end gap-3">
               <Button variant="default" disabled={creating} onClick={handleConfirmCreateWorkflow}>
-                {creating ? 'Creating…' : 'Create workflow'}
+                {creating ? "Creating…" : "Create workflow"}
               </Button>
             </div>
           }
@@ -682,7 +682,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
               className="w-full"
               onChange={(event) => setNewWorkflowName(event.target.value)}
               onKeyDown={(event) => {
-                if (event.key === 'Enter') {
+                if (event.key === "Enter") {
                   event.preventDefault();
                   handleConfirmCreateWorkflow();
                 }

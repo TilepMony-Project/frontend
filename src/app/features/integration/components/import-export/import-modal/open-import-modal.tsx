@@ -1,11 +1,11 @@
-import { Icon } from '@/components/icons';
-import { openModal } from '@/features/modals/stores/use-modal-store';
-import { ImportModal } from './import-modal';
+import { Icon } from "@/components/icons";
+import { openModal } from "@/features/modals/stores/use-modal-store";
+import { ImportModal } from "./import-modal";
 
 export function openImportModal() {
   openModal({
     content: <ImportModal />,
     icon: <Icon name="Download" />,
-    title: 'Import',
+    title: "Import",
   });
 }

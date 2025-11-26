@@ -1,7 +1,7 @@
-import { Switch } from '@/components/ui/switch';
-import type { SwitchControlProps } from '../../types/controls';
-import { createControlRenderer } from '../../utils/rendering';
-import { ControlWrapper } from '../control-wrapper';
+import { Switch } from "@/components/ui/switch";
+import type { SwitchControlProps } from "../../types/controls";
+import { createControlRenderer } from "../../utils/rendering";
+import { ControlWrapper } from "../control-wrapper";
 
 function SwitchControl(props: SwitchControlProps) {
   const { data, handleChange, path, enabled } = props;
@@ -17,4 +17,4 @@ function SwitchControl(props: SwitchControlProps) {
   );
 }
 
-export const switchControlRenderer = createControlRenderer('Switch', SwitchControl);
+export const switchControlRenderer = createControlRenderer("Switch", SwitchControl);

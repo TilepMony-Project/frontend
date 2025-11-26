@@ -5,15 +5,15 @@ import {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { cn } from '@/lib/utils';
-import type { ReactNode, SyntheticEvent } from 'react';
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import type { ReactNode, SyntheticEvent } from "react";
 
 export type SelectOption = {
   label: string;
   value: string;
   icon?: ReactNode;
-  type?: 'separator';
+  type?: "separator";
   disabled?: boolean;
 };
 
@@ -46,8 +46,8 @@ export function SelectWrapper({
     <Select value={value || undefined} onValueChange={handleValueChange} disabled={disabled}>
       <SelectTrigger
         className={cn(
-          'h-12 w-full rounded-xl border border-gray-200/80 bg-white px-4 text-left text-sm text-gray-900 shadow-sm transition-all duration-200 hover:border-gray-300 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/40 dark:border-gray-700 dark:bg-[#1c1c20] dark:text-gray-100',
-          error && 'border-destructive focus-visible:ring-destructive',
+          "h-12 w-full rounded-xl border border-gray-200/80 bg-white px-4 text-left text-sm text-gray-900 shadow-sm transition-all duration-200 hover:border-gray-300 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/40 dark:border-gray-700 dark:bg-[#1c1c20] dark:text-gray-100",
+          error && "border-destructive focus-visible:ring-destructive",
           className
         )}
       >
@@ -55,7 +55,7 @@ export function SelectWrapper({
       </SelectTrigger>
       <SelectContent className="rounded-xl border border-gray-200/80 bg-white p-1 text-sm shadow-xl dark:border-gray-700 dark:bg-[#1c1c20]">
         {items.map((item, index) => {
-          if (item.type === 'separator') {
+          if (item.type === "separator") {
             return <SelectSeparator key={`separator-${item.value ?? index}`} />;
           }
           return (

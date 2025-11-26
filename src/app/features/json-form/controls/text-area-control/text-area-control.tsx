@@ -1,8 +1,8 @@
-import { Textarea } from '@/components/ui/textarea';
-import { useEffect, useState } from 'react';
-import type { TextAreaControlProps } from '../../types/controls';
-import { createControlRenderer } from '../../utils/rendering';
-import { ControlWrapper } from '../control-wrapper';
+import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useState } from "react";
+import type { TextAreaControlProps } from "../../types/controls";
+import { createControlRenderer } from "../../utils/rendering";
+import { ControlWrapper } from "../control-wrapper";
 
 function TextAreaControl(props: TextAreaControlProps) {
   const { data, handleChange, path, enabled, uischema } = props;
@@ -37,4 +37,4 @@ function TextAreaControl(props: TextAreaControlProps) {
   );
 }
 
-export const textAreaControlRenderer = createControlRenderer('TextArea', TextAreaControl);
+export const textAreaControlRenderer = createControlRenderer("TextArea", TextAreaControl);

@@ -3,11 +3,11 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
-import type { AccordionLayoutElement, LayoutProps } from '../../types/layouts';
-import { createLayoutRenderer } from '../../utils/rendering';
-import { LayoutWrapper } from '../layout-wrapper';
-import { renderElements } from '../render-elements';
+} from "@/components/ui/accordion";
+import type { AccordionLayoutElement, LayoutProps } from "../../types/layouts";
+import { createLayoutRenderer } from "../../utils/rendering";
+import { LayoutWrapper } from "../layout-wrapper";
+import { renderElements } from "../render-elements";
 
 function AccordionLayout(props: LayoutProps<AccordionLayoutElement>) {
   const { uischema } = props;
@@ -35,4 +35,4 @@ function AccordionLayout(props: LayoutProps<AccordionLayoutElement>) {
   );
 }
 
-export const accordionLayoutRenderer = createLayoutRenderer('Accordion', AccordionLayout);
+export const accordionLayoutRenderer = createLayoutRenderer("Accordion", AccordionLayout);

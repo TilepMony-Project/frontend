@@ -1,1 +1,1 @@
-export const dataFormat = 'application/reactflow';
+export const dataFormat = "application/reactflow";

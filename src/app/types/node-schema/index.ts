@@ -3,7 +3,7 @@
 
 export type NodeSchema = Record<string, unknown>;
 
-export type PrimitiveFieldType = 'string' | 'number' | 'boolean' | 'array' | 'object';
+export type PrimitiveFieldType = "string" | "number" | "boolean" | "array" | "object";
 
 export type PrimitiveFieldSchema = {
   type: PrimitiveFieldType;

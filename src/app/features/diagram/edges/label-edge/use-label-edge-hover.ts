@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import useStore from '@/store/store';
-import { type EdgeState, useEdgeStyle } from '@synergycodes/overflow-ui';
+import { useState } from "react";
+import useStore from "@/store/store";
+import { type EdgeState, useEdgeStyle } from "@synergycodes/overflow-ui";
 
 type UseLabelEdgeHoverParams = {
   id: string;
@@ -13,7 +13,7 @@ export function useLabelEdgeHover({ id, isSelected }: UseLabelEdgeHoverParams) {
   const edgeHovered = useStore((state) => state.hoveredElement === id);
   const hovered = (labelHovered || edgeHovered) && !draggedSegmentDestinationId;
 
-  const edgeState: EdgeState = isSelected ? 'selected' : 'default';
+  const edgeState: EdgeState = isSelected ? "selected" : "default";
   const style = useEdgeStyle({ state: edgeState, isHovered: hovered });
 
   function handleMouseEnter() {

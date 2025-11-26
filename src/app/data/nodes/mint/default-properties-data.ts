@@ -1,11 +1,11 @@
-import type { NodeDataProperties } from '@/features/json-form/types/default-properties';
-import type { MintNodeSchema } from './schema';
+import type { NodeDataProperties } from "@/features/json-form/types/default-properties";
+import type { MintNodeSchema } from "./schema";
 
 export const defaultPropertiesData: NodeDataProperties<MintNodeSchema> = {
-  label: 'Mint',
-  description: '',
+  label: "Mint",
+  description: "",
   amount: 1000,
-  issuer: 'DummyIssuerA',
-  receivingWallet: '',
+  issuer: "DummyIssuerA",
+  receivingWallet: "",
   exchangeRate: 1,
 };

@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from "next/server";
 
 // POST /api/blockchain/vault - Deposit to vault
 export async function POST(request: NextRequest) {
@@ -8,17 +8,17 @@ export async function POST(request: NextRequest) {
 
     // Validate inputs
     if (!amount || !walletAddress || !yieldModel) {
-      return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
+      return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
     }
 
     // TODO: Implement actual smart contract call to Vault.sol
     // For now, simulate the vault deposit
 
-    const mockTransactionHash = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`;
+    const mockTransactionHash = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}`;
     const vaultShareTokens = amount; // 1:1 ratio for simplicity
 
     // Extract APR from yield model
-    const apr = yieldModel.includes('3%') ? 3 : yieldModel.includes('5%') ? 5 : 8;
+    const apr = yieldModel.includes("3%") ? 3 : yieldModel.includes("5%") ? 5 : 8;
 
     return NextResponse.json(
       {
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error depositing to vault:', error);
-    return NextResponse.json({ error: 'Failed to deposit to vault' }, { status: 500 });
+    console.error("Error depositing to vault:", error);
+    return NextResponse.json({ error: "Failed to deposit to vault" }, { status: 500 });
   }
 }

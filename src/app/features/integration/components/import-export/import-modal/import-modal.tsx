@@ -1,22 +1,22 @@
-import clsx from 'clsx';
-import { useCallback, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import clsx from "clsx";
+import { useCallback, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 
-import { Icon } from '@/components/icons';
-import { showToast, ToastType } from '@/utils/toast-utils';
+import { Icon } from "@/components/icons";
+import { showToast, ToastType } from "@/utils/toast-utils";
 
-import { setStoreDataFromIntegration } from '@/store/slices/diagram-slice/actions';
-import { SyntaxHighlighterLazy } from '@/features/syntax-highlighter/components/syntax-highlighter-lazy';
+import { setStoreDataFromIntegration } from "@/store/slices/diagram-slice/actions";
+import { SyntaxHighlighterLazy } from "@/features/syntax-highlighter/components/syntax-highlighter-lazy";
 
 import {
   type IntegrationDataError,
   validateIntegrationData,
-} from '@/features/integration/utils/validate-integration-data';
-import { closeModal } from '@/features/modals/stores/use-modal-store';
-import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';
+} from "@/features/integration/utils/validate-integration-data";
+import { closeModal } from "@/features/modals/stores/use-modal-store";
+import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
 
 export function ImportModal() {
-  const [jsonToParse, setJsonToParse] = useState('{}');
+  const [jsonToParse, setJsonToParse] = useState("{}");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [{ errors, warnings }, setJsonValidation] = useState<{
     errors: IntegrationDataError[];
@@ -33,12 +33,12 @@ export function ImportModal() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target?.result as string;
-      setJsonToParse(content || '{}');
+      setJsonToParse(content || "{}");
     };
     reader.onerror = () => {
       showToast({
-        title: 'Failed to read file',
-        subtitle: 'Please try again or paste the JSON directly',
+        title: "Failed to read file",
+        subtitle: "Please try again or paste the JSON directly",
         variant: ToastType.ERROR,
       });
     };
@@ -56,8 +56,8 @@ export function ImportModal() {
 
       if (errors.length > 0) {
         showToast({
-          title: 'Import failed',
-          subtitle: `Found ${errors.length} error${errors.length > 1 ? 's' : ''}. Please fix them before importing.`,
+          title: "Import failed",
+          subtitle: `Found ${errors.length} error${errors.length > 1 ? "s" : ""}. Please fix them before importing.`,
           variant: ToastType.ERROR,
         });
         return;
@@ -68,12 +68,12 @@ export function ImportModal() {
       }
 
       if (validatedIntegrationData) {
-        trackFutureChange('import');
+        trackFutureChange("import");
         setStoreDataFromIntegration(validatedIntegrationData);
         closeModal();
 
         showToast({
-          title: 'Diagram loaded successfully',
+          title: "Diagram loaded successfully",
           variant: ToastType.SUCCESS,
         });
       }
@@ -128,29 +128,25 @@ export function ImportModal() {
       <div className="flex flex-col gap-2">
         <SyntaxHighlighterLazy
           value={jsonToParse}
-          onChange={(json) => setJsonToParse(json || '{}')}
+          onChange={(json) => setJsonToParse(json || "{}")}
         />
       </div>
 
       {(hasErrors || hasWarnings) && (
         <div
           className={clsx(
-            'flex flex-col gap-2 p-4 rounded-xl border',
+            "flex flex-col gap-2 p-4 rounded-xl border",
             hasErrors
-              ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/50 text-red-900 dark:text-red-200'
-              : 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-900/50 text-yellow-900 dark:text-yellow-200'
+              ? "bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/50 text-red-900 dark:text-red-200"
+              : "bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-900/50 text-yellow-900 dark:text-yellow-200"
           )}
         >
           <div className="flex items-center gap-2">
-            <Icon
-              name={hasErrors ? 'XCircle' : 'Info'}
-              size={18}
-              className="shrink-0"
-            />
+            <Icon name={hasErrors ? "XCircle" : "Info"} size={18} className="shrink-0" />
             <span className="text-sm font-semibold">
               {hasErrors
-                ? `${errors.length} Error${errors.length > 1 ? 's' : ''} Found`
-                : `${warnings.length} Warning${warnings.length > 1 ? 's' : ''} Found`}
+                ? `${errors.length} Error${errors.length > 1 ? "s" : ""} Found`
+                : `${warnings.length} Warning${warnings.length > 1 ? "s" : ""} Found`}
             </span>
           </div>
           <div className="flex flex-col gap-1.5 pl-6">

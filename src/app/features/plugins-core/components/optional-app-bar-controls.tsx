@@ -1,5 +1,5 @@
-import type { PropsWithChildren } from 'react';
-import { withOptionalComponentPlugins } from '../adapters/adapter-components';
+import type { PropsWithChildren } from "react";
+import { withOptionalComponentPlugins } from "../adapters/adapter-components";
 
 function OptionalWrapper({ children }: PropsWithChildren) {
   return children;
@@ -7,5 +7,5 @@ function OptionalWrapper({ children }: PropsWithChildren) {
 
 export const OptionalAppBarControls = withOptionalComponentPlugins(
   OptionalWrapper,
-  'OptionalAppBarControls'
+  "OptionalAppBarControls"
 );

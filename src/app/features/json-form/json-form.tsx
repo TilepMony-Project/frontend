@@ -1,22 +1,22 @@
-import type { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
-import { JsonForms } from '@jsonforms/react';
-import { textControlRenderer } from './controls/text-control/text-control';
-import { groupLayoutRenderer } from './layouts/group-layout/group-layout';
+import type { JsonFormsRendererRegistryEntry } from "@jsonforms/core";
+import { JsonForms } from "@jsonforms/react";
+import { textControlRenderer } from "./controls/text-control/text-control";
+import { groupLayoutRenderer } from "./layouts/group-layout/group-layout";
 
-import type { ComponentProps } from 'react';
-import { datePickerControlRenderer } from './controls/date-picker-control/date-picker-control';
-import { dynamicConditionsControlRenderer } from './controls/dynamic-conditions-control/dynamic-conditions-control';
-import { labelRenderer } from './controls/label-control/label-control';
-import { selectControlRenderer } from './controls/select-control/select-control';
-import { switchControlRenderer } from './controls/switch-control/switch-control';
-import { textAreaControlRenderer } from './controls/text-area-control/text-area-control';
+import type { ComponentProps } from "react";
+import { datePickerControlRenderer } from "./controls/date-picker-control/date-picker-control";
+import { dynamicConditionsControlRenderer } from "./controls/dynamic-conditions-control/dynamic-conditions-control";
+import { labelRenderer } from "./controls/label-control/label-control";
+import { selectControlRenderer } from "./controls/select-control/select-control";
+import { switchControlRenderer } from "./controls/switch-control/switch-control";
+import { textAreaControlRenderer } from "./controls/text-area-control/text-area-control";
 
-import { accordionLayoutRenderer } from './layouts/accordion-layout/accordion-layout';
-import { horizontalLayoutRenderer } from './layouts/horizontal-layout/horizontal-layout';
-import { verticalLayoutRenderer } from './layouts/vertical-layout/vertical-layout';
-import { unknownRenderer } from './utils/unknown-renderer';
+import { accordionLayoutRenderer } from "./layouts/accordion-layout/accordion-layout";
+import { horizontalLayoutRenderer } from "./layouts/horizontal-layout/horizontal-layout";
+import { verticalLayoutRenderer } from "./layouts/vertical-layout/vertical-layout";
+import { unknownRenderer } from "./utils/unknown-renderer";
 
-type Props = Pick<ComponentProps<typeof JsonForms>, 'onChange' | 'data' | 'uischema' | 'schema'> & {
+type Props = Pick<ComponentProps<typeof JsonForms>, "onChange" | "data" | "uischema" | "schema"> & {
   readonly?: boolean;
 };
 

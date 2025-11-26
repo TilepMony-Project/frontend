@@ -1,6 +1,6 @@
-import { createPortal } from 'react-dom';
-import { Modal } from '@/components/ui/modal';
-import { closeModal, useModalStore } from '../stores/use-modal-store';
+import { createPortal } from "react-dom";
+import { Modal } from "@/components/ui/modal";
+import { closeModal, useModalStore } from "../stores/use-modal-store";
 
 export function ModalProvider() {
   const isOpen = useModalStore((state) => state.isOpen);
@@ -18,7 +18,7 @@ export function ModalProvider() {
           open={isOpen}
           icon={modal.icon}
           onClose={modal.isCloseButtonVisible ? closeModal : undefined}
-          title={modal.title || ''}
+          title={modal.title || ""}
           footer={modal.footer}
           footerVariant={modal.footerVariant}
         >

@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from "next/server";
 
 // POST /api/blockchain/transfer - Transfer tokens
 export async function POST(request: NextRequest) {
@@ -8,13 +8,13 @@ export async function POST(request: NextRequest) {
 
     // Validate inputs
     if (!amount || !recipientWallet || !token || !fromWallet) {
-      return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
+      return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
     }
 
     // TODO: Implement actual ERC20 transfer
     // For now, simulate the transfer operation
 
-    const mockTransactionHash = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`;
+    const mockTransactionHash = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}`;
 
     return NextResponse.json(
       {
@@ -24,12 +24,12 @@ export async function POST(request: NextRequest) {
         token,
         from: fromWallet,
         to: recipientWallet,
-        network: 'Mantle Testnet',
+        network: "Mantle Testnet",
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error transferring tokens:', error);
-    return NextResponse.json({ error: 'Failed to transfer tokens' }, { status: 500 });
+    console.error("Error transferring tokens:", error);
+    return NextResponse.json({ error: "Failed to transfer tokens" }, { status: 500 });
   }
 }

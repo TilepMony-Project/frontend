@@ -1,4 +1,4 @@
-import mongoose, { Schema, type Document } from 'mongoose';
+import mongoose, { Schema, type Document } from "mongoose";
 
 export interface ITransaction extends Document {
   workflowId: string;
@@ -11,7 +11,7 @@ export interface ITransaction extends Document {
   amount: string;
   token: string;
   gasUsed: string;
-  status: 'pending' | 'confirmed' | 'failed';
+  status: "pending" | "confirmed" | "failed";
   blockNumber?: number;
   createdAt: Date;
   updatedAt: Date;
@@ -64,8 +64,8 @@ const TransactionSchema = new Schema<ITransaction>(
     },
     status: {
       type: String,
-      enum: ['pending', 'confirmed', 'failed'],
-      default: 'pending',
+      enum: ["pending", "confirmed", "failed"],
+      default: "pending",
     },
     blockNumber: {
       type: Number,
@@ -77,4 +77,4 @@ const TransactionSchema = new Schema<ITransaction>(
 );
 
 export default mongoose.models.Transaction ||
-  mongoose.model<ITransaction>('Transaction', TransactionSchema);
+  mongoose.model<ITransaction>("Transaction", TransactionSchema);

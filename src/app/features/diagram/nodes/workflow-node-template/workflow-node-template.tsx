@@ -1,20 +1,19 @@
-import { Handle } from '@xyflow/react';
-import type { IconType, LayoutDirection } from '@/types/common';
-import { memo, useMemo } from 'react';
+import { Handle } from "@xyflow/react";
+import type { IconType, LayoutDirection } from "@/types/common";
+import { memo, useMemo } from "react";
 import {
   Collapsible,
   NodeDescription,
   NodeIcon,
   NodePanel,
   Status,
-} from '@synergycodes/overflow-ui';
-import { Icon } from '@/components/icons';
-import { getHandleId } from '../../handles/get-handle-id';
-import { getHandlePosition } from '../../handles/get-handle-position';
+} from "@synergycodes/overflow-ui";
+import { Icon } from "@/components/icons";
+import { getHandleId } from "../../handles/get-handle-id";
+import { getHandlePosition } from "../../handles/get-handle-position";
 
-
-import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
-import type { NodeData } from '@/types/node-data';
+import { withOptionalComponentPlugins } from "@/features/plugins-core/adapters/adapter-components";
+import type { NodeData } from "@/types/node-data";
 
 export type WorkflowNodeTemplateProps = {
   id: string;
@@ -36,40 +35,43 @@ const WorkflowNodeTemplateComponent = memo(
     icon,
     label,
     description,
-    layoutDirection = 'horizontal',
+    layoutDirection = "horizontal",
     selected = false,
     showHandles = true,
     isValid,
     children,
   }: WorkflowNodeTemplateProps) => {
-    const handleTargetId = getHandleId({ nodeId: id, handleType: 'target' });
-    const handleSourceId = getHandleId({ nodeId: id, handleType: 'source' });
+    const handleTargetId = getHandleId({ nodeId: id, handleType: "target" });
+    const handleSourceId = getHandleId({ nodeId: id, handleType: "source" });
 
     const handleTargetPosition = getHandlePosition({
       direction: layoutDirection,
-      handleType: 'target',
+      handleType: "target",
     });
     const handleSourcePosition = getHandlePosition({
       direction: layoutDirection,
-      handleType: 'source',
+      handleType: "source",
     });
 
     const iconElement = useMemo(() => <Icon name={icon} size="large" />, [icon]);
 
     const hasContent = !!children;
 
-    const handlesAlignment = hasContent && layoutDirection === 'horizontal' ? 'header' : 'center';
+    const handlesAlignment = hasContent && layoutDirection === "horizontal" ? "header" : "center";
 
     return (
       <Collapsible>
-        <NodePanel.Root selected={selected} className="[--ax-public-node-gap:0] workflow-node-with-border">
+        <NodePanel.Root
+          selected={selected}
+          className="[--ax-public-node-gap:0] workflow-node-with-border"
+        >
           <NodePanel.Header>
             <NodeIcon icon={iconElement} />
             <NodeDescription label={label} description={description} />
             {hasContent && <Collapsible.Button />}
           </NodePanel.Header>
           <NodePanel.Content>
-            <Status status={isValid === false ? 'invalid' : undefined} />
+            <Status status={isValid === false ? "invalid" : undefined} />
             <Collapsible.Content>
               <div className="pt-2">{children}</div>
             </Collapsible.Content>
@@ -86,5 +88,5 @@ const WorkflowNodeTemplateComponent = memo(
 
 export const WorkflowNodeTemplate = withOptionalComponentPlugins(
   WorkflowNodeTemplateComponent,
-  'WorkflowNodeTemplate'
+  "WorkflowNodeTemplate"
 );

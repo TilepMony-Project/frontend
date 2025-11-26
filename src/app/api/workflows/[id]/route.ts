@@ -1,13 +1,13 @@
-import connectDB from '@/lib/mongodb';
-import Workflow from '@/models/Workflow';
-import { revalidatePath } from 'next/cache';
-import { type NextRequest, NextResponse } from 'next/server';
+import connectDB from "@/lib/mongodb";
+import Workflow from "@/models/Workflow";
+import { revalidatePath } from "next/cache";
+import { type NextRequest, NextResponse } from "next/server";
 
 function revalidateWorkflowPaths() {
-  const paths = ['/', '/dashboard', '/workspace', '/workspace/[workflowId]'];
+  const paths = ["/", "/dashboard", "/workspace", "/workspace/[workflowId]"];
   for (const path of paths) {
-    if (path.includes('[')) {
-      revalidatePath(path, 'page');
+    if (path.includes("[")) {
+      revalidatePath(path, "page");
     } else {
       revalidatePath(path);
     }
@@ -23,15 +23,15 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
     const workflow = await Workflow.findById(id);
 
     if (!workflow) {
-      return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
+      return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
     }
 
     revalidateWorkflowPaths();
 
     return NextResponse.json({ workflow }, { status: 200 });
   } catch (error) {
-    console.error('Error fetching workflow:', error);
-    return NextResponse.json({ error: 'Failed to fetch workflow' }, { status: 500 });
+    console.error("Error fetching workflow:", error);
+    return NextResponse.json({ error: "Failed to fetch workflow" }, { status: 500 });
   }
 }
 
@@ -57,13 +57,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     );
 
     if (!workflow) {
-      return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
+      return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
     }
 
     return NextResponse.json({ workflow }, { status: 200 });
   } catch (error) {
-    console.error('Error updating workflow:', error);
-    return NextResponse.json({ error: 'Failed to update workflow' }, { status: 500 });
+    console.error("Error updating workflow:", error);
+    return NextResponse.json({ error: "Failed to update workflow" }, { status: 500 });
   }
 }
 
@@ -79,14 +79,14 @@ export async function DELETE(
     const workflow = await Workflow.findByIdAndDelete(id);
 
     if (!workflow) {
-      return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
+      return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
     }
 
     revalidateWorkflowPaths();
 
-    return NextResponse.json({ message: 'Workflow deleted successfully' }, { status: 200 });
+    return NextResponse.json({ message: "Workflow deleted successfully" }, { status: 200 });
   } catch (error) {
-    console.error('Error deleting workflow:', error);
-    return NextResponse.json({ error: 'Failed to delete workflow' }, { status: 500 });
+    console.error("Error deleting workflow:", error);
+    return NextResponse.json({ error: "Failed to delete workflow" }, { status: 500 });
   }
 }

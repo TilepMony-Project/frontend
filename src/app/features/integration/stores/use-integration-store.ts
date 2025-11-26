@@ -1,11 +1,11 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
-import { setStoreDataFromIntegration } from '@/store/slices/diagram-slice/actions';
+import { setStoreDataFromIntegration } from "@/store/slices/diagram-slice/actions";
 
-import type { IntegrationDataFormat } from '../types';
+import type { IntegrationDataFormat } from "../types";
 
-type IntegrationSavingStatus = 'disabled' | 'waiting' | 'saving' | 'saved' | 'notSaved';
+type IntegrationSavingStatus = "disabled" | "waiting" | "saving" | "saved" | "notSaved";
 
 type IntegrationStore = {
   savingStatus: IntegrationSavingStatus;
@@ -16,10 +16,10 @@ export const useIntegrationStore = create<IntegrationStore>()(
   devtools(
     () =>
       ({
-        savingStatus: 'disabled',
+        savingStatus: "disabled",
         lastSaveAttemptTimestamp: Date.now(),
       }) satisfies IntegrationStore,
-    { name: 'integrationStore' }
+    { name: "integrationStore" }
   )
 );
 
@@ -30,7 +30,7 @@ export function loadData(loadData: Partial<IntegrationDataFormat>) {
   }
 
   useIntegrationStore.setState({
-    savingStatus: 'waiting',
+    savingStatus: "waiting",
     lastSaveAttemptTimestamp: Date.now(),
   });
 }
@@ -43,6 +43,6 @@ export function setStoreSavingStatus(savingStatus: IntegrationSavingStatus) {
   return useIntegrationStore.setState((state) => ({
     savingStatus,
     lastSaveAttemptTimestamp:
-      savingStatus === 'saved' ? Date.now() : state.lastSaveAttemptTimestamp,
+      savingStatus === "saved" ? Date.now() : state.lastSaveAttemptTimestamp,
   }));
 }

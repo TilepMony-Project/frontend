@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from "react";
+import type React from "react";
 import { Button } from "@/components/ui/button";
 
 interface ApplicationCardProps {
@@ -57,7 +57,8 @@ const Applications: React.FC = () => {
             </div>
             <div className="flex items-center gap-2 px-4 lg:px-5">
               <p className="w-full max-w-3xl opacity-80 text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
-                From corporate payments to treasury automation, TilepMoney provides clear pathways to real-world commercial use cases for stablecoin payment infrastructure.
+                From corporate payments to treasury automation, TilepMoney provides clear pathways
+                to real-world commercial use cases for stablecoin payment infrastructure.
               </p>
             </div>
           </div>

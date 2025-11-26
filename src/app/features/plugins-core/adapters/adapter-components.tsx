@@ -1,6 +1,6 @@
-import type React from 'react';
-import { memo, useMemo, type ReactNode } from 'react';
-import { sortByPriority } from './utils/sort-by-priority';
+import type React from "react";
+import { memo, useMemo, type ReactNode } from "react";
+import { sortByPriority } from "./utils/sort-by-priority";
 
 type ModifyProps<P> = (props: P) => P;
 
@@ -11,7 +11,7 @@ type SharedDecoratorOptions<Props = object> = {
 };
 
 type DecoratorWithContent<Props = object> = {
-  place?: 'before' | 'after' | 'wrapper';
+  place?: "before" | "after" | "wrapper";
   content: React.ElementType;
 } & SharedDecoratorOptions<Props>;
 
@@ -79,13 +79,13 @@ export function withOptionalComponentPlugins<TProps extends object>(
     const resultAfter: ReactNode[] = [];
 
     for (const [index, plugin] of pluginsWithContent.entries()) {
-      const place = plugin.place || 'before';
+      const place = plugin.place || "before";
 
-      if (place === 'before') {
+      if (place === "before") {
         resultBefore.push(<plugin.content key={index} />);
       }
 
-      if (place === 'wrapper') {
+      if (place === "wrapper") {
         resultWrapper = (
           <plugin.content key={index} props={modifiedProps} component={Component}>
             {resultWrapper}
@@ -93,7 +93,7 @@ export function withOptionalComponentPlugins<TProps extends object>(
         );
       }
 
-      if (place === 'after') {
+      if (place === "after") {
         resultAfter.push(<plugin.content key={index} />);
       }
     }

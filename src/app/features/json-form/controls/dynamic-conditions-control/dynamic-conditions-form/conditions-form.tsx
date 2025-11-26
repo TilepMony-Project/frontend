@@ -6,15 +6,14 @@ import {
   useImperativeHandle,
   useRef,
   useState,
-} from 'react';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/icons';
-import type { DynamicCondition } from '@/features/json-form/types/controls';
-import { validateCondition } from '@/features/json-form/utils/conditional-transform';
-import { ConditionsFormField } from '../dynamic-conditions-form-field/conditions-form-field';
+} from "react";
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/icons";
+import type { DynamicCondition } from "@/features/json-form/types/controls";
+import { validateCondition } from "@/features/json-form/utils/conditional-transform";
+import { ConditionsFormField } from "../dynamic-conditions-form-field/conditions-form-field";
 
-
-import { closeModal } from '@/features/modals/stores/use-modal-store';
+import { closeModal } from "@/features/modals/stores/use-modal-store";
 
 type ConditionsFormProps = {
   onChange: (value: DynamicCondition[]) => void;
@@ -22,10 +21,10 @@ type ConditionsFormProps = {
 };
 
 const emptyCondition: DynamicCondition = {
-  x: '',
-  comparisonOperator: 'isEqual',
-  y: '',
-  logicalOperator: 'AND',
+  x: "",
+  comparisonOperator: "isEqual",
+  y: "",
+  logicalOperator: "AND",
 };
 
 export interface ConditionsFormHandle {
@@ -104,12 +103,7 @@ export const ConditionsForm = forwardRef<ConditionsFormHandle, ConditionsFormPro
             />
           ))}
         </div>
-        <Button
-          className="mt-4 w-full"
-          size="sm"
-          variant="secondary"
-          onClick={addCondition}
-        >
+        <Button className="mt-4 w-full" size="sm" variant="secondary" onClick={addCondition}>
           <Icon name="PlusCircle" />
         </Button>
       </form>

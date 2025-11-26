@@ -1,10 +1,10 @@
-import mongoose, { Schema, type Document } from 'mongoose';
+import mongoose, { Schema, type Document } from "mongoose";
 
 export interface IWorkflow extends Document {
   name: string;
   description?: string;
   userId: string;
-  status: 'draft' | 'running' | 'running_waiting' | 'stopped' | 'finished' | 'failed';
+  status: "draft" | "running" | "running_waiting" | "stopped" | "finished" | "failed";
   nodes: unknown[];
   edges: unknown[];
   createdAt: Date;
@@ -30,8 +30,8 @@ const WorkflowSchema = new Schema<IWorkflow>(
     },
     status: {
       type: String,
-      enum: ['draft', 'running', 'running_waiting', 'stopped', 'finished', 'failed'],
-      default: 'draft',
+      enum: ["draft", "running", "running_waiting", "stopped", "finished", "failed"],
+      default: "draft",
     },
     nodes: {
       type: Schema.Types.Mixed,
@@ -50,4 +50,4 @@ const WorkflowSchema = new Schema<IWorkflow>(
   }
 );
 
-export default mongoose.models.Workflow || mongoose.model<IWorkflow>('Workflow', WorkflowSchema);
+export default mongoose.models.Workflow || mongoose.model<IWorkflow>("Workflow", WorkflowSchema);

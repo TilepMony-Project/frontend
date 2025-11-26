@@ -1,7 +1,7 @@
-import useStore from '@/store/store';
-import { useCallback, useEffect, useMemo } from 'react';
-import type { DragEventHandler } from 'react';
-import { diagramStateSelector } from './selectors';
+import useStore from "@/store/store";
+import { useCallback, useEffect, useMemo } from "react";
+import type { DragEventHandler } from "react";
+import { diagramStateSelector } from "./selectors";
 
 import {
   Background,
@@ -14,27 +14,27 @@ import {
   type OnSelectionChangeParams,
   ReactFlow,
   SelectionMode,
-} from '@xyflow/react';
-import type { DragEvent, MouseEvent as ReactMouseEvent } from 'react';
-import { getNodeTypesObject } from './get-node-types-object';
-import '@xyflow/react/dist/style.css';
-import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';
-import { SNAP_GRID, SNAP_IS_ACTIVE } from '@/features/diagram/diagram.const';
+} from "@xyflow/react";
+import type { DragEvent, MouseEvent as ReactMouseEvent } from "react";
+import { getNodeTypesObject } from "./get-node-types-object";
+import "@xyflow/react/dist/style.css";
+import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
+import { SNAP_GRID, SNAP_IS_ACTIVE } from "@/features/diagram/diagram.const";
 import {
   callNodeChangedListeners,
   destroyNodeChangedListeners,
-} from '@/features/diagram/listeners/node-changed-listeners';
-import { useDeleteConfirmation } from '@/features/modals/delete-confirmation/use-delete-confirmation';
-import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
-import { usePaletteDrop } from '@/hooks/use-palette-drop';
-import type { WorkflowBuilderOnSelectionChangeParams } from '@/types/common';
-import type { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
-import { LabelEdge } from './edges/label-edge/label-edge';
-import { TemporaryEdge } from './edges/temporary-edge/temporary-edge';
+} from "@/features/diagram/listeners/node-changed-listeners";
+import { useDeleteConfirmation } from "@/features/modals/delete-confirmation/use-delete-confirmation";
+import { withOptionalComponentPlugins } from "@/features/plugins-core/adapters/adapter-components";
+import { usePaletteDrop } from "@/hooks/use-palette-drop";
+import type { WorkflowBuilderOnSelectionChangeParams } from "@/types/common";
+import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
+import { LabelEdge } from "./edges/label-edge/label-edge";
+import { TemporaryEdge } from "./edges/temporary-edge/temporary-edge";
 import {
   callNodeDragStartListeners,
   destroyNodeDragStartListeners,
-} from './listeners/node-drag-start-listeners';
+} from "./listeners/node-drag-start-listeners";
 
 function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }) {
   const {
@@ -58,7 +58,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
 
   const onDragOver = useCallback((event: DragEvent) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy';
+    event.dataTransfer.dropEffect = "copy";
   }, []);
 
   const { onDropFromPalette } = usePaletteDrop();
@@ -66,13 +66,13 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
   const fitViewOptions: FitViewOptions = useMemo(() => ({ maxZoom: 1 }), []);
 
   const onNodeDragStart: OnNodeDrag = useCallback((event, node, nodes) => {
-    trackFutureChange('nodeDragStart');
+    trackFutureChange("nodeDragStart");
     callNodeDragStartListeners(event, node, nodes);
   }, []);
 
   const onDrop: DragEventHandler = useCallback(
     (event) => {
-      trackFutureChange('addNode');
+      trackFutureChange("addNode");
       onDropFromPalette(event);
     },
     [onDropFromPalette]
@@ -80,7 +80,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
 
   const onConnect: OnConnect = useCallback(
     (connection) => {
-      trackFutureChange('addEdge');
+      trackFutureChange("addEdge");
       onConnectAction(connection);
     },
     [onConnectAction]
@@ -133,7 +133,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
           nodes,
           edges,
           onDeleteClick: () => {
-            trackFutureChange('delete');
+            trackFutureChange("delete");
             resolve(true);
           },
           onModalClosed: () => resolve(false),
@@ -143,7 +143,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
     [isReadOnlyMode, openDeleteConfirmationModal]
   );
 
-  const isPanMode = canvasInteractionMode === 'pan';
+  const isPanMode = canvasInteractionMode === "pan";
   const panOnDrag = isPanMode ? [0, 1, 2] : [1, 2];
   const selectionOnDrag = !isPanMode;
 
@@ -189,5 +189,5 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
 
 export const DiagramContainer = withOptionalComponentPlugins(
   DiagramContainerComponent,
-  'DiagramContainer'
+  "DiagramContainer"
 );

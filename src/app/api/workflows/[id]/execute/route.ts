@@ -1,8 +1,8 @@
-import connectDB from '@/lib/mongodb';
-import { startWorkflowExecution } from '@/lib/workflow/executor';
-import Execution from '@/models/Execution';
-import Workflow from '@/models/Workflow';
-import { type NextRequest, NextResponse } from 'next/server';
+import connectDB from "@/lib/mongodb";
+import { startWorkflowExecution } from "@/lib/workflow/executor";
+import Execution from "@/models/Execution";
+import Workflow from "@/models/Workflow";
+import { type NextRequest, NextResponse } from "next/server";
 
 // POST /api/workflows/[id]/execute - Execute workflow
 export async function POST(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -13,7 +13,7 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
     const workflow = await Workflow.findById(id);
 
     if (!workflow) {
-      return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
+      return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
     }
 
     // TODO: Add pre-execution validation
@@ -25,14 +25,14 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
     const execution = await Execution.create({
       workflowId: id,
       userId: workflow.userId,
-      status: 'running',
+      status: "running",
       startedAt: new Date(),
       executionLog: [],
     });
 
     // Update workflow status
     await Workflow.findByIdAndUpdate(id, {
-      status: 'running',
+      status: "running",
       lastExecutedAt: new Date(),
     });
 
@@ -42,13 +42,13 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
     return NextResponse.json(
       {
         executionId: execution._id.toString(),
-        status: 'running',
-        message: 'Workflow execution started',
+        status: "running",
+        message: "Workflow execution started",
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error executing workflow:', error);
-    return NextResponse.json({ error: 'Failed to execute workflow' }, { status: 500 });
+    console.error("Error executing workflow:", error);
+    return NextResponse.json({ error: "Failed to execute workflow" }, { status: 500 });
   }
 }

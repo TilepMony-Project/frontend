@@ -1,5 +1,5 @@
-import type { SingleSelectedElement } from '../../use-single-selected-element';
-import type { PropertiesBarItem } from './properties-bar.types';
+import type { SingleSelectedElement } from "../../use-single-selected-element";
+import type { PropertiesBarItem } from "./properties-bar.types";
 
 export function renderComponent(
   componentMap: PropertiesBarItem[],

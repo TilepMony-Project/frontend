@@ -2,5 +2,5 @@
 // TODO: Replace with proper type definitions
 
 export enum NodeType {
-  Node = 'Node',
+  Node = "Node",
 }

@@ -4,8 +4,8 @@ type WorkspacePageProps = {
   }>;
 };
 
-import { App } from '../../app';
-import { WalletGuard } from '../../components/wallet-guard';
+import { App } from "../../app";
+import { WalletGuard } from "../../components/wallet-guard";
 
 export default async function WorkspaceWithIdPage({ params }: WorkspacePageProps) {
   const { workflowId } = await params;

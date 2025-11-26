@@ -1,16 +1,16 @@
-import { useCallback, useMemo, useEffect, useState } from 'react';
+import { useCallback, useMemo, useEffect, useState } from "react";
 
-import { IntegrationWrapper } from './wrapper/integration-wrapper';
+import { IntegrationWrapper } from "./wrapper/integration-wrapper";
 
-import { getStoreDataForIntegration } from '@/store/slices/diagram-slice/actions';
+import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
 
-import type { IntegrationDataFormatOptional, OnSave } from '@/features/integration/types';
+import type { IntegrationDataFormatOptional, OnSave } from "@/features/integration/types";
 import {
   showSnackbarSaveErrorIfNeeded,
   showSnackbarSaveSuccessIfNeeded,
-} from '../../utils/show-snackbar';
+} from "../../utils/show-snackbar";
 
-const localStorageDiagramKey = 'workflowBuilderDiagram';
+const localStorageDiagramKey = "workflowBuilderDiagram";
 
 export function withIntegrationThroughLocalStorage<WProps extends object>(
   WrappedComponent: React.ComponentType<WProps>
@@ -26,7 +26,7 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
       const data = getStoreDataForIntegration();
 
       try {
-        if (typeof window !== 'undefined' && window.localStorage) {
+        if (typeof window !== "undefined" && window.localStorage) {
           localStorage.setItem(localStorageDiagramKey, JSON.stringify(data));
         }
 
@@ -43,7 +43,7 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
           setTimeout(() => {
             showSnackbarSaveSuccessIfNeeded(savingParams);
 
-            return resolve('success');
+            return resolve("success");
           }, 800);
         });
       } catch {
@@ -52,11 +52,11 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
 
       showSnackbarSaveErrorIfNeeded(savingParams);
 
-      return 'error';
+      return "error";
     }, []);
 
     const { name, layoutDirection, nodes, edges }: IntegrationDataFormatOptional = useMemo(() => {
-      if (!isClient || typeof window === 'undefined' || !window.localStorage) {
+      if (!isClient || typeof window === "undefined" || !window.localStorage) {
         return {};
       }
 

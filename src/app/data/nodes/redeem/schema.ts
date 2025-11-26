@@ -1,32 +1,32 @@
-import type { NodeSchema } from '@/types/node-schema';
+import type { NodeSchema } from "@/types/node-schema";
 
 export const currencyOptions = [
-  { label: 'USD', value: 'USD' },
-  { label: 'IDR', value: 'IDR' },
+  { label: "USD", value: "USD" },
+  { label: "IDR", value: "IDR" },
 ];
 
 export const schema = {
   properties: {
     label: {
-      type: 'string',
+      type: "string",
     },
     description: {
-      type: 'string',
+      type: "string",
     },
     amount: {
-      type: 'number',
+      type: "number",
       minimum: 0,
     },
     currency: {
-      type: 'string',
+      type: "string",
       options: currencyOptions,
     },
     recipientWallet: {
-      type: 'string',
-      pattern: '^0x[a-fA-F0-9]{40}$',
+      type: "string",
+      pattern: "^0x[a-fA-F0-9]{40}$",
     },
     conversionRate: {
-      type: 'number',
+      type: "number",
       readOnly: true,
     },
   },

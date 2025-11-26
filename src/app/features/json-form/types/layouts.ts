@@ -1,13 +1,13 @@
-import type { Layout, LayoutProps as JSONFormsLayoutProps } from '@jsonforms/core';
-import type { Override } from './utils';
-import type { UISchemaElement } from './uischema';
-import type { UISchemaRule } from './rules';
+import type { Layout, LayoutProps as JSONFormsLayoutProps } from "@jsonforms/core";
+import type { Override } from "./utils";
+import type { UISchemaElement } from "./uischema";
+import type { UISchemaRule } from "./rules";
 
 export type AccordionLayoutElement = Override<
   BaseLayoutElement,
   {
     label: string;
-    type: 'Accordion';
+    type: "Accordion";
   }
 >;
 
@@ -15,21 +15,21 @@ export type GroupLayoutElement = Override<
   BaseLayoutElement,
   {
     label: string;
-    type: 'Group';
+    type: "Group";
   }
 >;
 
 export type VerticalLayoutElement = Override<
   BaseLayoutElement,
   {
-    type: 'VerticalLayout';
+    type: "VerticalLayout";
   }
 >;
 
 export type HorizontalLayoutElement = Override<
   BaseLayoutElement,
   {
-    type: 'HorizontalLayout';
+    type: "HorizontalLayout";
   } & {
     /**
      * Defines the `grid-auto-columns` CSS property.

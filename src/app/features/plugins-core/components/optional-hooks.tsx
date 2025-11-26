@@ -1,7 +1,7 @@
-import { withOptionalComponentPlugins } from '../adapters/adapter-components';
+import { withOptionalComponentPlugins } from "../adapters/adapter-components";
 
 function OptionalHooksComponent() {
   return null;
 }
 
-export const OptionalHooks = withOptionalComponentPlugins(OptionalHooksComponent, 'OptionalHooks');
+export const OptionalHooks = withOptionalComponentPlugins(OptionalHooksComponent, "OptionalHooks");

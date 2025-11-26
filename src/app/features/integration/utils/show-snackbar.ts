@@ -1,5 +1,5 @@
-import { showToast, ToastType } from '@/utils/toast-utils';
-import type { OnSaveParams } from '../types';
+import { showToast, ToastType } from "@/utils/toast-utils";
+import type { OnSaveParams } from "../types";
 
 export function showSnackbarSaveSuccessIfNeeded(savingParams?: OnSaveParams) {
   if (savingParams?.isAutoSave) {
@@ -7,7 +7,7 @@ export function showSnackbarSaveSuccessIfNeeded(savingParams?: OnSaveParams) {
   }
 
   showToast({
-    title: 'Workflow saved successfully',
+    title: "Workflow saved successfully",
     variant: ToastType.SUCCESS,
   });
 }
@@ -18,7 +18,7 @@ export function showSnackbarSaveErrorIfNeeded(savingParams?: OnSaveParams) {
   }
 
   showToast({
-    title: 'Failed to save workflow',
+    title: "Failed to save workflow",
     variant: ToastType.ERROR,
   });
 }

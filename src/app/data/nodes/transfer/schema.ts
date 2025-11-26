@@ -1,32 +1,32 @@
-import type { NodeSchema } from '@/types/node-schema';
+import type { NodeSchema } from "@/types/node-schema";
 
 export const schema = {
   properties: {
     label: {
-      type: 'string',
+      type: "string",
     },
     description: {
-      type: 'string',
+      type: "string",
     },
     amount: {
-      type: 'number',
+      type: "number",
       minimum: 0,
     },
     recipientWallet: {
-      type: 'string',
-      pattern: '^0x[a-fA-F0-9]{40}$',
+      type: "string",
+      pattern: "^0x[a-fA-F0-9]{40}$",
     },
     network: {
-      type: 'string',
+      type: "string",
       readOnly: true,
     },
     maxSlippage: {
-      type: 'number',
+      type: "number",
       minimum: 0.1,
       maximum: 2,
     },
     memo: {
-      type: 'string',
+      type: "string",
     },
   },
 } satisfies NodeSchema;

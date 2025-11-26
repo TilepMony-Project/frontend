@@ -1,6 +1,6 @@
-import type { SingleSelectedElement } from '@/features/properties-bar/use-single-selected-element';
+import type { SingleSelectedElement } from "@/features/properties-bar/use-single-selected-element";
 
-type PropertiesBarSelection = Omit<PropertiesBarBaseProps, 'selection'> & {
+type PropertiesBarSelection = Omit<PropertiesBarBaseProps, "selection"> & {
   selection: SingleSelectedElement;
 };
 

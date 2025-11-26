@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import clsx from 'clsx';
-import { useMemo } from 'react';
-import { Icon } from '@/components/icons';
-import useStore from '@/store/store';
+import clsx from "clsx";
+import { useMemo } from "react";
+import { Icon } from "@/components/icons";
+import useStore from "@/store/store";
 
 type CanvasTool = {
-  id: 'select' | 'pan';
+  id: "select" | "pan";
   label: string;
   icon: string;
 };
@@ -17,8 +17,8 @@ export function CanvasToolToggle() {
 
   const tools: CanvasTool[] = useMemo(
     () => [
-      { id: 'select', label: 'Select Tool', icon: 'Pointer' },
-      { id: 'pan', label: 'Hand Tool', icon: 'Hand' },
+      { id: "select", label: "Select Tool", icon: "Pointer" },
+      { id: "pan", label: "Hand Tool", icon: "Hand" },
     ],
     []
   );
@@ -33,12 +33,12 @@ export function CanvasToolToggle() {
           aria-pressed={mode === tool.id}
           aria-label={tool.label}
           className={clsx(
-            'flex items-center gap-1 px-3 h-8 text-sm transition-colors',
-            index === 0 && 'rounded-l-full',
-            index === tools.length - 1 && 'rounded-r-full',
+            "flex items-center gap-1 px-3 h-8 text-sm transition-colors",
+            index === 0 && "rounded-l-full",
+            index === tools.length - 1 && "rounded-r-full",
             mode === tool.id
-              ? 'bg-[#1296e7] text-white shadow-sm'
-              : 'text-gray-600 hover:bg-[#eeeff3] dark:text-gray-300 dark:hover:bg-[#2c2d31]'
+              ? "bg-[#1296e7] text-white shadow-sm"
+              : "text-gray-600 hover:bg-[#eeeff3] dark:text-gray-300 dark:hover:bg-[#2c2d31]"
           )}
         >
           <Icon name={tool.icon} size={16} />

@@ -1,16 +1,16 @@
-import mongoose, { Schema, type Document } from 'mongoose';
+import mongoose, { Schema, type Document } from "mongoose";
 
 export interface IExecution extends Document {
   workflowId: string;
   userId: string;
-  status: 'running' | 'running_waiting' | 'stopped' | 'finished' | 'failed';
+  status: "running" | "running_waiting" | "stopped" | "finished" | "failed";
   startedAt: Date;
   finishedAt?: Date;
   currentNodeId?: string;
   executionLog: Array<{
     nodeId: string;
     nodeType: string;
-    status: 'pending' | 'processing' | 'complete' | 'failed';
+    status: "pending" | "processing" | "complete" | "failed";
     timestamp: Date;
     transactionHash?: string;
     error?: string;
@@ -34,8 +34,8 @@ const ExecutionSchema = new Schema<IExecution>(
     },
     status: {
       type: String,
-      enum: ['running', 'running_waiting', 'stopped', 'finished', 'failed'],
-      default: 'running',
+      enum: ["running", "running_waiting", "stopped", "finished", "failed"],
+      default: "running",
     },
     startedAt: {
       type: Date,
@@ -53,7 +53,7 @@ const ExecutionSchema = new Schema<IExecution>(
         nodeType: String,
         status: {
           type: String,
-          enum: ['pending', 'processing', 'complete', 'failed'],
+          enum: ["pending", "processing", "complete", "failed"],
         },
         timestamp: Date,
         transactionHash: String,
@@ -70,4 +70,4 @@ const ExecutionSchema = new Schema<IExecution>(
 );
 
 export default mongoose.models.Execution ||
-  mongoose.model<IExecution>('Execution', ExecutionSchema);
+  mongoose.model<IExecution>("Execution", ExecutionSchema);

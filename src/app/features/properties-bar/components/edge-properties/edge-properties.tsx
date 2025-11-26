@@ -1,10 +1,10 @@
-import type { WorkflowBuilderEdge } from '@/types/node-data';
-import useStore from '@/store/store';
-import { Input } from '@/components/ui/input';
+import type { WorkflowBuilderEdge } from "@/types/node-data";
+import useStore from "@/store/store";
+import { Input } from "@/components/ui/input";
 
-import { useEffect, useState } from 'react';
-import { FormControlWithLabel } from '@/components/form/form-control-with-label/form-control-with-label';
-import { OptionalEdgeProperties } from '@/features/plugins-core/components/optional-edge-properties';
+import { useEffect, useState } from "react";
+import { FormControlWithLabel } from "@/components/form/form-control-with-label/form-control-with-label";
+import { OptionalEdgeProperties } from "@/features/plugins-core/components/optional-edge-properties";
 
 type Props = {
   edge: WorkflowBuilderEdge;
@@ -33,7 +33,7 @@ export function EdgeProperties({ edge }: Props) {
     <div className="flex flex-col gap-3">
       <OptionalEdgeProperties>
         <FormControlWithLabel label="Label">
-          <Input value={input || ''} onChange={onChange} disabled={isReadOnlyMode} />
+          <Input value={input || ""} onChange={onChange} disabled={isReadOnlyMode} />
         </FormControlWithLabel>
       </OptionalEdgeProperties>
     </div>

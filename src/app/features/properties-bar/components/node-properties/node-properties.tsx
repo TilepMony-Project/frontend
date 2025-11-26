@@ -1,12 +1,12 @@
-import type { WorkflowBuilderNode } from '@/types/node-data';
-import useStore from '@/store/store';
-import type { JsonFormsReactProps } from '@jsonforms/react';
-import { JSONForm } from '@/features/json-form/json-form';
-import type { JsonFormsProps } from '@jsonforms/core';
-import { isDeepEqual } from 'remeda';
-import { memo } from 'react';
-import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';
-import { flatErrors } from '@/utils/validation/flat-errors';
+import type { WorkflowBuilderNode } from "@/types/node-data";
+import useStore from "@/store/store";
+import type { JsonFormsReactProps } from "@jsonforms/react";
+import { JSONForm } from "@/features/json-form/json-form";
+import type { JsonFormsProps } from "@jsonforms/core";
+import { isDeepEqual } from "remeda";
+import { memo } from "react";
+import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
+import { flatErrors } from "@/utils/validation/flat-errors";
 
 type Props = {
   node: WorkflowBuilderNode;
@@ -27,11 +27,11 @@ export const NodeProperties = memo(({ node }: Props) => {
 
   const { schema, uischema } = nodeDefinition;
 
-  const onChange: JsonFormsReactProps['onChange'] = ({ data, errors }) => {
+  const onChange: JsonFormsReactProps["onChange"] = ({ data, errors }) => {
     const flattenErrors = flatErrors(errors);
 
     if (!isDeepEqual({ ...data, errors: flattenErrors }, properties)) {
-      trackFutureChange('dataUpdate');
+      trackFutureChange("dataUpdate");
       setNodeProperties(id, { ...data, errors: flattenErrors });
     }
   };
@@ -40,7 +40,7 @@ export const NodeProperties = memo(({ node }: Props) => {
     <JSONForm
       data={properties}
       schema={schema}
-      uischema={uischema as JsonFormsProps['uischema']}
+      uischema={uischema as JsonFormsProps["uischema"]}
       onChange={onChange}
       readonly={isReadOnlyMode}
     />

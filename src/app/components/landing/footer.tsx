@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from "react";
+import type React from "react";
 import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import Link from "next/link";
 
@@ -8,7 +8,6 @@ const Footer: React.FC = () => {
   return (
     <div className="flex flex-col gap-16 px-8 lg:px-24 pt-16 lg:pt-20 pb-10 bg-background">
       <div className="flex flex-col gap-16">
-        
         {/* Logo Section */}
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-1">
@@ -17,11 +16,7 @@ const Footer: React.FC = () => {
               className="w-20 h-6 sm:w-24 sm:h-8"
               src="/landing/logo.svg"
             />
-            <img
-              alt="Sparkle"
-              className="w-4 h-4 sm:w-5 sm:h-5"
-              src="/landing/Sparkle.svg"
-            />
+            <img alt="Sparkle" className="w-4 h-4 sm:w-5 sm:h-5" src="/landing/Sparkle.svg" />
           </div>
           <div className="flex-1 h-px bg-border" />
         </div>
@@ -90,9 +85,7 @@ const Footer: React.FC = () => {
           </div>
           {/* Support & Contact */}
           <div className="flex flex-col gap-4">
-            <h3 className="text-base font-bold text-foreground">
-              Support & Contact
-            </h3>
+            <h3 className="text-base font-bold text-foreground">Support & Contact</h3>
             <div className="flex flex-col gap-2">
               <Link
                 className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
@@ -160,9 +153,7 @@ const Footer: React.FC = () => {
       {/* Bottom Section */}
       <div className="border-t border-border pt-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
-            ©2024 TilepMoney · All rights reserved.
-          </p>
+          <p className="text-sm text-muted-foreground">©2024 TilepMoney · All rights reserved.</p>
           <div className="flex items-center gap-6">
             <Link
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"

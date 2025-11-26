@@ -1,33 +1,33 @@
-import type { NodeSchema } from '@/types/node-schema';
+import type { NodeSchema } from "@/types/node-schema";
 
 export const issuerOptions = [
-  { label: 'DummyIssuerA', value: 'DummyIssuerA' },
-  { label: 'DummyIssuerB', value: 'DummyIssuerB' },
-  { label: 'DummyIssuerC', value: 'DummyIssuerC' },
+  { label: "DummyIssuerA", value: "DummyIssuerA" },
+  { label: "DummyIssuerB", value: "DummyIssuerB" },
+  { label: "DummyIssuerC", value: "DummyIssuerC" },
 ];
 
 export const schema = {
   properties: {
     label: {
-      type: 'string',
+      type: "string",
     },
     description: {
-      type: 'string',
+      type: "string",
     },
     amount: {
-      type: 'number',
+      type: "number",
       minimum: 0,
     },
     issuer: {
-      type: 'string',
+      type: "string",
       options: issuerOptions,
     },
     receivingWallet: {
-      type: 'string',
-      pattern: '^0x[a-fA-F0-9]{40}$',
+      type: "string",
+      pattern: "^0x[a-fA-F0-9]{40}$",
     },
     exchangeRate: {
-      type: 'number',
+      type: "number",
       readOnly: true,
     },
   },

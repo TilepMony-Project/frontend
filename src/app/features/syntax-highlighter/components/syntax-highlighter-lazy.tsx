@@ -1,10 +1,10 @@
-import React, { Suspense } from 'react';
-import { Textarea } from '@/components/ui/textarea';
+import React, { Suspense } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
-import type { SyntaxHighlighterProps } from './syntax-highlighter';
+import type { SyntaxHighlighterProps } from "./syntax-highlighter";
 
 const SyntaxHighlighter = React.lazy(() =>
-  import('./syntax-highlighter').then((module) => ({ default: module.SyntaxHighlighter }))
+  import("./syntax-highlighter").then((module) => ({ default: module.SyntaxHighlighter }))
 );
 
 type SyntaxHighlighterLazyProps = SyntaxHighlighterProps;
@@ -24,7 +24,7 @@ export function SyntaxHighlighterLazy(props: SyntaxHighlighterLazyProps) {
     >
       <SyntaxHighlighter
         value={value}
-        onChange={(value) => (onChange ? onChange(value || '') : undefined)}
+        onChange={(value) => (onChange ? onChange(value || "") : undefined)}
         isDisabled={isDisabled}
       />
     </Suspense>

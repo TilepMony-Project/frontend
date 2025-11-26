@@ -1,22 +1,20 @@
-'use client';
+"use client";
 
 // Plugins entry point
-import '@/features/plugins-core/index';
-import type { PropsWithChildren } from 'react';
+import "@/features/plugins-core/index";
+import type { PropsWithChildren } from "react";
 
-import useStore from '@/store/store';
+import useStore from "@/store/store";
 
-
-import { AppBarContainerLazy } from './features/app-bar/app-bar-container-lazy';
-import { DiagramContainer as Diagram } from './features/diagram/diagram';
-import { DiagramWrapper } from './features/diagram/diagram-wrapper';
-import { ExecutionMonitor } from './features/execution/components/execution-monitor/execution-monitor';
-import { AppLoaderContainer } from './features/integration/components/app-loader/app-loader-container';
-import { withIntegration } from './features/integration/components/with-integration';
-import { PaletteContainerLazy } from './features/palette/palette-container-lazy';
-import { OptionalHooks } from './features/plugins-core/components/optional-hooks';
-import { PropertiesBarContainerLazy } from './features/properties-bar/properties-bar-container-lazy';
-
+import { AppBarContainerLazy } from "./features/app-bar/app-bar-container-lazy";
+import { DiagramContainer as Diagram } from "./features/diagram/diagram";
+import { DiagramWrapper } from "./features/diagram/diagram-wrapper";
+import { ExecutionMonitor } from "./features/execution/components/execution-monitor/execution-monitor";
+import { AppLoaderContainer } from "./features/integration/components/app-loader/app-loader-container";
+import { withIntegration } from "./features/integration/components/with-integration";
+import { PaletteContainerLazy } from "./features/palette/palette-container-lazy";
+import { OptionalHooks } from "./features/plugins-core/components/optional-hooks";
+import { PropertiesBarContainerLazy } from "./features/properties-bar/properties-bar-container-lazy";
 
 type AppComponentProps = PropsWithChildren<{
   workflowId?: string | null;
