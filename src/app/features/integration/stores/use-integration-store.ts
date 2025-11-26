@@ -3,7 +3,6 @@ import { devtools } from 'zustand/middleware';
 
 import { setStoreDataFromIntegration } from '@/store/slices/diagram-slice/actions';
 
-import { showToast, ToastType } from '@/utils/toast-utils';
 import type { IntegrationDataFormat } from '../types';
 
 type IntegrationSavingStatus = 'disabled' | 'waiting' | 'saving' | 'saved' | 'notSaved';
@@ -28,11 +27,6 @@ export function loadData(loadData: Partial<IntegrationDataFormat>) {
   const hasAnyData = Object.values(loadData).some(Boolean);
   if (hasAnyData) {
     setStoreDataFromIntegration(loadData);
-
-    showToast({
-      title: 'Failed to load workflow',
-      variant: ToastType.ERROR,
-    });
   }
 
   useIntegrationStore.setState({

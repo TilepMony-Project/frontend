@@ -1,25 +1,26 @@
-
-import { LayoutWrapper } from '../layout-wrapper';
-import type { HorizontalLayoutElement, LayoutProps } from '../../types/layouts';
-import { renderElements } from '../render-elements';
-import { createLayoutRenderer } from '../../utils/rendering';
 import { type CSSProperties, useMemo } from 'react';
+import type { HorizontalLayoutElement, LayoutProps } from '../../types/layouts';
+import { createLayoutRenderer } from '../../utils/rendering';
+import { LayoutWrapper } from '../layout-wrapper';
+import { renderElements } from '../render-elements';
 import { useHasChildError } from './use-has-child-error';
 
 function HorizontalLayout(props: LayoutProps<HorizontalLayoutElement>) {
   const hasErrors = useHasChildError(props.uischema.elements);
 
   const { uischema } = props;
-  const { layoutColumns } = uischema;
+  const columns = uischema.layoutColumns ?? 'repeat(auto-fit, minmax(220px, 1fr))';
 
   const style: CSSProperties = useMemo(
-    () => (layoutColumns ? { gridAutoColumns: layoutColumns } : {}),
-    [layoutColumns]
+    () => ({
+      gridTemplateColumns: columns,
+    }),
+    [columns]
   );
 
   return (
     <LayoutWrapper hasErrors={hasErrors} {...props}>
-      <div style={style} className="grid grid-flow-col auto-cols-fr gap-2 [&>*:last-child]:justify-self-end">
+      <div style={style} className="grid gap-4 [&>*]:min-w-0">
         {renderElements(props)}
       </div>
     </LayoutWrapper>

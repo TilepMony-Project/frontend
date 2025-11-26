@@ -17,9 +17,8 @@ export type WorkflowSummary = {
   edgesCount: number;
 };
 
-function serializeWorkflow(workflow: any): WorkflowSummary {
-  // Using any because Workflow lean() returns plain objects at runtime.
-  const plainWorkflow = workflow as unknown as {
+function serializeWorkflow(workflow: unknown): WorkflowSummary {
+  const plainWorkflow = workflow as {
     _id: string;
     id?: string;
     name: string;
@@ -50,7 +49,11 @@ function serializeWorkflow(workflow: any): WorkflowSummary {
 function revalidateWorkflowPaths() {
   const paths = ['/', '/dashboard', '/workspace', '/workspace/[workflowId]'];
   for (const path of paths) {
-    revalidatePath(path);
+    if (path.includes('[')) {
+      revalidatePath(path, 'page');
+    } else {
+      revalidatePath(path);
+    }
   }
 }
 

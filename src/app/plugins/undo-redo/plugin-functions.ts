@@ -12,7 +12,7 @@ const TRACKED_EVENTS = new Set([
 ]);
 
 registerFunctionDecorator('trackFutureChange', {
-  place: 'before',
+  place: 'after',
   name: 'UndoRedoHistory',
   callback: ({ params }) => {
     const [changeName] = params as [string];

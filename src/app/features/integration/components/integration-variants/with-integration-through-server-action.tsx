@@ -9,6 +9,7 @@ import type { IntegrationDataFormatOptional, OnSave } from '@/features/integrati
 import { getStoreDataForIntegration } from '@/store/slices/diagram-slice/actions';
 import { showToast as showSnackbar } from '@/utils/toast-utils';
 import { showToast, ToastType } from '@/utils/toast-utils';
+import { WorkflowLoadingOverlay } from '@/components/workflow-loading-overlay';
 import {
   showSnackbarSaveErrorIfNeeded,
   showSnackbarSaveSuccessIfNeeded,
@@ -31,6 +32,7 @@ export function withIntegrationThroughServerAction<WProps extends object>(
     const [isClient, setIsClient] = useState(false);
     const [workflowId, setWorkflowId] = useState<string | null>(workflowIdFromProps ?? null);
     const [initialData, setInitialData] = useState<IntegrationDataFormatOptional>({});
+    const [isLoadingWorkflow, setIsLoadingWorkflow] = useState(false);
     const [userId] = useState<string>(() => {
       if (typeof window !== 'undefined' && window.localStorage) {
         return localStorage.getItem(USER_ID_KEY) || 'default-user';
@@ -70,6 +72,7 @@ export function withIntegrationThroughServerAction<WProps extends object>(
 
       if (!workflowId) {
         setInitialData({});
+        setIsLoadingWorkflow(false);
         return;
       }
 
@@ -77,6 +80,7 @@ export function withIntegrationThroughServerAction<WProps extends object>(
 
       async function fetchWorkflow() {
         try {
+          setIsLoadingWorkflow(true);
           const response = await fetch(`/api/workflows/${workflowId}`);
           if (!response.ok) {
             throw new Error('Failed to fetch workflow');
@@ -90,13 +94,19 @@ export function withIntegrationThroughServerAction<WProps extends object>(
               nodes: Array.isArray(workflow?.nodes) ? workflow.nodes : [],
               edges: Array.isArray(workflow?.edges) ? workflow.edges : [],
             });
+            setIsLoadingWorkflow(false);
+            showToast({
+              title: 'Workflow loaded successfully',
+              variant: ToastType.SUCCESS,
+            });
           }
         } catch (error) {
           console.error('Error loading workflow:', error);
           if (!cancelled) {
             setInitialData({});
+            setIsLoadingWorkflow(false);
             showToast({
-              title: 'Failed to save workflow',
+              title: 'Failed to load workflow',
               subtitle: error instanceof Error ? error.message : 'Please try again.',
               variant: ToastType.ERROR,
             });
@@ -145,15 +155,18 @@ export function withIntegrationThroughServerAction<WProps extends object>(
     const { name, layoutDirection, nodes, edges } = initialData;
 
     return (
-      <IntegrationWrapper
-        name={name}
-        layoutDirection={layoutDirection}
-        nodes={nodes}
-        edges={edges}
-        onSave={handleSave}
-      >
-        <WrappedComponent {...(restProps as WProps)} />
-      </IntegrationWrapper>
+      <>
+        {isLoadingWorkflow && <WorkflowLoadingOverlay />}
+        <IntegrationWrapper
+          name={name}
+          layoutDirection={layoutDirection}
+          nodes={nodes}
+          edges={edges}
+          onSave={handleSave}
+        >
+          <WrappedComponent {...(restProps as WProps)} />
+        </IntegrationWrapper>
+      </>
     );
   }
 

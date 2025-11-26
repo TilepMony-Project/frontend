@@ -1,14 +1,12 @@
-import { getWorkflowsForUser } from '@/actions/workflows';
+'use client';
+
 import { WalletGuard } from '@/components/wallet-guard';
 import { WorkflowDashboard } from '@/features/dashboard/components/workflow-dashboard';
 
-export const revalidate = 0;
-
-export default async function DashboardPage() {
-  const workflows = await getWorkflowsForUser();
+export default function DashboardPage() {
   return (
     <WalletGuard>
-      <WorkflowDashboard initialWorkflows={workflows} />
+      <WorkflowDashboard />
     </WalletGuard>
   );
 }

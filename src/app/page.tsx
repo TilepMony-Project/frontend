@@ -3,8 +3,9 @@
 import { Icon } from '@/components/icons';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+import { showToast, ToastType } from '@/utils/toast-utils';
 
 const featureList = [
   {
@@ -27,14 +28,18 @@ const featureList = [
 ];
 
 export default function LandingPage() {
-  const { isConnected } = useAccount();
+  const { isConnected, isConnecting } = useAccount();
   const router = useRouter();
+  const [isInitialized, setIsInitialized] = useState(false);
 
+  // Track when wallet initialization is complete
   useEffect(() => {
-    if (isConnected) {
-      router.replace('/dashboard');
+    if (!isConnecting) {
+      setIsInitialized(true);
     }
-  }, [isConnected, router]);
+  }, [isConnecting]);
+
+
 
   return (
     <main className="min-h-screen pt-12 pb-16 px-6 bg-[radial-gradient(circle_at_top,color-mix(in_srgb,var(--ax-colors-acc1-500),transparent_70%),transparent_70%),var(--ax-ui-bg-secondary-default)] flex flex-col gap-12">

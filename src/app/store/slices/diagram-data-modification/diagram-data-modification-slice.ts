@@ -13,6 +13,7 @@ import {
   applyNodeChanges,
 } from '@xyflow/react';
 import { removeElements } from './remove-elements';
+import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';
 
 export type DiagramDataModificationState = {
   onNodesChange: OnNodesChange<WorkflowBuilderNode>;
@@ -42,16 +43,19 @@ export function useDiagramDataModificationSlice(
       });
     },
     setNodeProperties: (nodeId, properties) => {
+      trackFutureChange('dataUpdate');
       set({
         nodes: updateNodesProperties(get().nodes, nodeId, properties),
       });
     },
     setNodeData: (nodeId, data) => {
+      trackFutureChange('dataUpdate');
       set({
         nodes: updateData(get().nodes, nodeId, data),
       });
     },
     setEdgeData: (edgeId, data) => {
+      trackFutureChange('dataUpdate');
       set({
         edges: updateData(get().edges, edgeId, data),
       });

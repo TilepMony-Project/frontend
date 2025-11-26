@@ -11,6 +11,7 @@ export const uischema: UISchema = {
       type: 'Text',
       label: 'Label',
       scope: scope('properties.label'),
+      readOnly: true,
     },
     {
       type: 'TextArea',
@@ -24,6 +25,7 @@ export const uischema: UISchema = {
       elements: [
         {
           type: 'HorizontalLayout',
+          layoutColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           elements: [
             {
               type: 'Text',

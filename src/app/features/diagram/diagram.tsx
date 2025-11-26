@@ -1,40 +1,40 @@
+import useStore from '@/store/store';
 import { useCallback, useEffect, useMemo } from 'react';
 import type { DragEventHandler } from 'react';
-import useStore from '@/store/store';
 import { diagramStateSelector } from './selectors';
 
-import type { DragEvent } from 'react';
-import { getNodeTypesObject } from './get-node-types-object';
 import {
-  ReactFlow,
   Background,
+  type EdgeTypes,
   type FitViewOptions,
   type NodeChange,
+  type OnBeforeDelete,
   type OnConnect,
   type OnNodeDrag,
-  type OnBeforeDelete,
-  type EdgeTypes,
-  SelectionMode,
   type OnSelectionChangeParams,
+  ReactFlow,
+  SelectionMode,
 } from '@xyflow/react';
+import type { DragEvent, MouseEvent as ReactMouseEvent } from 'react';
+import { getNodeTypesObject } from './get-node-types-object';
 import '@xyflow/react/dist/style.css';
-import type { WorkflowBuilderOnSelectionChangeParams } from '@/types/common';
-import type { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
-import { LabelEdge } from './edges/label-edge/label-edge';
-import { usePaletteDrop } from '@/hooks/use-palette-drop';
+import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';
+import { SNAP_GRID, SNAP_IS_ACTIVE } from '@/features/diagram/diagram.const';
 import {
   callNodeChangedListeners,
   destroyNodeChangedListeners,
 } from '@/features/diagram/listeners/node-changed-listeners';
+import { useDeleteConfirmation } from '@/features/modals/delete-confirmation/use-delete-confirmation';
+import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
+import { usePaletteDrop } from '@/hooks/use-palette-drop';
+import type { WorkflowBuilderOnSelectionChangeParams } from '@/types/common';
+import type { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
+import { LabelEdge } from './edges/label-edge/label-edge';
+import { TemporaryEdge } from './edges/temporary-edge/temporary-edge';
 import {
   callNodeDragStartListeners,
   destroyNodeDragStartListeners,
 } from './listeners/node-drag-start-listeners';
-import { SNAP_GRID, SNAP_IS_ACTIVE } from '@/features/diagram/diagram.const';
-import { withOptionalComponentPlugins } from '@/features/plugins-core/adapters/adapter-components';
-import { TemporaryEdge } from './edges/temporary-edge/temporary-edge';
-import { useDeleteConfirmation } from '@/features/modals/delete-confirmation/use-delete-confirmation';
-import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';
 
 function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }) {
   const {
@@ -48,6 +48,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
     onConnect: onConnectAction,
     onInit,
     onSelectionChange,
+    canvasInteractionMode,
   } = useStore(diagramStateSelector);
 
   const { openDeleteConfirmationModal } = useDeleteConfirmation();
@@ -87,8 +88,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
 
   const onConnectStart = useCallback(
     (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      _: any,
+      _event: ReactMouseEvent<Element, MouseEvent>,
       { nodeId, handleId }: { nodeId: string | null; handleId: string | null }
     ) => {
       setConnectionBeingDragged(nodeId, handleId);
@@ -100,13 +100,8 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
     setConnectionBeingDragged(null, null);
   }, [setConnectionBeingDragged]);
 
-  const onNodeDragStop = useCallback(() => {
-    return trackFutureChange('nodeDragStop');
-  }, []);
-
   const handleOnNodesChange = useCallback(
     (changes: NodeChange<WorkflowBuilderNode>[]) => {
-      trackFutureChange('nodeDragChange');
       callNodeChangedListeners(changes);
       onNodesChange(changes);
     },
@@ -148,7 +143,9 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
     [isReadOnlyMode, openDeleteConfirmationModal]
   );
 
-  const panOnDrag = [1, 2];
+  const isPanMode = canvasInteractionMode === 'pan';
+  const panOnDrag = isPanMode ? [0, 1, 2] : [1, 2];
+  const selectionOnDrag = !isPanMode;
 
   return (
     <div className="w-screen h-screen [&_.react-flow__edgelabel-renderer]:z-[1001]">
@@ -174,13 +171,12 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
         onEdgeMouseLeave={onEdgeMouseLeave}
         onNodesChange={handleOnNodesChange}
         onNodeDragStart={onNodeDragStart}
-        onNodeDragStop={onNodeDragStop}
         onBeforeDelete={onBeforeDelete}
         onSelectionChange={handleOnSelectionChange}
         minZoom={0.1}
         snapToGrid={SNAP_IS_ACTIVE}
         snapGrid={SNAP_GRID}
-        selectionOnDrag
+        selectionOnDrag={selectionOnDrag}
         panOnDrag={panOnDrag}
         selectionMode={SelectionMode.Partial}
         proOptions={{ hideAttribution: true }}

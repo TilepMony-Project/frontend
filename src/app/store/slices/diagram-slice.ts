@@ -1,4 +1,5 @@
-import { type Connection, type OnConnect, addEdge, type Node } from '@xyflow/react';
+import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';
+import { getEdgeZIndex } from '@/features/diagram/edges/get-edge-z-index';
 import type { GetDiagramState, SetDiagramState } from '@/store/store';
 import type {
   ConnectionBeingDragged,
@@ -6,10 +7,9 @@ import type {
   LayoutDirection,
   WorkflowBuilderReactFlowInstance,
 } from '@/types/common';
-import type { WorkflowBuilderNode, WorkflowBuilderEdge } from '@/types/node-data';
-import { getEdgeZIndex } from '@/features/diagram/edges/get-edge-z-index';
+import type { WorkflowBuilderEdge, WorkflowBuilderNode } from '@/types/node-data';
 import { getNodeWithErrors } from '@/utils/validation/get-node-errors';
-import { trackFutureChange } from '@/features/changes-tracker/stores/use-changes-tracker-store';
+import { type Connection, type Node, type OnConnect, addEdge } from '@xyflow/react';
 
 export type DiagramState = {
   nodes: WorkflowBuilderNode[];
@@ -18,12 +18,14 @@ export type DiagramState = {
   documentName: string | null;
   isReadOnlyMode: boolean;
   layoutDirection: LayoutDirection;
+  canvasInteractionMode: 'select' | 'pan';
   onConnect: OnConnect;
   onInit: (instance: WorkflowBuilderReactFlowInstance) => void;
   setDocumentName: (name: string) => void;
   setDiagramModel: (model?: DiagramModel, options?: { skipIfNotEmpty?: boolean }) => void;
   setToggleReadOnlyMode: (value?: boolean) => void;
   setLayoutDirection: (value: LayoutDirection) => void;
+  setCanvasInteractionMode: (mode: 'select' | 'pan') => void;
   setConnectionBeingDragged: (nodeId: string | null, handleId: string | null) => void;
   connectionBeingDragged: ConnectionBeingDragged | null;
   draggedSegmentDestinationId: string | null;
@@ -39,6 +41,7 @@ export function useDiagramSlice(set: SetDiagramState, get: GetDiagramState) {
     documentName: null,
     isReadOnlyMode: false,
     layoutDirection: 'horizontal' as LayoutDirection,
+    canvasInteractionMode: 'select' as 'select' | 'pan',
     connectionBeingDragged: null,
     draggedSegmentDestinationId: null,
     onConnect: (connection: Connection) => {
@@ -95,6 +98,11 @@ export function useDiagramSlice(set: SetDiagramState, get: GetDiagramState) {
     setLayoutDirection: (value: LayoutDirection) => {
       set({
         layoutDirection: value,
+      });
+    },
+    setCanvasInteractionMode: (mode: 'select' | 'pan') => {
+      set({
+        canvasInteractionMode: mode,
       });
     },
     setConnectionBeingDragged: (nodeId: string | null, handleId: string | null) => {

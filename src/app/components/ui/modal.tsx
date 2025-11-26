@@ -47,7 +47,7 @@ export function Modal({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className={cn(sizeClasses[size], className, !onClose && "[&>button]:hidden")}>
+      <DialogContent className={cn(sizeClasses[size], "shadow-2xl", className, !onClose && "[&>button]:hidden")}>
         <DialogHeader>
           <div className="flex items-center gap-2">
             {icon && <div className="flex-shrink-0">{icon}</div>}

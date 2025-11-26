@@ -11,6 +11,7 @@ export const uischema: UISchema = {
       type: 'Text',
       label: 'Label',
       scope: scope('properties.label'),
+      readOnly: true,
     },
     {
       type: 'TextArea',

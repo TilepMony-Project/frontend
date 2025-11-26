@@ -27,10 +27,12 @@ export const schema = {
     currency: {
       type: 'string',
       options: currencyOptions,
+      placeholder: 'Select currency',
     },
     paymentGateway: {
       type: 'string',
       options: paymentGatewayOptions,
+      placeholder: 'Choose payment processor',
     },
   },
 } satisfies NodeSchema;

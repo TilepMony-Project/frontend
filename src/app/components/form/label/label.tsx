@@ -13,8 +13,8 @@ export type LabelProps = {
 
 export function Label({ label, required, size = 'medium' }: LabelProps) {
   return (
-    <span className={clsx('flex gap-1 text-[var(--ax-public-form-label-color)] items-center', size === 'large' ? 'ax-public-p10' : 'ax-public-p11')}>
-      {required && <Asterisk className="w-2.5 h-2.5 min-w-[0.625rem] text-[var(--ax-public-form-label-asterisk-color)]" />}
+    <span className={clsx('flex gap-1 text-gray-700 dark:text-gray-300 items-center', size === 'large' ? 'text-base font-medium' : 'text-sm font-medium')}>
+      {required && <Asterisk className="w-2.5 h-2.5 min-w-[0.625rem] text-red-500" />}
       <span className="whitespace-nowrap overflow-hidden text-ellipsis w-full">{label}</span>
     </span>
   );
