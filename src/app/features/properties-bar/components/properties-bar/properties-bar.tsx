@@ -35,7 +35,7 @@ function PropertiesBarComponent({
   isSidebarExpanded,
   onToggleSidebar,
 }: PropertiesBarProps) {
-  const name = selection?.node?.data?.properties?.label ?? selection?.edge?.data?.label;
+  const name = getSelectionName(selection);
   const hasSelection = !!selection;
   const isExpanded = hasSelection && isSidebarExpanded;
   const hasCustomItems = tabs.length > 0;
@@ -125,3 +125,24 @@ function PropertiesBarComponent({
 }
 
 export const PropertiesBar = withOptionalComponentPlugins(PropertiesBarComponent, "PropertiesBar");
+
+function getSelectionName(selection: PropertiesBarProps["selection"]): string {
+  if (!selection) {
+    return "";
+  }
+
+  const nodeProperties = selection.node?.data?.properties;
+  const nodeLabel =
+    isRecord(nodeProperties) && typeof nodeProperties.label === "string"
+      ? nodeProperties.label
+      : undefined;
+
+  const edgeLabelValue = selection.edge?.data?.label;
+  const edgeLabel = typeof edgeLabelValue === "string" ? edgeLabelValue : undefined;
+
+  return nodeLabel ?? edgeLabel ?? "";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}

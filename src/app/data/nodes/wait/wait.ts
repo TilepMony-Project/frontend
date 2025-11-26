@@ -1,4 +1,5 @@
 import type { PaletteItem } from "@/types/common";
+import { NodeType } from "@/types/node-types";
 import { defaultPropertiesData } from "./default-properties-data";
 import { schema, type WaitNodeSchema } from "./schema";
 import { uischema } from "./uischema";
@@ -11,5 +12,5 @@ export const waitNode: PaletteItem<WaitNodeSchema> = {
   defaultPropertiesData: defaultPropertiesData as any,
   schema,
   uischema,
-  templateType: "Node",
+  templateType: NodeType.Node,
 };

@@ -10,12 +10,13 @@ import {
   type NodeChange,
   type OnBeforeDelete,
   type OnConnect,
+  type OnConnectStart,
   type OnNodeDrag,
   type OnSelectionChangeParams,
   ReactFlow,
   SelectionMode,
 } from "@xyflow/react";
-import type { DragEvent, MouseEvent as ReactMouseEvent } from "react";
+import type { DragEvent } from "react";
 import { getNodeTypesObject } from "./get-node-types-object";
 import "@xyflow/react/dist/style.css";
 import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
@@ -86,12 +87,9 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
     [onConnectAction]
   );
 
-  const onConnectStart = useCallback(
-    (
-      _event: ReactMouseEvent<Element, MouseEvent>,
-      { nodeId, handleId }: { nodeId: string | null; handleId: string | null }
-    ) => {
-      setConnectionBeingDragged(nodeId, handleId);
+  const onConnectStart: OnConnectStart = useCallback(
+    (_event, { nodeId, handleId }) => {
+      setConnectionBeingDragged(nodeId ?? null, handleId ?? null);
     },
     [setConnectionBeingDragged]
   );

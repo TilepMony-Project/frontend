@@ -6,6 +6,10 @@ export function renderComponent(
   selection: SingleSelectedElement | null,
   selectedTab: string
 ) {
+  if (!selection) {
+    return null;
+  }
+
   return componentMap
     .find(({ when }) => when({ selection, selectedTab }))
     ?.component({ selection, selectedTab });

@@ -1,4 +1,5 @@
 import Ajv from "ajv";
+import type { AnySchema } from "ajv";
 import type { WorkflowBuilderNode } from "@/types/node-data";
 import { flatErrors } from "./flat-errors";
 import { getNodeDefinition } from "./get-node-definition";
@@ -10,7 +11,10 @@ export function getNodeErrors(node?: WorkflowBuilderNode) {
     return [];
   }
 
-  const { schema } = definition;
+  const schema = definition.schema as AnySchema | undefined;
+  if (!schema) {
+    return [];
+  }
   // jsonforms uses Ajv but doesn't call strick
   const ajv = new Ajv({ allErrors: true, strict: false });
 

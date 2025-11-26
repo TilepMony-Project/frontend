@@ -25,7 +25,9 @@ export function usePaletteDrop() {
       }
 
       const { defaultPropertiesData, type, icon, templateType = NodeType.Node } = nodeDefinition;
-      const defaultProps = defaultPropertiesData as BaseNodeProperties;
+      const defaultProps: BaseNodeProperties = isRecord(defaultPropertiesData)
+        ? (defaultPropertiesData as BaseNodeProperties)
+        : {};
 
       const label =
         translateIfPossible(defaultProps.label) ||
@@ -38,7 +40,7 @@ export function usePaletteDrop() {
         nodeDefinition.description;
 
       const data = {
-        properties: { ...defaultPropertiesData, label, description },
+        properties: { ...defaultProps, label, description },
         type,
         icon,
       };
@@ -71,4 +73,8 @@ export function usePaletteDrop() {
   );
 
   return { onDropFromPalette };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }

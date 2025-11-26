@@ -3,7 +3,12 @@
 
 import type { Node, Edge } from "@xyflow/react";
 
-export type NodeData = Record<string, unknown>;
+export type NodePropertiesData = Record<string, unknown>;
+
+export type NodeData = {
+  properties?: NodePropertiesData;
+  [key: string]: unknown;
+};
 
 export type EdgeData = Record<string, unknown>;
 

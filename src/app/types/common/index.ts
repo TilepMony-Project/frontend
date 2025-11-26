@@ -2,6 +2,8 @@
 // TODO: Replace with proper type definitions
 
 import type { Edge, Node, ReactFlowInstance } from "@xyflow/react";
+import type { NodeType } from "@/types/node-types";
+import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
 
 export type LayoutDirection = "horizontal" | "vertical";
 
@@ -28,6 +30,7 @@ export type PaletteItem<T = unknown> = {
   description: string;
   type: string;
   icon: string | IconType;
+  templateType?: NodeType;
   defaultPropertiesData?: T;
   schema?: unknown;
   uischema?: unknown;
@@ -35,8 +38,12 @@ export type PaletteItem<T = unknown> = {
 };
 
 export type DiagramModel = {
-  nodes: unknown[];
-  edges: unknown[];
+  name?: string;
+  layoutDirection?: LayoutDirection;
+  diagram?: {
+    nodes: WorkflowBuilderNode[];
+    edges: WorkflowBuilderEdge[];
+  };
   [key: string]: unknown;
 };
 
@@ -48,6 +55,6 @@ export type ConnectionBeingDragged = {
 };
 
 export type WorkflowBuilderOnSelectionChangeParams = {
-  nodes: unknown[];
-  edges: unknown[];
+  nodes: WorkflowBuilderNode[];
+  edges: WorkflowBuilderEdge[];
 };

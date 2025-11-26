@@ -2,6 +2,7 @@ import { type Draft, produce } from "immer";
 import type {
   EdgeData,
   NodeData,
+  NodePropertiesData,
   WorkflowBuilderEdge,
   WorkflowBuilderNode,
 } from "@/types/node-data";
@@ -18,7 +19,7 @@ import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes
 export type DiagramDataModificationState = {
   onNodesChange: OnNodesChange<WorkflowBuilderNode>;
   onEdgesChange: OnEdgesChange<WorkflowBuilderEdge>;
-  setNodeProperties: (nodeId: string, properties: NodeData["properties"]) => void;
+  setNodeProperties: (nodeId: string, properties: NodePropertiesData) => void;
   setNodeData: <T extends WorkflowBuilderNode["data"]>(nodeId: string, data: T) => void;
   setEdgeData: (edgeId: string, data: EdgeData) => void;
   removeElements: (elements: {
@@ -68,7 +69,7 @@ export function useDiagramDataModificationSlice(
 function updateNodesProperties(
   nodes: WorkflowBuilderNode[],
   updatedNodeId: string,
-  properties: Partial<NodeData["properties"]>
+  properties: NodePropertiesData
 ) {
   return produce(nodes, (draft: Draft<WorkflowBuilderNode[]>) => {
     const node = draft.find((x) => x.id === updatedNodeId);

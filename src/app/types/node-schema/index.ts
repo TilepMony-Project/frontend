@@ -12,6 +12,19 @@ export type PrimitiveFieldSchema = {
 
 export type BaseNodePropertiesSchema = Record<string, unknown>;
 
+export type BaseNodeProperties = {
+  label?: string;
+  description?: string;
+  [key: string]: unknown;
+};
+
+export type FlatError = {
+  keyword: string;
+  instancePath: string;
+  schemaPath: string;
+  message?: string;
+};
+
 export type Option = {
   label: string;
   value: string | number;

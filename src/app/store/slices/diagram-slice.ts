@@ -71,8 +71,8 @@ export function useDiagramSlice(set: SetDiagramState, get: GetDiagramState) {
         }
       }
 
-      const nodes = model?.diagram.nodes.map(getNodeWithErrors) || [];
-      const edges = model?.diagram.edges || [];
+      const nodes = model?.diagram?.nodes?.map(getNodeWithErrors) ?? [];
+      const edges = model?.diagram?.edges ?? [];
       const documentName = model?.name || "Untitled";
       const layoutDirection = model?.layoutDirection || "horizontal";
 

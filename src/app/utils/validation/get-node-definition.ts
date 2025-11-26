@@ -3,10 +3,11 @@ import { getNodesDefinitionsByType } from "./get-nodes-definitions-by-type";
 import type { WorkflowBuilderNode } from "@/types/node-data";
 import type { PaletteItem } from "@/types/common";
 
-const nodesDefinitionsByType = getNodesDefinitionsByType(paletteData);
+const nodesDefinitionsByType: Record<string, PaletteItem> = getNodesDefinitionsByType(paletteData);
 
 export function getNodeDefinition(node?: WorkflowBuilderNode): PaletteItem | undefined {
-  const dataType = node?.data?.type || "";
+  const nodeData = node?.data;
+  const dataType = typeof nodeData?.type === "string" ? (nodeData.type as string) : "";
 
-  return nodesDefinitionsByType[dataType];
+  return dataType ? nodesDefinitionsByType[dataType] : undefined;
 }
