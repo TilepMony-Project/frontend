@@ -1,3 +1,4 @@
+import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
 import Workflow from "@/models/Workflow";
 import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
@@ -18,12 +19,13 @@ type ValidationChecklistItem = {
 };
 
 // POST /api/workflows/[id]/validate - Validate workflow before execution
-export async function POST(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { userId } = await requirePrivySession(request);
     await connectDB();
 
     const { id } = await params;
-    const workflow = await Workflow.findById(id);
+    const workflow = await Workflow.findOne({ _id: id, userId });
 
     if (!workflow) {
       return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
@@ -50,6 +52,9 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
       { status: 200 }
     );
   } catch (error) {
+    if (error instanceof PrivyUnauthorizedError) {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
     console.error("Error validating workflow:", error);
     return NextResponse.json({ error: "Failed to validate workflow" }, { status: 500 });
   }

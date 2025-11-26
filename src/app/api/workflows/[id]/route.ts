@@ -1,3 +1,4 @@
+import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
 import Workflow from "@/models/Workflow";
 import { revalidatePath } from "next/cache";
@@ -15,12 +16,13 @@ function revalidateWorkflowPaths() {
 }
 
 // GET /api/workflows/[id] - Get specific workflow
-export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { userId } = await requirePrivySession(request);
     await connectDB();
 
     const { id } = await params;
-    const workflow = await Workflow.findById(id);
+    const workflow = await Workflow.findOne({ _id: id, userId });
 
     if (!workflow) {
       return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
@@ -30,6 +32,9 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 
     return NextResponse.json({ workflow }, { status: 200 });
   } catch (error) {
+    if (error instanceof PrivyUnauthorizedError) {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
     console.error("Error fetching workflow:", error);
     return NextResponse.json({ error: "Failed to fetch workflow" }, { status: 500 });
   }
@@ -38,14 +43,15 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 // PUT /api/workflows/[id] - Update workflow
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { userId } = await requirePrivySession(request);
     await connectDB();
 
     const { id } = await params;
     const body = await request.json();
     const { name, description, nodes, edges, status } = body;
 
-    const workflow = await Workflow.findByIdAndUpdate(
-      id,
+    const workflow = await Workflow.findOneAndUpdate(
+      { _id: id, userId },
       {
         ...(name && { name }),
         ...(description !== undefined && { description }),
@@ -62,6 +68,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
     return NextResponse.json({ workflow }, { status: 200 });
   } catch (error) {
+    if (error instanceof PrivyUnauthorizedError) {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
     console.error("Error updating workflow:", error);
     return NextResponse.json({ error: "Failed to update workflow" }, { status: 500 });
   }
@@ -69,14 +78,15 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
 // DELETE /api/workflows/[id] - Delete workflow
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { userId } = await requirePrivySession(request);
     await connectDB();
 
     const { id } = await params;
-    const workflow = await Workflow.findByIdAndDelete(id);
+    const workflow = await Workflow.findOneAndDelete({ _id: id, userId });
 
     if (!workflow) {
       return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
@@ -86,6 +96,9 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Workflow deleted successfully" }, { status: 200 });
   } catch (error) {
+    if (error instanceof PrivyUnauthorizedError) {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
     console.error("Error deleting workflow:", error);
     return NextResponse.json({ error: "Failed to delete workflow" }, { status: 500 });
   }

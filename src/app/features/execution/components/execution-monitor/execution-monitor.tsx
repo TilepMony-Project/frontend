@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Icon } from "@/components/icons";
+import { usePrivySession } from "@/hooks/use-privy-session";
 import useStore from "@/store/store";
 import { copy } from "@/utils/copy";
 
@@ -36,6 +37,7 @@ export function ExecutionMonitor() {
   const nodes = useStore((state) => state.nodes);
   const setExecutionMonitorActive = useStore((state) => state.setExecutionMonitorActive);
   const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
+  const { accessToken } = usePrivySession();
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [execution, setExecution] = useState<ExecutionResponse["execution"] | null>(null);
   const [isExpanded, setIsExpanded] = useState(true);
@@ -56,7 +58,7 @@ export function ExecutionMonitor() {
   const hasTerminalStatus = execution ? TERMINAL_STATUSES.includes(execution.status) : false;
 
   fetchStatusRef.current = async () => {
-    if (!workflowId) {
+    if (!workflowId || !accessToken) {
       return;
     }
 
@@ -64,6 +66,9 @@ export function ExecutionMonitor() {
       setIsFetching(true);
       const response = await fetch(`/api/workflows/${workflowId}/status`, {
         cache: "no-store",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       if (!response.ok) {
@@ -83,7 +88,7 @@ export function ExecutionMonitor() {
   };
 
   useEffect(() => {
-    if (!workflowId) {
+    if (!workflowId || !accessToken) {
       return;
     }
 
@@ -95,10 +100,10 @@ export function ExecutionMonitor() {
         intervalRef.current = null;
       }
     };
-  }, [workflowId]);
+  }, [workflowId, accessToken]);
 
   useEffect(() => {
-    if (!workflowId) {
+    if (!workflowId || !accessToken) {
       return;
     }
 
@@ -119,7 +124,7 @@ export function ExecutionMonitor() {
         intervalRef.current = null;
       }
     };
-  }, [workflowId, hasTerminalStatus]);
+  }, [workflowId, hasTerminalStatus, accessToken]);
 
   const progress = useMemo(() => {
     if (!execution || nodes.length === 0) {

@@ -1,3 +1,4 @@
+import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
 import { startWorkflowExecution } from "@/lib/workflow/executor";
 import Execution from "@/models/Execution";
@@ -5,12 +6,13 @@ import Workflow from "@/models/Workflow";
 import { type NextRequest, NextResponse } from "next/server";
 
 // POST /api/workflows/[id]/execute - Execute workflow
-export async function POST(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { userId } = await requirePrivySession(request);
     await connectDB();
 
     const { id } = await params;
-    const workflow = await Workflow.findById(id);
+    const workflow = await Workflow.findOne({ _id: id, userId });
 
     if (!workflow) {
       return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
@@ -24,7 +26,7 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
     // Create execution record
     const execution = await Execution.create({
       workflowId: id,
-      userId: workflow.userId,
+      userId,
       status: "running",
       startedAt: new Date(),
       executionLog: [],
@@ -48,6 +50,9 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
       { status: 200 }
     );
   } catch (error) {
+    if (error instanceof PrivyUnauthorizedError) {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
     console.error("Error executing workflow:", error);
     return NextResponse.json({ error: "Failed to execute workflow" }, { status: 500 });
   }
