@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
@@ -32,7 +31,7 @@ type PendingAction = {
 };
 
 type Props = {
-  initialWorkflows: WorkflowSummary[];
+  initialWorkflows?: WorkflowSummary[];
 };
 
 type WorkflowApiPayload = {
@@ -114,6 +113,7 @@ function formatDate(value?: string | null) {
 export function WorkflowDashboard({ initialWorkflows }: Props) {
   const router = useRouter();
   const [workflows, setWorkflows] = useState<WorkflowSummary[]>(initialWorkflows ?? []);
+  const [isLoading, setIsLoading] = useState(!initialWorkflows);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | WorkflowSummary['status']>('all');
@@ -121,6 +121,42 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newWorkflowName, setNewWorkflowName] = useState('');
   const { theme, toggleTheme } = useTheme();
+
+  // Function to fetch workflows from API
+  const fetchWorkflows = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/workflows');
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch workflows');
+      }
+
+      const { workflows: fetchedWorkflows } = await response.json();
+      const normalized = fetchedWorkflows.map((workflow: WorkflowApiPayload) =>
+        normalizeWorkflow(workflow)
+      );
+      setWorkflows(normalized);
+    } catch (error) {
+      console.error('Error fetching workflows:', error);
+      showToast({
+        title: 'Failed to load workflows',
+        subtitle: error instanceof Error ? error.message : 'Please try refreshing the page',
+        variant: ToastType.ERROR,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Fetch workflows client-side on mount if not provided
+  useEffect(() => {
+    if (initialWorkflows) {
+      return; // Skip if initialWorkflows were provided (SSR)
+    }
+
+    void fetchWorkflows();
+  }, [initialWorkflows, fetchWorkflows]);
 
   const filteredWorkflows = useMemo(() => {
     const lowerSearch = searchTerm.toLowerCase().trim();
@@ -213,6 +249,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
 
       setWorkflows((prev) => prev.filter((workflow) => workflow.id !== workflowId));
       showToast({ title: 'Workflow deleted', variant: ToastType.SUCCESS });
+      // Refresh workflows to ensure consistency
+      if (!initialWorkflows) {
+        void fetchWorkflows();
+      }
     } catch (error) {
       console.error(error);
       showToast({
@@ -243,6 +283,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         title: 'Workflow duplicated',
         variant: ToastType.SUCCESS,
       });
+      // Refresh workflows to ensure consistency
+      if (!initialWorkflows) {
+        void fetchWorkflows();
+      }
     } catch (error) {
       console.error(error);
       showToast({
@@ -296,7 +340,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             value={searchTerm}
             placeholder="Search workflows"
             onChange={(event) => setSearchTerm(event.target.value)}
-            className="border-none outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:border-none focus:ring-0 focus:outline-none focus:border-none bg-transparent text-inherit w-full"
+            disabled={isLoading}
+            className="border-none outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:border-none focus:ring-0 focus:outline-none focus:border-none bg-transparent text-inherit w-full disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -304,7 +349,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white px-4 min-w-[200px] flex items-center justify-between"
+              disabled={isLoading}
+              className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white px-4 min-w-[200px] flex items-center justify-between disabled:opacity-50"
             >
               {STATUS_OPTIONS.find((option) => option.value === statusFilter)?.label ??
                 'All statuses'}
@@ -327,22 +373,24 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         <div className="flex rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden h-12">
           <button
             className={clsx(
-              'h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer',
+              'h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed',
               viewMode === 'grid' && 'bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white'
             )}
             type="button"
             onClick={() => setViewMode('grid')}
+            disabled={isLoading}
             aria-label="Grid view"
           >
             <Icon name="LayoutGrid" size={18} />
           </button>
           <button
             className={clsx(
-              'h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer',
+              'h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed',
               viewMode === 'list' && 'bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white'
             )}
             type="button"
             onClick={() => setViewMode('list')}
+            disabled={isLoading}
             aria-label="List view"
           >
             <Icon name="List" size={18} />
@@ -352,12 +400,19 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
 
       <section className="flex justify-between items-center text-gray-600 dark:text-gray-400">
         <span>
-          Showing {filteredWorkflows.length} of {workflows.length} workflows
+          {isLoading ? (
+            <span className="flex items-center gap-2">
+              <Icon name="Loader2" size={16} className="animate-spin" />
+              Loading workflows...
+            </span>
+          ) : (
+            `Showing ${filteredWorkflows.length} of ${workflows.length} workflows`
+          )}
         </span>
         <Button
           className="min-w-[180px] px-6 py-3 text-base rounded-full"
           onClick={openCreateWorkflowModal}
-          disabled={creating}
+          disabled={creating || isLoading}
           variant="default"
           size="lg"
         >
@@ -375,7 +430,34 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         </Button>
       </section>
 
-      {filteredWorkflows.length === 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="bg-white dark:bg-[#27282b] rounded-2xl p-8 border border-gray-200 dark:border-gray-700 animate-pulse"
+            >
+              <div className="flex justify-between gap-3 items-start mb-4">
+                <div className="flex-1">
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
+                </div>
+                <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-20" />
+              </div>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24" />
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24" />
+              </div>
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-4" />
+              <div className="flex gap-2 pt-4 border-t border-gray-100 dark:border-gray-800">
+                <div className="flex-1 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : filteredWorkflows.length === 0 ? (
         <div className="border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl py-8 px-2 text-center bg-white dark:bg-[#27282b] text-gray-600 dark:text-gray-400">
           <h3 className="m-0 mb-2 text-gray-900 dark:text-white text-lg font-semibold">
             No workflows found
