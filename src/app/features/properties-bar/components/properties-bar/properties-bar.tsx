@@ -96,12 +96,12 @@ function PropertiesBarComponent({
       }
       footer={
         isExpanded && (
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex flex-col gap-2.5 w-full">
             {selection?.node && (
               <Button
                 onClick={onRunNodeClick}
                 variant="default"
-                className="bg-green-500 hover:bg-green-600 text-white dark:bg-green-500 dark:hover:bg-green-600"
+                className="h-10 bg-green-500 hover:bg-green-600 text-white dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-200 font-medium text-sm"
               >
                 <Icon name="Play" size={16} />
                 {runNodeLabel}
@@ -110,7 +110,7 @@ function PropertiesBarComponent({
             <Button
               onClick={onDeleteClick}
               variant="outline"
-              className="border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50"
+              className="h-10 border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 transition-colors duration-200 font-medium text-sm"
             >
               <Icon name="Trash2" size={16} />
               {selection?.node ? deleteNodeLabel : deleteEdgeLabel}
