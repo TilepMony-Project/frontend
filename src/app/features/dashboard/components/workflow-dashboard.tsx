@@ -341,7 +341,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             placeholder="Search workflows"
             onChange={(event) => setSearchTerm(event.target.value)}
             disabled={isLoading}
-            className="border-none outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:border-none focus:ring-0 focus:outline-none focus:border-none bg-transparent text-inherit w-full disabled:opacity-50 disabled:cursor-not-allowed"
+            className="border-none outline-none focus-visible:outline-none focus-visible:ring-0 focus:ring-0 focus:outline-none bg-transparent text-inherit w-full disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
 

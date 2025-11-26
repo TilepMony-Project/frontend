@@ -100,8 +100,7 @@
   /* Import export modal variables */
   --wb-import-error-color: var(--ax-public-snackbar-title-color);
   --wb-import-error-background-color: var(--ax-public-snackbar-error-background);
-  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid
-    var(--ax-public-snackbar-error-border);
+  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid var(--ax-public-snackbar-error-border);
   --wb-import-error-border-radius: var(--ax-public-snackbar-border-radius);
 }
 
@@ -126,6 +125,53 @@ html[data-theme="dark"] {
 .ace_tooltip {
   display: none !important;
 }
+
+/* Custom scroll animations for partner logos */
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-right {
+  animation: scroll-right 30s linear infinite;
+}
+
+.animate-scroll-left {
+  animation: scroll-left 30s linear infinite;
+}
+
+/* Smooth bounce animation for buttons */
+@keyframes smooth-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-smooth-bounce {
+  animation: smooth-bounce 2s ease-in-out infinite;
+}
+
 
 @layer reset {
   ::-webkit-scrollbar {
@@ -169,7 +215,7 @@ html[data-theme="dark"] {
   body {
     margin: 0;
     background-color: var(--wb-background-color);
-    overflow: hidden;
+    overflow: auto;
   }
 
   body[data-scroll-locked] {
@@ -314,7 +360,7 @@ html[data-theme="dark"] {
     /* gray-700 dark */
   }
 
-  /* Remove all focus styles from inputs with these classes */
+  /* Remove all focus styles from inputs with border-none class */
   input.border-none:focus,
   input.border-none:focus-visible {
     outline: none !important;

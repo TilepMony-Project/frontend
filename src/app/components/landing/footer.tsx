@@ -1,0 +1,192 @@
+'use client';
+
+import React from "react";
+import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
+import Link from "next/link";
+
+const Footer: React.FC = () => {
+  return (
+    <div className="flex flex-col gap-16 px-8 lg:px-24 pt-16 lg:pt-20 pb-10 bg-background">
+      <div className="flex flex-col gap-16">
+        
+        {/* Logo Section */}
+        <div className="flex items-center gap-5">
+          <div className="flex items-center gap-1">
+            <img
+              alt="TilepMoney Logo"
+              className="w-20 h-6 sm:w-24 sm:h-8"
+              src="/landing/logo.svg"
+            />
+            <img
+              alt="Sparkle"
+              className="w-4 h-4 sm:w-5 sm:h-5"
+              src="/landing/Sparkle.svg"
+            />
+          </div>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+
+        {/* Footer Links */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* About TilepMoney */}
+          <div className="flex flex-col gap-4">
+            <h3 className="text-base font-bold text-foreground">About TilepMoney</h3>
+            <div className="flex flex-col gap-2">
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Company Overview
+              </Link>
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Careers
+              </Link>
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Press & Media
+              </Link>
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Testimonials
+              </Link>
+            </div>
+          </div>
+          {/* Resources */}
+          <div className="flex flex-col gap-4">
+            <h3 className="text-base font-bold text-foreground">Resources</h3>
+            <div className="flex flex-col gap-2">
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Blog
+              </Link>
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Help Center
+              </Link>
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Webinars & Events
+              </Link>
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Case Studies
+              </Link>
+            </div>
+          </div>
+          {/* Support & Contact */}
+          <div className="flex flex-col gap-4">
+            <h3 className="text-base font-bold text-foreground">
+              Support & Contact
+            </h3>
+            <div className="flex flex-col gap-2">
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Contact Us
+              </Link>
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Technical Support
+              </Link>
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Feedback
+              </Link>
+              <Link
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+                href="#"
+              >
+                Community Forum
+              </Link>
+            </div>
+          </div>
+          {/* Connect */}
+          <div className="flex flex-col gap-4">
+            <h3 className="text-base font-bold text-foreground">Connect</h3>
+            <div className="flex flex-col gap-2">
+              <Link
+                className="flex items-center gap-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 min-h-12"
+                href="#"
+              >
+                <Instagram className="w-4 h-4" />
+                Instagram
+              </Link>
+              <Link
+                className="flex items-center gap-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 min-h-12"
+                href="#"
+              >
+                <Facebook className="w-4 h-4" />
+                Facebook
+              </Link>
+              <Link
+                className="flex items-center gap-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 min-h-12"
+                href="#"
+              >
+                <Twitter className="w-4 h-4" />
+                Twitter / X
+              </Link>
+              <Link
+                className="flex items-center gap-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 min-h-12"
+                href="#"
+              >
+                <Linkedin className="w-4 h-4" />
+                LinkedIn
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Section */}
+      <div className="border-t border-border pt-6">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-muted-foreground">
+            ©2024 TilepMoney · All rights reserved.
+          </p>
+          <div className="flex items-center gap-6">
+            <Link
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+              href="#"
+            >
+              Terms of Use
+            </Link>
+            <Link
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+              href="#"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+              href="#"
+            >
+              Security
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Footer;
