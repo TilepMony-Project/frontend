@@ -43,6 +43,10 @@ const nextConfig = {
   experimental: {
     // Enable if needed for specific features
   },
+  // Turbopack configuration
+  // Note: Currently using webpack for SVG handling via @svgr/webpack
+  // Add turbopack config here when migrating from webpack
+  turbopack: {},
 };
 
 export default nextConfig;
