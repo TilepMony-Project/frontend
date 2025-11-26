@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { Button } from "@/components/ui/button";
+import { AuroraText } from "@/components/ui/aurora-text";
 
 const Hero: React.FC = () => {
   return (
@@ -16,16 +17,19 @@ const Hero: React.FC = () => {
                 Codeless Stablecoin Orchestration Builder
               </p>
             </div>
-            <p className="w-full max-w-4xl text-2xl sm:text-3xl lg:text-5xl font-bold text-center text-foreground px-4 leading-tight lg:leading-[1.15]">
+            <p className="w-full max-w-4xl text-2xl sm:text-4xl lg:text-6xl font-bold text-center text-foreground leading-tight lg:leading-[1.3]">
               Stablecoin creation made as easy as{" "}
-              <span className="bg-gradient-to-r from-primary via-blue-500 to-purple-500 bg-clip-text text-transparent">
+              <AuroraText
+                className="text-wrap break-words whitespace-nowrap"
+                colors={["#1296e7", "#3b82f6", "#a855f7", "#db2777"]}
+                speed={1.4}
+              >
                 drag-and-drop
-              </span>
-              .
+              </AuroraText>
             </p>
 
             <div className="flex items-start gap-2 px-4 lg:px-5 mt-2">
-              <p className="w-full max-w-3xl text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
+              <p className="w-full max-w-3xl text-sm lg:text-base text-center text-muted-foreground leading-[1.3] lg:leading-[1.6]">
                 Integrating stablecoin is hard, we made it easier using drag and drop. A visual
                 drag-and-drop builder that allows businesses to design stablecoin movement workflows
                 on Mantle L2.
