@@ -1,4 +1,4 @@
-import type { FieldSchema } from '@/types/node-schema';
+import type { PrimitiveFieldSchema } from '@/types/node-schema';
 import type { ControlElement, ControlProps as JsonFormsControlProps } from '@jsonforms/core';
 import type { InputProps } from '@/components/ui/input';
 import type { TextareaProps } from '@/components/ui/textarea';
@@ -12,7 +12,7 @@ type ControlProps<D, T extends UISchemaControlElement> = Override<
   {
     data: D;
     uischema: T;
-    schema: FieldSchema;
+    schema: PrimitiveFieldSchema;
   }
 >;
 
@@ -21,6 +21,7 @@ export type TextControlElement = Override<
   {
     type: 'Text';
     inputType?: string;
+    readOnly?: boolean;
   } & Pick<InputProps, 'placeholder'>
 >;
 export type TextControlProps = ControlProps<string, TextControlElement>;
