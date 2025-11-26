@@ -6,13 +6,15 @@ import { getControlsDotsItems } from '../../functions/get-controls-dots-items';
 import { OptionalAppBarControls } from '@/features/plugins-core/components/optional-app-bar-controls';
 import { ToggleReadyOnlyMode } from '../toggle-read-only-mode/toggle-read-only-mode';
 import { ToggleDarkMode } from '../toggle-dark-mode/toggle-dark-mode';
+import { CanvasToolToggle } from '@/features/app-bar/components/toolbar/canvas-tool-toggle';
 
 export function Controls() {
   const items: MenuItemProps[] = useMemo(() => getControlsDotsItems(), []);
 
   return (
-    <div className="flex justify-end items-center gap-2">
+    <div className="flex justify-end items-center gap-4">
       <OptionalAppBarControls>
+        <CanvasToolToggle />
         <ToggleReadyOnlyMode />
         <ToggleDarkMode />
       </OptionalAppBarControls>
