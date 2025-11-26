@@ -1,5 +1,5 @@
 import { Icon } from '@/components/icons';
-import { SelectWrapper as Select, type SelectProps } from '@/components/ui/select-wrapper';
+import { SelectWrapper as Select, type SelectOption, type SelectProps } from '@/components/ui/select-wrapper';
 import type { ItemOption, PrimitiveFieldSchema } from '@/types/node-schema';
 import type { SelectControlProps } from '../../types/controls';
 import { createControlRenderer } from '../../utils/rendering';
@@ -14,7 +14,7 @@ function SelectControl(props: SelectControlProps) {
         ? option
         : {
             ...option,
-            icon: <Icon name={option.icon} size="small" />,
+            icon: <Icon name={option.icon as string} size="small" />,
           }
   );
 
@@ -26,7 +26,7 @@ function SelectControl(props: SelectControlProps) {
     <ControlWrapper {...props}>
       <Select
         value={data ?? null}
-        items={items ?? []}
+        items={items as SelectOption[] ?? []}
         disabled={!enabled}
         onChange={onChange}
         placeholder={schema.placeholder}
