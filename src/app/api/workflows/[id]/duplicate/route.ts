@@ -6,7 +6,11 @@ import { NextResponse } from 'next/server';
 function revalidateWorkflowPaths() {
   const paths = ['/', '/dashboard', '/workspace', '/workspace/[workflowId]'];
   for (const path of paths) {
-    revalidatePath(path);
+    if (path.includes('[')) {
+      revalidatePath(path, 'page');
+    } else {
+      revalidatePath(path);
+    }
   }
 }
 
