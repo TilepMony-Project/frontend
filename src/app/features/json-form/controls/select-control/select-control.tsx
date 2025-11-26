@@ -29,7 +29,7 @@ function SelectControl(props: SelectControlProps) {
         items={items as SelectOption[] ?? []}
         disabled={!enabled}
         onChange={onChange}
-        placeholder={schema.placeholder}
+        placeholder={schema.placeholder as string }
         className="h-12 rounded-xl border border-gray-200/80 bg-white px-4 text-sm text-gray-900 shadow-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/40 dark:border-gray-700 dark:bg-[#1c1c20] dark:text-gray-100"
       />
     </ControlWrapper>
