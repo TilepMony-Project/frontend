@@ -15,12 +15,28 @@ const Header: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const isConnected = ready && authenticated;
   const primaryWalletAddress = wallets[0]?.address ?? user?.wallet?.address;
+  const linkedAccounts =
+    (user as { linkedAccounts?: Array<{ type?: string; walletClientType?: string; address?: string }> })?.linkedAccounts ??
+    [];
+  const originalWallet =
+    linkedAccounts.find((account) => account?.type === "wallet" && account.walletClientType !== "privy")?.address || null;
+  const loginIdentifier = originalWallet || user?.email?.address || primaryWalletAddress;
 
-  const formattedWalletLabel = primaryWalletAddress
-    ? `${primaryWalletAddress.slice(0, 6)}...${primaryWalletAddress.slice(-4)}`
-    : "Connected";
+  const formatIdentifier = (identifier?: string | null) => {
+    if (!identifier) {
+      return "Connected";
+    }
+    if (identifier.includes("@")) {
+      return identifier;
+    }
+    return `${identifier.slice(0, 6)}...${identifier.slice(-4)}`;
+  };
 
-  const connectButtonLabel = !ready ? "Loading..." : isConnected ? formattedWalletLabel : "Login / Connect";
+  const connectButtonLabel = !ready
+    ? "Loading..."
+    : isConnected
+      ? formatIdentifier(loginIdentifier)
+      : "Login / Connect";
 
   const handleAuthClick = () => {
     if (!ready) {
