@@ -5,7 +5,7 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactFlowProvider } from '@xyflow/react';
 import { setAutoFreeze } from 'immer';
-import { StrictMode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import TagManager from 'react-gtm-module';
 import { WagmiProvider } from 'wagmi';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -32,18 +32,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   // Prevent hydration mismatch by only rendering Web3 providers on client
   return (
-    <StrictMode>
-      <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          {mounted ? (
-            <RainbowKitProvider>
-              <ReactFlowProvider>{children}</ReactFlowProvider>
-            </RainbowKitProvider>
-          ) : (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        {mounted ? (
+          <RainbowKitProvider>
             <ReactFlowProvider>{children}</ReactFlowProvider>
-          )}
-        </QueryClientProvider>
-      </WagmiProvider>
-    </StrictMode>
+          </RainbowKitProvider>
+        ) : (
+          <ReactFlowProvider>{children}</ReactFlowProvider>
+        )}
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }
