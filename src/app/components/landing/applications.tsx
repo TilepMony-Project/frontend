@@ -26,7 +26,11 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
     >
       <div className="flex flex-col items-start gap-2">
         <div className="flex items-center justify-center pt-1 rounded-lg flex-shrink-0">
-          <img alt={iconAlt} className="w-8 h-8" src={icon} />
+          <img
+            alt={iconAlt}
+            className="w-8 h-8 dark:brightness-0 dark:invert"
+            src={icon}
+          />
         </div>
         <p className="text-lg font-semibold text-left text-foreground">{title}</p>
       </div>

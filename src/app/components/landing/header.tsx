@@ -1,15 +1,18 @@
 "use client";
 
 import type React from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
+import { IconSwitch } from "@/components/ui/icon-switch";
+import { useTheme } from "@/hooks/use-theme";
 
 const Header: React.FC = () => {
   const { isConnected } = useAccount();
   const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="flex flex-col bg-background border-b border-border">
@@ -45,7 +48,7 @@ const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Connect Wallet Button */}
+        {/* Connect Wallet Button and Theme Toggle */}
         <div className="flex items-center gap-3 w-full sm:w-auto justify-center lg:justify-end">
           <ConnectButton />
           {isConnected && (
@@ -58,6 +61,14 @@ const Header: React.FC = () => {
               <ChevronDown className="w-4 h-4 -rotate-90" />
             </button>
           )}
+          <IconSwitch
+            checked={theme === "dark"}
+            onChange={toggleTheme}
+            icon={<Sun size={18} />}
+            IconChecked={<Moon size={18} />}
+            variant="secondary"
+            className="h-10 w-10 bg-white dark:bg-[#27282b] border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-[#323336] shadow-sm p-0 flex items-center justify-center rounded-md"
+          />
         </div>
       </div>
     </div>

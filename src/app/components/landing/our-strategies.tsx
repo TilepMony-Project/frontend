@@ -15,7 +15,11 @@ const StrategyCard: React.FC<StrategyCardProps> = ({ icon, iconAlt, title, descr
     <div className="flex flex-col items-start gap-4 p-6 rounded-xl bg-card border hover:border-primary hover:shadow-xl transition-all duration-200 cursor-pointer">
       <div className="flex items-start gap-3">
         <div className="flex items-center justify-center min-w-8 min-h-8 p-2 rounded-lg bg-primary/10 flex-shrink-0">
-          <img alt={iconAlt} className="w-5 h-5" src={icon} />
+          <img
+            alt={iconAlt}
+            className="w-5 h-5 dark:brightness-0 dark:invert"
+            src={icon}
+          />
         </div>
         <p className="text-lg font-semibold text-left text-foreground">{title}</p>
       </div>

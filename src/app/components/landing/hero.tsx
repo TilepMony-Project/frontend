@@ -41,7 +41,11 @@ const Hero: React.FC = () => {
               src="/landing/card-background-0.svg"
             />
             <div className="flex flex-col sm:flex-row items-center p-3 sm:p-4 lg:p-6 rounded-full bg-card border-2 sm:border-4 lg:border-5 border-primary/35 gap-2 sm:gap-3 lg:gap-4 animate-smooth-bounce cursor-pointer hover:bg-accent hover:border-primary/50 hover:shadow-lg transition-all duration-300 max-w-[90%] sm:max-w-none relative z-10">
-              <img alt="Play" className="w-10 lg:h-10 flex-shrink-0" src="/landing/blue-play.svg" />
+              <img
+                alt="Play"
+                className="w-10 lg:h-10 flex-shrink-0 dark:brightness-0 dark:invert"
+                src="/landing/blue-play.svg"
+              />
               <div className="hidden sm:flex flex-col items-center sm:items-start gap-1">
                 <p className="text-sm sm:text-base lg:text-lg font-semibold text-foreground text-center sm:text-left leading-tight">
                   Watch introduce video
