@@ -11,9 +11,13 @@ const Hero: React.FC = () => {
         <div className="flex flex-col items-center gap-8 lg:gap-12">
           {/* Text Content */}
           <div className="flex flex-col items-center gap-4 lg:gap-6">
-            <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg">
-              <img alt="Sparkle" className="w-4 h-4 lg:w-5 lg:h-5" src="/landing/Sparkle.svg" />
-              <p className="text-sm lg:text-base font-medium text-center text-muted-foreground">
+            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5">
+              <img
+                alt="Sparkle"
+                className="w-4 h-4 lg:w-5 lg:h-5 group-hover:rotate-12 transition-transform duration-300"
+                src="/landing/Sparkle.svg"
+              />
+              <p className="text-sm lg:text-base font-medium text-center text-muted-foreground group-hover:text-primary transition-colors duration-300">
                 Codeless Stablecoin Orchestration Builder
               </p>
             </div>

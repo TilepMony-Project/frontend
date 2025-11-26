@@ -26,11 +26,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
     >
       <div className="flex flex-col items-start gap-2">
         <div className="flex items-center justify-center pt-1 rounded-lg flex-shrink-0">
-          <img
-            alt={iconAlt}
-            className="w-8 h-8 dark:brightness-0 dark:invert"
-            src={icon}
-          />
+          <img alt={iconAlt} className="w-8 h-8 dark:brightness-0 dark:invert" src={icon} />
         </div>
         <p className="text-lg font-semibold text-left text-foreground">{title}</p>
       </div>
@@ -48,9 +44,13 @@ const Applications: React.FC = () => {
       <div className="flex flex-col items-center gap-4">
         <div className="flex flex-col items-center gap-8 mb-8">
           <div className="flex flex-col items-center gap-6">
-            <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg w-fit">
-              <img alt="Sparkle" className="w-5 h-5" src="/landing/Sparkle.svg" />
-              <p className="text-base font-medium text-center text-muted-foreground">
+            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 w-fit">
+              <img
+                alt="Sparkle"
+                className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300"
+                src="/landing/Sparkle.svg"
+              />
+              <p className="text-base font-medium text-center text-muted-foreground group-hover:text-primary transition-colors duration-300">
                 Applications
               </p>
             </div>

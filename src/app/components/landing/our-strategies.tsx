@@ -15,11 +15,7 @@ const StrategyCard: React.FC<StrategyCardProps> = ({ icon, iconAlt, title, descr
     <div className="flex flex-col items-start gap-4 p-6 rounded-xl bg-card border hover:border-primary hover:shadow-xl transition-all duration-200 cursor-pointer">
       <div className="flex items-start gap-3">
         <div className="flex items-center justify-center min-w-8 min-h-8 p-2 rounded-lg bg-primary/10 flex-shrink-0">
-          <img
-            alt={iconAlt}
-            className="w-5 h-5 dark:brightness-0 dark:invert"
-            src={icon}
-          />
+          <img alt={iconAlt} className="w-5 h-5 dark:brightness-0 dark:invert" src={icon} />
         </div>
         <p className="text-lg font-semibold text-left text-foreground">{title}</p>
       </div>
@@ -53,9 +49,13 @@ const OurStrategies: React.FC = () => {
         <div className="flex flex-col items-center gap-8">
           {/* Text Content */}
           <div className="flex flex-col items-center gap-6">
-            <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg">
-              <img alt="Sparkle" className="w-5 h-5" src="/landing/Sparkle.svg" />
-              <p className="text-base font-medium text-center text-muted-foreground">
+            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5">
+              <img
+                alt="Sparkle"
+                className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300"
+                src="/landing/Sparkle.svg"
+              />
+              <p className="text-base font-medium text-center text-muted-foreground group-hover:text-primary transition-colors duration-300">
                 Our Strategies
               </p>
             </div>
