@@ -39,17 +39,7 @@ export default function LandingPage() {
     }
   }, [isConnecting]);
 
-  // Only redirect after initialization is complete
-  useEffect(() => {
-    if (isInitialized && isConnected) {
-      showToast({
-        title: 'Wallet connected!',
-        subtitle: 'Redirecting to dashboard...',
-        variant: ToastType.SUCCESS,
-      });
-      router.replace('/dashboard');
-    }
-  }, [isInitialized, isConnected, router]);
+
 
   return (
     <main className="min-h-screen pt-12 pb-16 px-6 bg-[radial-gradient(circle_at_top,color-mix(in_srgb,var(--ax-colors-acc1-500),transparent_70%),transparent_70%),var(--ax-ui-bg-secondary-default)] flex flex-col gap-12">
