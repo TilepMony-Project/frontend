@@ -1,10 +1,10 @@
+@import "@synergycodes/overflow-ui/tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer reset, ext-lib, ui;
-
-@import "@synergycodes/overflow-ui/tokens.css";
 
 @layer ui {
   @layer base, component;
@@ -100,7 +100,8 @@
   /* Import export modal variables */
   --wb-import-error-color: var(--ax-public-snackbar-title-color);
   --wb-import-error-background-color: var(--ax-public-snackbar-error-background);
-  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid var(--ax-public-snackbar-error-border);
+  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid
+    var(--ax-public-snackbar-error-border);
   --wb-import-error-border-radius: var(--ax-public-snackbar-border-radius);
 }
 
@@ -171,6 +172,12 @@ html[data-theme="dark"] {
     overflow: hidden;
   }
 
+  body[data-scroll-locked] {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    overflow: visible !important;
+  }
+
   button {
     cursor: pointer;
   }
@@ -179,8 +186,6 @@ html[data-theme="dark"] {
     cursor: copy;
   }
 }
-
-
 
 @layer base {
   :root {
@@ -264,8 +269,6 @@ html[data-theme="dark"] {
     --chart-5: 340 75% 55%;
   }
 }
-
-
 
 @layer base {
   * {
