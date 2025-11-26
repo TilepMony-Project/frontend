@@ -1,3 +1,4 @@
+import { requirePrivySession, PrivyUnauthorizedError } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
 import Workflow from "@/models/Workflow";
 import { revalidatePath } from "next/cache";
@@ -17,15 +18,16 @@ function revalidateWorkflowPaths() {
 // GET /api/workflows - List all workflows for user
 export async function GET(request: NextRequest) {
   try {
+    const { userId } = await requirePrivySession(request);
     await connectDB();
-
-    const searchParams = request.nextUrl.searchParams;
-    const userId = searchParams.get("userId") || "default-user"; // TODO: Get from auth
 
     const workflows = await Workflow.find({ userId }).sort({ updatedAt: -1 }).lean();
 
     return NextResponse.json({ workflows }, { status: 200 });
   } catch (error) {
+    if (error instanceof PrivyUnauthorizedError) {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
     console.error("Error fetching workflows:", error);
     return NextResponse.json({ error: "Failed to fetch workflows" }, { status: 500 });
   }
@@ -34,10 +36,11 @@ export async function GET(request: NextRequest) {
 // POST /api/workflows - Create new workflow
 export async function POST(request: NextRequest) {
   try {
+    const { userId } = await requirePrivySession(request);
     await connectDB();
 
     const body = await request.json();
-    const { name, description, nodes = [], edges = [], userId = "default-user" } = body;
+    const { name, description, nodes = [], edges = [] } = body;
 
     const workflow = await Workflow.create({
       name,
@@ -52,6 +55,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ workflow }, { status: 201 });
   } catch (error) {
+    if (error instanceof PrivyUnauthorizedError) {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
     console.error("Error creating workflow:", error);
     return NextResponse.json({ error: "Failed to create workflow" }, { status: 500 });
   }

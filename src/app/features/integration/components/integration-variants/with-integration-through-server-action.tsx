@@ -4,11 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 
 import { IntegrationWrapper } from "./wrapper/integration-wrapper";
 
-import { autoSaveWorkflow } from "@/actions/workflows";
 import type { IntegrationDataFormatOptional, OnSave } from "@/features/integration/types";
+import { usePrivySession } from "@/hooks/use-privy-session";
 import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
-import { showToast as showSnackbar } from "@/utils/toast-utils";
 import { showToast, ToastType } from "@/utils/toast-utils";
+import { showToast as showSnackbar } from "@/utils/toast-utils";
 import { WorkflowLoadingOverlay } from "@/components/workflow-loading-overlay";
 import {
   showSnackbarSaveErrorIfNeeded,
@@ -33,16 +33,18 @@ export function withIntegrationThroughServerAction<WProps extends object>(
     const [workflowId, setWorkflowId] = useState<string | null>(workflowIdFromProps ?? null);
     const [initialData, setInitialData] = useState<IntegrationDataFormatOptional>({});
     const [isLoadingWorkflow, setIsLoadingWorkflow] = useState(false);
-    const [userId] = useState<string>(() => {
-      if (typeof window !== "undefined" && window.localStorage) {
-        return localStorage.getItem(USER_ID_KEY) || "default-user";
-      }
-      return "default-user";
-    });
+    const { accessToken, userId } = usePrivySession();
 
     useEffect(() => {
       setIsClient(true);
     }, []);
+
+    useEffect(() => {
+      if (typeof window === "undefined" || !userId) {
+        return;
+      }
+      window.localStorage.setItem(USER_ID_KEY, userId);
+    }, [userId]);
 
     useEffect(() => {
       if (!isClient) {
@@ -76,12 +78,21 @@ export function withIntegrationThroughServerAction<WProps extends object>(
         return;
       }
 
+      if (!accessToken) {
+        setIsLoadingWorkflow(true);
+        return;
+      }
+
       let cancelled = false;
 
       async function fetchWorkflow() {
         try {
           setIsLoadingWorkflow(true);
-          const response = await fetch(`/api/workflows/${workflowId}`);
+          const response = await fetch(`/api/workflows/${workflowId}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
           if (!response.ok) {
             throw new Error("Failed to fetch workflow");
           }
@@ -114,49 +125,78 @@ export function withIntegrationThroughServerAction<WProps extends object>(
         }
       }
 
-      fetchWorkflow();
+      void fetchWorkflow();
 
       return () => {
         cancelled = true;
       };
-    }, [isClient, workflowId]);
+    }, [isClient, workflowId, accessToken]);
 
     const handleSave: OnSave = useCallback(
       async (savingParams) => {
         const data = getStoreDataForIntegration();
 
-        try {
-          const result = await autoSaveWorkflow(workflowId, data, userId);
-
-          if (result.success) {
-            // Update workflow ID if it was created
-            if (result.workflowId && result.workflowId !== workflowId) {
-              setWorkflowId(result.workflowId);
-              if (typeof window !== "undefined" && window.localStorage) {
-                localStorage.setItem(WORKFLOW_ID_KEY, result.workflowId);
-              }
-            }
-
-            showSnackbarSaveSuccessIfNeeded(savingParams);
-            return "success";
-          }
-
+        if (!accessToken) {
+          showToast({
+            title: "Session expired",
+            subtitle: "Please reconnect your Privy session before saving.",
+            variant: ToastType.ERROR,
+          });
           showSnackbarSaveErrorIfNeeded(savingParams);
           return "error";
+        }
+
+        try {
+          const endpoint = workflowId ? `/api/workflows/${workflowId}` : "/api/workflows";
+          const method = workflowId ? "PUT" : "POST";
+          const response = await fetch(endpoint, {
+            method,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+              name: data.name,
+              description: data.layoutDirection ? `Layout: ${data.layoutDirection}` : undefined,
+              nodes: data.nodes ?? [],
+              edges: data.edges ?? [],
+              status: "draft",
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to save workflow");
+          }
+
+          const payload = (await response.json()) as {
+            workflow?: { _id?: string; id?: string };
+          };
+          const savedId =
+            payload.workflow?._id?.toString?.() ?? payload.workflow?.id ?? workflowId ?? null;
+
+          if (savedId && savedId !== workflowId) {
+            setWorkflowId(savedId);
+            if (typeof window !== "undefined" && window.localStorage) {
+              localStorage.setItem(WORKFLOW_ID_KEY, savedId);
+            }
+          }
+
+          showSnackbarSaveSuccessIfNeeded(savingParams);
+          return "success";
         } catch (error) {
           console.error("Error saving workflow:", error);
           showSnackbarSaveErrorIfNeeded(savingParams);
           return "error";
         }
       },
-      [workflowId, userId]
+      [workflowId, accessToken]
     );
 
     const { name, layoutDirection, nodes, edges } = initialData;
 
     return (
       <>
-        {isLoadingWorkflow && <WorkflowLoadingOverlay />}
+        {(isLoadingWorkflow || (workflowId && !accessToken)) && <WorkflowLoadingOverlay />}
         <IntegrationWrapper
           name={name}
           layoutDirection={layoutDirection}

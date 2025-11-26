@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 
 export function PrivyUserSync() {
-  const { ready, authenticated, user } = usePrivy();
+  const { ready, authenticated, user, getAccessToken } = usePrivy();
   const { wallets } = useWallets();
   const lastSyncedSnapshot = useRef<string | null>(null);
 
@@ -44,17 +44,26 @@ export function PrivyUserSync() {
 
     lastSyncedSnapshot.current = payloadSignature;
 
-    fetch("/api/users/sync", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(syncPayload),
-    }).catch((error) => {
-      console.error("Failed to sync Privy user", error);
-      lastSyncedSnapshot.current = null;
-    });
-  }, [ready, authenticated, user, wallets]);
+    (async () => {
+      try {
+        const token = await getAccessToken();
+        if (!token) {
+          throw new Error("Missing Privy access token");
+        }
+        await fetch("/api/users/sync", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(syncPayload),
+        });
+      } catch (error) {
+        console.error("Failed to sync Privy user", error);
+        lastSyncedSnapshot.current = null;
+      }
+    })();
+  }, [ready, authenticated, user, wallets, getAccessToken]);
 
   return null;
 }

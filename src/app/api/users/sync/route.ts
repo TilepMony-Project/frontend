@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
 import MstUser from "@/models/MstUser";
 
@@ -22,6 +23,7 @@ type SyncRequest = {
 
 export async function POST(request: Request) {
   try {
+    const { userId } = await requirePrivySession(request);
     const body = (await request.json()) as SyncRequest;
     const privyUserId = body.privyUserId || body.privyUser?.id;
 
@@ -29,6 +31,13 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { success: false, error: "privyUserId is required" },
         { status: 400 }
+      );
+    }
+
+    if (privyUserId !== userId) {
+      return NextResponse.json(
+        { success: false, error: "Privy user mismatch" },
+        { status: 403 }
       );
     }
 
@@ -59,6 +68,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    if (error instanceof PrivyUnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error("Failed to sync Privy user", error);
     return NextResponse.json(
       { success: false, error: "Failed to sync user" },
