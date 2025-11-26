@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import type { PropsWithChildren, ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { showToast, ToastType } from "@/utils/toast-utils";
 
 type WalletGuardProps = PropsWithChildren<{
@@ -13,41 +13,33 @@ type WalletGuardProps = PropsWithChildren<{
 const defaultFallback = (
   <div className="flex flex-col items-center justify-center min-h-screen gap-4">
     <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-    <p className="text-base text-gray-600 dark:text-gray-400">Checking wallet connection…</p>
+    <p className="text-base text-gray-600 dark:text-gray-400">Checking account connection...</p>
   </div>
 );
 
 export function WalletGuard({ children, fallback = defaultFallback }: WalletGuardProps) {
   const router = useRouter();
-  const { isConnected, isConnecting } = useAccount();
-  const [isInitialized, setIsInitialized] = useState(false);
+  const { ready, authenticated } = usePrivy();
+  const { wallets } = useWallets();
+  const [hasWarned, setHasWarned] = useState(false);
 
-  // Track when wallet initialization is complete
-  useEffect(() => {
-    if (!isConnecting) {
-      setIsInitialized(true);
-    }
-  }, [isConnecting]);
+  const hasWallet = wallets.length > 0;
+  const isProvisioningWallet = ready && authenticated && !hasWallet;
+  const showFallback = !ready || isProvisioningWallet || !authenticated;
 
-  // Only redirect after initialization is complete
   useEffect(() => {
-    if (isInitialized && !isConnected && !isConnecting) {
+    if (ready && !authenticated && !hasWarned) {
       showToast({
-        title: "Wallet disconnected",
+        title: "Session expired",
         subtitle: "Redirecting to home...",
         variant: ToastType.INFO,
       });
+      setHasWarned(true);
       router.replace("/");
     }
-  }, [isInitialized, isConnected, isConnecting, router]);
+  }, [ready, authenticated, router, hasWarned]);
 
-  // Show loading during initialization or while connecting
-  if (!isInitialized || isConnecting) {
-    return <>{fallback}</>;
-  }
-
-  // Show loading if not connected (before redirect happens)
-  if (!isConnected) {
+  if (showFallback) {
     return <>{fallback}</>;
   }
 

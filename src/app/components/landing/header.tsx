@@ -3,16 +3,35 @@
 import type React from "react";
 import { ChevronDown, Moon, Sun } from "lucide-react";
 import Link from "next/link";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
 import { IconSwitch } from "@/components/ui/icon-switch";
 import { useTheme } from "@/hooks/use-theme";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 
 const Header: React.FC = () => {
-  const { isConnected } = useAccount();
+  const { ready, authenticated, login, logout, user } = usePrivy();
+  const { wallets } = useWallets();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
+  const isConnected = ready && authenticated;
+  const primaryWalletAddress = wallets[0]?.address ?? user?.wallet?.address;
+
+  const formattedWalletLabel = primaryWalletAddress
+    ? `${primaryWalletAddress.slice(0, 6)}...${primaryWalletAddress.slice(-4)}`
+    : "Connected";
+
+  const connectButtonLabel = !ready ? "Loading..." : isConnected ? formattedWalletLabel : "Login / Connect";
+
+  const handleAuthClick = () => {
+    if (!ready) {
+      return;
+    }
+    if (isConnected) {
+      logout();
+      return;
+    }
+    login();
+  };
 
   return (
     <div className="flex flex-col bg-background border-b border-border">
@@ -50,7 +69,14 @@ const Header: React.FC = () => {
 
         {/* Connect Wallet Button and Theme Toggle */}
         <div className="flex items-center gap-3 w-full sm:w-auto justify-center lg:justify-end">
-          <ConnectButton />
+          <button
+            type="button"
+            onClick={handleAuthClick}
+            disabled={!ready}
+            className="h-10 px-6 py-2 rounded-md bg-white dark:bg-[#1b1b1d] border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-900 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-[#242427] transition-all duration-200 hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {connectButtonLabel}
+          </button>
           {isConnected && (
             <button
               type="button"
