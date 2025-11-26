@@ -29,9 +29,7 @@ export function PaletteContainer() {
     <Sidebar
       className={clsx('w-auto', isSidebarExpanded && '!w-[300px]')}
       isExpanded={isSidebarExpanded}
-      header={
-        <PaletteHeader onClick={() => toggleSidebar()} isSidebarExpanded={isSidebarExpanded} />
-      }
+      header={<PaletteHeader onClick={() => toggleSidebar()} />}
     >
       <PaletteItems
         items={paletteItems}
