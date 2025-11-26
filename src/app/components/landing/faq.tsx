@@ -12,48 +12,48 @@ const FAQ: React.FC = () => {
   const faqItems = [
     {
       question:
-        "What is TilepMoney and how does it differ from other treasury platforms?",
+        "What is TilepMoney and how does it help B2B payment infrastructure?",
       answer:
-        "TilepMoney is a visual workflow builder for Web3 treasury operations. Unlike traditional platforms, TilepMoney lets you design complex stablecoin workflows with drag-and-drop simplicity, execute them on Mantle L2, and monitor everything in real-time—all without writing code.",
+        "TilepMoney is a codeless stablecoin orchestration builder for B2B payments infrastructure. It enables businesses to visually design and configure stablecoin movement workflows (Deposit → Mint → Swap → Bridge → Output) on Mantle L2. Everything is modular, provider-agnostic, and designed for integration into enterprise backend pipelines.",
     },
     {
-      question: "How does the visual workflow builder work?",
+      question: "How does the visual drag-and-drop workflow builder work?",
       answer:
-        "Our visual workflow builder uses a node-based interface where you drag and drop components to create treasury operations. Each node represents an action (deposit, mint, transfer, etc.), and you connect them to define your workflow logic. The system validates your workflow and simulates it before execution.",
+        "Our visual workflow builder uses a node-based interface where you drag and drop modular nodes to create stablecoin payment flows. Each node represents an action (Deposit, Mint, Swap, Bridge, Redeem, Transfer, Vault, Wait, Partition) and is fully configurable via a right-side panel. You connect nodes to define your workflow logic, and the system validates and simulates it before execution.",
     },
     {
-      question: "Is my wallet and data secure with TilepMoney?",
+      question: "What makes TilepMoney suitable for enterprise B2B operations?",
       answer:
-        "Yes, security is our top priority. We never store your private keys. All transactions are signed in your wallet, and we implement enterprise-grade security measures including end-to-end encryption, secure data transmission, and compliance with Web3 security best practices.",
-    },
-    {
-      question:
-        "Can I integrate TilepMoney with other Web3 tools and platforms?",
-      answer:
-        "Absolutely! TilepMoney integrates seamlessly with popular Web3 wallets, DeFi protocols, and blockchain networks. We support Mantle L2 natively and are expanding to other chains. Our API-first approach ensures easy connectivity with your existing tech stack.",
+        "TilepMoney is B2B-oriented with enterprise-friendly features: API entrypoints for backend integration, workflow storage, authentication layer with API keys for businesses, complete routing transparency for audits and compliance, provider-agnostic choice for issuers and bridges, and L2-based approach for safe experimentation before deploying real money flows.",
     },
     {
       question:
-        "How is the pricing structured for TilepMoney? Are there any hidden fees?",
+        "Can I test workflows safely before deploying to production?",
       answer:
-        "TilepMoney offers transparent pricing with no hidden fees. We have free tier for testing, and paid plans based on your workflow complexity and execution volume. Gas fees for on-chain transactions are separate and paid directly to the network. Contact our team for custom enterprise pricing.",
+        "Yes! TilepMoney runs entirely on Mantle L2, allowing businesses to test their routing logic safely before deploying real money flows. You can experiment with different provider combinations, workflow configurations, and output strategies without any financial risk.",
     },
     {
       question:
-        "I'm new to Web3 treasury operations. Does TilepMoney offer support?",
+        "What types of nodes are available and what can I build with them?",
       answer:
-        "Yes! We provide comprehensive onboarding including video tutorials, detailed documentation, example workflows, and a dedicated support team. We also offer webinars, best practices guides, and community support to help you master treasury operations on TilepMoney.",
+        "TilepMoney offers 9 node types: Deposit (bring fiat into system), Mint (convert fiat to stablecoin), Swap (exchange tokens), Bridge (move assets across chains), Redeem (convert stablecoin to fiat), Transfer (send to wallets), Vault (earn yield with stop conditions), Wait (delay execution), and Partition (split amounts into multiple branches). You can build complex workflows like corporate payments, treasury automation, merchant settlements, and cross-chain liquidity management.",
+    },
+    {
+      question:
+        "How does TilepMoney ensure routing transparency and compliance?",
+      answer:
+        "TilepMoney provides complete routing transparency by visualizing how money moves through each provider in your workflow. Every step is auditable, and you can see exactly which issuers, swap providers, and bridges are used. This transparency is essential for enterprise audits, compliance requirements, and understanding the complete flow of funds through your payment infrastructure.",
     },
   ];
 
   return (
     <div className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28 bg-background">
-      <div className="flex flex-col items-center gap-4">
-        <div className="flex flex-col items-center gap-10">
+      <div className="flex flex-col items-center gap-4 w-full max-w-7xl">
+        <div className="flex flex-col items-center gap-10 w-full">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full">
             
             {/* Text Content */}
-            <div className="flex flex-col gap-6 lg:pr-10 w-full lg:w-auto">
+            <div className="flex flex-col gap-6 lg:pr-10 w-full lg:w-auto lg:min-w-[380px]">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg w-fit">
                   <img
@@ -81,14 +81,18 @@ const FAQ: React.FC = () => {
             </div>
 
             {/* FAQ Items */}
-            <div className="flex flex-col gap-6 w-full lg:w-auto">
-              <Accordion type="single" collapsible defaultValue="item-0">
+            <div className="flex flex-col gap-4 w-full lg:flex-1">
+              <Accordion type="single" collapsible defaultValue="item-0" className="w-full space-y-3">
                 {faqItems.map((item, index) => (
-                  <AccordionItem key={index} value={`item-${index}`}>
-                    <AccordionTrigger className="text-left">
+                  <AccordionItem 
+                    key={index} 
+                    value={`item-${index}`}
+                    className="border border-gray-200 bg-card rounded-xl px-5 py-1 hover:border-primary/40 transition-all duration-300 group data-[state=open]:border-primary/50 data-[state=open]:bg-card/80"
+                  >
+                    <AccordionTrigger className="text-left hover:no-underline py-5 text-base lg:text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
                       {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground">
+                    <AccordionContent className="text-muted-foreground text-sm lg:text-base leading-relaxed pb-5 pt-1">
                       {item.answer}
                     </AccordionContent>
                   </AccordionItem>

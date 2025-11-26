@@ -1,11 +1,10 @@
 'use client';
 
-import React from "react";
+import type React from "react";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
 
 const Header: React.FC = () => {
@@ -14,27 +13,6 @@ const Header: React.FC = () => {
 
   return (
     <div className="flex flex-col bg-background border-b border-border">
-      {/* Top navigation bar */}
-      <div className="hidden lg:flex justify-between items-center px-8 lg:px-24 pt-5">
-        <div className="flex items-center gap-3 lg:gap-5">
-          <div className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-colors duration-300 min-h-12 px-2">
-            <p className="text-sm font-medium">English</p>
-            <ChevronDown className="w-4 h-4" />
-          </div>
-          <div className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-colors duration-300 min-h-12 px-2">
-            <p className="text-sm font-medium">Support</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 lg:gap-5">
-          <div className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-colors duration-300 min-h-12 px-2">
-            <p className="text-sm font-medium">Blog</p>
-          </div>
-          <div className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-colors duration-300 min-h-12 px-2">
-            <p className="text-sm font-medium">About us</p>
-            <ChevronDown className="w-4 h-4" />
-          </div>
-        </div>
-      </div>
 
       {/* Main navigation */}
       <div className="flex flex-col lg:flex-row justify-between items-center px-8 lg:px-24 py-4 lg:py-5 gap-4">
@@ -73,10 +51,11 @@ const Header: React.FC = () => {
         </div>
 
         {/* Connect Wallet Button */}
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-center lg:justify-end">
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-center lg:justify-end">
           <ConnectButton />
           {isConnected && (
             <button
+              type="button"
               onClick={() => router.push('/dashboard')}
               className="h-10 px-6 py-2 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all duration-200 hover:shadow-md active:scale-95 flex items-center gap-2"
             >

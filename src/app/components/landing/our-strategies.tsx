@@ -67,12 +67,12 @@ const OurStrategies: React.FC = () => {
             </div>
             <div className="flex items-center gap-2 px-4">
               <p className="w-full max-w-2xl text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-foreground leading-tight">
-                Streamline Your Treasury Operations
+                B2B Orchestration Studio for Stablecoin Flows
               </p>
             </div>
             <div className="flex items-center gap-2 px-4 lg:px-5">
               <p className="w-full max-w-xl opacity-80 text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
-                TilepMoney helps you gain control of your stablecoin operations across teams and workflows.
+                Design, test, and automate your payment and treasury routes with complete routing transparency and provider-agnostic flexibility.
               </p>
             </div>
           </div>
@@ -82,22 +82,22 @@ const OurStrategies: React.FC = () => {
         <div className="flex flex-col items-center gap-10 w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 w-full">
             <StrategyCard
-              description="In the fast-paced world of DeFi, every second counts. TilepMoney processes transactions in real-time, ensuring you're always working with the most up-to-date information. React to changes as they happen and pivot your strategies instantly."
-              icon="/landing/instant.svg"
-              iconAlt="Instant"
-              title="Instant Execution"
-            />
-            <StrategyCard
-              description="TilepMoney seamlessly integrates with your favorite Web3 tools, wallets, and platforms. Experience a unified treasury platform that bridges the gaps in your workflow, ensuring you have a holistic view of your operations."
-              icon="/landing/connect.svg"
-              iconAlt="Connect"
-              title="Connect & Streamline"
-            />
-            <StrategyCard
-              description="Harness the power of visual workflow building with TilepMoney. Design complex treasury operations with drag-and-drop simplicity, anticipate settlement patterns, and stay steps ahead. Make informed decisions backed by real-time data."
+              description="Design complex stablecoin flows with drag-and-drop simplicity. No coding required—just drag, drop, and configure each node to build your complete payment workflow from deposit to output."
               icon="/landing/database.svg"
               iconAlt="Database"
-              title="Visual Workflows"
+              title="Codeless Visual Orchestration"
+            />
+            <StrategyCard
+              description="Complete routing transparency for audits and compliance. Visualize and audit how money moves through each provider, ensuring full visibility into every step of your stablecoin operations."
+              icon="/landing/connect.svg"
+              iconAlt="Connect"
+              title="Routing Transparency"
+            />
+            <StrategyCard
+              description="Choose your preferred issuers, swap providers, and bridges. Provider-agnostic design gives you the flexibility to select the best services for your business needs without vendor lock-in."
+              icon="/landing/instant.svg"
+              iconAlt="Instant"
+              title="Provider-Agnostic"
             />
           </div>
 

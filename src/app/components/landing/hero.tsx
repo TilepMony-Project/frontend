@@ -31,19 +31,19 @@ const Hero: React.FC = () => {
             
             <div className="flex items-start gap-2 px-4 lg:px-5 mt-2">
               <p className="w-full max-w-3xl text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
-                Integrating stablecoin is hard, we made it easier using drag and drop. Even your kid can do it. No code required, just drag, drop, and deploy on Mantle L2.
+                Integrating stablecoin is hard, we made it easier using drag and drop. A visual drag-and-drop builder that allows businesses to design stablecoin movement workflows on Mantle L2.
               </p>
             </div>
           </div>
           
           {/* Card Background */}
-          <div className="w-full max-w-6xl h-64 sm:h-80 lg:h-96 relative overflow-hidden rounded-2xl lg:rounded-3xl bg-primary/20 border border-border mx-2 sm:mx-4">
+          <div className="w-full max-w-6xl h-64 sm:h-80 lg:h-96 relative overflow-hidden rounded-2xl lg:rounded-3xl bg-primary/20 border border-border mx-2 sm:mx-4 flex items-center justify-center">
             <img
               alt="Card Background"
               className="absolute left-0 top-0 w-full h-full object-cover"
               src="/landing/card-background-0.svg"
             />
-            <div className="flex flex-col sm:flex-row items-center absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 p-3 sm:p-4 lg:p-6 rounded-full bg-card border-2 sm:border-4 lg:border-5 border-primary/35 gap-2 sm:gap-3 lg:gap-4 animate-smooth-bounce cursor-pointer hover:bg-accent hover:border-primary/50 hover:shadow-lg transition-all duration-300 max-w-[90%] sm:max-w-none">
+            <div className="flex flex-col sm:flex-row items-center p-3 sm:p-4 lg:p-6 rounded-full bg-card border-2 sm:border-4 lg:border-5 border-primary/35 gap-2 sm:gap-3 lg:gap-4 animate-smooth-bounce cursor-pointer hover:bg-accent hover:border-primary/50 hover:shadow-lg transition-all duration-300 max-w-[90%] sm:max-w-none relative z-10">
               <img
                 alt="Play"
                 className="w-10 lg:h-10 flex-shrink-0"

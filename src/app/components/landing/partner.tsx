@@ -7,11 +7,6 @@ const Partner: React.FC = () => {
     <div className="flex flex-col items-center gap-5 px-8 lg:px-24 pt-10 pb-16 bg-background">
       <div className="flex flex-col items-center gap-5">
 
-        {/* Text Content */}
-        <p className="w-full max-w-7xl opacity-80 text-sm sm:text-base text-center text-muted-foreground px-4">
-          Trusted by leading Web3 projects and stablecoin issuers worldwide
-        </p>
-
         {/* Partners */}
         <div className="flex flex-col items-center py-5 gap-4">
           {/* First row - moving to the right */}

@@ -52,12 +52,12 @@ const Applications: React.FC = () => {
             </div>
             <div className="flex items-center gap-2 px-4">
               <p className="w-full max-w-4xl text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-foreground leading-tight">
-                Treasury operations made simple
+                Enterprise Use Cases for B2B Payments
               </p>
             </div>
             <div className="flex items-center gap-2 px-4 lg:px-5">
               <p className="w-full max-w-3xl opacity-80 text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
-                Advanced workflow tools enhance efficiency across your entire operation. By automating settlements and monitoring flows in real-time, these tools provide you with the critical insights needed for informed decision-making.
+                From corporate payments to treasury automation, TilepMoney provides clear pathways to real-world commercial use cases for stablecoin payment infrastructure.
               </p>
             </div>
           </div>
@@ -66,80 +66,80 @@ const Applications: React.FC = () => {
         {/* Applications */}
         <div className="flex flex-col items-center gap-10 w-full relative">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 w-full">
-            {/* Visual Orchestration */}
+            {/* Corporate Payments */}
             <ApplicationCard
-              categories="DeFi, Treasury, Settlements"
-              description="Drag-and-drop nodes to model treasury, settlement, and DeFi flows in minutes. Build complex workflows without writing a single line of code."
+              categories="B2B, Payments, Settlements"
+              description="Design and automate corporate payment flows with visual workflows. Configure deposit, mint, swap, bridge, and output nodes to streamline your payment infrastructure."
               icon="/landing/connect.svg"
               iconAlt="Connect"
-              title="Visual Orchestration"
+              title="Corporate Payments"
             />
-            {/* Safe Execution */}
+            {/* Treasury Automation */}
             <ApplicationCard
-              categories="Compliance, Security, Audit"
-              description="Node validation, staged simulation, and audit trails keep stablecoin operations compliant and secure at every step."
+              categories="Treasury, Automation, Yield"
+              description="Automate treasury operations with partition nodes, vault strategies, and wait conditions. Allocate funds across multiple channels with time-based and condition-based triggers."
               icon="/landing/ticket.svg"
               iconAlt="Ticket"
-              title="Safe Execution"
+              title="Treasury Automation"
             />
-            {/* One-Click Deployment */}
+            {/* Merchant Settlements */}
             <ApplicationCard
-              categories="Mantle L2, Testnet, Production"
-              description="Run workflows on Mantle testnet today and graduate to production with no rewrites. Seamless deployment at your fingertips."
+              categories="Merchants, Settlements, Cross-Chain"
+              description="Enable merchant settlements with cross-chain workflows. Bridge assets to Mantle L2 and configure automated settlement routes for your merchant partners."
               icon="/landing/target.svg"
               iconAlt="Target"
-              title="One-Click Deployment"
+              title="Merchant Settlements"
             />
-            {/* Real-Time Monitoring */}
+            {/* Crypto On/Off-Ramping */}
             <ApplicationCard
-              categories="Analytics, Monitoring, Alerts"
-              description="Monitor your treasury flows in real-time with live dashboards. Get instant alerts when conditions change and stay ahead of the curve."
+              categories="On-Ramp, Off-Ramp, Aggregation"
+              description="Build aggregated crypto on/off-ramping solutions. Connect deposit nodes to mint nodes, swap providers, and bridge services for seamless fiat-to-crypto conversions."
               icon="/landing/chart-rates.svg"
               iconAlt="Chart Rates"
-              title="Real-Time Monitoring"
+              title="Crypto On/Off-Ramping"
             />
-            {/* Enterprise Security */}
+            {/* Cross-Chain Liquidity */}
             <ApplicationCard
-              categories="Security, Encryption, Access Control"
-              description="Rest easy knowing your operations are protected with enterprise-grade security protocols. From encryption to access controls, we prioritize your safety."
+              categories="Liquidity, Cross-Chain, Enterprise"
+              description="Manage enterprise cross-chain liquidity with provider-agnostic bridge nodes. Test routing logic on Mantle L2 before deploying real money flows."
               icon="/landing/server.svg"
               iconAlt="Server"
-              title="Enterprise Security"
+              title="Cross-Chain Liquidity"
             />
-            {/* Team Collaboration */}
+            {/* L2 Safety */}
             <ApplicationCard
-              categories="Teams, Workflows, Permissions"
-              description="Work together seamlessly with role-based access controls. Share workflows, review changes, and drive collective success."
+              categories="L2, Safety, Testing"
+              description="Test your routing logic safely on Mantle L2. Experiment with workflows before deploying to production."
               icon="/landing/credit-card-sync.svg"
               iconAlt="Sync"
-              title="Team Collaboration"
+              title="L2 Safety"
             />
-            {/* Intuitive Interface */}
+            {/* Modular Nodes */}
             <ApplicationCard
               disableHoverShadow
-              categories="All Users"
-              description="TilepMoney offers an intuitive interface that's easy to navigate, ensuring you spend less time learning and more time building."
+              categories="Modularity, Flexibility, Design"
+              description="Each step is a modular node that can be arranged visually. Configure deposit, mint, swap, bridge, redeem, transfer, vault, wait, and partition nodes to build your workflow."
               icon="/landing/credit-card.svg"
               iconAlt="Card"
-              title="Intuitive Interface"
+              title="Modular Node Design"
             />
-            {/* Automated Workflows */}
+            {/* Enterprise Integration */}
             <ApplicationCard
               disableHoverShadow
-              categories="Automation, Efficiency, Scale"
-              description="Automate complex treasury operations with conditional logic and triggers. Let TilepMoney handle the heavy lifting."
+              categories="API, Enterprise, Backend"
+              description="Enterprise-friendly with API entrypoints and workflow storage. Designed for integration into enterprise backend pipelines with authentication and API key management."
               icon="/landing/hand-credit-card.svg"
               iconAlt="Hand Card"
-              title="Automated Workflows"
+              title="Enterprise Integration"
             />
-            {/* Scale with Confidence */}
+            {/* Provider Selection */}
             <ApplicationCard
               disableHoverShadow
-              categories="Startups, DAOs, Enterprises"
-              description="Whether you're a startup or an enterprise, TilepMoney scales with you. Experience robust treasury solutions that adapt to your growth."
+              categories="Providers, Choice, Flexibility"
+              description="Select preferred issuers, swap providers, and bridges. Choose between multiple liquidity providers and DEX aggregators for optimal execution."
               icon="/landing/transfer-data.svg"
               iconAlt="Transfer"
-              title="Scale with Confidence"
+              title="Provider Selection"
             />
           </div>
 
