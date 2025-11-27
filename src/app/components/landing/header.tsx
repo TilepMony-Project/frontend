@@ -15,7 +15,7 @@ const Header: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="flex flex-col bg-background border-b border-border">
+    <div className="flex flex-col border-b border-border/40 backdrop-blur">
       {/* Main navigation */}
       <div className="flex flex-col lg:flex-row justify-between items-center px-8 lg:px-24 py-4 lg:py-5 gap-4">
         <div className="flex items-center gap-4 lg:gap-10">

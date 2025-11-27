@@ -44,7 +44,7 @@ const StrategyCardBackground: React.FC = () => {
 
 const OurStrategies: React.FC = () => {
   return (
-    <div className="flex flex-col items-center gap-16 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28 bg-background">
+    <div className="flex flex-col items-center gap-16 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
       <div className="flex flex-col items-center gap-16">
         <div className="flex flex-col items-center gap-8">
           {/* Text Content */}

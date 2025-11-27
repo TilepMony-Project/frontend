@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Footer: React.FC = () => {
   return (
-    <div className="flex flex-col gap-16 px-8 lg:px-24 pt-16 lg:pt-20 pb-10 bg-background">
+    <div className="flex flex-col gap-16 px-8 lg:px-24 pt-16 lg:pt-20 pb-10">
       <div className="flex flex-col gap-16">
         {/* Logo Section */}
         <div className="flex items-center gap-5">

@@ -40,7 +40,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 
 const Applications: React.FC = () => {
   return (
-    <div className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28 bg-background">
+    <div className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
       <div className="flex flex-col items-center gap-4">
         <div className="flex flex-col items-center gap-8 mb-8">
           <div className="flex flex-col items-center gap-6">
@@ -148,13 +148,9 @@ const Applications: React.FC = () => {
             />
           </div>
 
-          {/* Gradient Overlay */}
+          {/* Gradient Overlay - Fades content smoothly into background */}
           <div
-            className="absolute bottom-0 left-0 w-full h-32 pointer-events-none z-10"
-            style={{
-              background:
-                "linear-gradient(to top, hsl(var(--background)) 38.84%, rgba(255,255,255,0) 100%)",
-            }}
+            className="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10 bg-gradient-to-t from-[#eeeff3] via-[#eeeff3]/80 to-transparent dark:from-[#27282b] dark:via-[#27282b]/80 dark:to-transparent rounded-b-2xl"
           />
         </div>
 

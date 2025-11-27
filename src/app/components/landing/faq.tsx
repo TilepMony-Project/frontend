@@ -43,7 +43,7 @@ const FAQ: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28 bg-background">
+    <div className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
       <div className="flex flex-col items-center gap-4 w-full max-w-7xl">
         <div className="flex flex-col items-center gap-10 w-full">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full">
@@ -84,7 +84,7 @@ const FAQ: React.FC = () => {
               >
                 {faqItems.map((item, index) => (
                   <AccordionItem
-                    key={index}
+                    key={item.question}
                     value={`item-${index}`}
                     className="border border-gray-200 bg-card rounded-xl px-5 py-1 hover:border-primary/40 transition-all duration-300 group data-[state=open]:border-primary/50 data-[state=open]:bg-card/80"
                   >

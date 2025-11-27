@@ -4,7 +4,7 @@ import type React from "react";
 
 const Partner: React.FC = () => {
   return (
-    <div className="flex flex-col items-center gap-5 px-8 lg:px-24 pt-10 pb-16 bg-background">
+    <div className="flex flex-col items-center gap-5 px-8 lg:px-24 pt-10 pb-16">
       <div className="flex flex-col items-center gap-5">
         {/* Partners */}
         <div className="flex flex-col items-center py-5 gap-4">

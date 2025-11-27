@@ -6,7 +6,7 @@ import { AuroraText } from "@/components/ui/aurora-text";
 
 const Hero: React.FC = () => {
   return (
-    <div className="flex flex-col items-center px-8 lg:px-24 pt-20 lg:pt-28 pb-16 lg:pb-20 bg-background">
+    <div className="flex flex-col items-center px-8 lg:px-24 pt-20 lg:pt-28 pb-16 lg:pb-20">
       <div className="flex flex-col items-center relative gap-12 lg:gap-16">
         <div className="flex flex-col items-center gap-8 lg:gap-12">
           {/* Text Content */}
