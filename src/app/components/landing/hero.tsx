@@ -1,17 +1,26 @@
 "use client";
 
 import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AuroraText } from "@/components/ui/aurora-text";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const Hero: React.FC = () => {
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+
   return (
     <div className="flex flex-col items-center px-8 lg:px-24 pt-20 lg:pt-28 pb-16 lg:pb-20">
       <div className="flex flex-col items-center relative gap-12 lg:gap-16">
         <div className="flex flex-col items-center gap-8 lg:gap-12">
           {/* Text Content */}
           <div className="flex flex-col items-center gap-4 lg:gap-6">
-            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5">
+            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default">
               <img
                 alt="Sparkle"
                 className="w-4 h-4 lg:w-5 lg:h-5 group-hover:rotate-12 transition-transform duration-300"
@@ -48,7 +57,10 @@ const Hero: React.FC = () => {
               className="absolute left-0 top-0 w-full h-full object-cover"
               src="/landing/card-background-0.svg"
             />
-            <div className="flex flex-col sm:flex-row items-center p-3 sm:p-4 lg:p-6 rounded-full bg-card border-2 sm:border-4 lg:border-5 border-primary/35 gap-2 sm:gap-3 lg:gap-4 animate-smooth-bounce cursor-pointer hover:bg-accent hover:border-primary/50 hover:shadow-lg transition-all duration-300 max-w-[90%] sm:max-w-none relative z-10">
+            <div 
+              onClick={() => setIsVideoOpen(true)}
+              className="flex flex-col sm:flex-row items-center p-3 sm:p-4 lg:p-6 rounded-full bg-card border-2 sm:border-4 lg:border-5 border-primary/35 gap-2 sm:gap-3 lg:gap-4 animate-smooth-bounce cursor-pointer hover:bg-accent hover:border-primary/50 hover:shadow-lg transition-all duration-300 max-w-[90%] sm:max-w-none relative z-10"
+            >
               <img
                 alt="Play"
                 className="w-10 lg:h-10 flex-shrink-0 dark:brightness-0 dark:invert"
@@ -68,6 +80,24 @@ const Hero: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Video Modal */}
+      <Dialog open={isVideoOpen} onOpenChange={setIsVideoOpen}>
+        <DialogContent className="max-w-4xl w-[95vw] p-0">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Introduction Video</DialogTitle>
+          </DialogHeader>
+          <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+            <iframe
+              className="absolute top-0 left-0 w-full h-full rounded-lg"
+              src="https://www.youtube.com/embed/J7g9R8PETHc?si=DdWOgIBKA8Easuck"
+              title="TilepMoney Introduction Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
