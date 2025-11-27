@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { AuroraText } from "@/components/ui/aurora-text";
 import {
@@ -15,7 +16,7 @@ const Hero: React.FC = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   return (
-    <div className="flex flex-col items-center px-8 lg:px-24 pt-20 lg:pt-28 pb-16 lg:pb-20">
+    <div id="demo" className="flex flex-col items-center px-8 lg:px-24 pt-20 lg:pt-28 pb-16 lg:pb-20">
       <div className="flex flex-col items-center relative gap-12 lg:gap-16">
         <div className="flex flex-col items-center gap-8 lg:gap-12">
           {/* Text Content */}
@@ -52,10 +53,12 @@ const Hero: React.FC = () => {
 
           {/* Card Background */}
           <div className="w-full max-w-6xl h-64 sm:h-80 lg:h-96 relative overflow-hidden rounded-2xl lg:rounded-3xl bg-primary/20 border border-border mx-2 sm:mx-4 flex items-center justify-center">
-            <img
+            <Image
               alt="Card Background"
-              className="absolute left-0 top-0 w-full h-full object-cover"
+              className="object-cover"
               src="/landing/card-background-0.svg"
+              fill
+              priority
             />
             <div
               onClick={() => setIsVideoOpen(true)}
