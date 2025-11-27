@@ -12,28 +12,28 @@ import Partner from "./components/landing/partner";
 export default function LandingPage() {
   return (
     <DotPatternLinearGradient>
-      <div className="flex flex-col">
-        {/* Header */}
-        <Header />
+    <div className="flex flex-col">
+      {/* Header */}
+      <Header />
 
-        {/* Hero */}
-        <Hero />
+      {/* Hero */}
+      <Hero />
 
-        {/* Partner */}
-        <Partner />
+      {/* Partner */}
+      <Partner />
 
-        {/* Our Strategies */}
-        <OurStrategies />
+      {/* Our Strategies */}
+      <OurStrategies />
 
-        {/* Applications */}
-        <Applications />
+      {/* Applications */}
+      <Applications />
 
-        {/* FAQ */}
-        <FAQ />
+      {/* FAQ */}
+      <FAQ />
 
-        {/* Footer */}
-        <Footer />
-      </div>
+      {/* Footer */}
+      <Footer />
+    </div>
     </DotPatternLinearGradient>
   );
 }
