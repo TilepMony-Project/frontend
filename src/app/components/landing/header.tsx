@@ -26,6 +26,20 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerOffset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -41,27 +55,41 @@ const Header: React.FC = () => {
           <Link href="/" className="flex items-center gap-1">
             <img
               alt="TilepMoney Logo"
-              className="w-8 h-8 sm:w-10 sm:h-10"
+              className="w-10 h-10 sm:w-12 sm:h-12"
               src="/tilepmoney.png"
             />
           </Link>
 
           {/* Navigation menu */}
           <div className="hidden md:flex items-center gap-4 lg:gap-8">
-            <div className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-colors duration-300 min-h-12 px-2">
-              <p className="text-sm lg:text-base font-medium">Features</p>
-              <ChevronDown className="w-4 h-4" />
-            </div>
-            <div className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-colors duration-300 min-h-12 px-2">
-              <p className="text-sm lg:text-base font-medium">Case Studies</p>
-              <ChevronDown className="w-4 h-4" />
-            </div>
-            <div className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-colors duration-300 min-h-12 px-2">
-              <p className="text-sm lg:text-base font-medium">Pricing</p>
-            </div>
-            <div className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-colors duration-300 min-h-12 px-2">
-              <p className="text-sm lg:text-base font-medium">Applications</p>
-            </div>
+            <button
+              type="button"
+              onClick={() => scrollToSection("demo")}
+              className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-105 active:scale-95 min-h-12 px-2 bg-transparent border-none outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md shadow-none hover:!shadow-none"
+            >
+              <p className="text-sm lg:text-base font-medium">Home</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToSection("features")}
+              className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-105 active:scale-95 min-h-12 px-2 bg-transparent border-none outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md shadow-none hover:!shadow-none"
+            >
+              <p className="text-sm lg:text-base font-medium">Our strategies</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToSection("applications")}
+              className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-105 active:scale-95 min-h-12 px-2 bg-transparent border-none outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md shadow-none hover:!shadow-none"
+            >
+              <p className="text-sm lg:text-base font-medium">Application</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToSection("faq")}
+              className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-105 active:scale-95 min-h-12 px-2 bg-transparent border-none outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md shadow-none hover:!shadow-none"
+            >
+              <p className="text-sm lg:text-base font-medium">FAQ</p>
+            </button>
           </div>
         </div>
 

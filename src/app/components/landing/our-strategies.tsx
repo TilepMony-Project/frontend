@@ -12,7 +12,7 @@ interface StrategyCardProps {
 
 const StrategyCard: React.FC<StrategyCardProps> = ({ icon, iconAlt, title, description }) => {
   return (
-    <div className="flex flex-col items-start gap-4 p-6 rounded-xl bg-card border-[1px] border-primary/40 dark:border-white/40 hover:border-primary border[1px] dark:hover:border-[1.5px] dark:hover:border-primary hover:shadow-xl transition-all duration-200 cursor-pointer">
+    <div className="flex flex-col items-start gap-4 p-6 rounded-xl bg-card border-[1px] border-primary/20 dark:border-white/40 hover:border-primary border[1px] dark:hover:border-[1.5px] dark:hover:border-primary  transition-all duration-200 cursor-pointer">
       <div className="flex items-start gap-3">
         <div className="flex items-center justify-center min-w-8 min-h-8 p-2 rounded-lg bg-primary/10 flex-shrink-0">
           <img alt={iconAlt} className="w-5 h-5 dark:brightness-0 dark:invert" src={icon} />
@@ -44,7 +44,7 @@ const StrategyCardBackground: React.FC = () => {
 
 const OurStrategies: React.FC = () => {
   return (
-    <div className="flex flex-col items-center gap-16 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
+    <div id="features" className="flex flex-col items-center gap-16 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
       <div className="flex flex-col items-center gap-16">
         <div className="flex flex-col items-center gap-8">
           {/* Text Content */}

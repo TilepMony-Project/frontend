@@ -22,7 +22,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col items-start gap-4 p-6 rounded-xl bg-card border-[1px] border-primary/40 dark:border-white/40 hover:border-primary border[1px] dark:hover:border-[1.5px] dark:hover:border-primary hover:shadow-xl transition-all duration-200 cursor-pointer ${!disableHoverShadow ? "hover:shadow-xl" : ""}`}
+      className={`flex flex-col items-start gap-4 p-6 rounded-xl bg-card border-[1px] border-primary/20 dark:border-white/40 hover:border-primary border[1px] dark:hover:border-[1.5px] dark:hover:border-primary hover:shadow-xl transition-all duration-200 cursor-pointer ${!disableHoverShadow ? "hover:shadow-xl" : ""}`}
     >
       <div className="flex flex-col items-start gap-2">
         <div className="flex items-center justify-center pt-1 rounded-lg flex-shrink-0">
@@ -40,7 +40,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 
 const Applications: React.FC = () => {
   return (
-    <div className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
+    <div id="applications" className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
       <div className="flex flex-col items-center gap-4">
         <div className="flex flex-col items-center gap-8 mb-8">
           <div className="flex flex-col items-center gap-6">

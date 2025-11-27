@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
           <div className="flex items-center gap-1">
             <img
               alt="TilepMoney Logo"
-              className="w-8 h-8 sm:w-10 sm:h-10"
+              className="w-10 h-10 sm:w-12 sm:h-12"
               src="/tilepmoney.png"
             />
           </div>

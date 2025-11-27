@@ -43,7 +43,7 @@ const FAQ: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
+    <div id="faq" className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
       <div className="flex flex-col items-center gap-4 w-full max-w-7xl">
         <div className="flex flex-col items-center gap-10 w-full">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full">
@@ -86,7 +86,7 @@ const FAQ: React.FC = () => {
                   <AccordionItem
                     key={item.question}
                     value={`item-${index}`}
-                    className="border-[1px] border-primary dark:border-white/40 bg-card rounded-xl px-5 py-1 hover:border-primary dark:hover:border-primary/40 transition-all duration-300 group data-[state=open]:border-primary/50 data-[state=open]:bg-card/80"
+                    className="border-[1px] border-primary/20 dark:border-white/40 bg-card rounded-xl px-5 py-1 hover:border-primary dark:hover:border-primary/40 transition-all duration-300 group data-[state=open]:border-primary/50 data-[state=open]:bg-card/80"
                   >
                     <AccordionTrigger className="text-left hover:no-underline py-5 text-base lg:text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
                       {item.question}
