@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type React from "react";
 import { ChevronDown, Moon, Sun } from "lucide-react";
 import Link from "next/link";
@@ -8,25 +9,41 @@ import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
 import { IconSwitch } from "@/components/ui/icon-switch";
 import { useTheme } from "@/hooks/use-theme";
+import { cn } from "@/lib/utils";
 
 const Header: React.FC = () => {
   const { isConnected } = useAccount();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className="flex flex-col border-b border-border/40 backdrop-blur">
+    <div
+      className={cn(
+        "sticky z-50 flex flex-col backdrop-blur-lg transition-all duration-300",
+        isScrolled
+          ? "top-4 mx-4 lg:mx-8 mt-4 border border-border/40 rounded-full shadow-lg bg-background/40"
+          : "top-0 border-b border-border/40 bg-background/80 shadow-lg"
+      )}
+    >
       {/* Main navigation */}
       <div className="flex flex-col lg:flex-row justify-between items-center px-8 lg:px-24 py-4 lg:py-5 gap-4">
         <div className="flex items-center gap-4 lg:gap-10">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-1">
             <img
               alt="TilepMoney Logo"
-              className="w-20 h-6 sm:w-24 sm:h-8"
-              src="/landing/logo.svg"
+              className="w-8 h-8 sm:w-10 sm:h-10"
+              src="/tilepmoney.png"
             />
-            <img alt="Sparkle" className="w-4 h-4 sm:w-5 sm:h-5" src="/landing/Sparkle.svg" />
           </Link>
 
           {/* Navigation menu */}
