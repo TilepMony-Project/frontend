@@ -1,0 +1,161 @@
+{
+  "id": "corporate-invoice-settlement",
+  "name": "Corporate Invoice Settlement",
+  "category": "Payments",
+  "description": "Manage B2B invoices: ingest fiat, mint to IDRX, swap to USDT, wait until due date, transfer to suppliers, and redeem any remainder.",
+  "layoutDirection": "horizontal",
+  "nodes": [
+    {
+      "id": "deposit-invoice",
+      "type": "Node",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "deposit",
+        "icon": "DollarSign",
+        "properties": {
+          "label": "Deposit - Corporate Treasury",
+          "description": "Fund invoices from corporate treasury",
+          "amount": 750000,
+          "currency": "IDR",
+          "paymentGateway": "TreasuryPortal"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "mint-invoice",
+      "type": "Node",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "mint",
+        "icon": "Coins",
+        "properties": {
+          "label": "Mint IDRX",
+          "description": "Issuer converts funds to IDRX",
+          "amount": 750000,
+          "issuer": "IssuerInvoice",
+          "receivingWallet": "0xdddddddddddddddddddddddddddddddddddddddd",
+          "exchangeRate": 1
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "swap-invoice",
+      "type": "Node",
+      "position": { "x": 640, "y": 0 },
+      "data": {
+        "type": "swap",
+        "icon": "ArrowLeftRight",
+        "properties": {
+          "label": "Swap to USDT",
+          "description": "Use USDT for supplier payments",
+          "inputToken": "IDRX",
+          "outputToken": "USDT",
+          "amount": 750000,
+          "swapProvider": "DummyDEXInvoice",
+          "slippageTolerance": 0.5,
+          "preferredRoute": "Best price"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "wait-invoice",
+      "type": "Node",
+      "position": { "x": 960, "y": 0 },
+      "data": {
+        "type": "wait",
+        "icon": "Clock",
+        "properties": {
+          "label": "Wait for Due Date",
+          "description": "Hold funds until invoice due date",
+          "delayDuration": 14,
+          "timeUnit": "days",
+          "reason": "Invoice settlement schedule"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-invoice",
+      "type": "Node",
+      "position": { "x": 1280, "y": 0 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Transfer to Supplier",
+          "description": "Send USDT directly to supplier wallet",
+          "amount": 700000,
+          "recipientWallet": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "network": "Mantle Testnet",
+          "maxSlippage": 0.2,
+          "memo": "Invoice settlement"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "redeem-invoice",
+      "type": "Node",
+      "position": { "x": 1600, "y": 0 },
+      "data": {
+        "type": "redeem",
+        "icon": "Building2",
+        "properties": {
+          "label": "Redeem Remainder",
+          "description": "Optionally redeem leftover USDT",
+          "amount": 50000,
+          "currency": "IDR",
+          "recipientWallet": "Bank-Account-Settlement",
+          "conversionRate": 1
+        },
+        "segments": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-deposit-invoice-mint",
+      "type": "labelEdge",
+      "source": "deposit-invoice",
+      "target": "mint-invoice",
+      "sourceHandle": "deposit-invoice:source",
+      "targetHandle": "mint-invoice:target"
+    },
+    {
+      "id": "edge-mint-invoice-swap",
+      "type": "labelEdge",
+      "source": "mint-invoice",
+      "target": "swap-invoice",
+      "sourceHandle": "mint-invoice:source",
+      "targetHandle": "swap-invoice:target"
+    },
+    {
+      "id": "edge-swap-invoice-wait",
+      "type": "labelEdge",
+      "source": "swap-invoice",
+      "target": "wait-invoice",
+      "sourceHandle": "swap-invoice:source",
+      "targetHandle": "wait-invoice:target"
+    },
+    {
+      "id": "edge-wait-invoice-transfer",
+      "type": "labelEdge",
+      "source": "wait-invoice",
+      "target": "transfer-invoice",
+      "sourceHandle": "wait-invoice:source",
+      "targetHandle": "transfer-invoice:target"
+    },
+    {
+      "id": "edge-transfer-invoice-redeem",
+      "type": "labelEdge",
+      "source": "transfer-invoice",
+      "target": "redeem-invoice",
+      "sourceHandle": "transfer-invoice:source",
+      "targetHandle": "redeem-invoice:target"
+    }
+  ]
+}
+

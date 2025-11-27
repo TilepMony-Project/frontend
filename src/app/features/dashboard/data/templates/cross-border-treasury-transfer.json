@@ -1,0 +1,248 @@
+{
+  "id": "cross-border-treasury-transfer",
+  "name": "Cross-Border Treasury Transfer",
+  "category": "Treasury",
+  "description": "Convert IDR funding into multi-branch settlements that cover corporate wallets, fiat payouts, and delayed vault deposits.",
+  "layoutDirection": "horizontal",
+  "nodes": [
+    {
+      "id": "deposit-cbtt",
+      "type": "Node",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "deposit",
+        "icon": "DollarSign",
+        "properties": {
+          "label": "Deposit - IDR Funding",
+          "description": "Receive 1,000,000 IDR from HQ treasury",
+          "amount": 1000000,
+          "currency": "IDR",
+          "paymentGateway": "CorporateGatewayA"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "mint-cbtt",
+      "type": "Node",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "mint",
+        "icon": "Coins",
+        "properties": {
+          "label": "Mint IDRX",
+          "description": "Issuer A converts treasury cash into IDRX",
+          "amount": 1000000,
+          "issuer": "IssuerA",
+          "receivingWallet": "0x1111111111111111111111111111111111111111",
+          "exchangeRate": 1
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "swap-cbtt",
+      "type": "Node",
+      "position": { "x": 640, "y": 0 },
+      "data": {
+        "type": "swap",
+        "icon": "ArrowLeftRight",
+        "properties": {
+          "label": "Swap to USDT",
+          "description": "DummyDEXA optimizes IDRX → USDT",
+          "inputToken": "IDRX",
+          "outputToken": "USDT",
+          "amount": 1000000,
+          "swapProvider": "DummyDEXA",
+          "slippageTolerance": 0.5,
+          "preferredRoute": "Direct"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "bridge-cbtt",
+      "type": "Node",
+      "position": { "x": 960, "y": 0 },
+      "data": {
+        "type": "bridge",
+        "icon": "Link2",
+        "properties": {
+          "label": "Bridge to Mantle",
+          "description": "Bridge USDT to mUSDT with DummyLayerZero",
+          "amount": 1000000,
+          "bridgeProvider": "DummyLayerZero",
+          "sourceChain": "Ethereum Testnet",
+          "destinationChain": "Mantle Testnet",
+          "receiverWallet": "0x2222222222222222222222222222222222222222",
+          "estimatedTime": "~30 seconds"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "partition-cbtt",
+      "type": "Node",
+      "position": { "x": 1280, "y": 0 },
+      "data": {
+        "type": "partition",
+        "icon": "GitBranch",
+        "properties": {
+          "label": "Partition Treasury Routes",
+          "description": "Split funds across wallets, fiat, and vault",
+          "numberOfBranches": 3,
+          "autoBalance": false,
+          "branches": [
+            { "percentage": 50, "label": "Branch A - Corporate Wallet" },
+            { "percentage": 30, "label": "Branch B - Fiat Redemption" },
+            { "percentage": 20, "label": "Branch C - Delayed Vault" }
+          ]
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-cbtt",
+      "type": "Node",
+      "position": { "x": 1580, "y": -220 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Transfer - Corporate Wallet",
+          "description": "Send 50% to on-chain treasury wallet",
+          "amount": 500000,
+          "recipientWallet": "0x3333333333333333333333333333333333333333",
+          "network": "Mantle Testnet",
+          "maxSlippage": 0.5,
+          "memo": "Corporate treasury refill"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "redeem-cbtt",
+      "type": "Node",
+      "position": { "x": 1580, "y": 0 },
+      "data": {
+        "type": "redeem",
+        "icon": "Building2",
+        "properties": {
+          "label": "Redeem to Fiat",
+          "description": "Settle 30% to IDR bank account",
+          "amount": 300000,
+          "currency": "IDR",
+          "recipientWallet": "Bank-Account-001",
+          "conversionRate": 1
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "wait-cbtt",
+      "type": "Node",
+      "position": { "x": 1580, "y": 220 },
+      "data": {
+        "type": "wait",
+        "icon": "Clock",
+        "properties": {
+          "label": "Wait 7 Days",
+          "description": "Delay 20% before vault allocation",
+          "delayDuration": 7,
+          "timeUnit": "days",
+          "reason": "Compliance cooling period"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "vault-cbtt",
+      "type": "Node",
+      "position": { "x": 1880, "y": 220 },
+      "data": {
+        "type": "vault",
+        "icon": "ShieldCheck",
+        "properties": {
+          "label": "Vault Allocation",
+          "description": "Hold funds until 120 mUSDT target hit",
+          "amount": 200000,
+          "yieldModel": "Moderate 5% APR",
+          "stopCondition": "targetAmount",
+          "targetAmount": 120,
+          "timePeriod": 30,
+          "timeUnit": "days",
+          "aprThreshold": 2,
+          "autoWithdrawDestination": "redeem"
+        },
+        "segments": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-deposit-mint",
+      "type": "labelEdge",
+      "source": "deposit-cbtt",
+      "target": "mint-cbtt",
+      "sourceHandle": "deposit-cbtt:source",
+      "targetHandle": "mint-cbtt:target"
+    },
+    {
+      "id": "edge-mint-swap",
+      "type": "labelEdge",
+      "source": "mint-cbtt",
+      "target": "swap-cbtt",
+      "sourceHandle": "mint-cbtt:source",
+      "targetHandle": "swap-cbtt:target"
+    },
+    {
+      "id": "edge-swap-bridge",
+      "type": "labelEdge",
+      "source": "swap-cbtt",
+      "target": "bridge-cbtt",
+      "sourceHandle": "swap-cbtt:source",
+      "targetHandle": "bridge-cbtt:target"
+    },
+    {
+      "id": "edge-bridge-partition",
+      "type": "labelEdge",
+      "source": "bridge-cbtt",
+      "target": "partition-cbtt",
+      "sourceHandle": "bridge-cbtt:source",
+      "targetHandle": "partition-cbtt:target"
+    },
+    {
+      "id": "edge-partition-transfer",
+      "type": "labelEdge",
+      "source": "partition-cbtt",
+      "target": "transfer-cbtt",
+      "sourceHandle": "partition-cbtt:source",
+      "targetHandle": "transfer-cbtt:target"
+    },
+    {
+      "id": "edge-partition-redeem",
+      "type": "labelEdge",
+      "source": "partition-cbtt",
+      "target": "redeem-cbtt",
+      "sourceHandle": "partition-cbtt:source",
+      "targetHandle": "redeem-cbtt:target"
+    },
+    {
+      "id": "edge-partition-wait",
+      "type": "labelEdge",
+      "source": "partition-cbtt",
+      "target": "wait-cbtt",
+      "sourceHandle": "partition-cbtt:source",
+      "targetHandle": "wait-cbtt:target"
+    },
+    {
+      "id": "edge-wait-vault",
+      "type": "labelEdge",
+      "source": "wait-cbtt",
+      "target": "vault-cbtt",
+      "sourceHandle": "wait-cbtt:source",
+      "targetHandle": "vault-cbtt:target"
+    }
+  ]
+}
+

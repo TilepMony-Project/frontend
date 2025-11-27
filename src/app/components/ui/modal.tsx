@@ -19,6 +19,7 @@ export type ModalProps = {
   icon?: React.ReactNode;
   footerVariant?: FooterVariant;
   className?: string;
+  titleActions?: React.ReactNode;
 };
 
 export function Modal({
@@ -30,6 +31,7 @@ export function Modal({
   size = "medium",
   icon,
   className,
+  titleActions,
 }: ModalProps) {
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen && onClose) {
@@ -51,9 +53,12 @@ export function Modal({
         className={cn(sizeClasses[size], "shadow-2xl", className, !onClose && "[&>button]:hidden")}
       >
         <DialogHeader>
-          <div className="flex items-center gap-2">
-            {icon && <div className="flex-shrink-0">{icon}</div>}
-            <DialogTitle>{title}</DialogTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {icon && <div className="flex-shrink-0">{icon}</div>}
+              <DialogTitle>{title}</DialogTitle>
+              {titleActions && <div className="flex items-center gap-2">{titleActions}</div>}
+            </div>
           </div>
         </DialogHeader>
         <div className="py-4">{children}</div>

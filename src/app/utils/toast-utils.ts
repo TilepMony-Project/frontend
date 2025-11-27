@@ -5,6 +5,7 @@ export enum ToastType {
   ERROR = "error",
   INFO = "info",
   WARNING = "warning",
+  LOADING = "loading",
 }
 
 type ShowToastParams = {
@@ -15,33 +16,33 @@ type ShowToastParams = {
     label: string;
     onClick: () => void;
   };
+  id?: string | number;
 };
 
-export function showToast({ title, subtitle, variant, action }: ShowToastParams) {
+export function showToast({ title, subtitle, variant, action, id }: ShowToastParams) {
   const options = {
     description: subtitle,
+    id,
     action: action
       ? {
-          label: action.label,
-          onClick: action.onClick,
-        }
+        label: action.label,
+        onClick: action.onClick,
+      }
       : undefined,
   };
 
   switch (variant) {
     case ToastType.SUCCESS:
-      toast.success(title, options);
-      break;
+      return toast.success(title, options);
     case ToastType.ERROR:
-      toast.error(title, options);
-      break;
+      return toast.error(title, options);
     case ToastType.INFO:
-      toast.info(title, options);
-      break;
+      return toast.info(title, options);
     case ToastType.WARNING:
-      toast.warning(title, options);
-      break;
+      return toast.warning(title, options);
+    case ToastType.LOADING:
+      return toast.loading(title, options);
     default:
-      toast(title, options);
+      return toast(title, options);
   }
 }

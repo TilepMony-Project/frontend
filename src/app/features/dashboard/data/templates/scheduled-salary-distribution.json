@@ -1,0 +1,218 @@
+{
+  "id": "scheduled-salary-distribution",
+  "name": "Scheduled Salary Distribution",
+  "category": "Payroll",
+  "description": "Convert monthly mint into USDT, split across employee wallets, and queue the cycle every 30 days.",
+  "layoutDirection": "horizontal",
+  "nodes": [
+    {
+      "id": "deposit-payroll",
+      "type": "Node",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "deposit",
+        "icon": "DollarSign",
+        "properties": {
+          "label": "Deposit - Payroll Funding",
+          "description": "Load monthly payroll budget",
+          "amount": 500000,
+          "currency": "IDR",
+          "paymentGateway": "PayrollGateway"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "mint-payroll",
+      "type": "Node",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "mint",
+        "icon": "Coins",
+        "properties": {
+          "label": "Monthly Mint",
+          "description": "Issuer converts payroll funds to IDRX",
+          "amount": 500000,
+          "issuer": "IssuerPayroll",
+          "receivingWallet": "0xcccccccccccccccccccccccccccccccccccccccc",
+          "exchangeRate": 1
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "swap-payroll",
+      "type": "Node",
+      "position": { "x": 640, "y": 0 },
+      "data": {
+        "type": "swap",
+        "icon": "ArrowLeftRight",
+        "properties": {
+          "label": "Swap to USDT",
+          "description": "Payroll runs in USDT",
+          "inputToken": "IDRX",
+          "outputToken": "USDT",
+          "amount": 500000,
+          "swapProvider": "DummyDEXPayroll",
+          "slippageTolerance": 0.5,
+          "preferredRoute": "Best price"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "partition-payroll",
+      "type": "Node",
+      "position": { "x": 960, "y": 0 },
+      "data": {
+        "type": "partition",
+        "icon": "GitBranch",
+        "properties": {
+          "label": "Split Payroll",
+          "description": "Allocate per employee",
+          "numberOfBranches": 3,
+          "autoBalance": false,
+          "branches": [
+            { "percentage": 40, "label": "Employee A" },
+            { "percentage": 35, "label": "Employee B" },
+            { "percentage": 25, "label": "Employee C" }
+          ]
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-employee-a",
+      "type": "Node",
+      "position": { "x": 1300, "y": -200 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Transfer - Employee A",
+          "description": "Send 40% to Employee A",
+          "amount": 200000,
+          "recipientWallet": "0xaaaabbbbccccddddeeeeffff0000111122223333",
+          "network": "Mantle Testnet",
+          "maxSlippage": 0.3,
+          "memo": "Payroll - Employee A"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-employee-b",
+      "type": "Node",
+      "position": { "x": 1300, "y": 0 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Transfer - Employee B",
+          "description": "Send 35% to Employee B",
+          "amount": 175000,
+          "recipientWallet": "0xbbbbccccddddeeeeffff00001111222233334444",
+          "network": "Mantle Testnet",
+          "maxSlippage": 0.3,
+          "memo": "Payroll - Employee B"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-employee-c",
+      "type": "Node",
+      "position": { "x": 1300, "y": 200 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Transfer - Employee C",
+          "description": "Send 25% to Employee C",
+          "amount": 125000,
+          "recipientWallet": "0xccccddddeeeeffff000011112222333344445555",
+          "network": "Mantle Testnet",
+          "maxSlippage": 0.3,
+          "memo": "Payroll - Employee C"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "wait-payroll",
+      "type": "Node",
+      "position": { "x": 1620, "y": 40 },
+      "data": {
+        "type": "wait",
+        "icon": "Clock",
+        "properties": {
+          "label": "Wait 30 Days",
+          "description": "Schedule next payroll run",
+          "delayDuration": 30,
+          "timeUnit": "days",
+          "reason": "Monthly payroll cadence"
+        },
+        "segments": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-deposit-payroll-mint",
+      "type": "labelEdge",
+      "source": "deposit-payroll",
+      "target": "mint-payroll",
+      "sourceHandle": "deposit-payroll:source",
+      "targetHandle": "mint-payroll:target"
+    },
+    {
+      "id": "edge-mint-payroll-swap",
+      "type": "labelEdge",
+      "source": "mint-payroll",
+      "target": "swap-payroll",
+      "sourceHandle": "mint-payroll:source",
+      "targetHandle": "swap-payroll:target"
+    },
+    {
+      "id": "edge-swap-payroll-partition",
+      "type": "labelEdge",
+      "source": "swap-payroll",
+      "target": "partition-payroll",
+      "sourceHandle": "swap-payroll:source",
+      "targetHandle": "partition-payroll:target"
+    },
+    {
+      "id": "edge-partition-payroll-emp-a",
+      "type": "labelEdge",
+      "source": "partition-payroll",
+      "target": "transfer-employee-a",
+      "sourceHandle": "partition-payroll:source",
+      "targetHandle": "transfer-employee-a:target"
+    },
+    {
+      "id": "edge-partition-payroll-emp-b",
+      "type": "labelEdge",
+      "source": "partition-payroll",
+      "target": "transfer-employee-b",
+      "sourceHandle": "partition-payroll:source",
+      "targetHandle": "transfer-employee-b:target"
+    },
+    {
+      "id": "edge-partition-payroll-emp-c",
+      "type": "labelEdge",
+      "source": "partition-payroll",
+      "target": "transfer-employee-c",
+      "sourceHandle": "partition-payroll:source",
+      "targetHandle": "transfer-employee-c:target"
+    },
+    {
+      "id": "edge-partition-payroll-wait",
+      "type": "labelEdge",
+      "source": "partition-payroll",
+      "target": "wait-payroll",
+      "sourceHandle": "partition-payroll:source",
+      "targetHandle": "wait-payroll:target"
+    }
+  ]
+}
+

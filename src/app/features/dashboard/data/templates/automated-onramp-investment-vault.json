@@ -1,0 +1,140 @@
+{
+  "id": "automated-onramp-investment-vault",
+  "name": "Automated On-Ramp + Investment Vault",
+  "category": "On-Ramp",
+  "description": "Streamline fiat onboarding into IDRX, swap to USDC, hold funds in a vault, then push into an investment wallet.",
+  "layoutDirection": "horizontal",
+  "nodes": [
+    {
+      "id": "deposit-onramp",
+      "type": "Node",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "deposit",
+        "icon": "DollarSign",
+        "properties": {
+          "label": "Deposit - Bank Transfer",
+          "description": "Collect corporate capital via bank transfer",
+          "amount": 250000,
+          "currency": "IDR",
+          "paymentGateway": "EnterpriseBankRail"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "mint-onramp",
+      "type": "Node",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "mint",
+        "icon": "Coins",
+        "properties": {
+          "label": "Mint to IDRX",
+          "description": "Convert fiat to IDRX for on-chain routing",
+          "amount": 250000,
+          "issuer": "DummyIssuerA",
+          "receivingWallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exchangeRate": 1
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "swap-onramp",
+      "type": "Node",
+      "position": { "x": 640, "y": 0 },
+      "data": {
+        "type": "swap",
+        "icon": "ArrowLeftRight",
+        "properties": {
+          "label": "Swap IDRX → USDC",
+          "description": "Move into USD stablecoin for investment",
+          "inputToken": "IDRX",
+          "outputToken": "USDC",
+          "amount": 250000,
+          "swapProvider": "DummyDEXB",
+          "slippageTolerance": 0.35,
+          "preferredRoute": "Best price"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "vault-onramp",
+      "type": "Node",
+      "position": { "x": 960, "y": 0 },
+      "data": {
+        "type": "vault",
+        "icon": "ShieldCheck",
+        "properties": {
+          "label": "Investment Vault",
+          "description": "Hold until vault reaches 2,000 USDC",
+          "amount": 2000,
+          "yieldModel": "Moderate 5% APR",
+          "stopCondition": "targetAmount",
+          "targetAmount": 2000,
+          "timePeriod": 14,
+          "timeUnit": "days",
+          "aprThreshold": 2,
+          "autoWithdrawDestination": "transfer"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-onramp",
+      "type": "Node",
+      "position": { "x": 1280, "y": 0 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Transfer to Investment Wallet",
+          "description": "Move vault tokens into investment strategy",
+          "amount": 2000,
+          "recipientWallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "network": "Mantle Testnet",
+          "maxSlippage": 0.25,
+          "memo": "Auto on-ramp investment"
+        },
+        "segments": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-deposit-onramp-mint",
+      "type": "labelEdge",
+      "source": "deposit-onramp",
+      "target": "mint-onramp",
+      "sourceHandle": "deposit-onramp:source",
+      "targetHandle": "mint-onramp:target"
+    },
+    {
+      "id": "edge-mint-onramp-swap",
+      "type": "labelEdge",
+      "source": "mint-onramp",
+      "target": "swap-onramp",
+      "sourceHandle": "mint-onramp:source",
+      "targetHandle": "swap-onramp:target"
+    },
+    {
+      "id": "edge-swap-onramp-vault",
+      "type": "labelEdge",
+      "source": "swap-onramp",
+      "target": "vault-onramp",
+      "sourceHandle": "swap-onramp:source",
+      "targetHandle": "vault-onramp:target"
+    },
+    {
+      "id": "edge-vault-onramp-transfer",
+      "type": "labelEdge",
+      "source": "vault-onramp",
+      "target": "transfer-onramp",
+      "sourceHandle": "vault-onramp:source",
+      "targetHandle": "transfer-onramp:target"
+    }
+  ]
+}
+

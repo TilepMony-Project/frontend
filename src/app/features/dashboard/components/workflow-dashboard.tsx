@@ -23,11 +23,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import { ToastType, showToast } from "@/utils/toast-utils";
+import { workflowTemplates, type WorkflowTemplate } from "@/features/dashboard/data/templates";
 
 type ViewMode = "grid" | "list";
 
 type PendingAction = {
-  type: "create" | "duplicate" | "delete" | null;
+  type: "create" | "duplicate" | "delete" | "template" | null;
   workflowId?: string;
 };
 
@@ -121,7 +122,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const [statusFilter, setStatusFilter] = useState<"all" | WorkflowSummary["status"]>("all");
   const [pendingAction, setPendingAction] = useState<PendingAction>({ type: null });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newWorkflowName, setNewWorkflowName] = useState("");
+  const [workflowToDelete, setWorkflowToDelete] = useState<WorkflowSummary | null>(null);
   const { theme, toggleTheme } = useTheme();
   const ownerDisplay = user?.email?.address || user?.wallet?.address || user?.id || null;
   const isBusy = isLoading || isLoadingToken;
@@ -202,6 +206,34 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     setIsCreateModalOpen(false);
   }
 
+  function openTemplateModal() {
+    setIsTemplateModalOpen(true);
+  }
+
+  function closeTemplateModal() {
+    if (pendingAction.type === "template") {
+      return;
+    }
+    setIsTemplateModalOpen(false);
+  }
+
+  function openDeleteWorkflowModal(workflow: WorkflowSummary) {
+    setWorkflowToDelete(workflow);
+    setIsDeleteModalOpen(true);
+  }
+
+  function closeDeleteWorkflowModal() {
+    if (pendingAction.type === "delete") {
+      return;
+    }
+    setIsDeleteModalOpen(false);
+    setWorkflowToDelete(null);
+  }
+
+  function deepClone<T>(value: T): T {
+    return JSON.parse(JSON.stringify(value));
+  }
+
   async function createWorkflow(nameOverride?: string) {
     if (!accessToken) {
       showToast({
@@ -256,12 +288,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     void createWorkflow(newWorkflowName);
   }
 
-  async function handleDeleteWorkflow(workflowId: string) {
-    const confirmed = window.confirm("Delete this workflow? This action cannot be undone.");
-    if (!confirmed) {
-      return;
-    }
-
+  async function handleCreateWorkflowFromTemplate(template: WorkflowTemplate) {
     if (!accessToken) {
       showToast({
         title: "Session not ready",
@@ -271,6 +298,49 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       return;
     }
 
+    try {
+      setPendingAction({ type: "template", workflowId: template.id });
+      const response = await fetch("/api/workflows", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          name: template.name,
+          description: template.description,
+          nodes: deepClone(template.nodes),
+          edges: deepClone(template.edges),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create workflow from template");
+      }
+
+      const { workflow } = await response.json();
+      const normalized = normalizeWorkflow(workflow);
+      setWorkflows((prev) => [normalized, ...prev]);
+      showToast({
+        title: "Template applied",
+        subtitle: `${template.name} is ready in your workspace.`,
+        variant: ToastType.SUCCESS,
+      });
+      setIsTemplateModalOpen(false);
+      router.push(`/workspace/${normalized.id}`);
+    } catch (error) {
+      console.error(error);
+      showToast({
+        title: "Unable to apply template",
+        subtitle: error instanceof Error ? error.message : "Please try again.",
+        variant: ToastType.ERROR,
+      });
+    } finally {
+      resetAction();
+    }
+  }
+
+  async function handleDeleteWorkflow(workflowId: string) {
     try {
       setPendingAction({ type: "delete", workflowId });
       const response = await fetch(`/api/workflows/${workflowId}`, {
@@ -286,6 +356,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
 
       setWorkflows((prev) => prev.filter((workflow) => workflow.id !== workflowId));
       showToast({ title: "Workflow deleted", variant: ToastType.SUCCESS });
+      setIsDeleteModalOpen(false);
+      setWorkflowToDelete(null);
       // Refresh workflows to ensure consistency
       if (!initialWorkflows) {
         void fetchWorkflows();
@@ -311,6 +383,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       });
       return;
     }
+    const toastId = showToast({
+      title: "Duplicating workflow...",
+      variant: ToastType.LOADING,
+    });
 
     try {
       setPendingAction({ type: "duplicate", workflowId });
@@ -329,6 +405,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       const normalized = normalizeWorkflow(workflow);
       setWorkflows((prev) => [normalized, ...prev]);
       showToast({
+        id: toastId,
         title: "Workflow duplicated",
         variant: ToastType.SUCCESS,
       });
@@ -339,6 +416,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     } catch (error) {
       console.error(error);
       showToast({
+        id: toastId,
         title: "Unable to duplicate workflow",
         subtitle: error instanceof Error ? error.message : "Please try again.",
         variant: ToastType.ERROR,
@@ -358,7 +436,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
 
   const [isOpeningWorkflow, setIsOpeningWorkflow] = useState<string | null>(null);
   const creating = pendingAction.type === "create";
+  const creatingTemplate = pendingAction.type === "template";
   const mutatingWorkflowId = pendingAction.workflowId;
+  const deletingWorkflowId =
+    pendingAction.type === "delete" ? pendingAction.workflowId : null;
 
   return (
     <div className="min-h-screen p-8 flex flex-col gap-6 bg-[#eeeff3] dark:bg-[#151516]">
@@ -453,9 +534,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         </div>
       </section>
 
-      <section className="flex justify-between items-center text-gray-600 dark:text-gray-400">
-        <span>
-          {isBusy ? (
+      <section className="flex justify-between items-center gap-4 text-gray-600 dark:text-gray-400 flex-wrap">
+        <span className="text-sm">
+          {isLoading ? (
             <span className="flex items-center gap-2">
               <Icon name="Loader2" size={16} className="animate-spin" />
               {isLoadingToken ? "Preparing your workspace..." : "Loading workflows..."}
@@ -464,25 +545,46 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             `Showing ${filteredWorkflows.length} of ${workflows.length} workflows`
           )}
         </span>
-        <Button
-          className="min-w-[180px] px-6 py-3 text-base rounded-full"
-          onClick={openCreateWorkflowModal}
-          disabled={creating || isBusy || !accessToken}
-          variant="default"
-          size="lg"
-        >
-          {creating ? (
-            <>
-              <Icon name="Loader2" size={18} className="animate-spin" />
-              Creating...
-            </>
-          ) : (
-            <>
-              <Icon name="Plus" size={18} />
-              New workflow
-            </>
-          )}
-        </Button>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            className="min-w-[180px] px-6 py-3 text-base rounded-full border border-border"
+            onClick={openTemplateModal}
+            disabled={creatingTemplate || isLoading}
+            variant="outline"
+            size="lg"
+          >
+            {creatingTemplate ? (
+              <>
+                <Icon name="Loader2" size={18} className="animate-spin" />
+                Loading template...
+              </>
+            ) : (
+              <>
+                <Icon name="LayoutGrid" size={18} />
+                Choose template
+              </>
+            )}
+          </Button>
+          <Button
+            className="min-w-[180px] px-6 py-3 text-base rounded-full"
+            onClick={openCreateWorkflowModal}
+            disabled={creating || isLoading}
+            variant="default"
+            size="lg"
+          >
+            {creating ? (
+              <>
+                <Icon name="Loader2" size={18} className="animate-spin" />
+                Creating...
+              </>
+            ) : (
+              <>
+                <Icon name="Plus" size={18} />
+                New workflow
+              </>
+            )}
+          </Button>
+        </div>
       </section>
 
       {isBusy ? (
@@ -595,7 +697,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 <button
                   type="button"
                   className="px-4 py-3 rounded-xl border border-red-200 dark:border-red-900/50 bg-transparent text-red-600 dark:text-red-400 cursor-pointer font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => handleDeleteWorkflow(workflow.id)}
+                  onClick={() => openDeleteWorkflowModal(workflow)}
                   disabled={pendingAction.type === "delete" && mutatingWorkflowId === workflow.id}
                   title="Delete workflow"
                 >
@@ -693,7 +795,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                       <button
                         type="button"
                         className="rounded-lg border border-red-300 dark:border-red-700 bg-transparent text-red-600 dark:text-red-400 px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950"
-                        onClick={() => handleDeleteWorkflow(workflow.id)}
+                        onClick={() => openDeleteWorkflowModal(workflow)}
                         disabled={
                           pendingAction.type === "delete" && mutatingWorkflowId === workflow.id
                         }
@@ -743,6 +845,122 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 }
               }}
             />
+          </div>
+        </Modal>
+      )}
+      {isTemplateModalOpen && (
+        <Modal
+          open={isTemplateModalOpen}
+          title="Choose a template"
+          onClose={creatingTemplate ? undefined : closeTemplateModal}
+          size="extra-large"
+          titleActions={
+            <span className="group relative inline-flex">
+              <a
+                href="https://www.notion.so/Flow-Templates-2b59b7e1751380948781f49d6ce86707?source=copy_link"
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary hover:text-primary/80 transition-colors focus:outline-none"
+                aria-label="View template guidelines"
+              >
+                <Icon name="Info" size={20} />
+              </a>
+              <span className="pointer-events-none absolute left-0 bottom-full z-20 mb-2 whitespace-nowrap rounded-md bg-gray-900 px-3 py-1 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
+                View template guidelines
+              </span>
+            </span>
+          }
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {workflowTemplates.map((template) => {
+              const isProcessingTemplate =
+                creatingTemplate && mutatingWorkflowId === template.id;
+              return (
+                <article
+                  key={template.id}
+                  className="flex flex-col gap-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#27282b] p-5 shadow-sm"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-base font-semibold text-gray-900 dark:text-white">
+                        {template.name}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {template.category}
+                      </p>
+                    </div>
+                    <span className="text-xs font-medium rounded-full px-3 py-1 bg-primary/10 text-primary min-w-fit">
+                      {template.nodes.length} nodes
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {template.description}
+                  </p>
+                  <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+                    <span className="flex items-center gap-1">
+                      <Icon name="GitBranch" size={14} />
+                      {template.edges.length} edges
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Icon name="ArrowLeftRight" size={14} />
+                      {template.layoutDirection === "horizontal" ? "Horizontal" : "Vertical"} layout
+                    </span>
+                  </div>
+                  <Button
+                    variant="default"
+                    className="mt-auto"
+                    onClick={() => void handleCreateWorkflowFromTemplate(template)}
+                    disabled={isProcessingTemplate}
+                  >
+                    {isProcessingTemplate ? (
+                      <>
+                        <Icon name="Loader2" size={18} className="animate-spin" />
+                        Applying...
+                      </>
+                    ) : (
+                      <>
+                        <Icon name="Copy" size={18} />
+                        Use this template
+                      </>
+                    )}
+                  </Button>
+                </article>
+              );
+            })}
+          </div>
+        </Modal>
+      )}
+      {isDeleteModalOpen && workflowToDelete && (
+        <Modal
+          open={isDeleteModalOpen}
+          title="Delete workflow"
+          onClose={pendingAction.type === "delete" ? undefined : closeDeleteWorkflowModal}
+          footer={
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={closeDeleteWorkflowModal}
+                disabled={pendingAction.type === "delete"}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="default"
+                className="bg-red-600 hover:bg-red-700"
+                onClick={() => handleDeleteWorkflow(workflowToDelete.id)}
+                disabled={deletingWorkflowId === workflowToDelete.id}
+              >
+                {deletingWorkflowId === workflowToDelete.id ? "Deleting…" : "Delete workflow"}
+              </Button>
+            </div>
+          }
+        >
+          <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+            <p>
+              You are about to delete <strong>{workflowToDelete.name}</strong>. This action cannot be
+              undone and the workflow will be permanently removed from your dashboard.
+            </p>
+            <p>If you’re sure, click “Delete workflow” below.</p>
           </div>
         </Modal>
       )}
