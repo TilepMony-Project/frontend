@@ -1,0 +1,2 @@
+patchedDependencies:
+  '@synergycodes/overflow-ui': patches/@synergycodes__overflow-ui.patch
