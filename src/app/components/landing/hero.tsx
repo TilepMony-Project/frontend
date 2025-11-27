@@ -34,7 +34,7 @@ const Hero: React.FC = () => {
               Stablecoin creation made as easy as{" "}
               <AuroraText
                 className="text-wrap break-words whitespace-nowrap"
-                colors={["#1296e7", "#3b82f6", "#a855f7", "#db2777"]}
+                colors={["#f5c0b1", "#a79ee2", "#1296e7", "#91e5e8"]}
                 speed={1.4}
               >
                 drag-and-drop
@@ -57,8 +57,14 @@ const Hero: React.FC = () => {
               className="absolute left-0 top-0 w-full h-full object-cover"
               src="/landing/card-background-0.svg"
             />
-            <div 
+            <div
               onClick={() => setIsVideoOpen(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setIsVideoOpen(true);
+                }
+              }}
               className="flex flex-col sm:flex-row items-center p-3 sm:p-4 lg:p-6 rounded-full bg-card border-2 sm:border-4 lg:border-5 border-primary/35 gap-2 sm:gap-3 lg:gap-4 animate-smooth-bounce cursor-pointer hover:bg-accent hover:border-primary/50 hover:shadow-lg transition-all duration-300 max-w-[90%] sm:max-w-none relative z-10"
             >
               <img
@@ -68,7 +74,7 @@ const Hero: React.FC = () => {
               />
               <div className="hidden sm:flex flex-col items-center sm:items-start gap-1">
                 <p className="text-sm sm:text-base lg:text-lg font-semibold text-foreground text-center sm:text-left leading-tight">
-                  Watch introduce video
+                  Watch demo video
                 </p>
                 <div className="flex items-center gap-1 sm:gap-2">
                   <p className="opacity-80 text-xs sm:text-sm text-muted-foreground">5 mins</p>
