@@ -37,14 +37,16 @@ export function LabelEdge({
   });
 
   const { label, icon } = data;
-  const content = icon ? <Icon name={icon as any} /> : label;
+  const labelText = typeof label === "string" ? label : undefined;
+  const iconName = typeof icon === "string" ? icon : undefined;
+  const content = iconName ? <Icon name={iconName} /> : labelText;
 
   const labelProps = {
     id,
-    content: content as any,
+    content,
     hovered,
     selected,
-    icon: icon as any,
+    icon: iconName,
     onMouseEnter,
     onMouseLeave,
   };

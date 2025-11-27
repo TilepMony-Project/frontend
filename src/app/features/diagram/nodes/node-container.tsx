@@ -12,7 +12,10 @@ type Props = NodeProps<WorkflowBuilderNode>;
 
 export const NodeContainer = memo(({ id, data, selected }: Props) => {
   const { icon, properties } = data;
-  const { label = "", description = "" } = properties as any;
+  const label = typeof properties?.label === "string" ? properties.label : "";
+  const description =
+    typeof properties?.description === "string" ? properties.description : "";
+  const iconName = icon ?? "Circle";
   const isValid = getIsValidFromProperties(properties);
 
   const layoutDirection = useStore((store) => store.layoutDirection);
@@ -34,7 +37,7 @@ export const NodeContainer = memo(({ id, data, selected }: Props) => {
         data={data}
         label={label}
         description={description}
-        icon={icon as any}
+        icon={iconName}
         isValid={isValid}
       />
     </NodeAsPortWrapper>

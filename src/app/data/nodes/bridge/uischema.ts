@@ -40,7 +40,7 @@ export const uischema: UISchema = {
           label: "Source Chain",
           scope: scope("properties.sourceChain"),
           readOnly: true,
-        } as any,
+        },
         {
           type: "Text",
           label: "Destination Chain",

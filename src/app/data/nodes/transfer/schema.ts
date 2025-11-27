@@ -20,6 +20,10 @@ export const schema = {
       type: "string",
       readOnly: true,
     },
+    gasFee: {
+      type: "number",
+      readOnly: true,
+    },
     maxSlippage: {
       type: "number",
       minimum: 0.1,

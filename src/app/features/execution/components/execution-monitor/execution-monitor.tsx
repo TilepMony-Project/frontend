@@ -149,9 +149,13 @@ export function ExecutionMonitor() {
         (execution?.status === "running" || execution?.status === "running_waiting"
           ? "pending"
           : "pending");
+      const nodeLabel =
+        typeof node.data?.properties?.label === "string"
+          ? node.data.properties.label
+          : undefined;
       return {
         id: node.id,
-        label: ((node.data as any)?.properties?.label as string) ?? node.type ?? "Node",
+        label: nodeLabel ?? node.type ?? "Node",
         type: node.type ?? "node",
         status,
       };

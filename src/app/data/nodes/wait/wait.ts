@@ -1,15 +1,15 @@
 import type { PaletteItem } from "@/types/common";
 import { NodeType } from "@/types/node-types";
 import { defaultPropertiesData } from "./default-properties-data";
-import { schema, type WaitNodeSchema } from "./schema";
+import { schema } from "./schema";
 import { uischema } from "./uischema";
 
-export const waitNode: PaletteItem<WaitNodeSchema> = {
+export const waitNode: PaletteItem<typeof defaultPropertiesData> = {
   label: "Wait",
   description: "Delay workflow execution for specified time period",
   type: "wait",
   icon: "Clock",
-  defaultPropertiesData: defaultPropertiesData as any,
+  defaultPropertiesData,
   schema,
   uischema,
   templateType: NodeType.Node,

@@ -7,6 +7,7 @@ export const defaultPropertiesData: NodeDataProperties<TransferNodeSchema> = {
   amount: 1000,
   recipientWallet: "",
   network: "Mantle Testnet",
+  gasFee: 0,
   maxSlippage: 0.5,
   memo: "",
 };

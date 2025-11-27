@@ -21,11 +21,7 @@ type ComponentDecoratorOptions<Props = object> =
   | DecoratorWithContent<Props>
   | DecoratorWithNoContent<Props>;
 
-const pluginRegistryComponents = new Map<
-  string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ComponentDecoratorOptions<any>[]
->();
+const pluginRegistryComponents = new Map<string, ComponentDecoratorOptions<unknown>[]>();
 
 export function registerComponentDecorator<P>(
   componentName: string,
@@ -35,10 +31,14 @@ export function registerComponentDecorator<P>(
     pluginRegistryComponents.set(componentName, []);
   }
 
-  pluginRegistryComponents.get(componentName)!.push({
+  const decoratedPlugin: ComponentDecoratorOptions<P> = {
     ...plugin,
     name: plugin.name ?? ((plugin as DecoratorWithContent)?.content as { name: string })?.name,
-  });
+  };
+
+  pluginRegistryComponents.get(componentName)!.push(
+    decoratedPlugin as ComponentDecoratorOptions<unknown>
+  );
 }
 
 export function hasRegisteredComponentDecorator(componentName: string, pluginName: string) {
@@ -50,7 +50,10 @@ export function withOptionalComponentPlugins<TProps extends object>(
   componentName: string
 ) {
   const DecoratedComponent = memo((props: TProps) => {
-    const plugins = pluginRegistryComponents.get(componentName)?.sort(sortByPriority) || [];
+    const plugins =
+      (pluginRegistryComponents.get(componentName)?.sort(
+        sortByPriority
+      ) as ComponentDecoratorOptions<TProps>[]) || [];
 
     const modifiedProps = useMemo(() => {
       let result = { ...props };
