@@ -31,15 +31,19 @@ function AppComponent(_props: AppComponentProps) {
 
   return (
     <div className="absolute flex flex-col h-full w-full overflow-hidden">
-      <div className="flex justify-between box-border w-full p-4 z-10 gap-4 pointer-events-none">
+      <DiagramWrapper>
+        <Diagram />
+      </DiagramWrapper>
+
+      <div className="fixed top-0 left-0 right-0 z-[50] flex justify-between box-border w-full p-4 gap-4 pointer-events-none">
         <AppBarContainerLazy />
       </div>
-      <div className="relative w-full h-full px-4 pb-4 box-border flex justify-between overflow-hidden">
-        <div className="h-full flex z-[1] pointer-events-none">
+      <div className="fixed inset-0 top-[6.5rem] px-4 pb-4 box-border flex justify-between overflow-hidden pointer-events-none z-[40]">
+        <div className="h-full flex pointer-events-auto">
           <PaletteContainerLazy />
         </div>
         {shouldShowRightPanel && (
-          <div className="h-full flex z-[1] pointer-events-none">
+          <div className="h-full flex pointer-events-auto">
             <div className="flex flex-col gap-4 items-end justify-between">
               {isExecutionMonitorActive ? <ExecutionMonitor /> : null}
               {shouldShowPropertiesPanel ? <PropertiesBarContainerLazy /> : null}
@@ -47,9 +51,6 @@ function AppComponent(_props: AppComponentProps) {
           </div>
         )}
       </div>
-      <DiagramWrapper>
-        <Diagram />
-      </DiagramWrapper>
 
       <AppLoaderContainer />
       <OptionalHooks />

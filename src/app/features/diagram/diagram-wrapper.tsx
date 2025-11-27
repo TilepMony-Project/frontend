@@ -7,5 +7,5 @@ export function DiagramWrapper({ children }: PropsWithChildren) {
   const commandHandler = useCommandHandler();
   useCommandHandlerKeyboard(commandHandler);
 
-  return <div className="absolute">{children}</div>;
+  return <div className="absolute inset-0 isolate">{children}</div>;
 }
