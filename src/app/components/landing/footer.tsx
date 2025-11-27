@@ -13,10 +13,9 @@ const Footer: React.FC = () => {
           <div className="flex items-center gap-1">
             <img
               alt="TilepMoney Logo"
-              className="w-20 h-6 sm:w-24 sm:h-8"
-              src="/landing/logo.svg"
+              className="w-8 h-8 sm:w-10 sm:h-10"
+              src="/tilepmoney.png"
             />
-            <img alt="Sparkle" className="w-4 h-4 sm:w-5 sm:h-5" src="/landing/Sparkle.svg" />
           </div>
           <div className="flex-1 h-px bg-border" />
         </div>

@@ -31,7 +31,7 @@ const Header: React.FC = () => {
       className={cn(
         "sticky z-50 flex flex-col backdrop-blur-lg transition-all duration-300",
         isScrolled
-          ? "top-4 mx-4 lg:mx-8 mt-4 border border-border/40 rounded-full shadow-lg bg-background/40"
+          ? "top-4 mx-4 lg:mx-8 mt-4 border-[1px] rounded-full shadow-lg bg-background/40 border-primary dark:border-white/40"
           : "top-0 border-b border-border/40 bg-background/80 shadow-lg"
       )}
     >

@@ -15,7 +15,7 @@ export function DotPatternLinearGradient({ children, className }: DotPatternLine
   return (
     <div
       className={cn(
-        "relative min-h-screen w-full overflow-hidden",
+        "relative min-h-screen w-full",
         "bg-[radial-gradient(circle_at_top,_rgba(18,150,231,0.1),transparent_50%),_linear-gradient(to_bottom,#ffffff,#eeeff3)]",
         "dark:bg-[radial-gradient(circle_at_top,_rgba(18,150,231,0.25),transparent_55%),_linear-gradient(to_bottom,#151516,#27282b)]",
         className

@@ -20,7 +20,7 @@ const Hero: React.FC = () => {
         <div className="flex flex-col items-center gap-8 lg:gap-12">
           {/* Text Content */}
           <div className="flex flex-col items-center gap-4 lg:gap-6">
-            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default">
+            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary dark:border-white/40 hover:border-primary dark:hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default">
               <img
                 alt="Sparkle"
                 className="w-4 h-4 lg:w-5 lg:h-5 group-hover:rotate-12 transition-transform duration-300"

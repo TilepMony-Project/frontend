@@ -12,7 +12,7 @@ interface StrategyCardProps {
 
 const StrategyCard: React.FC<StrategyCardProps> = ({ icon, iconAlt, title, description }) => {
   return (
-    <div className="flex flex-col items-start gap-4 p-6 rounded-xl bg-card border hover:border-primary hover:shadow-xl transition-all duration-200 cursor-pointer">
+    <div className="flex flex-col items-start gap-4 p-6 rounded-xl bg-card border-[1px] border-primary/40 dark:border-white/40 hover:border-primary border[1px] dark:hover:border-[1.5px] dark:hover:border-primary hover:shadow-xl transition-all duration-200 cursor-pointer">
       <div className="flex items-start gap-3">
         <div className="flex items-center justify-center min-w-8 min-h-8 p-2 rounded-lg bg-primary/10 flex-shrink-0">
           <img alt={iconAlt} className="w-5 h-5 dark:brightness-0 dark:invert" src={icon} />
@@ -26,7 +26,7 @@ const StrategyCard: React.FC<StrategyCardProps> = ({ icon, iconAlt, title, descr
 
 const StrategyCardBackground: React.FC = () => {
   return (
-    <div className="w-full max-w-6xl h-96 relative overflow-hidden rounded-3xl bg-primary/20 border border-border flex items-center justify-center">
+    <div className="w-full max-w-6xl h-96 relative overflow-hidden rounded-3xl bg-primary/20 border-[1px] border-primary/40 dark:border-white/40 flex items-center justify-center">
       <img
         alt="Card Background 1"
         className="absolute left-0 top-0 w-full h-full object-cover"
@@ -49,7 +49,7 @@ const OurStrategies: React.FC = () => {
         <div className="flex flex-col items-center gap-8">
           {/* Text Content */}
           <div className="flex flex-col items-center gap-6">
-            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5">
+            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary/40 dark:border-white/40 hover:border-primary dark:hover:border-primary/40 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default">
               <img
                 alt="Sparkle"
                 className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300"

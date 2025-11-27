@@ -50,7 +50,7 @@ const FAQ: React.FC = () => {
             {/* Text Content */}
             <div className="flex flex-col gap-6 lg:pr-10 w-full lg:w-auto lg:min-w-[380px]">
               <div className="flex flex-col gap-4">
-                <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 w-fit">
+                <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary dark:border-white/40 hover:border-primary dark:hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default w-fit">
                   <img
                     alt="Sparkle"
                     className="w-4 h-4 lg:w-5 lg:h-5 group-hover:rotate-12 transition-transform duration-300"
@@ -86,7 +86,7 @@ const FAQ: React.FC = () => {
                   <AccordionItem
                     key={item.question}
                     value={`item-${index}`}
-                    className="border border-gray-200 bg-card rounded-xl px-5 py-1 hover:border-primary/40 transition-all duration-300 group data-[state=open]:border-primary/50 data-[state=open]:bg-card/80"
+                    className="border-[1px] border-primary dark:border-white/40 bg-card rounded-xl px-5 py-1 hover:border-primary dark:hover:border-primary/40 transition-all duration-300 group data-[state=open]:border-primary/50 data-[state=open]:bg-card/80"
                   >
                     <AccordionTrigger className="text-left hover:no-underline py-5 text-base lg:text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
                       {item.question}

@@ -22,7 +22,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col items-start gap-4 p-6 rounded-xl bg-card border border-border hover:border-primary cursor-pointer transition-all duration-200 min-h-12 ${!disableHoverShadow ? "hover:shadow-xl" : ""}`}
+      className={`flex flex-col items-start gap-4 p-6 rounded-xl bg-card border-[1px] border-primary/40 dark:border-white/40 hover:border-primary border[1px] dark:hover:border-[1.5px] dark:hover:border-primary hover:shadow-xl transition-all duration-200 cursor-pointer ${!disableHoverShadow ? "hover:shadow-xl" : ""}`}
     >
       <div className="flex flex-col items-start gap-2">
         <div className="flex items-center justify-center pt-1 rounded-lg flex-shrink-0">
@@ -44,7 +44,7 @@ const Applications: React.FC = () => {
       <div className="flex flex-col items-center gap-4">
         <div className="flex flex-col items-center gap-8 mb-8">
           <div className="flex flex-col items-center gap-6">
-            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 w-fit">
+            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default w-fit">
               <img
                 alt="Sparkle"
                 className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300"
@@ -149,19 +149,19 @@ const Applications: React.FC = () => {
           </div>
 
           {/* Gradient Overlay - Fades content smoothly into background */}
-          <div
-            className="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10 bg-gradient-to-t from-[#eeeff3] via-[#eeeff3]/80 to-transparent dark:from-[#27282b] dark:via-[#27282b]/80 dark:to-transparent rounded-b-2xl"
-          />
+          {/* <div
+            className="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10 bg-gradient-to-t from-[#eeeff3] via-[#eeeff3]/80 to-transparent dark:from-[#27282b] dark:via-[#27282b]/80 dark:to-transparent rounded-b-md"
+          /> */}
         </div>
 
-        <div className="flex flex-col items-center w-full px-4">
+        {/* <div className="flex flex-col items-center w-full px-4">
           <Button
-            className="px-6 py-3 rounded-xl backdrop-blur-md font-bold transition-all duration-200 min-h-12 w-full sm:w-auto"
+            className="px-6 py-3 rounded-xl backdrop-blur-md font-bold transition-all duration-200 min-h-12 w-full sm:w-auto border border-border hover:border-primary"
             variant="outline"
           >
             Explore more applications
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
