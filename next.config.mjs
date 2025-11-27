@@ -25,10 +25,13 @@ const nextConfig = {
     }
 
     // Ignore optional dependencies that are not needed for web
+    // Alias Node-focused logging deps to browser-safe versions
     config.resolve.alias = {
       ...config.resolve.alias,
       '@react-native-async-storage/async-storage': false,
       'pino-pretty': false,
+      pino: 'pino/browser',
+      'thread-stream': false,
     };
 
     // Ignore warnings for optional peer dependencies
@@ -40,13 +43,18 @@ const nextConfig = {
 
     return config;
   },
-  experimental: {
-    // Enable if needed for specific features
-  },
+  experimental: {},
   // Turbopack configuration
   // Note: Currently using webpack for SVG handling via @svgr/webpack
   // Add turbopack config here when migrating from webpack
-  turbopack: {},
+  turbopack: {
+    // Keep Turbopack aligned with the webpack aliases above
+    resolveAlias: {
+      pino: {
+        browser: 'pino/browser',
+      },
+    },
+  },
 };
 
 export default nextConfig;

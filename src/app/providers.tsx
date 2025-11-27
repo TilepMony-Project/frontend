@@ -3,10 +3,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactFlowProvider } from "@xyflow/react";
 import { setAutoFreeze } from "immer";
+import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import TagManager from "react-gtm-module";
-import { PrivyProvider, type PrivyClientConfig } from "@privy-io/react-auth";
-import { SmartWalletsProvider } from "@privy-io/react-auth/smart-wallets";
+import type { PrivyClientConfig } from "@privy-io/react-auth";
 import { PrivyUserSync } from "@/components/privy-user-sync";
 
 // Disable immer's automatic object freezing because ReactFlow mutates objects under the hood
@@ -29,6 +29,16 @@ const privyConfig: PrivyClientConfig = {
   },
 };
 
+const PrivyProviderNoSSR = dynamic(
+  () => import("@privy-io/react-auth").then((mod) => mod.PrivyProvider),
+  { ssr: false }
+);
+
+const SmartWalletsProviderNoSSR = dynamic(
+  () => import("@privy-io/react-auth/smart-wallets").then((mod) => mod.SmartWalletsProvider),
+  { ssr: false }
+);
+
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Initialize GTM if GTM_ID is available
@@ -45,15 +55,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <PrivyProvider appId={privyAppId} config={privyConfig}>
-      <SmartWalletsProvider>
+    <PrivyProviderNoSSR appId={privyAppId} config={privyConfig}>
+      <SmartWalletsProviderNoSSR>
         <QueryClientProvider client={queryClient}>
           <ReactFlowProvider>
             <PrivyUserSync />
             {children}
           </ReactFlowProvider>
         </QueryClientProvider>
-      </SmartWalletsProvider>
-    </PrivyProvider>
+      </SmartWalletsProviderNoSSR>
+    </PrivyProviderNoSSR>
   );
 }
