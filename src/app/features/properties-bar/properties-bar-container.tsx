@@ -32,7 +32,7 @@ export function PropertiesBarContainer() {
       return;
     }
 
-    const nodeLabel = selection.node.data?.properties?.label ?? "Selected node";
+    const nodeLabel = getNodeLabel(selection.node.data?.properties);
 
     showToast({
       title: `${nodeLabel} execution coming soon`,
@@ -56,4 +56,16 @@ export function PropertiesBarContainer() {
       onToggleSidebar={togglePropertiesBar}
     />
   );
+}
+
+function getNodeLabel(properties: unknown): string {
+  if (isRecord(properties) && typeof properties.label === "string") {
+    return properties.label;
+  }
+
+  return "Selected node";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }

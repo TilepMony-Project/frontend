@@ -12,16 +12,16 @@ type Props = {
 
 export function EdgeProperties({ edge }: Props) {
   const { data = {}, id } = edge;
-  const { label } = data;
+  const labelValue = typeof data.label === "string" ? data.label : "";
 
   const setEdgeData = useStore((state) => state.setEdgeData);
   const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
 
-  const [input, setInput] = useState(label);
+  const [input, setInput] = useState<string>(labelValue);
 
   useEffect(() => {
-    setInput(label);
-  }, [label]);
+    setInput(labelValue);
+  }, [labelValue]);
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const { value } = event.target;
@@ -33,7 +33,7 @@ export function EdgeProperties({ edge }: Props) {
     <div className="flex flex-col gap-3">
       <OptionalEdgeProperties>
         <FormControlWithLabel label="Label">
-          <Input value={input || ""} onChange={onChange} disabled={isReadOnlyMode} />
+          <Input value={input} onChange={onChange} disabled={isReadOnlyMode} />
         </FormControlWithLabel>
       </OptionalEdgeProperties>
     </div>

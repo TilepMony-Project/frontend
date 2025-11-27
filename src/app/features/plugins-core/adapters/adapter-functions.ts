@@ -36,12 +36,11 @@ export function registerFunctionDecorator(functionName: string, plugin: Callback
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function withOptionalFunctionPlugins<F extends (...arguments_: any[]) => any>(
-  rootFunction: F,
+export function withOptionalFunctionPlugins<T extends unknown[], R>(
+  rootFunction: (...arguments_: T) => R,
   functionName: string
 ) {
-  return (...params: Parameters<F>) => {
+  return (...params: T) => {
     const plugins = pluginRegistryCallbacks.get(functionName)?.sort(sortByPriority) || [];
 
     const pluginsBefore = plugins.filter(
@@ -52,16 +51,16 @@ export function withOptionalFunctionPlugins<F extends (...arguments_: any[]) => 
     ) as DecoratorOptionsAfter[];
 
     // Those can modify params that wrapped function will receive
-    let paramsToUse: Parameters<F> = params;
+    let paramsToUse: T = params;
     for (const plugin of pluginsBefore) {
       const response = plugin.callback({ params: paramsToUse });
 
       if (response?.replacedParams) {
-        paramsToUse = response.replacedParams as Parameters<F>;
+        paramsToUse = response.replacedParams as T;
       }
     }
 
-    const returnValue = rootFunction(...paramsToUse) as ReturnType<F>;
+    const returnValue = rootFunction(...paramsToUse);
 
     // Those can modify value that wrapped function will return
     let returnValueToUse = returnValue;
@@ -69,7 +68,7 @@ export function withOptionalFunctionPlugins<F extends (...arguments_: any[]) => 
       const response = plugin.callback({ params: paramsToUse, returnValue: returnValueToUse });
 
       if (response?.replacedReturn) {
-        returnValueToUse = response.replacedReturn as ReturnType<F>;
+        returnValueToUse = response.replacedReturn as R;
       }
     }
 

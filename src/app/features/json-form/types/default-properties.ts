@@ -6,7 +6,7 @@ type TypeMap = {
   boolean: boolean;
 };
 
-type Convert<T> = T extends PrimitiveFieldType ? TypeMap[T] : unknown;
+type Convert<T> = T extends PrimitiveFieldType ? TypeMap[Extract<T, keyof TypeMap>] : unknown;
 
 type ExtractProperties<T> = T extends { type: "object"; properties: infer P }
   ? { [K in keyof P]: ExtractProperties<P[K]> }

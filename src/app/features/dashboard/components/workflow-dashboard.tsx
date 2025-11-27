@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import type { WorkflowSummary } from "@/actions/workflows";
 import { Icon } from "@/components/icons";
 import { IconSwitch } from "@/components/ui/icon-switch";
+import { usePrivySession } from "@/hooks/use-privy-session";
 import { useTheme } from "@/hooks/use-theme";
 import { Moon, Sun } from "lucide-react";
 
@@ -112,6 +113,7 @@ function formatDate(value?: string | null) {
 
 export function WorkflowDashboard({ initialWorkflows }: Props) {
   const router = useRouter();
+  const { accessToken, user, isLoadingToken } = usePrivySession();
   const [workflows, setWorkflows] = useState<WorkflowSummary[]>(initialWorkflows ?? []);
   const [isLoading, setIsLoading] = useState(!initialWorkflows);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -121,12 +123,21 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newWorkflowName, setNewWorkflowName] = useState("");
   const { theme, toggleTheme } = useTheme();
+  const ownerDisplay = user?.email?.address || user?.wallet?.address || user?.id || null;
+  const isBusy = isLoading || isLoadingToken;
 
   // Function to fetch workflows from API
   const fetchWorkflows = useCallback(async () => {
+    if (!accessToken) {
+      return;
+    }
     try {
       setIsLoading(true);
-      const response = await fetch("/api/workflows");
+      const response = await fetch("/api/workflows", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch workflows");
@@ -147,16 +158,21 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [accessToken]);
 
   // Fetch workflows client-side on mount if not provided
   useEffect(() => {
     if (initialWorkflows) {
-      return; // Skip if initialWorkflows were provided (SSR)
+      return;
+    }
+
+    if (!accessToken) {
+      setIsLoading(true);
+      return;
     }
 
     void fetchWorkflows();
-  }, [initialWorkflows, fetchWorkflows]);
+  }, [initialWorkflows, fetchWorkflows, accessToken]);
 
   const filteredWorkflows = useMemo(() => {
     const lowerSearch = searchTerm.toLowerCase().trim();
@@ -187,6 +203,14 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   }
 
   async function createWorkflow(nameOverride?: string) {
+    if (!accessToken) {
+      showToast({
+        title: "Session not ready",
+        subtitle: "Please wait for your Privy session before creating a workflow.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
     try {
       setPendingAction({ type: "create" });
       const workflowName = nameOverride?.trim() ? nameOverride.trim() : "Untitled workflow";
@@ -195,6 +219,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           name: workflowName,
@@ -237,10 +262,22 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       return;
     }
 
+    if (!accessToken) {
+      showToast({
+        title: "Session not ready",
+        subtitle: "Please wait for Privy to finish connecting.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
+
     try {
       setPendingAction({ type: "delete", workflowId });
       const response = await fetch(`/api/workflows/${workflowId}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       if (!response.ok) {
@@ -266,10 +303,22 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   }
 
   async function handleDuplicateWorkflow(workflowId: string) {
+    if (!accessToken) {
+      showToast({
+        title: "Session not ready",
+        subtitle: "Please wait for Privy to finish connecting.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
+
     try {
       setPendingAction({ type: "duplicate", workflowId });
       const response = await fetch(`/api/workflows/${workflowId}/duplicate`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       if (!response.ok) {
@@ -321,6 +370,12 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           <p className="mt-1 text-gray-600 dark:text-gray-400 text-sm">
             Review, filter, and jump into any orchestration workspace.
           </p>
+          {ownerDisplay && (
+            <p className="mt-1 text-gray-500 dark:text-gray-500 text-xs">
+              Workspace owner:{" "}
+              <span className="font-semibold text-gray-900 dark:text-white break-all">{ownerDisplay}</span>
+            </p>
+          )}
         </div>
         <IconSwitch
           checked={theme === "dark"}
@@ -340,7 +395,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             value={searchTerm}
             placeholder="Search workflows"
             onChange={(event) => setSearchTerm(event.target.value)}
-            disabled={isLoading}
+            disabled={isBusy}
             className="border-none outline-none focus-visible:outline-none focus-visible:ring-0 focus:ring-0 focus:outline-none bg-transparent text-inherit w-full disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
@@ -349,7 +404,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              disabled={isLoading}
+              disabled={isBusy}
               className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white px-4 min-w-[200px] flex items-center justify-between disabled:opacity-50"
             >
               {STATUS_OPTIONS.find((option) => option.value === statusFilter)?.label ??
@@ -378,7 +433,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             )}
             type="button"
             onClick={() => setViewMode("grid")}
-            disabled={isLoading}
+            disabled={isBusy}
             aria-label="Grid view"
           >
             <Icon name="LayoutGrid" size={18} />
@@ -390,7 +445,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             )}
             type="button"
             onClick={() => setViewMode("list")}
-            disabled={isLoading}
+            disabled={isBusy}
             aria-label="List view"
           >
             <Icon name="List" size={18} />
@@ -400,10 +455,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
 
       <section className="flex justify-between items-center text-gray-600 dark:text-gray-400">
         <span>
-          {isLoading ? (
+          {isBusy ? (
             <span className="flex items-center gap-2">
               <Icon name="Loader2" size={16} className="animate-spin" />
-              Loading workflows...
+              {isLoadingToken ? "Preparing your workspace..." : "Loading workflows..."}
             </span>
           ) : (
             `Showing ${filteredWorkflows.length} of ${workflows.length} workflows`
@@ -412,7 +467,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         <Button
           className="min-w-[180px] px-6 py-3 text-base rounded-full"
           onClick={openCreateWorkflowModal}
-          disabled={creating || isLoading}
+          disabled={creating || isBusy || !accessToken}
           variant="default"
           size="lg"
         >
@@ -430,7 +485,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         </Button>
       </section>
 
-      {isLoading ? (
+      {isBusy ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
           {[1, 2, 3, 4].map((i) => (
             <div

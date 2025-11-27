@@ -4,10 +4,10 @@ type NodesDefinitionsBySubType = {
   [subType: string]: PaletteItem;
 };
 
-export function getNodesDefinitionsByType(palette: PaletteItem[]) {
-  return palette.reduce((stack: NodesDefinitionsBySubType, item) => {
+export function getNodesDefinitionsByType(palette: PaletteItem[]): NodesDefinitionsBySubType {
+  return palette.reduce<NodesDefinitionsBySubType>((stack, item) => {
     stack[item.type] = item;
 
     return stack;
-  }, {});
+  }, {} as NodesDefinitionsBySubType);
 }

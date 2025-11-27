@@ -1,15 +1,16 @@
 import type { PaletteItem } from "@/types/common";
+import { NodeType } from "@/types/node-types";
 import { defaultPropertiesData } from "./default-properties-data";
-import { schema, type SwapNodeSchema } from "./schema";
+import { schema } from "./schema";
 import { uischema } from "./uischema";
 
-export const swapNode: PaletteItem<SwapNodeSchema> = {
+export const swapNode: PaletteItem<typeof defaultPropertiesData> = {
   label: "Swap",
   description: "Exchange one token for another via dummy DEX",
   type: "swap",
   icon: "ArrowLeftRight",
-  defaultPropertiesData: defaultPropertiesData as any,
+  defaultPropertiesData,
   schema,
   uischema,
-  templateType: "Node",
+  templateType: NodeType.Node,
 };

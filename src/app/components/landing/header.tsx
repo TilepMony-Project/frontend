@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import type React from "react";
 import { ChevronDown, Moon, Sun } from "lucide-react";
 import Link from "next/link";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
 import { IconSwitch } from "@/components/ui/icon-switch";
 import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 
 const Header: React.FC = () => {
-  const { isConnected } = useAccount();
+  const { ready, authenticated, login, logout, user } = usePrivy();
+  const { wallets } = useWallets();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,6 +26,7 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Scroll to section
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -38,6 +39,42 @@ const Header: React.FC = () => {
         behavior: "smooth",
       });
     }
+  };
+
+  const isConnected = ready && authenticated;
+  const primaryWalletAddress = wallets[0]?.address ?? user?.wallet?.address;
+  const linkedAccounts =
+    (user as { linkedAccounts?: Array<{ type?: string; walletClientType?: string; address?: string }> })?.linkedAccounts ??
+    [];
+  const originalWallet =
+    linkedAccounts.find((account) => account?.type === "wallet" && account.walletClientType !== "privy")?.address || null;
+  const loginIdentifier = originalWallet || user?.email?.address || primaryWalletAddress;
+
+  const formatIdentifier = (identifier?: string | null) => {
+    if (!identifier) {
+      return "Connected";
+    }
+    if (identifier.includes("@")) {
+      return identifier;
+    }
+    return `${identifier.slice(0, 6)}...${identifier.slice(-4)}`;
+  };
+
+  const connectButtonLabel = !ready
+    ? "Loading..."
+    : isConnected
+      ? formatIdentifier(loginIdentifier)
+      : "Login / Connect";
+
+  const handleAuthClick = () => {
+    if (!ready) {
+      return;
+    }
+    if (isConnected) {
+      logout();
+      return;
+    }
+    login();
   };
 
   return (
@@ -95,7 +132,14 @@ const Header: React.FC = () => {
 
         {/* Connect Wallet Button and Theme Toggle */}
         <div className="flex items-center gap-3 w-full sm:w-auto justify-center lg:justify-end">
-          <ConnectButton />
+          <button
+            type="button"
+            onClick={handleAuthClick}
+            disabled={!ready}
+            className="h-10 px-6 py-2 rounded-md bg-white dark:bg-[#1b1b1d] border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-900 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-[#242427] transition-all duration-200 hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {connectButtonLabel}
+          </button>
           {isConnected && (
             <button
               type="button"

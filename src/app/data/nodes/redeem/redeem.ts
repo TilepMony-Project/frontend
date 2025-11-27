@@ -1,15 +1,16 @@
 import type { PaletteItem } from "@/types/common";
+import { NodeType } from "@/types/node-types";
 import { defaultPropertiesData } from "./default-properties-data";
-import { schema, type RedeemNodeSchema } from "./schema";
+import { schema } from "./schema";
 import { uischema } from "./uischema";
 
-export const redeemNode: PaletteItem<RedeemNodeSchema> = {
+export const redeemNode: PaletteItem<typeof defaultPropertiesData> = {
   label: "Redeem",
   description: "Convert stablecoin back to fiat (database simulation)",
   type: "redeem",
   icon: "Building2",
-  defaultPropertiesData: defaultPropertiesData as any,
+  defaultPropertiesData,
   schema,
   uischema,
-  templateType: "Node",
+  templateType: NodeType.Node,
 };

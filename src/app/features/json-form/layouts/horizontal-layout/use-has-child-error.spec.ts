@@ -1,11 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useHasChildError } from "./use-has-child-error";
 import { useJsonForms } from "@jsonforms/react";
+import type { UISchemaElement } from "../../types/uischema";
 
 vi.mock("@jsonforms/react", () => ({
   useJsonForms: vi.fn(),
 }));
+
+const useJsonFormsMock = vi.mocked(useJsonForms);
 
 describe("useHasChildError", () => {
   beforeEach(() => {
@@ -13,14 +15,14 @@ describe("useHasChildError", () => {
   });
 
   it("returns false when no errors are present", () => {
-    (useJsonForms as any).mockReturnValue({ core: { errors: [] } });
+    useJsonFormsMock.mockReturnValue({ core: { errors: [] } });
 
     const result = useHasChildError([{ scope: "#/properties/name" }]);
     expect(result).toBe(false);
   });
 
   it("returns false when childElements is empty", () => {
-    (useJsonForms as any).mockReturnValue({
+    useJsonFormsMock.mockReturnValue({
       core: { errors: [{ instancePath: "/name" }] },
     });
 
@@ -29,7 +31,7 @@ describe("useHasChildError", () => {
   });
 
   it("returns true when a matching error exists", () => {
-    (useJsonForms as any).mockReturnValue({
+    useJsonFormsMock.mockReturnValue({
       core: { errors: [{ instancePath: "/name" }] },
     });
 
@@ -38,7 +40,7 @@ describe("useHasChildError", () => {
   });
 
   it("returns false when no matching error exists", () => {
-    (useJsonForms as any).mockReturnValue({
+    useJsonFormsMock.mockReturnValue({
       core: { errors: [{ instancePath: "/age" }] },
     });
 
@@ -47,7 +49,7 @@ describe("useHasChildError", () => {
   });
 
   it("returns true for required errors with missing property", () => {
-    (useJsonForms as any).mockReturnValue({
+    useJsonFormsMock.mockReturnValue({
       core: {
         errors: [
           {
@@ -64,22 +66,22 @@ describe("useHasChildError", () => {
   });
 
   it("ignores child elements without a scope", () => {
-    (useJsonForms as any).mockReturnValue({
+    useJsonFormsMock.mockReturnValue({
       core: { errors: [{ instancePath: "/name" }] },
     });
 
-    const result = useHasChildError([{ label: "Test" } as any]);
+    const result = useHasChildError([{ type: "Label", text: "Test" } satisfies UISchemaElement]);
     expect(result).toBe(false);
   });
 
   it("returns false when core is undefined", () => {
-    (useJsonForms as any).mockReturnValue({});
+    useJsonFormsMock.mockReturnValue({});
     const result = useHasChildError([{ scope: "#/properties/name" }]);
     expect(result).toBe(false);
   });
 
   it("returns false when childElements is undefined", () => {
-    (useJsonForms as any).mockReturnValue({ core: { errors: [{ instancePath: "/name" }] } });
+    useJsonFormsMock.mockReturnValue({ core: { errors: [{ instancePath: "/name" }] } });
     const result = useHasChildError();
     expect(result).toBe(false);
   });

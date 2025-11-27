@@ -56,16 +56,17 @@ export function captureSnapshot() {
 
 export function undoWorkflowStep() {
   const currentSnapshot = getCurrentSnapshot();
-  let snapshotToRestore: DiagramSnapshot | null = null;
+  const historyState = useUndoRedoHistoryStore.getState();
+
+  if (historyState.past.length === 0) {
+    return;
+  }
+
+  const snapshotToRestore = deepCloneSnapshot(
+    historyState.past[historyState.past.length - 1]
+  );
 
   useUndoRedoHistoryStore.setState((state) => {
-    if (state.past.length === 0) {
-      return state;
-    }
-
-    const previousSnapshot = state.past[state.past.length - 1];
-    snapshotToRestore = deepCloneSnapshot(previousSnapshot);
-
     const updatedPast = state.past.slice(0, -1);
     const updatedFuture = [currentSnapshot, ...state.future];
 
@@ -76,26 +77,24 @@ export function undoWorkflowStep() {
     };
   });
 
-  if (snapshotToRestore) {
-    useStore.setState({
-      nodes: snapshotToRestore.nodes,
-      edges: snapshotToRestore.edges,
-    });
-  }
+  useStore.setState({
+    nodes: snapshotToRestore.nodes,
+    edges: snapshotToRestore.edges,
+  });
 }
 
 export function redoWorkflowStep() {
   const currentSnapshot = getCurrentSnapshot();
-  let snapshotToRestore: DiagramSnapshot | null = null;
+  const historyState = useUndoRedoHistoryStore.getState();
+
+  if (historyState.future.length === 0) {
+    return;
+  }
+
+  const [nextSnapshot, ...remainingFuture] = historyState.future;
+  const snapshotToRestore = deepCloneSnapshot(nextSnapshot);
 
   useUndoRedoHistoryStore.setState((state) => {
-    if (state.future.length === 0) {
-      return state;
-    }
-
-    const [nextSnapshot, ...remainingFuture] = state.future;
-    snapshotToRestore = deepCloneSnapshot(nextSnapshot);
-
     const updatedPast = [...state.past, currentSnapshot];
     if (updatedPast.length > state.limit) {
       updatedPast.splice(0, updatedPast.length - state.limit);
@@ -108,12 +107,10 @@ export function redoWorkflowStep() {
     };
   });
 
-  if (snapshotToRestore) {
-    useStore.setState({
-      nodes: snapshotToRestore.nodes,
-      edges: snapshotToRestore.edges,
-    });
-  }
+  useStore.setState({
+    nodes: snapshotToRestore.nodes,
+    edges: snapshotToRestore.edges,
+  });
 }
 
 export function canUndo() {

@@ -1,15 +1,16 @@
 import type { PaletteItem } from "@/types/common";
+import { NodeType } from "@/types/node-types";
 import { defaultPropertiesData } from "./default-properties-data";
-import { schema, type DepositNodeSchema } from "./schema";
+import { schema } from "./schema";
 import { uischema } from "./uischema";
 
-export const depositNode: PaletteItem<DepositNodeSchema> = {
+export const depositNode: PaletteItem<typeof defaultPropertiesData> = {
   label: "Deposit",
   description: "Simulates receiving fiat funding from corporate client or treasury",
   type: "deposit",
   icon: "DollarSign",
-  defaultPropertiesData: defaultPropertiesData as any,
+  defaultPropertiesData,
   schema,
   uischema,
-  templateType: "Node",
+  templateType: NodeType.Node,
 };

@@ -96,9 +96,9 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
 
     const nodesIdsWithErrors = validatedIntegrationData.nodes
       .filter((node) => {
-        const errors = (node?.data as any)?.properties?.errors;
+        const propertyErrors = node.data?.properties?.errors;
 
-        return Array.isArray(errors) && errors.length > 0;
+        return Array.isArray(propertyErrors) && propertyErrors.length > 0;
       })
       .map((node) => node?.id || "?");
 

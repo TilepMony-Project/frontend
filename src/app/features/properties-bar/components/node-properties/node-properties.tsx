@@ -19,18 +19,30 @@ export const NodeProperties = memo(({ node }: Props) => {
 
   const { data, id } = node;
   const { properties, type } = data;
+  const nodeType = typeof type === "string" ? type : undefined;
+  const propertiesData =
+    properties && typeof properties === "object" ? (properties as Record<string, unknown>) : {};
 
-  const nodeDefinition = getNodeDefinition(type);
+  if (!nodeType) {
+    return;
+  }
+
+  const nodeDefinition = getNodeDefinition(nodeType);
   if (!nodeDefinition) {
     return;
   }
 
-  const { schema, uischema } = nodeDefinition;
+  const schemaDefinition = nodeDefinition.schema as JsonFormsProps["schema"] | undefined;
+  const uischemaDefinition = nodeDefinition.uischema as JsonFormsProps["uischema"] | undefined;
+
+  if (!schemaDefinition || !uischemaDefinition) {
+    return;
+  }
 
   const onChange: JsonFormsReactProps["onChange"] = ({ data, errors }) => {
     const flattenErrors = flatErrors(errors);
 
-    if (!isDeepEqual({ ...data, errors: flattenErrors }, properties)) {
+    if (!isDeepEqual({ ...data, errors: flattenErrors }, propertiesData)) {
       trackFutureChange("dataUpdate");
       setNodeProperties(id, { ...data, errors: flattenErrors });
     }
@@ -38,9 +50,9 @@ export const NodeProperties = memo(({ node }: Props) => {
 
   return (
     <JSONForm
-      data={properties}
-      schema={schema}
-      uischema={uischema as JsonFormsProps["uischema"]}
+      data={propertiesData}
+      schema={schemaDefinition}
+      uischema={uischemaDefinition}
       onChange={onChange}
       readonly={isReadOnlyMode}
     />
