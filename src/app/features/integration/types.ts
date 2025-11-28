@@ -3,7 +3,7 @@ import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data
 
 export type IntegrationDataFormat = {
   name: string;
-  layoutDirection: LayoutDirection;
+  description?: string;
   nodes: WorkflowBuilderNode[];
   edges: WorkflowBuilderEdge[];
 };

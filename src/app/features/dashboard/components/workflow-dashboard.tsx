@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Modal } from "@/components/ui/modal";
 import { ToastType, showToast } from "@/utils/toast-utils";
 import { workflowTemplates, type WorkflowTemplate } from "@/features/dashboard/data/templates";
@@ -125,6 +126,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newWorkflowName, setNewWorkflowName] = useState("");
+  const [newWorkflowDescription, setNewWorkflowDescription] = useState("");
   const [workflowToDelete, setWorkflowToDelete] = useState<WorkflowSummary | null>(null);
   const { theme, toggleTheme } = useTheme();
   const ownerDisplay = user?.email?.address || user?.wallet?.address || user?.id || null;
@@ -196,6 +198,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
 
   function openCreateWorkflowModal() {
     setNewWorkflowName("");
+    setNewWorkflowDescription("");
     setIsCreateModalOpen(true);
   }
 
@@ -234,7 +237,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     return JSON.parse(JSON.stringify(value));
   }
 
-  async function createWorkflow(nameOverride?: string) {
+  async function createWorkflow(nameOverride?: string, descriptionOverride?: string) {
     if (!accessToken) {
       showToast({
         title: "Session not ready",
@@ -255,7 +258,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         },
         body: JSON.stringify({
           name: workflowName,
-          description: "Draft workflow created from dashboard",
+          name: workflowName,
+          description: descriptionOverride?.trim() || "No description provided",
           nodes: [],
           edges: [],
         }),
@@ -285,7 +289,15 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   }
 
   function handleConfirmCreateWorkflow() {
-    void createWorkflow(newWorkflowName);
+    if (!newWorkflowDescription.trim()) {
+      showToast({
+        title: "Description required",
+        subtitle: "Please provide a description for your workflow.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
+    void createWorkflow(newWorkflowName, newWorkflowDescription);
   }
 
   async function handleCreateWorkflowFromTemplate(template: WorkflowTemplate) {
@@ -844,6 +856,19 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   handleConfirmCreateWorkflow();
                 }
               }}
+            />
+            <label
+              htmlFor="workflow-description-input"
+              className="font-semibold text-gray-900 dark:text-white mt-2"
+            >
+              Description <span className="text-red-500">*</span>
+            </label>
+            <Textarea
+              id="workflow-description-input"
+              value={newWorkflowDescription}
+              className="w-full min-h-[100px]"
+              placeholder="Describe your workflow..."
+              onChange={(event) => setNewWorkflowDescription(event.target.value)}
             />
           </div>
         </Modal>

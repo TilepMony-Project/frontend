@@ -77,7 +77,7 @@ export async function autoSaveWorkflow(
         workflowId,
         {
           name: name || "Untitled Workflow",
-          description: data.layoutDirection ? `Layout: ${data.layoutDirection}` : undefined,
+          description: data.description,
           nodes,
           edges,
           status: "draft",
@@ -96,7 +96,7 @@ export async function autoSaveWorkflow(
     // Otherwise, create a new workflow
     const workflow = await Workflow.create({
       name: name || "Untitled Workflow",
-      description: data.layoutDirection ? `Layout: ${data.layoutDirection}` : undefined,
+      description: data.description,
       userId,
       nodes,
       edges,
