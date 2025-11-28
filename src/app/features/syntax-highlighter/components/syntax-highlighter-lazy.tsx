@@ -10,7 +10,7 @@ const SyntaxHighlighter = React.lazy(() =>
 type SyntaxHighlighterLazyProps = SyntaxHighlighterProps;
 
 export function SyntaxHighlighterLazy(props: SyntaxHighlighterLazyProps) {
-  const { value, onChange, isDisabled } = props;
+  const { value, onChange, isDisabled, placeholder } = props;
 
   return (
     <Suspense
@@ -19,6 +19,8 @@ export function SyntaxHighlighterLazy(props: SyntaxHighlighterLazyProps) {
           value={value}
           onChange={(event) => (onChange ? onChange(event.target.value) : undefined)}
           disabled={isDisabled}
+          placeholder={placeholder}
+          className="rounded-xl border-border bg-background dark:bg-[#1e1e1e] font-mono text-sm min-h-[300px]"
         />
       }
     >
@@ -26,6 +28,7 @@ export function SyntaxHighlighterLazy(props: SyntaxHighlighterLazyProps) {
         value={value}
         onChange={(value) => (onChange ? onChange(value || "") : undefined)}
         isDisabled={isDisabled}
+        placeholder={placeholder}
       />
     </Suspense>
   );

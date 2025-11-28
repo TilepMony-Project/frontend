@@ -16,7 +16,7 @@ import { closeModal } from "@/features/modals/stores/use-modal-store";
 import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
 
 export function ImportModal() {
-  const [jsonToParse, setJsonToParse] = useState("{}");
+  const [jsonToParse, setJsonToParse] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [{ errors, warnings }, setJsonValidation] = useState<{
     errors: IntegrationDataError[];
@@ -33,7 +33,7 @@ export function ImportModal() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target?.result as string;
-      setJsonToParse(content || "{}");
+      setJsonToParse(content || "");
     };
     reader.onerror = () => {
       showToast({
@@ -47,7 +47,9 @@ export function ImportModal() {
 
   const handleImport = useCallback(
     ({ shouldIgnoreWarnings }: { shouldIgnoreWarnings: boolean }) => {
-      const { errors, warnings, validatedIntegrationData } = validateIntegrationData(jsonToParse);
+      // Use "{}" for validation if value is empty (placeholder case)
+      const valueToValidate = jsonToParse.trim() || "{}";
+      const { errors, warnings, validatedIntegrationData } = validateIntegrationData(valueToValidate);
 
       setJsonValidation({
         errors,
@@ -128,7 +130,7 @@ export function ImportModal() {
       <div className="flex flex-col gap-2">
         <SyntaxHighlighterLazy
           value={jsonToParse}
-          onChange={(json) => setJsonToParse(json || "{}")}
+          onChange={(json) => setJsonToParse(json || "")}
         />
       </div>
 

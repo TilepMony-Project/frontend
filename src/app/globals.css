@@ -78,6 +78,8 @@
   --wb-syntax-highlighter-color-variable-value: var(--ax-colors-blue-500);
   --wb-syntax-highlighter-background-color-highlight: var(--ax-colors-green-400-30);
   --wb-syntax-highlighter-color-cursor: var(--ax-colors-blue-500);
+  --wb-syntax-highlighter-border-color: hsl(var(--border));
+  --wb-syntax-highlighter-border-radius: 0.75rem;
 
   /* Connectable item variables */
   --wb-connectable-item-horizontal-padding: 0.75rem;
@@ -100,8 +102,7 @@
   /* Import export modal variables */
   --wb-import-error-color: var(--ax-public-snackbar-title-color);
   --wb-import-error-background-color: var(--ax-public-snackbar-error-background);
-  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid
-    var(--ax-public-snackbar-error-border);
+  --wb-import-error-border: var(--ax-public-snackbar-border-size) solid var(--ax-public-snackbar-error-border);
   --wb-import-error-border-radius: var(--ax-public-snackbar-border-radius);
 }
 
@@ -125,6 +126,89 @@ html[data-theme="dark"] {
 /* Ace Editor global styles */
 .ace_tooltip {
   display: none !important;
+}
+
+/* Ace Editor custom styling for better contrast */
+.ace_editor {
+  border-radius: 0.75rem;
+  background-color: transparent !important;
+}
+
+/* Light theme (github) - ensure good contrast */
+.ace-github .ace_gutter {
+  background: transparent !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.ace-github {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.ace-github .ace_string {
+  color: #0ea5e9 !important;
+  /* High contrast blue for strings */
+}
+
+.ace-github .ace_keyword {
+  color: #7c3aed !important;
+  /* High contrast purple for keywords */
+}
+
+.ace-github .ace_constant.ace_numeric {
+  color: #059669 !important;
+  /* High contrast green for numbers */
+}
+
+.ace-github .ace_constant.ace_language {
+  color: #dc2626 !important;
+  /* High contrast red for booleans/null */
+}
+
+.ace-github .ace_support.ace_function {
+  color: #ea580c !important;
+  /* High contrast orange for functions */
+}
+
+/* Dark theme (monokai) - ensure good contrast */
+.ace-monokai {
+  background-color: #1e1e1e !important;
+  color: #d4d4d4 !important;
+}
+
+.ace-monokai .ace_gutter {
+  background: transparent !important;
+  color: #858585 !important;
+}
+
+.ace-monokai .ace_string {
+  color: #ce9178 !important;
+  /* High contrast orange for strings */
+}
+
+.ace-monokai .ace_keyword {
+  color: #c586c0 !important;
+  /* High contrast purple for keywords */
+}
+
+.ace-monokai .ace_constant.ace_numeric {
+  color: #b5cea8 !important;
+  /* High contrast green for numbers */
+}
+
+.ace-monokai .ace_constant.ace_language {
+  color: #569cd6 !important;
+  /* High contrast blue for booleans/null */
+}
+
+.ace-monokai .ace_support.ace_function {
+  color: #dcdcaa !important;
+  /* High contrast yellow for functions */
+}
+
+.ace-monokai .ace_variable {
+  color: #9cdcfe !important;
+  /* High contrast light blue for variables */
 }
 
 /* Custom scroll animations for partner logos */
@@ -158,6 +242,7 @@ html[data-theme="dark"] {
 
 /* Smooth bounce animation for buttons */
 @keyframes smooth-bounce {
+
   0%,
   100% {
     transform: translateY(0);
@@ -211,17 +296,19 @@ html[data-theme="dark"] {
     font-family: "Poppins", sans-serif;
   }
 
+  html,
   body {
     margin: 0;
     background-color: var(--wb-background-color);
     overflow: auto;
+    height: 100%;
   }
 
-  body[data-scroll-locked] {
+  /* body[data-scroll-locked] {
     margin-right: 0 !important;
     margin-left: 0 !important;
     overflow: visible !important;
-  }
+  } */
 
   button {
     cursor: pointer;
@@ -313,6 +400,7 @@ html[data-theme="dark"] {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+
   .theme {
     --animate-aurora: aurora 8s ease-in-out infinite alternate;
   }
@@ -376,18 +464,22 @@ html[data-theme="dark"] {
     background-position: 0% 50%;
     transform: rotate(-5deg) scale(0.9);
   }
+
   25% {
     background-position: 50% 100%;
     transform: rotate(5deg) scale(1.1);
   }
+
   50% {
     background-position: 100% 50%;
     transform: rotate(-3deg) scale(0.95);
   }
+
   75% {
     background-position: 50% 0%;
     transform: rotate(3deg) scale(1.05);
   }
+
   100% {
     background-position: 0% 50%;
     transform: rotate(-5deg) scale(0.9);
