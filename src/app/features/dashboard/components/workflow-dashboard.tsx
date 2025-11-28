@@ -471,17 +471,15 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           )}
         </div>
         <div className="flex items-center gap-3">
-          <Tooltip content="Profile settings">
-            <Button
-              type="button"
-              variant="ghost"
-              className="hidden h-12 items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-[#27282b]/80 px-5 text-sm font-medium text-gray-900 dark:text-gray-100 shadow-sm hover:bg-accent/40 sm:flex"
-              onClick={() => router.push("/dashboard/profile")}
-            >
-              <Icon name="User" size={18} />
-              Profile
-            </Button>
-          </Tooltip>
+          <Button
+            type="button"
+            variant="ghost"
+            className="hidden h-12 items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-[#27282b]/80 px-5 text-sm font-medium text-gray-900 dark:text-gray-100 shadow-sm hover:bg-accent/40 sm:flex"
+            onClick={() => router.push("/dashboard/profile")}
+          >
+            <Icon name="User" size={18} />
+            Profile
+          </Button>
           <IconSwitch
             checked={theme === "dark"}
             onChange={toggleTheme}
