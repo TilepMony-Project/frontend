@@ -47,6 +47,7 @@ import {
   Trash2,
   Undo2,
   Upload,
+  User,
   X,
   XCircle,
 } from "lucide-react";
@@ -75,6 +76,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   Search: Search,
   List: List,
   Copy: Copy,
+  User: User,
 
   // Modal and form icons
   Lock: Lock,

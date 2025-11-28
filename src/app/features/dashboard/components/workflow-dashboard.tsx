@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import type { WorkflowSummary } from "@/actions/workflows";
 import { Icon } from "@/components/icons";
 import { IconSwitch } from "@/components/ui/icon-switch";
+import { Tooltip } from "@/components/ui/tooltip";
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { useTheme } from "@/hooks/use-theme";
 import { Moon, Sun } from "lucide-react";
@@ -258,7 +259,6 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         },
         body: JSON.stringify({
           name: workflowName,
-          name: workflowName,
           description: descriptionOverride?.trim() || "No description provided",
           nodes: [],
           edges: [],
@@ -470,14 +470,27 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             </p>
           )}
         </div>
-        <IconSwitch
-          checked={theme === "dark"}
-          onChange={toggleTheme}
-          icon={<Sun size={18} />}
-          IconChecked={<Moon size={18} />}
-          variant="secondary"
-          className="h-12 w-12 bg-white dark:bg-[#27282b] border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-[#323336] shadow-sm p-0 flex items-center justify-center"
-        />
+        <div className="flex items-center gap-3">
+          <Tooltip content="Profile settings">
+            <Button
+              type="button"
+              variant="ghost"
+              className="hidden h-12 items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-[#27282b]/80 px-5 text-sm font-medium text-gray-900 dark:text-gray-100 shadow-sm hover:bg-accent/40 sm:flex"
+              onClick={() => router.push("/dashboard/profile")}
+            >
+              <Icon name="User" size={18} />
+              Profile
+            </Button>
+          </Tooltip>
+          <IconSwitch
+            checked={theme === "dark"}
+            onChange={toggleTheme}
+            icon={<Sun size={18} />}
+            IconChecked={<Moon size={18} />}
+            variant="secondary"
+            className="h-12 w-12 bg-white dark:bg-[#27282b] border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-[#323336] shadow-sm p-0 flex items-center justify-center"
+          />
+        </div>
       </section>
 
       <section className="flex flex-wrap gap-4 items-center bg-white dark:bg-[#27282b] rounded-2xl p-4 shadow-sm">
