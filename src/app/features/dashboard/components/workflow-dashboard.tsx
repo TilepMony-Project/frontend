@@ -463,12 +463,6 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           <p className="mt-1 text-gray-600 dark:text-gray-400 text-sm">
             Review, filter, and jump into any orchestration workspace.
           </p>
-          {ownerDisplay && (
-            <p className="mt-1 text-gray-500 dark:text-gray-500 text-xs">
-              Workspace owner:{" "}
-              <span className="font-semibold text-gray-900 dark:text-white break-all">{ownerDisplay}</span>
-            </p>
-          )}
         </div>
         <div className="flex items-center gap-3">
           <Button
@@ -609,6 +603,19 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           </Button>
         </div>
       </section>
+
+      {ownerDisplay && (
+        <div className="pointer-events-none fixed left-6 bottom-6 z-30">
+          <div className="pointer-events-auto space-y-1 rounded-2xl border border-gray-200 bg-white/95 px-4 py-3 text-xs text-gray-600 shadow-lg ring-1 ring-white/60 dark:border-gray-700 dark:bg-[#1f1f24]/95 dark:text-gray-300 dark:ring-gray-800/60">
+            <div className="text-[11px] text-gray-500 dark:text-gray-400">
+              Workspace owner:{" "}
+              <span className="font-semibold text-gray-900 dark:text-white break-all">
+                {ownerDisplay}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isBusy ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
