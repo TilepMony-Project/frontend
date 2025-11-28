@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { PROFILE_TIMEZONES } from "@/features/profile/constants";
 import { usePrivySession } from "@/hooks/use-privy-session";
+import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
 import { showToast, ToastType } from "@/utils/toast-utils";
 import { Icon } from "@/components/icons";
 
@@ -65,6 +66,7 @@ const timezoneOptions: SelectOption[] = PROFILE_TIMEZONES.map((tz) => ({
 
 export function ProfileSettings() {
   const { accessToken, isLoadingToken, user } = usePrivySession();
+  const getFreshToken = useGetFreshToken();
   const router = useRouter();
   const [formState, setFormState] = useState<ProfileFormState>(DEFAULT_PROFILE);
   const [initialState, setInitialState] = useState<ProfileFormState>(DEFAULT_PROFILE);
@@ -89,9 +91,13 @@ export function ProfileSettings() {
     async function fetchProfile() {
       try {
         setIsLoadingProfile(true);
+        const freshToken = await getFreshToken();
+        if (!freshToken) {
+          throw new Error("Unable to get authentication token");
+        }
         const response = await fetch("/api/profile", {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${freshToken}`,
           },
         });
 
@@ -150,11 +156,15 @@ export function ProfileSettings() {
 
     try {
       setIsSaving(true);
+      const freshToken = await getFreshToken();
+      if (!freshToken) {
+        throw new Error("Unable to get authentication token");
+      }
       const response = await fetch("/api/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${freshToken}`,
         },
         body: JSON.stringify(formState),
       });

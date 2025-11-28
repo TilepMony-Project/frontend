@@ -6,6 +6,7 @@ import { IntegrationWrapper } from "./wrapper/integration-wrapper";
 
 import type { IntegrationDataFormatOptional, OnSave } from "@/features/integration/types";
 import { usePrivySession } from "@/hooks/use-privy-session";
+import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
 import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
 import { showToast, ToastType } from "@/utils/toast-utils";
 import { showToast as showSnackbar } from "@/utils/toast-utils";
@@ -34,6 +35,7 @@ export function withIntegrationThroughServerAction<WProps extends object>(
     const [initialData, setInitialData] = useState<IntegrationDataFormatOptional>({});
     const [isLoadingWorkflow, setIsLoadingWorkflow] = useState(false);
     const { accessToken, userId } = usePrivySession();
+    const getFreshToken = useGetFreshToken();
 
     useEffect(() => {
       setIsClient(true);
@@ -88,9 +90,13 @@ export function withIntegrationThroughServerAction<WProps extends object>(
       async function fetchWorkflow() {
         try {
           setIsLoadingWorkflow(true);
+          const freshToken = await getFreshToken();
+          if (!freshToken) {
+            throw new Error("Unable to get authentication token");
+          }
           const response = await fetch(`/api/workflows/${workflowId}`, {
             headers: {
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${freshToken}`,
             },
           });
           if (!response.ok) {
@@ -147,13 +153,24 @@ export function withIntegrationThroughServerAction<WProps extends object>(
         }
 
         try {
+          const freshToken = await getFreshToken();
+          if (!freshToken) {
+            showToast({
+              title: "Session expired",
+              subtitle: "Please reconnect your Privy session before saving.",
+              variant: ToastType.ERROR,
+            });
+            showSnackbarSaveErrorIfNeeded(savingParams);
+            return "error";
+          }
+
           const endpoint = workflowId ? `/api/workflows/${workflowId}` : "/api/workflows";
           const method = workflowId ? "PUT" : "POST";
           const response = await fetch(endpoint, {
             method,
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${freshToken}`,
             },
             body: JSON.stringify({
               name: data.name,

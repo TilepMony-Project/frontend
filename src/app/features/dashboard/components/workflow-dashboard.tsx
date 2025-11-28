@@ -10,6 +10,7 @@ import { Icon } from "@/components/icons";
 import { IconSwitch } from "@/components/ui/icon-switch";
 import { Tooltip } from "@/components/ui/tooltip";
 import { usePrivySession } from "@/hooks/use-privy-session";
+import { usePrivy } from "@privy-io/react-auth";
 import { useTheme } from "@/hooks/use-theme";
 import { Moon, Sun } from "lucide-react";
 
@@ -120,6 +121,7 @@ function formatDate(value?: string | null) {
 export function WorkflowDashboard({ initialWorkflows }: Props) {
   const router = useRouter();
   const { accessToken, user, isLoadingToken } = usePrivySession();
+  const { getAccessToken } = usePrivy();
   const [workflows, setWorkflows] = useState<WorkflowSummary[]>(initialWorkflows ?? []);
   const [isLoading, setIsLoading] = useState(!initialWorkflows);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -138,14 +140,15 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
 
   // Function to fetch workflows from API
   const fetchWorkflows = useCallback(async () => {
-    if (!accessToken) {
+    const freshToken = await getFreshToken();
+    if (!freshToken) {
       return;
     }
     try {
       setIsLoading(true);
       const response = await fetch("/api/workflows", {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${freshToken}`,
         },
       });
 
@@ -241,8 +244,21 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     return JSON.parse(JSON.stringify(value));
   }
 
+  // Helper function to get a fresh token
+  async function getFreshToken(): Promise<string | null> {
+    try {
+      const token = await getAccessToken();
+      return token;
+    } catch (error) {
+      console.error("Failed to get fresh access token:", error);
+      return null;
+    }
+  }
+
   async function createWorkflow(nameOverride?: string, descriptionOverride?: string) {
-    if (!accessToken) {
+    // Get a fresh token to avoid expiration issues
+    const freshToken = await getFreshToken();
+    if (!freshToken) {
       showToast({
         title: "Session not ready",
         subtitle: "Please wait for your Privy session before creating a workflow.",
@@ -258,7 +274,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${freshToken}`,
         },
         body: JSON.stringify({
           name: workflowName,
@@ -313,13 +329,23 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       return;
     }
 
+    const freshToken = await getFreshToken();
+    if (!freshToken) {
+      showToast({
+        title: "Session not ready",
+        subtitle: "Please wait for your Privy session.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
+
     try {
       setPendingAction({ type: "template", workflowId: template.id });
       const response = await fetch("/api/workflows", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${freshToken}`,
         },
         body: JSON.stringify({
           name: template.name,
@@ -356,12 +382,22 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   }
 
   async function handleDeleteWorkflow(workflowId: string) {
+    const freshToken = await getFreshToken();
+    if (!freshToken) {
+      showToast({
+        title: "Session not ready",
+        subtitle: "Please wait for your Privy session.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
+
     try {
       setPendingAction({ type: "delete", workflowId });
       const response = await fetch(`/api/workflows/${workflowId}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${freshToken}`,
         },
       });
 
@@ -403,12 +439,22 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       variant: ToastType.LOADING,
     });
 
+    const freshToken = await getFreshToken();
+    if (!freshToken) {
+      showToast({
+        title: "Session not ready",
+        subtitle: "Please wait for your Privy session.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
+
     try {
       setPendingAction({ type: "duplicate", workflowId });
       const response = await fetch(`/api/workflows/${workflowId}/duplicate`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${freshToken}`,
         },
       });
 

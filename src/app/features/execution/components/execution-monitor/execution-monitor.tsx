@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Icon } from "@/components/icons";
 import { usePrivySession } from "@/hooks/use-privy-session";
+import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
 import useStore from "@/store/store";
 import { copy } from "@/utils/copy";
 
@@ -38,6 +39,7 @@ export function ExecutionMonitor() {
   const setExecutionMonitorActive = useStore((state) => state.setExecutionMonitorActive);
   const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
   const { accessToken } = usePrivySession();
+  const getFreshToken = useGetFreshToken();
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [execution, setExecution] = useState<ExecutionResponse["execution"] | null>(null);
   const [isExpanded, setIsExpanded] = useState(true);
@@ -58,16 +60,20 @@ export function ExecutionMonitor() {
   const hasTerminalStatus = execution ? TERMINAL_STATUSES.includes(execution.status) : false;
 
   fetchStatusRef.current = async () => {
-    if (!workflowId || !accessToken) {
+    if (!workflowId) {
       return;
     }
 
     try {
       setIsFetching(true);
+      const freshToken = await getFreshToken();
+      if (!freshToken) {
+        throw new Error("Unable to get authentication token");
+      }
       const response = await fetch(`/api/workflows/${workflowId}/status`, {
         cache: "no-store",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${freshToken}`,
         },
       });
 
