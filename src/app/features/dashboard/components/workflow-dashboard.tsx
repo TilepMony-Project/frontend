@@ -24,6 +24,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Modal } from "@/components/ui/modal";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, XAxis, YAxis } from "recharts";
 import { ToastType, showToast } from "@/utils/toast-utils";
 import { workflowTemplates, type WorkflowTemplate } from "@/features/dashboard/data/templates";
 
@@ -485,6 +488,220 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         </div>
       </section>
 
+      {/* Analytics Section */}
+      <section className="grid gap-6">
+        {/* KPI Cards */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
+            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+              <div className="flex flex-col space-y-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Total Workflows
+                </CardTitle>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {workflows.length}
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {filteredWorkflows.length !== workflows.length && (
+                    <span>{filteredWorkflows.length} filtered</span>
+                  )}
+                </p>
+              </div>
+              <Icon name="FileText" size={24} className="text-gray-500 dark:text-gray-400" />
+            </CardHeader>
+          </Card>
+
+          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
+            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+              <div className="flex flex-col space-y-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Total Nodes
+                </CardTitle>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {workflows.reduce((sum, w) => sum + w.nodesCount, 0)}
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Across all workflows
+                </p>
+              </div>
+              <Icon name="Box" size={24} className="text-gray-500 dark:text-gray-400" />
+            </CardHeader>
+          </Card>
+
+          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
+            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+              <div className="flex flex-col space-y-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Total Edges
+                </CardTitle>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {workflows.reduce((sum, w) => sum + w.edgesCount, 0)}
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Total connections
+                </p>
+              </div>
+              <Icon name="GitBranch" size={24} className="text-gray-500 dark:text-gray-400" />
+            </CardHeader>
+          </Card>
+
+          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
+            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+              <div className="flex flex-col space-y-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Completion Rate
+                </CardTitle>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {workflows.length > 0
+                    ? Math.round(
+                        (workflows.filter((w) => w.status === "finished").length / workflows.length) *
+                          100
+                      )
+                    : 0}
+                  %
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {workflows.filter((w) => w.status === "finished").length} of {workflows.length} completed
+                </p>
+              </div>
+              <Icon name="CheckCircle2" size={24} className="text-gray-500 dark:text-gray-400" />
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* Charts */}
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* Status Distribution Chart */}
+          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-gray-900 dark:text-white">Workflow Status Distribution</CardTitle>
+              <CardDescription className="text-gray-600 dark:text-gray-400">
+                Breakdown of workflows by status
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer
+                config={{
+                  draft: { label: "Draft", color: "hsl(var(--chart-1))" },
+                  running: { label: "Running", color: "hsl(var(--chart-2))" },
+                  running_waiting: { label: "Running (Waiting)", color: "hsl(var(--chart-3))" },
+                  stopped: { label: "Stopped", color: "hsl(var(--chart-4))" },
+                  finished: { label: "Finished", color: "hsl(var(--chart-5))" },
+                  failed: { label: "Failed", color: "hsl(var(--chart-6))" },
+                }}
+                className="h-[300px]"
+              >
+                <PieChart>
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Pie
+                    data={[
+                      {
+                        name: "Draft",
+                        value: workflows.filter((w) => w.status === "draft").length,
+                        fill: "var(--color-draft)",
+                      },
+                      {
+                        name: "Running",
+                        value: workflows.filter((w) => w.status === "running").length,
+                        fill: "var(--color-running)",
+                      },
+                      {
+                        name: "Running (Waiting)",
+                        value: workflows.filter((w) => w.status === "running_waiting").length,
+                        fill: "var(--color-running_waiting)",
+                      },
+                      {
+                        name: "Stopped",
+                        value: workflows.filter((w) => w.status === "stopped").length,
+                        fill: "var(--color-stopped)",
+                      },
+                      {
+                        name: "Finished",
+                        value: workflows.filter((w) => w.status === "finished").length,
+                        fill: "var(--color-finished)",
+                      },
+                      {
+                        name: "Failed",
+                        value: workflows.filter((w) => w.status === "failed").length,
+                        fill: "var(--color-failed)",
+                      },
+                    ].filter((item) => item.value > 0)}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    label
+                  />
+                </PieChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+
+          {/* Activity Timeline Chart */}
+          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-gray-900 dark:text-white">Recent Activity</CardTitle>
+              <CardDescription className="text-gray-600 dark:text-gray-400">
+                Workflows updated in the last 7 days
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer
+                config={{
+                  count: { label: "Workflows", color: "hsl(var(--chart-1))" },
+                }}
+                className="h-[300px]"
+              >
+                <AreaChart
+                  accessibilityLayer
+                  data={(() => {
+                    const last7Days = Array.from({ length: 7 }, (_, i) => {
+                      const date = new Date();
+                      date.setDate(date.getDate() - (6 - i));
+                      return date.toISOString().split("T")[0];
+                    });
+                    return last7Days.map((date) => ({
+                      date: new Date(date).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      }),
+                      count: workflows.filter((w) => {
+                        const workflowDate = new Date(w.updatedAt).toISOString().split("T")[0];
+                        return workflowDate === date;
+                      }).length,
+                    }));
+                  })()}
+                  margin={{
+                    left: 12,
+                    right: 12,
+                  }}
+                >
+                  <CartesianGrid vertical={false} className="stroke-gray-200 dark:stroke-gray-700" />
+                  <XAxis
+                    dataKey="date"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    className="text-xs text-gray-600 dark:text-gray-400"
+                  />
+                  <YAxis domain={[0, 'auto']} hide />
+                  <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
+                  <Area
+                    dataKey="count"
+                    type="natural"
+                    fill="var(--color-count)"
+                    fillOpacity={0.4}
+                    stroke="var(--color-count)"
+                  />
+                </AreaChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
       <section className="flex flex-wrap gap-4 items-center bg-white dark:bg-[#27282b] rounded-2xl p-4 shadow-sm">
         <div className="flex-1 min-w-[200px] flex items-center gap-2 p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white">
           <Icon name="Search" size={18} />
@@ -603,19 +820,6 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           </Button>
         </div>
       </section>
-
-      {ownerDisplay && (
-        <div className="pointer-events-none fixed left-6 bottom-6 z-30">
-          <div className="pointer-events-auto space-y-1 rounded-2xl border border-gray-200 bg-white/95 px-4 py-3 text-xs text-gray-600 shadow-lg ring-1 ring-white/60 dark:border-gray-700 dark:bg-[#1f1f24]/95 dark:text-gray-300 dark:ring-gray-800/60">
-            <div className="text-[11px] text-gray-500 dark:text-gray-400">
-              Workspace owner:{" "}
-              <span className="font-semibold text-gray-900 dark:text-white break-all">
-                {ownerDisplay}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
 
       {isBusy ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
@@ -923,30 +1127,25 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   key={template.id}
                   className="flex flex-col gap-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#27282b] p-5 shadow-sm"
                 >
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <p className="text-base font-semibold text-gray-900 dark:text-white">
-                        {template.name}
-                      </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {template.category}
-                      </p>
-                    </div>
-                    <span className="text-xs font-medium rounded-full px-3 py-1 bg-primary/10 text-primary min-w-fit">
-                      {template.nodes.length} nodes
-                    </span>
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 dark:text-white">
+                      {template.name}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {template.category}
+                    </p>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                     {template.description}
                   </p>
                   <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                     <span className="flex items-center gap-1">
-                      <Icon name="GitBranch" size={14} />
-                      {template.edges.length} edges
+                      <Icon name="Box" size={14} />
+                      {template.nodes.length} nodes
                     </span>
                     <span className="flex items-center gap-1">
-                      <Icon name="ArrowLeftRight" size={14} />
-                      {template.layoutDirection === "horizontal" ? "Horizontal" : "Vertical"} layout
+                      <Icon name="GitBranch" size={14} />
+                      {template.edges.length} edges
                     </span>
                   </div>
                   <Button
@@ -1007,6 +1206,19 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           </div>
         </Modal>
       )}
+      <footer className="mt-72 w-full border-t border-gray-200 pt-10 dark:border-gray-800">
+        {ownerDisplay && (
+          <div className="max-w-lg rounded-2xl border border-gray-200 bg-white/95 px-4 py-3 text-xs text-gray-600 shadow-lg ring-1 ring-white/60 dark:border-gray-700 dark:bg-[#1f1f24]/95 dark:text-gray-300 dark:ring-gray-800/60 sm:ml-4">
+            <div className="text-[11px] text-gray-500 dark:text-gray-400">
+              Workspace owner:{" "}
+              <span className="font-semibold text-gray-900 dark:text-white break-all">
+                {ownerDisplay}
+              </span>
+            </div>
+          </div>
+        )}
+        
+      </footer>
     </div>
   );
 }

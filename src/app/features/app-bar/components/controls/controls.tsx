@@ -24,29 +24,6 @@ export function Controls() {
         <ToggleReadyOnlyMode />
         <ToggleDarkMode />
       </OptionalAppBarControls>
-      <Tooltip content="Profile settings">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="hidden items-center gap-2 rounded-full border border-border bg-background/80 px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent/40 sm:flex"
-          onClick={() => router.push("/dashboard/profile")}
-        >
-          <Icon name="User" size={16} />
-          Profile
-        </Button>
-      </Tooltip>
-      <Tooltip content="Profile settings">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="flex sm:hidden"
-          onClick={() => router.push("/dashboard/profile")}
-        >
-          <Icon name="User" size={16} />
-        </Button>
-      </Tooltip>
       {items.length > 0 && (
         <div className="relative">
           <Menu items={items}>

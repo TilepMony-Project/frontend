@@ -15,6 +15,7 @@ import {
   Copy,
   DollarSign,
   Download,
+  FileText,
   GitBranch,
   GripVertical,
   Hand,
@@ -77,6 +78,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   List: List,
   Copy: Copy,
   User: User,
+  FileText: FileText,
 
   // Modal and form icons
   Lock: Lock,
