@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
@@ -34,7 +35,7 @@ import { workflowTemplates, type WorkflowTemplate } from "@/features/dashboard/d
 type ViewMode = "grid" | "list";
 
 type PendingAction = {
-  type: "create" | "duplicate" | "delete" | "template" | null;
+  type: "delete" | "create" | "duplicate" | "template" | "update" | null;
   workflowId?: string;
 };
 
@@ -417,6 +418,65 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       console.error(error);
       showToast({
         title: "Unable to delete workflow",
+        subtitle: error instanceof Error ? error.message : "Please try again.",
+        variant: ToastType.ERROR,
+      });
+    } finally {
+      resetAction();
+    }
+  }
+
+  async function handleSetStatusCompleted(workflowId: string) {
+    if (!accessToken) {
+      showToast({
+        title: "Session not ready",
+        subtitle: "Please wait for Privy to finish connecting.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
+
+    const freshToken = await getFreshToken();
+    if (!freshToken) {
+      showToast({
+        title: "Session not ready",
+        subtitle: "Please wait for your Privy session.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
+
+    try {
+      setPendingAction({ type: "update", workflowId });
+      const response = await fetch(`/api/workflows/${workflowId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${freshToken}`,
+        },
+        body: JSON.stringify({ status: "finished" }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update workflow status");
+      }
+
+      const { workflow } = await response.json();
+      const normalized = normalizeWorkflow(workflow);
+      
+      setWorkflows((prev) => 
+        prev.map((w) => (w.id === workflowId ? normalized : w))
+      );
+      
+      showToast({ 
+        title: "Workflow completed", 
+        subtitle: "Status updated to finished",
+        variant: ToastType.SUCCESS 
+      });
+    } catch (error) {
+      console.error(error);
+      showToast({
+        title: "Unable to update status",
         subtitle: error instanceof Error ? error.message : "Please try again.",
         variant: ToastType.ERROR,
       });
@@ -983,6 +1043,31 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 >
                   <Icon name="Trash2" size={18} />
                 </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 cursor-pointer font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={pendingAction.type === "update" && mutatingWorkflowId === workflow.id}
+                    >
+                      {pendingAction.type === "update" && mutatingWorkflowId === workflow.id ? (
+                        <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <Icon name="MoreHorizontal" size={18} />
+                      )}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={() => handleSetStatusCompleted(workflow.id)}
+                      disabled={workflow.status === "finished"}
+                      className="cursor-pointer dark:border dark:border-gray-700"
+                    >
+                      <Icon name="CheckCircle2" size={16} className="mr-2" />
+                      Set as Completed
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </article>
           ))}
@@ -1062,30 +1147,50 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                       </button>
                       <button
                         type="button"
-                        className="rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800"
+                        className="rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={() => handleDuplicateWorkflow(workflow.id)}
                         disabled={
                           pendingAction.type === "duplicate" && mutatingWorkflowId === workflow.id
                         }
                       >
-                        {pendingAction.type === "duplicate" && mutatingWorkflowId === workflow.id
-                          ? "Duplicating…"
-                          : "Duplicate"}
+                        <Icon name="Copy" size={18} />
                       </button>
                       <button
                         type="button"
-                        className="rounded-lg border border-red-300 dark:border-red-700 bg-transparent text-red-600 dark:text-red-400 px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950"
+                        className="rounded-lg border border-red-200 dark:border-red-900/50 bg-transparent text-red-600 dark:text-red-400 px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={() => openDeleteWorkflowModal(workflow)}
-                        disabled={
-                          pendingAction.type === "delete" && mutatingWorkflowId === workflow.id
-                        }
+                        disabled={pendingAction.type === "delete" && mutatingWorkflowId === workflow.id}
                       >
-                        {pendingAction.type === "delete" && mutatingWorkflowId === workflow.id
-                          ? "Deleting…"
-                          : "Delete"}
+                        <Icon name="Trash2" size={18} />
                       </button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            type="button"
+                            className="rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={pendingAction.type === "update" && mutatingWorkflowId === workflow.id}
+                          >
+                            {pendingAction.type === "update" && mutatingWorkflowId === workflow.id ? (
+                              <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                              <Icon name="MoreHorizontal" size={18} />
+                            )}
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() => handleSetStatusCompleted(workflow.id)}
+                            disabled={workflow.status === "finished"}
+                            className="cursor-pointer dark:border dark:border-gray-700"
+                          >
+                            <Icon name="CheckCircle2" size={16} className="mr-2" />
+                            Set as Completed
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </td>
+
                 </tr>
               ))}
             </tbody>
