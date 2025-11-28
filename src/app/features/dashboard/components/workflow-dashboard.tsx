@@ -758,10 +758,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             <tbody>
               {filteredWorkflows.map((workflow) => (
                 <tr key={workflow.id}>
-                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                    <div>
-                      <strong>{workflow.name}</strong>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white max-w-xs">
+                    <div className="max-w-xs">
+                      <strong className="block truncate">{workflow.name}</strong>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm truncate">
                         {workflow.description || "No description"}
                       </p>
                     </div>
