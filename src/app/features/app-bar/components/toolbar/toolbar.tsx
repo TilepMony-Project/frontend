@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
 
 import { Icon } from "@/components/icons";
@@ -18,15 +19,17 @@ export function Toolbar() {
   return (
     <div className="flex items-center justify-between gap-8">
       <div className="flex items-center gap-4">
-        <Button
-          className="flex items-center gap-[0.35rem] rounded-full px-[0.85rem] py-[0.35rem] font-semibold"
-          variant="secondary"
-          size="sm"
-          onClick={handleNavigateToDashboard}
-        >
-          <Icon name="ArrowLeft" size={16} />
-          Back
-        </Button>
+        <Tooltip content="Back to dashboard">
+          <Button
+            className="flex items-center gap-[0.35rem] rounded-full px-[0.85rem] py-[0.35rem] font-semibold"
+            variant="secondary"
+            size="sm"
+            onClick={handleNavigateToDashboard}
+          >
+            <Icon name="ArrowLeft" size={16} />
+            Back
+          </Button>
+        </Tooltip>
       </div>
       <div className="flex items-center gap-2">
         <OptionalAppBarTools>

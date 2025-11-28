@@ -1,6 +1,7 @@
 import { Icon } from "@/components/icons";
 
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { showToast, ToastType } from "@/utils/toast-utils";
 
 export function RunButton() {
@@ -13,8 +14,10 @@ export function RunButton() {
   }
 
   return (
-    <Button variant="ghost" size="icon" onClick={handleRun}>
-      <Icon name="Play" />
-    </Button>
+    <Tooltip content="Run workflow">
+      <Button variant="ghost" size="icon" onClick={handleRun}>
+        <Icon name="Play" />
+      </Button>
+    </Tooltip>
   );
 }
