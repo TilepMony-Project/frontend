@@ -1,14 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type React from "react";
-import { ChevronDown, Moon, Sun } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
+import { ChevronDown, Moon, Shield as ShieldIcon, Sun, Wallet as WalletIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { IconSwitch } from "@/components/ui/icon-switch";
 import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
+import {
+  WalletCoinbase,
+  WalletMetamask,
+  WalletRainbow,
+  WalletRabby,
+  WalletWalletConnect,
+} from "@web3icons/react";
 
 const Header: React.FC = () => {
   const { ready, authenticated, login, logout, user } = usePrivy();
@@ -46,9 +54,42 @@ const Header: React.FC = () => {
   const linkedAccounts =
     (user as { linkedAccounts?: Array<{ type?: string; walletClientType?: string; address?: string }> })?.linkedAccounts ??
     [];
+  const externalWallet = linkedAccounts.find(
+    (account) => account?.type === "wallet" && account.address
+  );
+  const walletClientType =
+    externalWallet?.walletClientType || user?.wallet?.walletClientType || wallets[0]?.walletClientType || "embedded";
   const originalWallet =
     linkedAccounts.find((account) => account?.type === "wallet" && account.walletClientType !== "privy")?.address || null;
   const loginIdentifier = originalWallet || user?.email?.address || primaryWalletAddress;
+
+  type WalletMeta = {
+    label: string;
+    Icon: ComponentType<SVGProps<SVGSVGElement>>;
+  };
+
+  const walletMeta = useMemo<WalletMeta>(() => {
+    const type = walletClientType?.toLowerCase() ?? "embedded";
+    if (type.includes("metamask")) {
+      return { label: "MetaMask", Icon: WalletMetamask };
+    }
+    if (type.includes("rabby")) {
+      return { label: "Rabby Wallet", Icon: WalletRabby };
+    }
+    if (type.includes("coinbase")) {
+      return { label: "Coinbase Wallet", Icon: WalletCoinbase };
+    }
+    if (type.includes("rainbow")) {
+      return { label: "Rainbow", Icon: WalletRainbow };
+    }
+    if (type.includes("walletconnect")) {
+      return { label: "WalletConnect", Icon: WalletWalletConnect };
+    }
+    if (type.includes("privy") || type.includes("embedded")) {
+      return { label: "Privy Wallet", Icon: ShieldIcon };
+    }
+    return { label: "Wallet", Icon: WalletIcon };
+  }, [walletClientType]);
 
   const formatIdentifier = (identifier?: string | null) => {
     if (!identifier) {
@@ -64,7 +105,7 @@ const Header: React.FC = () => {
     ? "Loading..."
     : isConnected
       ? formatIdentifier(loginIdentifier)
-      : "Login / Connect";
+      : "Connect Wallet";
 
   const handleAuthClick = () => {
     if (!ready) {
@@ -136,8 +177,18 @@ const Header: React.FC = () => {
             type="button"
             onClick={handleAuthClick}
             disabled={!ready}
-            className="h-10 px-6 py-2 rounded-md bg-white dark:bg-[#1b1b1d] border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-900 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-[#242427] transition-all duration-200 hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+            className={cn(
+              "h-10 px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2",
+              isConnected
+                ? "bg-white dark:bg-[#1b1b1d] border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-[#242427]"
+                : "bg-primary text-primary-foreground hover:bg-primary/90"
+            )}
           >
+            {isConnected && (
+              <span className="flex items-center justify-center">
+                <walletMeta.Icon className="h-4 w-4" />
+              </span>
+            )}
             {connectButtonLabel}
           </button>
           {isConnected && (
