@@ -21,7 +21,7 @@ export function withIntegrationThroughProps<WProps extends object>(
   function WithIntegrationComponent(
     propsForWrapperAndIntegration: Prettify<Props & React.ComponentProps<typeof WrappedComponent>>
   ) {
-    const { name, layoutDirection, nodes, edges, onDataSave, ...props } =
+    const { name, nodes, edges, onDataSave, ...props } =
       propsForWrapperAndIntegration;
 
     const handleSave: OnSave = useCallback(
@@ -50,7 +50,6 @@ export function withIntegrationThroughProps<WProps extends object>(
     return (
       <IntegrationWrapper
         name={name}
-        layoutDirection={layoutDirection}
         nodes={nodes}
         edges={edges}
         onSave={handleSave}

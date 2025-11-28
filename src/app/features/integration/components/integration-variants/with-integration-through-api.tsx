@@ -45,7 +45,7 @@ export function withIntegrationThroughApi<WProps extends object>(
       return "error";
     }, []);
 
-    const [{ name, layoutDirection, nodes, edges }, setData] =
+    const [{ name, nodes, edges }, setData] =
       useState<IntegrationDataFormatOptional>({});
 
     useEffect(() => {
@@ -76,7 +76,6 @@ export function withIntegrationThroughApi<WProps extends object>(
     return (
       <IntegrationWrapper
         name={name}
-        layoutDirection={layoutDirection}
         nodes={nodes}
         edges={edges}
         onSave={handleSave}

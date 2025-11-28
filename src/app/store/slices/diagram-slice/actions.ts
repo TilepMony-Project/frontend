@@ -40,7 +40,6 @@ export function getStoreDataForIntegration(): IntegrationDataFormat {
     name: state.documentName || "",
     nodes: state.nodes,
     edges: state.edges,
-    layoutDirection: state.layoutDirection,
   };
 }
 
@@ -49,6 +48,5 @@ export function setStoreDataFromIntegration(loadData: Partial<IntegrationDataFor
     documentName: loadData.name ?? state.documentName,
     nodes: loadData.nodes ?? state.nodes.map(getNodeWithErrors),
     edges: loadData.edges ?? state.edges,
-    layoutDirection: loadData.layoutDirection ?? state.layoutDirection,
   }));
 }

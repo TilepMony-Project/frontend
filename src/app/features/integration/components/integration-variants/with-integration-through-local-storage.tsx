@@ -55,7 +55,7 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
       return "error";
     }, []);
 
-    const { name, layoutDirection, nodes, edges }: IntegrationDataFormatOptional = useMemo(() => {
+    const { name, nodes, edges }: IntegrationDataFormatOptional = useMemo(() => {
       if (!isClient || typeof window === "undefined" || !window.localStorage) {
         return {};
       }
@@ -66,12 +66,11 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
       }
 
       try {
-        const { name, layoutDirection, nodes, edges } =
+        const { name, nodes, edges } =
           (JSON.parse(data) as unknown as IntegrationDataFormatOptional) || {};
 
         return {
           name,
-          layoutDirection,
           nodes,
           edges,
         };
@@ -85,7 +84,6 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
     return (
       <IntegrationWrapper
         name={name}
-        layoutDirection={layoutDirection}
         nodes={nodes}
         edges={edges}
         onSave={handleSave}

@@ -49,7 +49,6 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
 
   const validatedIntegrationData: IntegrationDataFormat = {
     name: "",
-    layoutDirection: "horizontal",
     nodes: [],
     edges: [],
   };
@@ -61,9 +60,7 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
     validatedIntegrationData.name = objectToCheck.name;
   }
 
-  if (objectToCheck.layoutDirection && getIsValidLayoutDirections(objectToCheck.layoutDirection)) {
-    validatedIntegrationData.layoutDirection = objectToCheck.layoutDirection;
-  }
+
 
   if (Array.isArray(objectToCheck.nodes)) {
     const { knownNodes, unknownNodes } = objectToCheck.nodes.reduce(

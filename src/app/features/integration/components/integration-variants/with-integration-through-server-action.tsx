@@ -157,7 +157,7 @@ export function withIntegrationThroughServerAction<WProps extends object>(
             },
             body: JSON.stringify({
               name: data.name,
-              description: data.layoutDirection ? `Layout: ${data.layoutDirection}` : undefined,
+              description: data.description,
               nodes: data.nodes ?? [],
               edges: data.edges ?? [],
               status: "draft",
@@ -192,14 +192,13 @@ export function withIntegrationThroughServerAction<WProps extends object>(
       [workflowId, accessToken]
     );
 
-    const { name, layoutDirection, nodes, edges } = initialData;
+    const { name, nodes, edges } = initialData;
 
     return (
       <>
         {(isLoadingWorkflow || (workflowId && !accessToken)) && <WorkflowLoadingOverlay />}
         <IntegrationWrapper
           name={name}
-          layoutDirection={layoutDirection}
           nodes={nodes}
           edges={edges}
           onSave={handleSave}
