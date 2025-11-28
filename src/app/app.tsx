@@ -30,7 +30,7 @@ function AppComponent(_props: AppComponentProps) {
   const shouldShowRightPanel = isExecutionMonitorActive || shouldShowPropertiesPanel;
 
   return (
-    <div className="absolute flex flex-col h-full w-full overflow-hidden">
+    <div className="fixed flex flex-col h-full w-full overflow-hidden">
       <DiagramWrapper>
         <Diagram />
       </DiagramWrapper>

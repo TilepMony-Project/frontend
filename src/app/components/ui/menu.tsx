@@ -21,7 +21,7 @@ export function Menu({ items, children }: MenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="border-gray-200 dark:border-gray-700">
         {items.map((item, index) => (
           <DropdownMenuItem
             key={index}
