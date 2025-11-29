@@ -6,9 +6,12 @@ import type { IconType } from "@/types/common";
 
 export type NodePropertiesData = Record<string, unknown>;
 
+export type ExecutionStatus = "idle" | "running" | "success" | "error";
+
 export type NodeData = {
   icon?: IconType;
   properties?: NodePropertiesData;
+  executionStatus?: ExecutionStatus;
   [key: string]: unknown;
 };
 
