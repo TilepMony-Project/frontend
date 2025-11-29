@@ -64,9 +64,11 @@ function buildProfileUpdate(payload: ProfilePayload) {
   update.jobTitle = sanitizeString(payload.jobTitle, 80);
   update.company = sanitizeString(payload.company, 120);
   update.location = sanitizeString(payload.location, 120);
-  update.timezone = PROFILE_TIMEZONE_VALUES.includes(payload.timezone ?? "")
-    ? payload.timezone
-    : undefined;
+  update.timezone =
+    typeof payload.timezone === "string" &&
+      PROFILE_TIMEZONE_VALUES.includes(payload.timezone as any)
+      ? payload.timezone
+      : undefined;
   update.phone = sanitizePhone(payload.phone);
   update.bio = sanitizeString(payload.bio, 1000);
   update.website = sanitizeUrl(payload.website);

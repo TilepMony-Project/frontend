@@ -1,4 +1,4 @@
-import { Handle, Position, type NodeProps } from "@xyflow/react";
+import { Handle, Position, type NodeProps, type Node } from "@xyflow/react";
 import { memo, useMemo } from "react";
 import {
   Collapsible,
@@ -7,9 +7,16 @@ import {
   NodePanel,
 } from "@synergycodes/overflow-ui";
 import { Icon } from "@/components/icons";
-import type { NodeData } from "@/types/node-data";
 
-type LandingPageNodeProps = NodeProps<NodeData>;
+type LandingPageNode = Node<{
+  icon?: string;
+  properties?: {
+    label?: string;
+    description?: string;
+  };
+}>;
+
+type LandingPageNodeProps = NodeProps<LandingPageNode>;
 
 export const LandingPageNode = memo(({ data, selected }: LandingPageNodeProps) => {
   const { icon, properties } = data;
