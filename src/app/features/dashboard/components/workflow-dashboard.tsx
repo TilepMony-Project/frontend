@@ -4,23 +4,36 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import type { WorkflowSummary } from "@/actions/workflows";
 import { Icon } from "@/components/icons";
 import { IconSwitch } from "@/components/ui/icon-switch";
 import { Tooltip } from "@/components/ui/tooltip";
 import { usePrivySession } from "@/hooks/use-privy-session";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useTheme } from "@/hooks/use-theme";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, ChevronDown, LogOut, Copy, Check, Shield as ShieldIcon, Wallet as WalletIcon, Heart } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
+import {
+  WalletCoinbase,
+  WalletMetamask,
+  WalletRainbow,
+  WalletRabby,
+  WalletWalletConnect,
+} from "@web3icons/react";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -122,7 +135,8 @@ function formatDate(value?: string | null) {
 export function WorkflowDashboard({ initialWorkflows }: Props) {
   const router = useRouter();
   const { accessToken, user, isLoadingToken } = usePrivySession();
-  const { getAccessToken } = usePrivy();
+  const { ready, authenticated, login, logout, getAccessToken } = usePrivy();
+  const { wallets } = useWallets();
   const [workflows, setWorkflows] = useState<WorkflowSummary[]>(initialWorkflows ?? []);
   const [isLoading, setIsLoading] = useState(!initialWorkflows);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -135,9 +149,88 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const [newWorkflowName, setNewWorkflowName] = useState("");
   const [newWorkflowDescription, setNewWorkflowDescription] = useState("");
   const [workflowToDelete, setWorkflowToDelete] = useState<WorkflowSummary | null>(null);
+  const [hasCopied, setHasCopied] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const ownerDisplay = user?.email?.address || user?.wallet?.address || user?.id || null;
   const isBusy = isLoading || isLoadingToken;
+
+  // Wallet connection logic
+  const isConnected = ready && authenticated;
+  const primaryWalletAddress = wallets[0]?.address ?? user?.wallet?.address;
+  const linkedAccounts =
+    (user as { linkedAccounts?: Array<{ type?: string; walletClientType?: string; address?: string }> })?.linkedAccounts ??
+    [];
+  const externalWallet = linkedAccounts.find(
+    (account) => account?.type === "wallet" && account.address
+  );
+  const walletClientType =
+    externalWallet?.walletClientType || user?.wallet?.walletClientType || wallets[0]?.walletClientType || "embedded";
+  const originalWallet =
+    linkedAccounts.find((account) => account?.type === "wallet" && account.walletClientType !== "privy")?.address || null;
+  const loginIdentifier = originalWallet || user?.email?.address || primaryWalletAddress;
+
+  type WalletMeta = {
+    label: string;
+    Icon: ComponentType<SVGProps<SVGSVGElement>>;
+  };
+
+  const walletMeta = useMemo<WalletMeta>(() => {
+    const type = walletClientType?.toLowerCase() ?? "embedded";
+    if (type.includes("metamask")) {
+      return { label: "MetaMask", Icon: WalletMetamask };
+    }
+    if (type.includes("rabby")) {
+      return { label: "Rabby Wallet", Icon: WalletRabby };
+    }
+    if (type.includes("coinbase")) {
+      return { label: "Coinbase Wallet", Icon: WalletCoinbase };
+    }
+    if (type.includes("rainbow")) {
+      return { label: "Rainbow", Icon: WalletRainbow };
+    }
+    if (type.includes("walletconnect")) {
+      return { label: "WalletConnect", Icon: WalletWalletConnect };
+    }
+    if (type.includes("privy") || type.includes("embedded")) {
+      return { label: "Privy Wallet", Icon: ShieldIcon };
+    }
+    return { label: "Wallet", Icon: WalletIcon };
+  }, [walletClientType]);
+
+  const formatIdentifier = (identifier?: string | null) => {
+    if (!identifier) {
+      return "Connected";
+    }
+    if (identifier.includes("@")) {
+      return identifier;
+    }
+    return `${identifier.slice(0, 6)}...${identifier.slice(-4)}`;
+  };
+
+  const connectButtonLabel = !ready
+    ? "Loading..."
+    : isConnected
+      ? formatIdentifier(loginIdentifier)
+      : "Connect Wallet";
+
+  const handleAuthClick = () => {
+    if (!ready) {
+      return;
+    }
+    if (isConnected) {
+      logout();
+      return;
+    }
+    login();
+  };
+
+  const copyToClipboard = async () => {
+    if (loginIdentifier) {
+      await navigator.clipboard.writeText(loginIdentifier);
+      setHasCopied(true);
+      toast.success("Address copied to clipboard");
+      setTimeout(() => setHasCopied(false), 2000);
+    }
+  };
 
   // Function to fetch workflows from API
   const fetchWorkflows = useCallback(async () => {
@@ -583,6 +676,67 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             <Icon name="User" size={18} />
             Profile
           </Button>
+          {isConnected ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    "h-12 px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:shadow-md flex items-center gap-2 outline-none",
+                    "bg-white dark:bg-[#1b1b1d] border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-[#242427]"
+                  )}
+                >
+                  <span className="flex items-center justify-center">
+                    <walletMeta.Icon className="h-4 w-4" />
+                  </span>
+                  {connectButtonLabel}
+                  <ChevronDown className="h-4 w-4 text-muted-foreground ml-1" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-60">
+                <DropdownMenuLabel>My Wallet</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <div className="px-2 py-1.5 text-sm">
+                  <div className="flex items-center justify-between gap-2 p-2 rounded-md bg-muted/50">
+                    <span className="font-mono text-xs text-muted-foreground truncate">
+                      {loginIdentifier}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={copyToClipboard}
+                      className="p-1 hover:bg-background rounded-md transition-colors"
+                    >
+                      {hasCopied ? (
+                        <Check className="h-3 w-3 text-green-500" />
+                      ) : (
+                        <Copy className="h-3 w-3 text-muted-foreground" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={logout}
+                  className="text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400 focus:bg-red-50 dark:focus:bg-red-950/20 cursor-pointer"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Disconnect</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <button
+              type="button"
+              onClick={handleAuthClick}
+              disabled={!ready}
+              className={cn(
+                "h-12 px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2",
+                "bg-primary text-primary-foreground hover:bg-primary/90"
+              )}
+            >
+              {connectButtonLabel}
+            </button>
+          )}
           <IconSwitch
             checked={theme === "dark"}
             onChange={toggleTheme}
@@ -1357,18 +1511,30 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           </div>
         </Modal>
       )}
-      <footer className="mt-72 w-full border-t border-gray-200 pt-10 dark:border-gray-800">
-        {ownerDisplay && (
-          <div className="max-w-lg rounded-2xl border border-gray-200 bg-white/95 px-4 py-3 text-xs text-gray-600 shadow-lg ring-1 ring-white/60 dark:border-gray-700 dark:bg-[#1f1f24]/95 dark:text-gray-300 dark:ring-gray-800/60 sm:ml-4">
-            <div className="text-[11px] text-gray-500 dark:text-gray-400">
-              Workspace owner:{" "}
-              <span className="font-semibold text-gray-900 dark:text-white break-all">
-                {ownerDisplay}
-              </span>
-            </div>
+      <footer className="mt-72 w-full border-t border-gray-200 pt-6 dark:border-gray-800">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-muted-foreground">©2024 TilepMoney · All rights reserved.</p>
+          <div className="flex items-center gap-6">
+            <Link
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+              href="#"
+            >
+              Terms of Use
+            </Link>
+            <Link
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+              href="#"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
+              href="#"
+            >
+              Security
+            </Link>
           </div>
-        )}
-        
+        </div>
       </footer>
     </div>
   );

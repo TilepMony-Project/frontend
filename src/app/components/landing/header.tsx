@@ -234,6 +234,7 @@ const Header: React.FC = () => {
                       {loginIdentifier}
                     </span>
                     <button
+                      type="button"
                       onClick={copyToClipboard}
                       className="p-1 hover:bg-background rounded-md transition-colors"
                     >
