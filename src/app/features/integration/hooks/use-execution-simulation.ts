@@ -21,14 +21,6 @@ export function useExecutionSimulation() {
          const status = isSuccess ? "success" : "error";
 
          setNodeData(nodeId, { executionStatus: status });
-
-         if (!isSuccess) {
-            showToast({
-               title: "Node Execution Failed",
-               subtitle: "Simulation error occurred.",
-               variant: ToastType.ERROR,
-            });
-         }
       },
       [setNodeData]
    );
@@ -43,12 +35,6 @@ export function useExecutionSimulation() {
          return;
       }
 
-      showToast({
-         title: "Workflow Started",
-         subtitle: "Executing nodes sequentially...",
-         variant: ToastType.SUCCESS,
-      });
-
       // Reset all nodes to idle first
       nodes.forEach((node) => {
          setNodeData(node.id, { executionStatus: "idle" });
@@ -62,12 +48,6 @@ export function useExecutionSimulation() {
          // If a node fails, stop execution (optional, but realistic)
          // For now, we'll continue to show full flow simulation
       }
-
-      showToast({
-         title: "Workflow Completed",
-         subtitle: "All nodes executed.",
-         variant: ToastType.SUCCESS,
-      });
    }, [nodes, runNode, setNodeData]);
 
    return {

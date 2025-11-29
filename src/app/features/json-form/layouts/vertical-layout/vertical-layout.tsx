@@ -6,7 +6,7 @@ import { renderElements } from "../render-elements";
 function VerticalLayout(props: LayoutProps<VerticalLayoutElement>) {
   return (
     <LayoutWrapper {...props}>
-      <div className="flex flex-col gap-4">{renderElements(props)}</div>
+      <div className="flex flex-col gap-2">{renderElements(props)}</div>
     </LayoutWrapper>
   );
 }

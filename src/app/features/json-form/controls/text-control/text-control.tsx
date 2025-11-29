@@ -54,7 +54,7 @@ function TextControl(props: TextControlProps) {
         disabled={isDisabled}
         placeholder={placeholder}
         inputMode={isNumberInput ? "decimal" : undefined}
-        className="h-12 rounded-xl border border-gray-200/80 bg-white px-4 text-sm text-gray-900 shadow-sm transition-all duration-200 placeholder:text-gray-500 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/40 dark:border-gray-700 dark:bg-[#1c1c20] dark:text-gray-100 dark:placeholder:text-gray-500"
+        className="h-10 rounded-xl border border-gray-200/80 bg-white px-4 text-sm text-gray-900 shadow-sm transition-all duration-200 placeholder:text-gray-500 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/40 dark:border-gray-700 dark:bg-[#1c1c20] dark:text-gray-100 dark:placeholder:text-gray-500"
       />
     </ControlWrapper>
   );

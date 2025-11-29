@@ -23,7 +23,7 @@ type Props = Pick<ComponentProps<typeof JsonForms>, "onChange" | "data" | "uisch
 export function JSONForm(props: Props) {
   const { readonly, ...rest } = props;
   return (
-    <div className="[&>div]:flex [&>div]:flex-col [&>div]:gap-4 [&_hr]:w-[calc(100%+2rem)]">
+    <div className="[&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&_hr]:w-[calc(100%+2rem)]">
       <JsonForms
         renderers={renderers}
         validationMode="ValidateAndShow"

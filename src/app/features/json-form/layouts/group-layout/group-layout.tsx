@@ -10,8 +10,8 @@ function GroupLayout(props: LayoutProps<GroupLayoutElement>) {
 
   return (
     <LayoutWrapper {...props}>
-      <div className="flex flex-col pb-5 gap-3">
-        <h1 className={clsx("py-2", "ax-public-h10")}>{uischema.label}</h1>
+      <div className="flex flex-col pb-3 gap-2">
+        <h1 className={clsx("py-1", "ax-public-h10")}>{uischema.label}</h1>
         {renderElements(props)}
       </div>
     </LayoutWrapper>
