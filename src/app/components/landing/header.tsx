@@ -27,11 +27,13 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      setIsScrolled(scrollTop > 10);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    // Use capture phase to detect scroll events from elements (like body) since scroll doesn't bubble
+    window.addEventListener("scroll", handleScroll, true);
+    return () => window.removeEventListener("scroll", handleScroll, true);
   }, []);
 
   // Scroll to section
@@ -40,9 +42,21 @@ const Header: React.FC = () => {
     if (element) {
       const headerOffset = 100;
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      const offsetPosition = elementPosition + scrollTop - headerOffset;
 
+      // Try scrolling body first as it's the likely container due to global styles
+      document.body.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+
+      // Also try window/documentElement as fallback
       window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+      document.documentElement.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
