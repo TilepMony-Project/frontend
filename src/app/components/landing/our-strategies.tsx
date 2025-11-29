@@ -24,20 +24,12 @@ const StrategyCard: React.FC<StrategyCardProps> = ({ icon, iconAlt, title, descr
   );
 };
 
+import WorkflowPreview from "./workflow-preview/workflow-preview";
+
 const StrategyCardBackground: React.FC = () => {
   return (
-    <div className="w-full max-w-6xl h-96 relative overflow-hidden rounded-3xl bg-primary/20 border-[1px] border-primary/40 dark:border-white/40 flex items-center justify-center">
-      <img
-        alt="Card Background 1"
-        className="absolute left-0 top-0 w-full h-full object-cover"
-        src="/landing/card-background-1.svg"
-      />
-      <div className="flex items-center gap-3 px-6 py-4 rounded-full bg-card border-4 lg:border-5 border-primary/35 relative z-10 animate-smooth-bounce cursor-pointer hover:bg-accent hover:border-primary/50 hover:shadow-lg transition-all duration-300">
-        <img alt="Sparkle" className="w-8 h-8" src="/landing/Sparkle.svg" />
-        <div className="flex flex-col items-start">
-          <p className="text-xl font-semibold text-foreground">AI-Driven Forecasts</p>
-        </div>
-      </div>
+    <div className="w-full max-w-7xl h-96 relative overflow-hidden rounded-3xl bg-primary/20 border-[1px] border-primary/40 dark:border-white/40 flex items-center justify-center">
+      <WorkflowPreview />
     </div>
   );
 };
