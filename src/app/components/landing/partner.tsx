@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import { firstRowLogos, secondRowLogos } from "@/data/partner-logos";
 
 const Partner: React.FC = () => {
   return (
@@ -13,39 +14,31 @@ const Partner: React.FC = () => {
             <div className="flex animate-scroll-right gap-8 sm:gap-12 lg:gap-16">
               {/* First set of logos */}
               <div className="flex items-center gap-8 sm:gap-12 lg:gap-16 flex-shrink-0">
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 0" className="w-auto h-14" src="/landing/Logo-0.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 1" className="w-auto h-14" src="/landing/Logo-1.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 2" className="w-auto h-14" src="/landing/Logo-2.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 3" className="w-auto h-14" src="/landing/Logo-3.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 4" className="w-auto h-14" src="/landing/Logo-4.svg" />
-                </div>
+                {firstRowLogos.map(({ name, Icon }) => (
+                  <div
+                    key={name}
+                    className="flex justify-center items-center py-3"
+                  >
+                    <Icon
+                      className="w-auto h-14 opacity-60 hover:opacity-100 transition-opacity duration-300"
+                      aria-label={name}
+                    />
+                  </div>
+                ))}
               </div>
               {/* Duplicate set for seamless loop */}
               <div className="flex items-center gap-8 sm:gap-12 lg:gap-16 flex-shrink-0">
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 0" className="w-auto h-14" src="/landing/Logo-0.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 1" className="w-auto h-14" src="/landing/Logo-1.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 2" className="w-auto h-14" src="/landing/Logo-2.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 3" className="w-auto h-14" src="/landing/Logo-3.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 4" className="w-auto h-14" src="/landing/Logo-4.svg" />
-                </div>
+                {firstRowLogos.map(({ name, Icon }) => (
+                  <div
+                    key={`${name}-duplicate`}
+                    className="flex justify-center items-center py-3"
+                  >
+                    <Icon
+                      className="w-auto h-14 opacity-60 hover:opacity-100 transition-opacity duration-300"
+                      aria-label={name}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -55,39 +48,31 @@ const Partner: React.FC = () => {
             <div className="flex animate-scroll-left gap-8 sm:gap-12 lg:gap-16">
               {/* First set of logos */}
               <div className="flex items-center gap-8 sm:gap-12 lg:gap-16 flex-shrink-0">
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 5" className="w-auto h-14" src="/landing/Logo-5.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 6" className="w-auto h-14" src="/landing/Logo-6.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 7" className="w-auto h-14" src="/landing/Logo-7.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 8" className="w-auto h-14" src="/landing/Logo-8.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 9" className="w-auto h-14" src="/landing/Logo-9.svg" />
-                </div>
+                {secondRowLogos.map(({ name, Icon }) => (
+                  <div
+                    key={name}
+                    className="flex justify-center items-center py-3"
+                  >
+                    <Icon
+                      className="w-auto h-14 opacity-60 hover:opacity-100 transition-opacity duration-300"
+                      aria-label={name}
+                    />
+                  </div>
+                ))}
               </div>
               {/* Duplicate set for seamless loop */}
               <div className="flex items-center gap-8 sm:gap-12 lg:gap-16 flex-shrink-0">
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 5" className="w-auto h-14" src="/landing/Logo-5.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 6" className="w-auto h-14" src="/landing/Logo-6.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 7" className="w-auto h-14" src="/landing/Logo-7.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 8" className="w-auto h-14" src="/landing/Logo-8.svg" />
-                </div>
-                <div className="flex justify-center items-center py-3">
-                  <img alt="Partner Logo 9" className="w-auto h-14" src="/landing/Logo-9.svg" />
-                </div>
+                {secondRowLogos.map(({ name, Icon }) => (
+                  <div
+                    key={`${name}-duplicate`}
+                    className="flex justify-center items-center py-3"
+                  >
+                    <Icon
+                      className="w-auto h-14 opacity-60 hover:opacity-100 transition-opacity duration-300"
+                      aria-label={name}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
