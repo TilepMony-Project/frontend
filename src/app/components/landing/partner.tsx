@@ -17,10 +17,10 @@ const LogoBox = ({
         {/* Glow effect on hover - only in dark mode */}
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 dark:group-hover:from-primary/10 dark:group-hover:via-primary/5 dark:group-hover:to-transparent transition-all duration-500 opacity-0 dark:opacity-100" />
 
-        {/* Icon */}
+        {/* Icon - using branded colors, works in both modes */}
         <div className="relative z-10">
           <Icon
-            className="w-10 h-10 transition-all duration-300 opacity-90 group-hover:opacity-100 drop-shadow-sm invert dark:invert-0"
+            className="w-10 h-10 transition-all duration-300 opacity-90 group-hover:opacity-100 drop-shadow-sm"
             aria-label={name}
           />
         </div>
@@ -31,10 +31,26 @@ const LogoBox = ({
 
 const Partner: React.FC = () => {
   return (
-    <div className="flex flex-col items-center gap-5 px-8 lg:px-24 pt-10 pb-16">
-      <div className="flex flex-col items-center gap-5">
-        {/* Partners */}
-        <div className="flex flex-col items-center py-5 gap-3">
+    <div className="flex flex-col items-center gap-8 px-8 lg:px-24 pt-16 pb-16">
+      {/* Header Section */}
+      <div className="text-center space-y-3">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+          <span className="text-gray-900 dark:text-gray-100">
+            Seamlessly connect with{" "}
+          </span>
+          <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            over 26+ integrations
+          </span>
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+          Build powerful stablecoin workflows with support for major DeFi
+          protocols and blockchain networks
+        </p>
+      </div>
+
+      {/* Logo Carousel */}
+      <div className="flex flex-col items-center gap-5 w-full">
+        <div className="flex flex-col items-center py-5 gap-3 w-full">
           {/* First row - moving to the right */}
           <div className="relative w-full max-w-7xl overflow-hidden">
             <div className="flex animate-scroll-right gap-5 sm:gap-6 lg:gap-8">
