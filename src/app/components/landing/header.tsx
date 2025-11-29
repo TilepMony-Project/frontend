@@ -17,6 +17,16 @@ import {
   WalletRabby,
   WalletWalletConnect,
 } from "@web3icons/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogOut, Copy, Check } from "lucide-react";
+import { toast } from "sonner";
 
 const Header: React.FC = () => {
   const { ready, authenticated, login, logout, user } = usePrivy();
@@ -24,6 +34,16 @@ const Header: React.FC = () => {
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hasCopied, setHasCopied] = useState(false);
+
+  const copyToClipboard = async () => {
+    if (loginIdentifier) {
+      await navigator.clipboard.writeText(loginIdentifier);
+      setHasCopied(true);
+      toast.success("Address copied to clipboard");
+      setTimeout(() => setHasCopied(false), 2000);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -187,24 +207,67 @@ const Header: React.FC = () => {
 
         {/* Connect Wallet Button and Theme Toggle */}
         <div className="flex items-center gap-3 w-full sm:w-auto justify-center lg:justify-end">
-          <button
-            type="button"
-            onClick={handleAuthClick}
-            disabled={!ready}
-            className={cn(
-              "h-10 px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2",
-              isConnected
-                ? "bg-white dark:bg-[#1b1b1d] border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-[#242427]"
-                : "bg-primary text-primary-foreground hover:bg-primary/90"
-            )}
-          >
-            {isConnected && (
-              <span className="flex items-center justify-center">
-                <walletMeta.Icon className="h-4 w-4" />
-              </span>
-            )}
-            {connectButtonLabel}
-          </button>
+
+          {isConnected ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    "h-10 px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:shadow-md flex items-center gap-2 outline-none",
+                    "bg-white dark:bg-[#1b1b1d] border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-[#242427]"
+                  )}
+                >
+                  <span className="flex items-center justify-center">
+                    <walletMeta.Icon className="h-4 w-4" />
+                  </span>
+                  {connectButtonLabel}
+                  <ChevronDown className="h-4 w-4 text-muted-foreground ml-1" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-60">
+                <DropdownMenuLabel>My Wallet</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <div className="px-2 py-1.5 text-sm">
+                  <div className="flex items-center justify-between gap-2 p-2 rounded-md bg-muted/50">
+                    <span className="font-mono text-xs text-muted-foreground truncate">
+                      {loginIdentifier}
+                    </span>
+                    <button
+                      onClick={copyToClipboard}
+                      className="p-1 hover:bg-background rounded-md transition-colors"
+                    >
+                      {hasCopied ? (
+                        <Check className="h-3 w-3 text-green-500" />
+                      ) : (
+                        <Copy className="h-3 w-3 text-muted-foreground" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={logout}
+                  className="text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400 focus:bg-red-50 dark:focus:bg-red-950/20 cursor-pointer"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Disconnect</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <button
+              type="button"
+              onClick={handleAuthClick}
+              disabled={!ready}
+              className={cn(
+                "h-10 px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2",
+                "bg-primary text-primary-foreground hover:bg-primary/90"
+              )}
+            >
+              {connectButtonLabel}
+            </button>
+          )}
           {isConnected && (
             <button
               type="button"
