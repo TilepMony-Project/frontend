@@ -2,6 +2,9 @@
 
 import type React from "react";
 import { firstRowLogos, secondRowLogos } from "@/data/partner-logos";
+import { usePrivy } from "@privy-io/react-auth";
+import { useRouter } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 
 const LogoBox = ({
   name,
@@ -30,6 +33,21 @@ const LogoBox = ({
 };
 
 const Partner: React.FC = () => {
+  const { ready, authenticated, login } = usePrivy();
+  const router = useRouter();
+
+  const handleBrowseIntegrations = () => {
+    if (!ready) return;
+
+    if (authenticated) {
+      // Navigate to dashboard/workspace if logged in
+      router.push("/dashboard");
+    } else {
+      // Show connect wallet dialog if not logged in
+      login();
+    }
+  };
+
   return (
     <div className="flex flex-col items-center gap-8 px-8 lg:px-24 pt-16 pb-16">
       {/* Header Section */}
@@ -87,6 +105,19 @@ const Partner: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Browse All Integrations Button */}
+      <div className="mt-4">
+        <button
+          type="button"
+          onClick={handleBrowseIntegrations}
+          disabled={!ready}
+          className="group relative px-8 py-4 bg-gradient-to-r from-primary to-primary/80 text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-3"
+        >
+          <span>Browse all integrations</span>
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+        </button>
       </div>
     </div>
   );
