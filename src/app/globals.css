@@ -450,6 +450,35 @@ html[data-theme="dark"] {
     /* gray-700 dark */
   }
 
+  /* Node label text truncation - prevent title overflow */
+  .workflow-node-with-border .node-description-wrapper {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .workflow-node-with-border .node-description-wrapper * {
+    min-width: 0;
+  }
+
+  /* Target the label specifically */
+  .workflow-node-with-border [data-node-label],
+  .workflow-node-with-border .node-description-wrapper>div>div:first-child,
+  .workflow-node-with-border .node-description-wrapper h1,
+  .workflow-node-with-border .node-description-wrapper h2,
+  .workflow-node-with-border .node-description-wrapper h3,
+  .workflow-node-with-border .node-description-wrapper h4,
+  .workflow-node-with-border .node-description-wrapper h5,
+  .workflow-node-with-border .node-description-wrapper h6,
+  .workflow-node-with-border .node-description-wrapper strong,
+  .workflow-node-with-border .node-description-wrapper span:first-child {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: block;
+  }
+
   /* Node description text max height */
   .workflow-node-with-border [data-node-description],
   .workflow-node-with-border p,
