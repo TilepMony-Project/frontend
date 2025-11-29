@@ -11,6 +11,11 @@ import TokenLINK from "@web3icons/react/icons/tokens/TokenLINK";
 import TokenCRV from "@web3icons/react/icons/tokens/TokenCRV";
 import TokenCOMP from "@web3icons/react/icons/tokens/TokenCOMP";
 import TokenLDO from "@web3icons/react/icons/tokens/TokenLDO";
+import TokenMKR from "@web3icons/react/icons/tokens/TokenMKR";
+import TokenSNX from "@web3icons/react/icons/tokens/TokenSNX";
+import TokenYFI from "@web3icons/react/icons/tokens/TokenYFI";
+import TokenWBTC from "@web3icons/react/icons/tokens/TokenWBTC";
+import TokenFRAX from "@web3icons/react/icons/tokens/TokenFRAX";
 // Layer 1 & Layer 2 Networks
 import NetworkMantle from "@web3icons/react/icons/networks/NetworkMantle";
 import NetworkEthereum from "@web3icons/react/icons/networks/NetworkEthereum";
@@ -22,6 +27,9 @@ import NetworkAvalanche from "@web3icons/react/icons/networks/NetworkAvalanche";
 import NetworkSolana from "@web3icons/react/icons/networks/NetworkSolana";
 import NetworkZksync from "@web3icons/react/icons/networks/NetworkZksync";
 import NetworkBlast from "@web3icons/react/icons/networks/NetworkBlast";
+import NetworkScroll from "@web3icons/react/icons/networks/NetworkScroll";
+import NetworkLinea from "@web3icons/react/icons/networks/NetworkLinea";
+import NetworkStarknet from "@web3icons/react/icons/networks/NetworkStarknet";
 
 export interface PartnerLogo {
   name: string;
@@ -30,7 +38,7 @@ export interface PartnerLogo {
 }
 
 export const partnerLogos: PartnerLogo[] = [
-  // Row 1 - Stablecoins & Major DeFi
+  // Row 1 - Stablecoins & Major DeFi Protocols
   {
     name: "USDT",
     Icon: TokenUSDT,
@@ -44,6 +52,11 @@ export const partnerLogos: PartnerLogo[] = [
   {
     name: "DAI",
     Icon: TokenDAI,
+    category: "stablecoin",
+  },
+  {
+    name: "FRAX",
+    Icon: TokenFRAX,
     category: "stablecoin",
   },
   {
@@ -77,12 +90,22 @@ export const partnerLogos: PartnerLogo[] = [
     category: "defi",
   },
   {
-    name: "1inch",
-    Icon: Token1INCH,
+    name: "MakerDAO",
+    Icon: TokenMKR,
+    category: "defi",
+  },
+  {
+    name: "Synthetix",
+    Icon: TokenSNX,
+    category: "defi",
+  },
+  {
+    name: "Yearn",
+    Icon: TokenYFI,
     category: "defi",
   },
 
-  // Row 2 - Layer 2s & Major L1s
+  // Row 2 - Layer 2s, Major L1s & Wrapped Assets
   {
     name: "Arbitrum",
     Icon: NetworkArbitrumOne,
@@ -104,24 +127,34 @@ export const partnerLogos: PartnerLogo[] = [
     category: "blockchain",
   },
   {
-    name: "Avalanche",
-    Icon: NetworkAvalanche,
-    category: "blockchain",
-  },
-  {
-    name: "Solana",
-    Icon: NetworkSolana,
-    category: "blockchain",
-  },
-  {
     name: "zkSync",
     Icon: NetworkZksync,
     category: "blockchain",
   },
   {
-    name: "Blast",
-    Icon: NetworkBlast,
+    name: "Starknet",
+    Icon: NetworkStarknet,
     category: "blockchain",
+  },
+  {
+    name: "Scroll",
+    Icon: NetworkScroll,
+    category: "blockchain",
+  },
+  {
+    name: "Linea",
+    Icon: NetworkLinea,
+    category: "blockchain",
+  },
+  {
+    name: "WBTC",
+    Icon: TokenWBTC,
+    category: "defi",
+  },
+  {
+    name: "1inch",
+    Icon: Token1INCH,
+    category: "defi",
   },
   {
     name: "Compound",
@@ -136,5 +169,5 @@ export const partnerLogos: PartnerLogo[] = [
 ];
 
 // Split logos into two rows for the scrolling animation
-export const firstRowLogos = partnerLogos.slice(0, 10);
-export const secondRowLogos = partnerLogos.slice(10, 20);
+export const firstRowLogos = partnerLogos.slice(0, 13);
+export const secondRowLogos = partnerLogos.slice(13, 26);
