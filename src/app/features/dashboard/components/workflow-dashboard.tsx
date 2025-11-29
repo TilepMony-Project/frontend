@@ -1513,7 +1513,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       )}
       <footer className="mt-72 w-full border-t border-gray-200 pt-6 dark:border-gray-800">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">©2024 TilepMoney · All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">©2025 TilepMoney · All rights reserved.</p>
           <div className="flex items-center gap-6">
             <Link
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"
