@@ -86,14 +86,19 @@ export const uischema: UISchema = {
          label: "Advanced Options",
          elements: [
             {
-               type: "Switch",
-               label: "Start Immediately",
-               scope: scope("properties.startImmediately"),
-            },
-            {
-               type: "Switch",
-               label: "Enabled",
-               scope: scope("properties.enabled"),
+               type: "HorizontalLayout",
+               elements: [
+                  {
+                     type: "Switch",
+                     label: "Start Immediately",
+                     scope: scope("properties.startImmediately"),
+                  },
+                  {
+                     type: "Switch",
+                     label: "Enabled",
+                     scope: scope("properties.enabled"),
+                  },
+               ],
             },
          ],
       },

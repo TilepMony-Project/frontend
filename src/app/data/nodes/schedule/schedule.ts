@@ -8,7 +8,7 @@ export const scheduleNode: PaletteItem<typeof defaultPropertiesData> = {
    label: "Schedule",
    description: "Schedule workflow execution with intervals, cron, or loop count",
    type: "schedule",
-   icon: "ArrowsClockwise",
+   icon: "RefreshCw",
    defaultPropertiesData,
    schema,
    uischema,

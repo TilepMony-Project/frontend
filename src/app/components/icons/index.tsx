@@ -40,6 +40,7 @@ import {
   PlusCircle,
   Pointer,
   Redo2,
+  RefreshCw,
   Save,
   Search,
   Send,
@@ -122,6 +123,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   Building2: Building2, // Redeem
   Send: Send, // Transfer
   ShieldCheck: ShieldCheck, // Vault
+  RefreshCw: RefreshCw, // Schedule
   Clock: Clock, // Wait
   GitBranch: GitBranch, // Partition
 };
