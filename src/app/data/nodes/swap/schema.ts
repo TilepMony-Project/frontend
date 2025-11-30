@@ -1,10 +1,10 @@
 import type { NodeSchema } from "@/types/node-schema";
 
 export const tokenOptions = [
-  { label: "USDT", value: "USDT" },
-  { label: "USDX", value: "USDX" },
-  { label: "IDRX", value: "IDRX" },
-  { label: "mUSDT", value: "mUSDT" },
+  { label: "USDT", value: "USDT", icon: "TokenUSDT" },
+  { label: "USDX", value: "USDX", icon: "TokenUSDC" },
+  { label: "IDRX", value: "IDRX", icon: "TokenDAI" },
+  { label: "mUSDT", value: "mUSDT", icon: "TokenUSDT" },
 ];
 
 export const swapProviderOptions = [

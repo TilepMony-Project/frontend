@@ -13,6 +13,7 @@ import { vaultNode } from "./nodes/vault/vault";
 // Utility Nodes
 import { waitNode } from "./nodes/wait/wait";
 import { partitionNode } from "./nodes/partition/partition";
+import { scheduleNode } from "./nodes/schedule/schedule";
 
 // Organized by category for TilepMoney
 export const paletteData: PaletteItem[] = [
@@ -27,6 +28,7 @@ export const paletteData: PaletteItem[] = [
   transferNode,
   vaultNode,
   // Utility Nodes
+  scheduleNode,
   waitNode,
   partitionNode,
 ];

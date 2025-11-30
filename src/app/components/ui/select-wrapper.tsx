@@ -25,6 +25,7 @@ export type SelectProps = {
   disabled?: boolean;
   error?: boolean;
   className?: string;
+  icon?: ReactNode;
 };
 
 export function SelectWrapper({
@@ -35,12 +36,16 @@ export function SelectWrapper({
   disabled,
   error,
   className,
+  icon,
 }: SelectProps) {
   const handleValueChange = (newValue: string) => {
     if (onChange) {
       onChange(null, newValue);
     }
   };
+
+  const selectedItem = value ? items.find((item) => item.value === value) : null;
+  const displayIcon = icon || selectedItem?.icon;
 
   return (
     <Select value={value || undefined} onValueChange={handleValueChange} disabled={disabled}>
@@ -51,7 +56,16 @@ export function SelectWrapper({
           className
         )}
       >
-        <SelectValue placeholder={placeholder} />
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          {displayIcon && (
+            <span className="flex h-4 w-4 items-center justify-center text-gray-500 dark:text-gray-400 flex-shrink-0">
+              {displayIcon}
+            </span>
+          )}
+          <SelectValue placeholder={placeholder}>
+            {selectedItem?.label}
+          </SelectValue>
+        </div>
       </SelectTrigger>
       <SelectContent className="rounded-xl border border-gray-200/80 bg-white p-1 text-sm shadow-xl dark:border-gray-700 dark:bg-[#1c1c20]">
         {items.map((item, index) => {
