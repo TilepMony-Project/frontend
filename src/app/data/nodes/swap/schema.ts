@@ -3,14 +3,14 @@ import type { NodeSchema } from "@/types/node-schema";
 export const tokenOptions = [
   { label: "USDT", value: "USDT", icon: "TokenUSDT" },
   { label: "USDX", value: "USDX", icon: "TokenUSDC" },
-  { label: "IDRX", value: "IDRX", icon: "TokenDAI" },
+  { label: "IDRX", value: "IDRX", icon: "TokenIDRX" },
   { label: "mUSDT", value: "mUSDT", icon: "TokenUSDT" },
 ];
 
 export const swapProviderOptions = [
-  { label: "DummyDEXA", value: "DummyDEXA" },
-  { label: "DummyDEXB", value: "DummyDEXB" },
-  { label: "DummyDEXC", value: "DummyDEXC" },
+  { label: "Uniswap", value: "DummyDEXA", icon: "TokenUNI" },
+  { label: "1INCH", value: "DummyDEXB", icon: "Token1INCH" },
+  { label: "Curve", value: "DummyDEXC", icon: "TokenCRV" },
 ];
 
 export const routeOptions = [

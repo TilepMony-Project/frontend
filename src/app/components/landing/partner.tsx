@@ -13,9 +13,6 @@ const LogoBox = ({
   name: string;
   Icon: React.FC<React.SVGProps<SVGSVGElement>>;
 }) => {
-  // Logos that need better contrast in light mode
-  const needsDarkInLightMode = name === "FRAX" || name === "Mantle" || name === "WBTC";
-
   return (
     <div className="group relative flex-shrink-0">
       {/* Background box with subtle styling for both light and dark mode */}
@@ -26,10 +23,10 @@ const LogoBox = ({
         {/* Icon - using branded colors, works in both modes */}
         <div className="relative z-10">
           <Icon
-            className={`w-10 h-10 transition-all duration-300 opacity-90 group-hover:opacity-100 drop-shadow-sm ${
-              needsDarkInLightMode
-                ? "brightness-0 dark:brightness-100"
-                : ""
+            className={`w-10 h-10 transition-all duration-300 drop-shadow-sm ${
+              ["FRAX", "Mantle", "WBTC"].includes(name)
+                ? "text-[#FFD700] opacity-100"
+                : "opacity-90 group-hover:opacity-100"
             }`}
             aria-label={name}
           />
@@ -56,7 +53,10 @@ const Partner: React.FC = () => {
   };
 
   return (
-    <div id="integrations" className="flex flex-col items-center gap-8 px-8 lg:px-24 pt-16 pb-16">
+    <div
+      id="integrations"
+      className="flex flex-col items-center gap-8 px-8 lg:px-24 pt-16 pb-16"
+    >
       {/* Header Section */}
       <div className="flex flex-col items-center gap-6">
         <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary/40 dark:border-white/40 hover:border-primary dark:hover:border-primary/40 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default">
@@ -71,15 +71,18 @@ const Partner: React.FC = () => {
         </div>
       </div>
       <div className="text-center space-y-3">
-        <h2 className="max-w-lg mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
+        <h2 className="max-w-lg mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight flex flex-col items-center gap-2">
           <span className="text-gray-900 dark:text-gray-100">
-            Seamlessly connect with{" "}
+            Seamlessly connect
           </span>
-          <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            over 26+ integrations
+          <span className="flex flex-wrap justify-center gap-x-1.5">
+            <span className="text-gray-900 dark:text-gray-100">with</span>
+            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              over 26+ integrations
+            </span>
           </span>
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base max-w-2xl mx-auto">
+        <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base max-w-lg mx-auto">
           Build powerful stablecoin workflows with support for major DeFi
           protocols and blockchain networks
         </p>
