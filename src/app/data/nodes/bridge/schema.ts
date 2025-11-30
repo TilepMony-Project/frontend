@@ -1,9 +1,9 @@
 import type { NodeSchema } from "@/types/node-schema";
 
 export const bridgeProviderOptions = [
-  { label: "LayerZero", value: "DummyLayerZero", icon: "NetworkZksync" },
-  { label: "Orbiter", value: "DummyOrbiter", icon: "NetworkStarknet" },
-  { label: "Hyperlane", value: "DummyHyperlane", icon: "NetworkLinea" },
+  { label: "LayerZero", value: "DummyLayerZero", icon: "BridgeLayerZero" },
+  { label: "Orbiter", value: "DummyOrbiter", icon: "BridgeOrbiter" },
+  { label: "Hyperlane", value: "DummyHyperlane", icon: "BridgeHyperlane" },
 ];
 
 export const schema = {
