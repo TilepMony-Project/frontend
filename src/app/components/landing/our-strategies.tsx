@@ -52,9 +52,14 @@ const OurStrategies: React.FC = () => {
               </p>
             </div>
             <div className="flex items-center gap-2 px-4">
-              <p className="w-full max-w-2xl text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-foreground leading-tight">
-                B2B Orchestration Studio for Stablecoin Flows
-              </p>
+              <h2 className="w-full max-w-2xl mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold text-center leading-tight">
+                <span className="text-gray-900 dark:text-gray-100">
+                  B2B Orchestration Studio for{" "}
+                </span>
+                <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                  Stablecoin Flows
+                </span>
+              </h2>
             </div>
             <div className="flex items-center gap-2 px-4 lg:px-5">
               <p className="w-full max-w-xl opacity-80 text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
