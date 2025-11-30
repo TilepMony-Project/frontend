@@ -849,10 +849,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   finished: { label: "Finished", color: "hsl(var(--chart-5))" },
                   failed: { label: "Failed", color: "hsl(var(--chart-6))" },
                 }}
-                className="h-[300px]"
+                className="mx-auto aspect-square max-h-[250px]"
               >
                 <PieChart>
-                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
                   <Pie
                     data={[
                       {
@@ -888,11 +888,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                     ].filter((item) => item.value > 0)}
                     dataKey="value"
                     nameKey="name"
-                    cx="50%"
-                    cy="50%"
                     innerRadius={60}
-                    outerRadius={80}
-                    label
+                    strokeWidth={5}
                   />
                 </PieChart>
               </ChartContainer>
@@ -912,7 +909,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 config={{
                   count: { label: "Workflows", color: "hsl(var(--chart-1))" },
                 }}
-                className="h-[300px]"
+                className="aspect-auto h-[250px] w-full"
               >
                 <AreaChart
                   accessibilityLayer
@@ -936,6 +933,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   margin={{
                     left: 12,
                     right: 12,
+                    top: 20,
                   }}
                 >
                   <CartesianGrid vertical={false} className="stroke-gray-200 dark:stroke-gray-700" />
@@ -948,12 +946,27 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   />
                   <YAxis domain={[0, 'auto']} hide />
                   <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
+                  <defs>
+                    <linearGradient id="fillCount" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="5%"
+                        stopColor="var(--color-count)"
+                        stopOpacity={0.8}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor="var(--color-count)"
+                        stopOpacity={0.1}
+                      />
+                    </linearGradient>
+                  </defs>
                   <Area
                     dataKey="count"
                     type="natural"
-                    fill="var(--color-count)"
+                    fill="url(#fillCount)"
                     fillOpacity={0.4}
                     stroke="var(--color-count)"
+                    stackId="a"
                   />
                 </AreaChart>
               </ChartContainer>
