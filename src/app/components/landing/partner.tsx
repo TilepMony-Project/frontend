@@ -23,7 +23,11 @@ const LogoBox = ({
         {/* Icon - using branded colors, works in both modes */}
         <div className="relative z-10">
           <Icon
-            className="w-10 h-10 transition-all duration-300 opacity-90 group-hover:opacity-100 drop-shadow-sm"
+            className={`w-10 h-10 transition-all duration-300 drop-shadow-sm ${
+              ["FRAX", "Mantle", "WBTC"].includes(name)
+                ? "text-[#FFD700] opacity-100"
+                : "opacity-90 group-hover:opacity-100"
+            }`}
             aria-label={name}
           />
         </div>
@@ -52,15 +56,18 @@ const Partner: React.FC = () => {
     <div className="flex flex-col items-center gap-8 px-8 lg:px-24 pt-16 pb-16">
       {/* Header Section */}
       <div className="text-center space-y-3">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold flex flex-col items-center gap-2">
           <span className="text-gray-900 dark:text-gray-100">
-            Seamlessly connect with{" "}
+            Seamlessly connect with
           </span>
-          <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            over 26+ integrations
+          <span className="flex flex-wrap justify-center gap-x-2.5">
+            {/* <span className="text-gray-900 dark:text-gray-100">with</span> */}
+            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              over 26+ integrations
+            </span>
           </span>
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+        <p className="text-gray-600 dark:text-gray-400 text-lg max-w-lg mx-auto">
           Build powerful stablecoin workflows with support for major DeFi
           protocols and blockchain networks
         </p>
