@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
-import MstUser from "@/models/MstUser";
+import User from "@/models/User";
 
 type PrivyUserPayload = {
   id: string;
@@ -60,13 +60,19 @@ export async function POST(request: Request) {
       lastSyncedAt: new Date(),
     };
 
-    await MstUser.findOneAndUpdate(
+    const result = await User.findOneAndUpdate(
       { privyUserId },
-      { $set: update, $setOnInsert: { privyUserId } },
+      { $set: update, $setOnInsert: { privyUserId, userId: privyUserId } },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
-    return NextResponse.json({ success: true });
+    console.log(`✅ User synced successfully: ${privyUserId}`, {
+      email: result.email,
+      walletAddress: result.walletAddress,
+      lastSyncedAt: result.lastSyncedAt,
+    });
+
+    return NextResponse.json({ success: true, user: { id: result._id, privyUserId: result.privyUserId } });
   } catch (error) {
     if (error instanceof PrivyUnauthorizedError) {
       return NextResponse.json({ success: false, error: error.message }, { status: 401 });

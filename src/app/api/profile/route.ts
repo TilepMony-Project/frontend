@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
-import MstUser from "@/models/MstUser";
 import User from "@/models/User";
 import { PROFILE_TIMEZONE_VALUES } from "@/features/profile/constants";
 
@@ -98,7 +97,7 @@ function serializeProfile(profile: any) {
   }
 
   return {
-    userId: profile.userId,
+    userId: profile.userId || profile.privyUserId,
     walletAddress: profile.walletAddress ?? null,
     email: profile.email ?? null,
     fullName: profile.fullName ?? "",
@@ -127,14 +126,15 @@ export async function GET(request: Request) {
     const { userId } = await requirePrivySession(request);
     await connectDB();
 
-    let profile = await User.findOne({ userId });
+    // Try to find by userId or privyUserId
+    let profile = await User.findOne({
+      $or: [{ userId }, { privyUserId: userId }]
+    });
 
     if (!profile) {
-      const syncedUser = await MstUser.findOne({ privyUserId: userId });
       profile = await User.create({
+        privyUserId: userId,
         userId,
-        email: syncedUser?.email,
-        walletAddress: syncedUser?.walletAddress,
         timezone: "UTC",
       });
     }
@@ -178,13 +178,13 @@ export async function PUT(request: Request) {
     }
 
     const profile = await User.findOneAndUpdate(
-      { userId },
+      { $or: [{ userId }, { privyUserId: userId }] },
       {
         $set: {
           timezone: update.timezone ?? undefined,
           ...updateObject,
         },
-        $setOnInsert: { userId },
+        $setOnInsert: { privyUserId: userId, userId },
       },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );

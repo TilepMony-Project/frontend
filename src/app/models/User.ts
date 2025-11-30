@@ -1,9 +1,15 @@
 import mongoose, { Schema, type Document } from "mongoose";
 
 export interface IUser extends Document {
+  // Authentication & Identity (from MstUser)
+  privyUserId?: string;
   userId?: string;
   walletAddress?: string;
   email?: string;
+  linkedAccounts?: Record<string, unknown>;
+  privyUser?: Record<string, unknown>;
+  lastSyncedAt?: Date;
+  // Profile Information
   fullName?: string;
   jobTitle?: string;
   company?: string;
@@ -32,6 +38,13 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
   {
+    // Authentication & Identity (from MstUser)
+    privyUserId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
     userId: {
       type: String,
       unique: true,
@@ -126,8 +139,20 @@ const UserSchema = new Schema<IUser>(
       type: Schema.Types.Mixed,
       default: {},
     },
+    linkedAccounts: {
+      type: Schema.Types.Mixed,
+      default: {},
+    },
+    privyUser: {
+      type: Schema.Types.Mixed,
+      default: {},
+    },
+    lastSyncedAt: {
+      type: Date,
+    },
   },
   {
+    collection: "users",
     timestamps: true,
   }
 );
