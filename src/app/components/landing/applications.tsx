@@ -2,6 +2,10 @@
 
 import type React from "react";
 import { Button } from "@/components/ui/button";
+import {
+  useFadeInOnScroll,
+  useStaggerFade,
+} from "@/hooks/use-scroll-animations";
 
 interface ApplicationCardProps {
   icon: string;
@@ -22,13 +26,21 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col items-start gap-4 p-6 rounded-xl bg-card border-[1px] border-primary/20 dark:border-white/40 hover:border-primary border[1px] dark:hover:border-[1.5px] dark:hover:border-primary hover:shadow-xl transition-all duration-200 cursor-pointer ${!disableHoverShadow ? "hover:shadow-xl" : ""}`}
+      className={`flex flex-col items-start gap-4 p-6 rounded-xl bg-card border-[1px] border-primary/20 dark:border-white/40 hover:border-primary border[1px] dark:hover:border-[1.5px] dark:hover:border-primary hover:shadow-xl transition-all duration-200 cursor-pointer ${
+        !disableHoverShadow ? "hover:shadow-xl" : ""
+      }`}
     >
       <div className="flex flex-col items-start gap-2">
         <div className="flex items-center justify-center pt-1 rounded-lg flex-shrink-0">
-          <img alt={iconAlt} className="w-8 h-8 dark:brightness-0 dark:invert" src={icon} />
+          <img
+            alt={iconAlt}
+            className="w-8 h-8 dark:brightness-0 dark:invert"
+            src={icon}
+          />
         </div>
-        <p className="text-lg font-semibold text-left text-foreground">{title}</p>
+        <p className="text-lg font-semibold text-left text-foreground">
+          {title}
+        </p>
       </div>
       <p className="text-base text-left text-muted-foreground leading-relaxed min-h-24">
         {description}
@@ -39,12 +51,24 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 };
 
 const Applications: React.FC = () => {
+  // Fade animation refs
+  const badgeRef = useFadeInOnScroll({ delay: 0.1, y: 20 });
+  const headlineRef = useFadeInOnScroll({ delay: 0.3, y: 25 });
+  const descriptionRef = useFadeInOnScroll({ delay: 0.5, y: 20 });
+  const cardsRef = useStaggerFade({ stagger: 0.08, y: 30 });
+
   return (
-    <div id="applications" className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
+    <div
+      id="applications"
+      className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28"
+    >
       <div className="flex flex-col items-center gap-4">
         <div className="flex flex-col items-center gap-8 mb-8">
           <div className="flex flex-col items-center gap-6">
-            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default w-fit">
+            <div
+              ref={badgeRef as React.RefObject<HTMLDivElement>}
+              className="group flex items-center gap-2 px-3 py-2 rounded-2xl bg-card border border-border shadow-lg hover:shadow-xl hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default w-fit"
+            >
               <img
                 alt="Sparkle"
                 className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300"
@@ -55,7 +79,10 @@ const Applications: React.FC = () => {
               </p>
             </div>
             <div className="flex items-center gap-2 px-4">
-              <h2 className="w-full max-w-4xl mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold text-center leading-tight">
+              <h2
+                ref={headlineRef as React.RefObject<HTMLHeadingElement>}
+                className="w-full max-w-4xl mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold text-center leading-tight"
+              >
                 <span className="text-gray-900 dark:text-gray-100">
                   Enterprise Use Cases for{" "}
                 </span>
@@ -64,10 +91,14 @@ const Applications: React.FC = () => {
                 </span>
               </h2>
             </div>
-            <div className="flex items-center gap-2 px-4 lg:px-5">
+            <div
+              ref={descriptionRef as React.RefObject<HTMLDivElement>}
+              className="flex items-center gap-2 px-4 lg:px-5"
+            >
               <p className="w-full max-w-3xl opacity-80 text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
-                From corporate payments to treasury automation, TilepMoney provides clear pathways
-                to real-world commercial use cases for stablecoin payment infrastructure.
+                From corporate payments to treasury automation, TilepMoney
+                provides clear pathways to real-world commercial use cases for
+                stablecoin payment infrastructure.
               </p>
             </div>
           </div>
@@ -75,7 +106,10 @@ const Applications: React.FC = () => {
 
         {/* Applications */}
         <div className="flex flex-col items-center gap-10 w-full relative">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 w-full">
+          <div
+            ref={cardsRef as React.RefObject<HTMLDivElement>}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 w-full"
+          >
             {/* Corporate Payments */}
             <ApplicationCard
               categories="B2B, Payments, Settlements"

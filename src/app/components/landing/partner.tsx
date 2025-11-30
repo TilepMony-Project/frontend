@@ -5,6 +5,7 @@ import { firstRowLogos, secondRowLogos } from "@/data/partner-logos";
 import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
+import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 
 const LogoBox = ({
   name,
@@ -40,6 +41,12 @@ const Partner: React.FC = () => {
   const { ready, authenticated, login } = usePrivy();
   const router = useRouter();
 
+  // Fade animation refs
+  const badgeRef = useFadeInOnScroll({ delay: 0.1, y: 20 });
+  const headlineRef = useFadeInOnScroll({ delay: 0.3, y: 25 });
+  const descriptionRef = useFadeInOnScroll({ delay: 0.5, y: 20 });
+  const buttonRef = useFadeInOnScroll({ delay: 0.7, y: 20 });
+
   const handleBrowseIntegrations = () => {
     if (!ready) return;
 
@@ -59,7 +66,10 @@ const Partner: React.FC = () => {
     >
       {/* Header Section */}
       <div className="flex flex-col items-center gap-6">
-        <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary/40 dark:border-white/40 hover:border-primary dark:hover:border-primary/40 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default">
+        <div
+          ref={badgeRef as React.RefObject<HTMLDivElement>}
+          className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary/40 dark:border-white/40 hover:border-primary dark:hover:border-primary/40 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default"
+        >
           <img
             alt="Sparkle"
             className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300"
@@ -71,7 +81,10 @@ const Partner: React.FC = () => {
         </div>
       </div>
       <div className="text-center space-y-3">
-        <h2 className="max-w-lg mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight flex flex-col items-center gap-2">
+        <h2
+          ref={headlineRef as React.RefObject<HTMLHeadingElement>}
+          className="max-w-lg mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight flex flex-col items-center gap-2"
+        >
           <span className="text-gray-900 dark:text-gray-100">
             Seamlessly connect
           </span>
@@ -82,7 +95,10 @@ const Partner: React.FC = () => {
             </span>
           </span>
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base max-w-lg mx-auto">
+        <p
+          ref={descriptionRef as React.RefObject<HTMLParagraphElement>}
+          className="text-gray-600 dark:text-gray-400 text-sm lg:text-base max-w-lg mx-auto"
+        >
           Build powerful stablecoin workflows with support for major DeFi
           protocols and blockchain networks
         </p>
@@ -130,7 +146,7 @@ const Partner: React.FC = () => {
       </div>
 
       {/* Browse All Integrations Button */}
-      <div className="mt-2">
+      <div ref={buttonRef as React.RefObject<HTMLDivElement>} className="mt-2">
         <button
           type="button"
           onClick={handleBrowseIntegrations}

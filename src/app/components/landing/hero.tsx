@@ -11,17 +11,30 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 
 const Hero: React.FC = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
+  // Fade animation refs
+  const badgeRef = useFadeInOnScroll({ delay: 0.1, y: 20 });
+  const headlineRef = useFadeInOnScroll({ delay: 0.3, y: 30 });
+  const descriptionRef = useFadeInOnScroll({ delay: 0.5, y: 20 });
+  const cardRef = useFadeInOnScroll({ delay: 0.7, y: 40 });
+
   return (
-    <div id="demo" className="flex flex-col items-center px-8 lg:px-24 pt-20 lg:pt-28 pb-16 lg:pb-20">
+    <div
+      id="demo"
+      className="flex flex-col items-center px-8 lg:px-24 pt-20 lg:pt-28 pb-16 lg:pb-20"
+    >
       <div className="flex flex-col items-center relative gap-12 lg:gap-16">
         <div className="flex flex-col items-center gap-8 lg:gap-12">
           {/* Text Content */}
           <div className="flex flex-col items-center gap-4 lg:gap-6">
-            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary dark:border-white/40 hover:border-primary dark:hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default">
+            <div
+              ref={badgeRef as React.RefObject<HTMLDivElement>}
+              className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary dark:border-white/40 hover:border-primary dark:hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default"
+            >
               <img
                 alt="Sparkle"
                 className="w-4 h-4 lg:w-5 lg:h-5 group-hover:rotate-12 transition-transform duration-300"
@@ -31,7 +44,10 @@ const Hero: React.FC = () => {
                 Codeless Stablecoin Orchestration Builder
               </p>
             </div>
-            <p className="w-full max-w-4xl text-2xl sm:text-4xl lg:text-6xl font-bold text-center text-foreground leading-tight lg:leading-[1.3]">
+            <p
+              ref={headlineRef as React.RefObject<HTMLParagraphElement>}
+              className="w-full max-w-4xl text-2xl sm:text-4xl lg:text-6xl font-bold text-center text-foreground leading-tight lg:leading-[1.3]"
+            >
               Stablecoin creation made as easy as{" "}
               <AuroraText
                 className="text-wrap break-words whitespace-nowrap"
@@ -42,17 +58,23 @@ const Hero: React.FC = () => {
               </AuroraText>
             </p>
 
-            <div className="flex items-start gap-2 px-4 lg:px-5 mt-2">
+            <div
+              ref={descriptionRef as React.RefObject<HTMLDivElement>}
+              className="flex items-start gap-2 px-4 lg:px-5 mt-2"
+            >
               <p className="w-full max-w-3xl text-sm lg:text-base text-center text-muted-foreground leading-[1.3] lg:leading-[1.6]">
-                Integrating stablecoin is hard, we made it easier using drag and drop. A visual
-                drag-and-drop builder that allows businesses to design stablecoin movement workflows
-                on Mantle L2.
+                Integrating stablecoin is hard, we made it easier using drag and
+                drop. A visual drag-and-drop builder that allows businesses to
+                design stablecoin movement workflows on Mantle L2.
               </p>
             </div>
           </div>
 
           {/* Card Background */}
-          <div className="w-full max-w-6xl h-64 sm:h-80 lg:h-96 relative overflow-hidden rounded-2xl lg:rounded-3xl bg-primary/20 border border-border mx-2 sm:mx-4 flex items-center justify-center">
+          <div
+            ref={cardRef as React.RefObject<HTMLDivElement>}
+            className="w-full max-w-6xl h-64 sm:h-80 lg:h-96 relative overflow-hidden rounded-2xl lg:rounded-3xl bg-primary/20 border border-border mx-2 sm:mx-4 flex items-center justify-center"
+          >
             <Image
               alt="Card Background"
               className="object-cover"
@@ -80,9 +102,13 @@ const Hero: React.FC = () => {
                   Watch demo video
                 </p>
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <p className="opacity-80 text-xs sm:text-sm text-muted-foreground">5 mins</p>
+                  <p className="opacity-80 text-xs sm:text-sm text-muted-foreground">
+                    5 mins
+                  </p>
                   <div className="w-1 h-1 rounded-full bg-muted" />
-                  <p className="text-xs sm:text-sm font-medium text-primary">Play video</p>
+                  <p className="text-xs sm:text-sm font-medium text-primary">
+                    Play video
+                  </p>
                 </div>
               </div>
             </div>
@@ -96,7 +122,7 @@ const Hero: React.FC = () => {
           <DialogHeader className="sr-only">
             <DialogTitle>Introduction Video</DialogTitle>
           </DialogHeader>
-          <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
             <iframe
               className="absolute top-0 left-0 w-full h-full rounded-lg"
               src="https://www.youtube.com/embed/J7g9R8PETHc?si=DdWOgIBKA8Easuck"
