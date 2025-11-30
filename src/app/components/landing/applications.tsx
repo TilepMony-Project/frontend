@@ -55,9 +55,14 @@ const Applications: React.FC = () => {
               </p>
             </div>
             <div className="flex items-center gap-2 px-4">
-              <p className="w-full max-w-4xl text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-foreground leading-tight">
-                Enterprise Use Cases for B2B Payments
-              </p>
+              <h2 className="w-full max-w-4xl mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold text-center leading-tight">
+                <span className="text-gray-900 dark:text-gray-100">
+                  Enterprise Use Cases for{" "}
+                </span>
+                <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                  B2B Payments
+                </span>
+              </h2>
             </div>
             <div className="flex items-center gap-2 px-4 lg:px-5">
               <p className="w-full max-w-3xl opacity-80 text-sm lg:text-base text-center text-muted-foreground leading-relaxed">

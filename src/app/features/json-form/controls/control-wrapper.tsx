@@ -19,7 +19,7 @@ export function ControlWrapper({ children, uischema, errors, ...props }: Props) 
   const childrenControl = showIndicatorDot ? <IndicatorDot>{children}</IndicatorDot> : children;
 
   return (
-    <div className="mb-4">
+    <div className="">
       {hasLabel ? (
         <FormControlWithLabel label={label} required={required}>
           {childrenControl}

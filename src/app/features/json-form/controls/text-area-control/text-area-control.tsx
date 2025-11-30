@@ -31,7 +31,7 @@ function TextAreaControl(props: TextAreaControlProps) {
         onChange={onChange}
         onBlur={onBlur}
         rows={minRows}
-        className="min-h-[110px] rounded-xl border border-gray-200/80 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm transition-all duration-200 placeholder:text-gray-500 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/40 dark:border-gray-700 dark:bg-[#1c1c20] dark:text-gray-100 dark:placeholder:text-gray-500"
+        className="min-h-[80px] rounded-xl border border-gray-200/80 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm transition-all duration-200 placeholder:text-gray-500 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/40 dark:border-gray-700 dark:bg-[#1c1c20] dark:text-gray-100 dark:placeholder:text-gray-500"
       />
     </ControlWrapper>
   );

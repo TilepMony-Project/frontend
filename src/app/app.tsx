@@ -26,8 +26,7 @@ function AppComponent(_props: AppComponentProps) {
   const hasSingleSelection = selectedNodesCount + selectedEdgesCount === 1;
   const isExecutionMonitorActive = useStore((state) => state.isExecutionMonitorActive);
 
-  const shouldShowPropertiesPanel = hasSingleSelection && !isExecutionMonitorActive;
-  const shouldShowRightPanel = isExecutionMonitorActive || shouldShowPropertiesPanel;
+  const shouldShowPropertiesPanel = hasSingleSelection;
 
   return (
     <div className="fixed flex flex-col h-full w-full overflow-hidden">
@@ -42,16 +41,16 @@ function AppComponent(_props: AppComponentProps) {
         <div className="h-full flex pointer-events-auto">
           <PaletteContainerLazy />
         </div>
-        {shouldShowRightPanel && (
+        {shouldShowPropertiesPanel && (
           <div className="h-full flex pointer-events-auto">
             <div className="flex flex-col gap-4 items-end justify-between">
-              {isExecutionMonitorActive ? <ExecutionMonitor /> : null}
-              {shouldShowPropertiesPanel ? <PropertiesBarContainerLazy /> : null}
+              <PropertiesBarContainerLazy />
             </div>
           </div>
         )}
       </div>
 
+      <ExecutionMonitor />
       <AppLoaderContainer />
       <OptionalHooks />
     </div>

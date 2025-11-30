@@ -55,6 +55,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
   const { openDeleteConfirmationModal } = useDeleteConfirmation();
 
   const setConnectionBeingDragged = useStore((store) => store.setConnectionBeingDragged);
+  const togglePropertiesBar = useStore((store) => store.togglePropertiesBar);
   const nodeTypes = useMemo(getNodeTypesObject, []);
 
   const onDragOver = useCallback((event: DragEvent) => {
@@ -113,6 +114,11 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
     [onSelectionChange]
   );
 
+  const onNodeDoubleClick = useCallback(() => {
+    // Toggle properties panel on double-click
+    togglePropertiesBar();
+  }, [togglePropertiesBar]);
+
   useEffect(() => {
     destroyNodeChangedListeners();
     destroyNodeDragStartListeners();
@@ -169,6 +175,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
         onEdgeMouseLeave={onEdgeMouseLeave}
         onNodesChange={handleOnNodesChange}
         onNodeDragStart={onNodeDragStart}
+        onNodeDoubleClick={onNodeDoubleClick}
         onBeforeDelete={onBeforeDelete}
         onSelectionChange={handleOnSelectionChange}
         minZoom={0.1}

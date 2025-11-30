@@ -78,7 +78,7 @@ function PropertiesBarComponent({
 
   return (
     <Sidebar
-      className={clsx(isExpanded && "!w-[420px]")}
+      className={clsx(isExpanded && "!w-[420px] !h-[500px]")}
       isExpanded={isExpanded}
       contentClassName="-ml-4 w-[calc(100%+1rem)] [&>*]:pl-4"
       header={
@@ -96,7 +96,7 @@ function PropertiesBarComponent({
       }
       footer={
         isExpanded && (
-          <div className="flex flex-col gap-2.5 w-full">
+          <div className="flex flex-col gap-2 w-full">
             {selection?.node && (
               <Button
                 onClick={onRunNodeClick}
