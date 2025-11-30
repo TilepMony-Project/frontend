@@ -39,12 +39,14 @@ import NetworkBlast from "@web3icons/react/icons/networks/NetworkBlast";
 import NetworkScroll from "@web3icons/react/icons/networks/NetworkScroll";
 import NetworkLinea from "@web3icons/react/icons/networks/NetworkLinea";
 import NetworkStarknet from "@web3icons/react/icons/networks/NetworkStarknet";
+import TokenIDRX from "@/components/icons/TokenIDRX";
 
 // Web3icon mapping
 const web3IconMap: Record<string, FC<SVGProps<SVGSVGElement>>> = {
   TokenUSDT,
   TokenUSDC,
   TokenDAI,
+  TokenIDRX,
   TokenUNI,
   Token1INCH,
   TokenAAVE,
@@ -89,14 +91,15 @@ function renderIcon(iconName: string | undefined): React.ReactNode {
 function SelectControl(props: SelectControlProps) {
   const { data, handleChange, path, enabled, schema } = props;
 
-  const items = ((schema as PrimitiveFieldSchema).options as ItemOption[] | undefined)?.map(
-    (option) =>
-      option.type === "separator" || !option.icon
-        ? option
-        : {
-            ...option,
-            icon: renderIcon(option.icon as string),
-          }
+  const items = (
+    (schema as PrimitiveFieldSchema).options as ItemOption[] | undefined
+  )?.map((option) =>
+    option.type === "separator" || !option.icon
+      ? option
+      : {
+          ...option,
+          icon: renderIcon(option.icon as string),
+        }
   );
 
   const onChange: SelectProps["onChange"] = (_event, value) => {
@@ -123,4 +126,7 @@ function SelectControl(props: SelectControlProps) {
   );
 }
 
-export const selectControlRenderer = createControlRenderer("Select", SelectControl);
+export const selectControlRenderer = createControlRenderer(
+  "Select",
+  SelectControl
+);

@@ -1,9 +1,9 @@
 import type { NodeSchema } from "@/types/node-schema";
 
 export const issuerOptions = [
-  { label: "DummyIssuerA", value: "DummyIssuerA" },
-  { label: "DummyIssuerB", value: "DummyIssuerB" },
-  { label: "DummyIssuerC", value: "DummyIssuerC" },
+  { label: "DummyIssuerA", value: "DummyIssuerA", icon: "TokenUSDT" },
+  { label: "DummyIssuerB", value: "DummyIssuerB", icon: "TokenUSDC" },
+  { label: "DummyIssuerC", value: "DummyIssuerC", icon: "TokenDAI" },
 ];
 
 export const schema = {
