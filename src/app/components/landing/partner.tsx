@@ -25,7 +25,7 @@ const LogoBox = ({
           <Icon
             className={`w-10 h-10 transition-all duration-300 drop-shadow-sm ${
               ["FRAX", "Mantle", "WBTC"].includes(name)
-                ? "text-[#FFD700] opacity-100"
+                ? "brightness-0 dark:brightness-0 dark:invert opacity-90 group-hover:opacity-100"
                 : "opacity-90 group-hover:opacity-100"
             }`}
             aria-label={name}
