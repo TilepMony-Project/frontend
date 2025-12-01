@@ -41,11 +41,37 @@ const Partner: React.FC = () => {
   const { ready, authenticated, login } = usePrivy();
   const router = useRouter();
 
-  // Fade animation refs
-  const badgeRef = useFadeInOnScroll({ delay: 0.1, y: 20 });
-  const headlineRef = useFadeInOnScroll({ delay: 0.3, y: 25 });
-  const descriptionRef = useFadeInOnScroll({ delay: 0.5, y: 20 });
-  const buttonRef = useFadeInOnScroll({ delay: 0.7, y: 20 });
+  // Cinematic animation refs with enhanced effects
+  const badgeRef = useFadeInOnScroll({ 
+    delay: 0, 
+    y: 20, 
+    scale: 0.85,
+    blur: 6,
+    duration: 0.8,
+    ease: "power3.out"
+  });
+  const headlineRef = useFadeInOnScroll({ 
+    delay: 0.2, 
+    y: 40, 
+    scale: 0.93,
+    blur: 5,
+    duration: 1.5,
+    ease: "power4.out"
+  });
+  const descriptionRef = useFadeInOnScroll({ 
+    delay: 0.4, 
+    y: 30, 
+    scale: 0.95,
+    duration: 1.3,
+    ease: "power3.out"
+  });
+  const buttonRef = useFadeInOnScroll({ 
+    delay: 0.6, 
+    y: 30, 
+    scale: 0.9,
+    duration: 1.2,
+    ease: "power3.out"
+  });
 
   const handleBrowseIntegrations = () => {
     if (!ready) return;

@@ -7,6 +7,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  useFadeInOnScroll,
+  useStaggerFade,
+} from "@/hooks/use-scroll-animations";
 
 const FAQ: React.FC = () => {
   const faqItems = [
@@ -42,6 +46,39 @@ const FAQ: React.FC = () => {
     },
   ];
 
+  // Cinematic animation refs with enhanced effects
+  const badgeRef = useFadeInOnScroll({ 
+    delay: 0, 
+    y: 20, 
+    scale: 0.85,
+    blur: 6,
+    duration: 0.8,
+    ease: "power3.out"
+  });
+  const headlineRef = useFadeInOnScroll({ 
+    delay: 0.2, 
+    y: 40, 
+    scale: 0.93,
+    blur: 5,
+    duration: 1.5,
+    ease: "power4.out"
+  });
+  const descriptionRef = useFadeInOnScroll({ 
+    delay: 0.4, 
+    y: 30, 
+    scale: 0.95,
+    duration: 1.3,
+    ease: "power3.out"
+  });
+  const faqItemsRef = useStaggerFade({ 
+    stagger: 0.12, 
+    y: 40, 
+    scale: 0.92,
+    blur: 4,
+    duration: 1,
+    ease: "power3.out"
+  });
+
   return (
     <div id="faq" className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
       <div className="flex flex-col items-center gap-4 w-full max-w-7xl">
@@ -50,7 +87,10 @@ const FAQ: React.FC = () => {
             {/* Text Content */}
             <div className="flex flex-col gap-6 lg:pr-10 w-full lg:w-auto lg:min-w-[380px]">
               <div className="flex flex-col gap-4">
-                <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary dark:border-white/40 hover:border-primary dark:hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default w-fit">
+                <div 
+                  ref={badgeRef as React.RefObject<HTMLDivElement>}
+                  className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary dark:border-white/40 hover:border-primary dark:hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default w-fit"
+                >
                   <img
                     alt="Sparkle"
                     className="w-4 h-4 lg:w-5 lg:h-5 group-hover:rotate-12 transition-transform duration-300"
@@ -61,7 +101,10 @@ const FAQ: React.FC = () => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <h2 className="w-full lg:w-96 text-2xl sm:text-3xl lg:text-4xl font-bold text-left leading-tight">
+                  <h2 
+                    ref={headlineRef as React.RefObject<HTMLHeadingElement>}
+                    className="w-full lg:w-96 text-2xl sm:text-3xl lg:text-4xl font-bold text-left leading-tight"
+                  >
                     <span className="text-gray-900 dark:text-gray-100">
                       Frequently asked{" "}
                     </span>
@@ -70,7 +113,10 @@ const FAQ: React.FC = () => {
                     </span>
                   </h2>
                 </div>
-                <div className="flex items-center gap-2 lg:pr-6">
+                <div 
+                  ref={descriptionRef as React.RefObject<HTMLDivElement>}
+                  className="flex items-center gap-2 lg:pr-6"
+                >
                   <p className="w-full lg:w-96 opacity-80 text-sm lg:text-base text-left text-muted-foreground leading-relaxed">
                     Explore our frequently asked questions to learn more about TilepMoney's
                     features, security, integration capabilities, and more
@@ -86,6 +132,7 @@ const FAQ: React.FC = () => {
                 collapsible
                 defaultValue="item-0"
                 className="w-full space-y-3"
+                ref={faqItemsRef as React.RefObject<HTMLDivElement>}
               >
                 {faqItems.map((item, index) => (
                   <AccordionItem

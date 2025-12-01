@@ -16,11 +16,38 @@ import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 const Hero: React.FC = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
-  // Fade animation refs
-  const badgeRef = useFadeInOnScroll({ delay: 0.1, y: 20 });
-  const headlineRef = useFadeInOnScroll({ delay: 0.3, y: 30 });
-  const descriptionRef = useFadeInOnScroll({ delay: 0.5, y: 20 });
-  const cardRef = useFadeInOnScroll({ delay: 0.7, y: 40 });
+  // Cinematic animation refs with enhanced effects
+  const badgeRef = useFadeInOnScroll({ 
+    delay: 0, 
+    y: 20, 
+    scale: 0.85, 
+    blur: 6,
+    duration: 0.8,
+    ease: "power3.out"
+  });
+  const headlineRef = useFadeInOnScroll({ 
+    delay: 0.2, 
+    y: 50, 
+    scale: 0.92,
+    blur: 6,
+    duration: 1.6,
+    ease: "power4.out"
+  });
+  const descriptionRef = useFadeInOnScroll({ 
+    delay: 0.4, 
+    y: 30, 
+    scale: 0.95,
+    duration: 1.3,
+    ease: "power3.out"
+  });
+  const cardRef = useFadeInOnScroll({ 
+    delay: 0.6, 
+    y: 60, 
+    scale: 0.9,
+    blur: 10,
+    duration: 1.8,
+    ease: "power4.out"
+  });
 
   return (
     <div
