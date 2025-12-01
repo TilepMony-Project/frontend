@@ -8,32 +8,35 @@ import Header from "./components/landing/header";
 import Hero from "./components/landing/hero";
 import OurStrategies from "./components/landing/our-strategies";
 import Partner from "./components/landing/partner";
+import ScrollSmootherWrapper from "./components/landing/scroll-smoother-wrapper";
 
 export default function LandingPage() {
   return (
-    <DotPatternLinearGradient>
-    <div className="flex flex-col">
-      {/* Header */}
-      <Header />
+    <ScrollSmootherWrapper>
+      <DotPatternLinearGradient>
+      <div className="flex flex-col">
+        {/* Header */}
+        <Header />
 
-      {/* Hero */}
-      <Hero />
+        {/* Hero */}
+        <Hero />
 
-      {/* Partner */}
-      <Partner />
+        {/* Partner */}
+        <Partner />
 
-      {/* Our Strategies */}
-      <OurStrategies />
+        {/* Our Strategies */}
+        <OurStrategies />
 
-      {/* Applications */}
-      <Applications />
+        {/* Applications */}
+        <Applications />
 
-      {/* FAQ */}
-      <FAQ />
+        {/* FAQ */}
+        <FAQ />
 
-      {/* Footer */}
-      <Footer />
-    </div>
-    </DotPatternLinearGradient>
+        {/* Footer */}
+        <Footer />
+      </div>
+      </DotPatternLinearGradient>
+    </ScrollSmootherWrapper>
   );
 }
