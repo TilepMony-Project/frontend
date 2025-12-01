@@ -45,12 +45,12 @@ import {
 
 const StrategyCardBackground: React.FC = () => {
   const workflowRef = useFadeInOnScroll({ 
-    delay: 0.8, 
-    y: 80, 
-    scale: 0.88,
-    blur: 12,
-    duration: 2,
-    ease: "power4.out"
+    delay: 0.4, 
+    y: 40, 
+    scale: 0.95,
+    blur: 8,
+    duration: 1.4,
+    ease: "power3.out"
   });
 
   return (
@@ -66,34 +66,34 @@ const StrategyCardBackground: React.FC = () => {
 const OurStrategies: React.FC = () => {
   // Cinematic animation refs with enhanced effects
   const badgeRef = useFadeInOnScroll({ 
-    delay: 0.4, 
-    y: 30, 
+    delay: 0, 
+    y: 20, 
     scale: 0.95,
-    duration: 1.3,
+    duration: 1.0,
     ease: "power3.out"
   });
   const headlineRef = useFadeInOnScroll({ 
-    delay: 0.2, 
-    y: 40, 
-    scale: 0.93,
-    blur: 5,
-    duration: 1.5,
-    ease: "power4.out"
-  });
-  const descriptionRef = useFadeInOnScroll({ 
-    delay: 0.4, 
+    delay: 0.1, 
     y: 30, 
     scale: 0.95,
-    duration: 1.3,
+    blur: 4,
+    duration: 1.2,
+    ease: "power3.out"
+  });
+  const descriptionRef = useFadeInOnScroll({ 
+    delay: 0.2, 
+    y: 20, 
+    scale: 0.98,
+    duration: 1.1,
     ease: "power3.out"
   });
   const cardsRef = useStaggerFade({ 
-    stagger: 0.15, 
-    y: 50, 
-    scale: 0.85,
-    blur: 6,
-    duration: 1.2,
-    ease: "power4.out"
+    stagger: 0.1, 
+    y: 30, 
+    scale: 0.92,
+    blur: 4,
+    duration: 1.0,
+    ease: "power3.out"
   });
 
   return (

@@ -53,34 +53,34 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 const Applications: React.FC = () => {
   // Cinematic animation refs with enhanced effects
   const badgeRef = useFadeInOnScroll({ 
-    delay: 0.4, 
-    y: 30, 
+    delay: 0, 
+    y: 20, 
     scale: 0.95,
-    duration: 1.3,
+    duration: 1.0,
     ease: "power3.out"
   });
   const headlineRef = useFadeInOnScroll({ 
-    delay: 0.2, 
-    y: 40, 
-    scale: 0.93,
-    blur: 5,
-    duration: 1.5,
-    ease: "power4.out"
-  });
-  const descriptionRef = useFadeInOnScroll({ 
-    delay: 0.4, 
+    delay: 0.1, 
     y: 30, 
     scale: 0.95,
-    duration: 1.3,
+    blur: 4,
+    duration: 1.2,
+    ease: "power3.out"
+  });
+  const descriptionRef = useFadeInOnScroll({ 
+    delay: 0.2, 
+    y: 20, 
+    scale: 0.98,
+    duration: 1.1,
     ease: "power3.out"
   });
   const cardsRef = useStaggerFade({ 
-    stagger: 0.1, 
-    y: 50, 
-    scale: 0.88,
-    blur: 5,
-    duration: 1.1,
-    ease: "power4.out"
+    stagger: 0.08, 
+    y: 30, 
+    scale: 0.92,
+    blur: 4,
+    duration: 1.0,
+    ease: "power3.out"
   });
 
   return (

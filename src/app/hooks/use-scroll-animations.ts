@@ -83,6 +83,7 @@ export function useFadeInOnScroll(options?: {
             scale: options?.scale || 1,
             rotation: options?.rotation || 0,
             filter: options?.blur ? `blur(${options.blur}px)` : "blur(0px)",
+            willChange: "transform, opacity, filter",
           },
           {
             opacity: 1,
@@ -110,6 +111,7 @@ export function useFadeInOnScroll(options?: {
             scale: options?.scale !== undefined ? options.scale : 0.95,
             rotation: options?.rotation || 0,
             filter: options?.blur ? `blur(${options.blur}px)` : "blur(0px)",
+            willChange: "transform, opacity, filter",
           },
           {
             opacity: 1,

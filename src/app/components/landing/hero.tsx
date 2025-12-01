@@ -18,34 +18,34 @@ const Hero: React.FC = () => {
 
   // Cinematic animation refs with enhanced effects
   const badgeRef = useFadeInOnScroll({ 
-    delay: 0.4, 
-    y: 30, 
-    scale: 0.95,
-    duration: 1.3,
+    delay: 0, 
+    y: 20, 
+    scale: 0.95, 
+    duration: 1.0,
     ease: "power3.out"
   });
   const headlineRef = useFadeInOnScroll({ 
-    delay: 0.2, 
-    y: 50, 
-    scale: 0.92,
-    blur: 6,
-    duration: 1.6,
-    ease: "power4.out"
+    delay: 0.1, 
+    y: 40, 
+    scale: 0.95,
+    blur: 5,
+    duration: 1.2,
+    ease: "power3.out"
   });
   const descriptionRef = useFadeInOnScroll({ 
-    delay: 0.4, 
+    delay: 0.2, 
     y: 30, 
-    scale: 0.95,
-    duration: 1.3,
+    scale: 0.98,
+    duration: 1.1,
     ease: "power3.out"
   });
   const cardRef = useFadeInOnScroll({ 
-    delay: 0.6, 
-    y: 60, 
-    scale: 0.9,
-    blur: 10,
-    duration: 1.8,
-    ease: "power4.out"
+    delay: 0.3, 
+    y: 40, 
+    scale: 0.95,
+    blur: 8,
+    duration: 1.4,
+    ease: "power3.out"
   });
 
   return (
