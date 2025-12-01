@@ -36,6 +36,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Pagination } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Modal } from "@/components/ui/modal";
@@ -142,6 +143,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | WorkflowSummary["status"]>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(12);
   const [pendingAction, setPendingAction] = useState<PendingAction>({ type: null });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
@@ -292,6 +295,20 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       return matchesStatus && matchesSearch;
     });
   }, [statusFilter, searchTerm, workflows]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, searchTerm]);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredWorkflows.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedWorkflows = useMemo(
+    () => filteredWorkflows.slice(startIndex, endIndex),
+    [filteredWorkflows, startIndex, endIndex]
+  );
 
   function resetAction() {
     setPendingAction({ type: null });
@@ -1042,16 +1059,51 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       </section>
 
       <section className="flex justify-between items-center gap-4 text-gray-600 dark:text-gray-400 flex-wrap">
-        <span className="text-sm">
-          {isLoading ? (
-            <span className="flex items-center gap-2">
-              <Icon name="Loader2" size={16} className="animate-spin" />
-              {isLoadingToken ? "Preparing your workspace..." : "Loading workflows..."}
-            </span>
-          ) : (
-            `Showing ${filteredWorkflows.length} of ${workflows.length} workflows`
+        <div className="flex items-center gap-4 flex-wrap">
+          <span className="text-sm">
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <Icon name="Loader2" size={16} className="animate-spin" />
+                {isLoadingToken ? "Preparing your workspace..." : "Loading workflows..."}
+              </span>
+            ) : (
+              <>
+                Showing {startIndex + 1}-{Math.min(endIndex, filteredWorkflows.length)} of{" "}
+                {filteredWorkflows.length} workflows
+                {filteredWorkflows.length !== workflows.length && ` (${workflows.length} total)`}
+              </>
+            )}
+          </span>
+          {!isLoading && filteredWorkflows.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-9 text-xs"
+                  disabled={isBusy}
+                >
+                  {itemsPerPage} per page
+                  <Icon name="ChevronDown" size={14} className="ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-32">
+                {[6, 12, 24, 48].map((size) => (
+                  <DropdownMenuItem
+                    key={size}
+                    onClick={() => {
+                      setItemsPerPage(size);
+                      setCurrentPage(1);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    {size} per page
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
-        </span>
+        </div>
         <div className="flex flex-wrap items-center gap-3">
           <Button
             className="min-w-[180px] px-6 py-3 text-base rounded-full border border-border"
@@ -1130,7 +1182,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         </div>
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
-          {filteredWorkflows.map((workflow) => (
+          {paginatedWorkflows.map((workflow) => (
             <article
               key={workflow.id}
               className="group bg-white dark:bg-[#27282b] rounded-2xl p-8 border border-gray-200 dark:border-gray-700 flex flex-col gap-5 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/50"
@@ -1265,7 +1317,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
               </tr>
             </thead>
             <tbody>
-              {filteredWorkflows.map((workflow) => (
+              {paginatedWorkflows.map((workflow) => (
                 <tr key={workflow.id}>
                   <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white max-w-xs">
                     <div className="max-w-xs">
@@ -1364,6 +1416,18 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           </table>
         </div>
       )}
+
+      {/* Pagination */}
+      {!isBusy && filteredWorkflows.length > 0 && totalPages > 1 && (
+        <div className="flex items-center justify-center py-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
+
       {isCreateModalOpen && (
         <Modal
           open={isCreateModalOpen}
