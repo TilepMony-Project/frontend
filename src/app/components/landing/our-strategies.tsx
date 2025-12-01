@@ -10,38 +10,72 @@ interface StrategyCardProps {
   description: string;
 }
 
-const StrategyCard: React.FC<StrategyCardProps> = ({ icon, iconAlt, title, description }) => {
+const StrategyCard: React.FC<StrategyCardProps> = ({
+  icon,
+  iconAlt,
+  title,
+  description,
+}) => {
   return (
     <div className="flex flex-col items-start gap-4 p-6 rounded-xl bg-card border-[1px] border-primary/20 dark:border-white/40 hover:border-primary border[1px] dark:hover:border-[1.5px] dark:hover:border-primary  transition-all duration-200 cursor-pointer">
       <div className="flex items-start gap-3">
         <div className="flex items-center justify-center min-w-8 min-h-8 p-2 rounded-lg bg-primary/10 flex-shrink-0">
-          <img alt={iconAlt} className="w-5 h-5 dark:brightness-0 dark:invert" src={icon} />
+          <img
+            alt={iconAlt}
+            className="w-5 h-5 dark:brightness-0 dark:invert"
+            src={icon}
+          />
         </div>
-        <p className="text-lg font-semibold text-left text-foreground">{title}</p>
+        <p className="text-lg font-semibold text-left text-foreground">
+          {title}
+        </p>
       </div>
-      <p className="text-base text-left text-muted-foreground leading-relaxed">{description}</p>
+      <p className="text-base text-left text-muted-foreground leading-relaxed">
+        {description}
+      </p>
     </div>
   );
 };
 
 import WorkflowPreview from "./workflow-preview/workflow-preview";
+import {
+  useFadeInOnScroll,
+  useStaggerFade,
+} from "@/hooks/use-scroll-animations";
 
 const StrategyCardBackground: React.FC = () => {
+  const workflowRef = useFadeInOnScroll({ delay: 0.7, y: 40 });
+
   return (
-    <div className="w-full max-w-7xl h-96 relative overflow-hidden rounded-3xl bg-primary/20 border-[1px] border-primary/40 dark:border-white/40 flex items-center justify-center">
+    <div
+      ref={workflowRef as React.RefObject<HTMLDivElement>}
+      className="w-full max-w-7xl h-96 relative overflow-hidden rounded-3xl bg-primary/20 border-[1px] border-primary/40 dark:border-white/40 flex items-center justify-center"
+    >
       <WorkflowPreview />
     </div>
   );
 };
 
 const OurStrategies: React.FC = () => {
+  // Fade animation refs
+  const badgeRef = useFadeInOnScroll({ delay: 0.1, y: 20 });
+  const headlineRef = useFadeInOnScroll({ delay: 0.3, y: 25 });
+  const descriptionRef = useFadeInOnScroll({ delay: 0.5, y: 20 });
+  const cardsRef = useStaggerFade({ stagger: 0.1, y: 30 });
+
   return (
-    <div id="features" className="flex flex-col items-center gap-16 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
+    <div
+      id="features"
+      className="flex flex-col items-center gap-16 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28"
+    >
       <div className="flex flex-col items-center gap-16">
         <div className="flex flex-col items-center gap-8">
           {/* Text Content */}
           <div className="flex flex-col items-center gap-6">
-            <div className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary/40 dark:border-white/40 hover:border-primary dark:hover:border-primary/40 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default">
+            <div
+              ref={badgeRef as React.RefObject<HTMLDivElement>}
+              className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary/40 dark:border-white/40 hover:border-primary dark:hover:border-primary/40 transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default"
+            >
               <img
                 alt="Sparkle"
                 className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300"
@@ -52,7 +86,10 @@ const OurStrategies: React.FC = () => {
               </p>
             </div>
             <div className="flex items-center gap-2 px-4">
-              <h2 className="w-full max-w-2xl mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold text-center leading-tight">
+              <h2
+                ref={headlineRef as React.RefObject<HTMLHeadingElement>}
+                className="w-full max-w-2xl mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold text-center leading-tight"
+              >
                 <span className="text-gray-900 dark:text-gray-100">
                   B2B Orchestration Studio for{" "}
                 </span>
@@ -61,10 +98,13 @@ const OurStrategies: React.FC = () => {
                 </span>
               </h2>
             </div>
-            <div className="flex items-center gap-2 px-4 lg:px-5">
+            <div
+              ref={descriptionRef as React.RefObject<HTMLDivElement>}
+              className="flex items-center gap-2 px-4 lg:px-5"
+            >
               <p className="w-full max-w-xl opacity-80 text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
-                Design, test, and automate your payment and treasury routes with complete routing
-                transparency and provider-agnostic flexibility.
+                Design, test, and automate your payment and treasury routes with
+                complete routing transparency and provider-agnostic flexibility.
               </p>
             </div>
           </div>
@@ -72,7 +112,10 @@ const OurStrategies: React.FC = () => {
 
         {/* Strategies */}
         <div className="flex flex-col items-center gap-10 w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 w-full">
+          <div
+            ref={cardsRef as React.RefObject<HTMLDivElement>}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 w-full"
+          >
             <StrategyCard
               description="Design complex stablecoin flows with drag-and-drop simplicity. No coding required—just drag, drop, and configure each node to build your complete payment workflow from deposit to output."
               icon="/landing/database.svg"
