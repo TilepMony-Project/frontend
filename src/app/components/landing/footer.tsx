@@ -7,8 +7,11 @@ import {
   useFadeInOnScroll,
   useStaggerFade,
 } from "@/hooks/use-scroll-animations";
+import { useTheme } from "@/hooks/use-theme";
 
 const Footer: React.FC = () => {
+  const { theme } = useTheme();
+  
   // Cinematic animation refs with enhanced effects
   const logoRef = useFadeInOnScroll({ 
     delay: 0, 
@@ -42,11 +45,21 @@ const Footer: React.FC = () => {
           className="flex items-center gap-5"
         >
           <div className="flex items-center gap-1">
-            <img
-              alt="TilepMoney Logo"
-              className="w-10 h-10 sm:w-12 sm:h-12"
-              src="/tilepmoney.png"
-            />
+            {theme === "dark" ? (
+              <img
+                key="dark-logo"
+                alt="TilepMoney Logo"
+                className="h-10 sm:h-12 w-auto"
+                src="/tilepmoney_white_text.png"
+              />
+            ) : (
+              <img
+                key="light-logo"
+                alt="TilepMoney Logo"
+                className="h-10 sm:h-12 w-auto"
+                src="/tilepmoney_dark_text.png"
+              />
+            )}
           </div>
           <div className="flex-1 h-px bg-border" />
         </div>

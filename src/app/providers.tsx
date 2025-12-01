@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import TagManager from "react-gtm-module";
 import type { PrivyClientConfig } from "@privy-io/react-auth";
 import { PrivyUserSync } from "@/components/privy-user-sync";
+import { ThemeProvider } from "@/hooks/use-theme";
 
 // Disable immer's automatic object freezing because ReactFlow mutates objects under the hood
 // and requires this to be turned off to function properly, especially when node size is updated
@@ -59,8 +60,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <SmartWalletsProviderNoSSR>
         <QueryClientProvider client={queryClient}>
           <ReactFlowProvider>
-            <PrivyUserSync />
-            {children}
+            <ThemeProvider>
+              <PrivyUserSync />
+              {children}
+            </ThemeProvider>
           </ReactFlowProvider>
         </QueryClientProvider>
       </SmartWalletsProviderNoSSR>
