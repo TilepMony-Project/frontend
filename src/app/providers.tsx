@@ -19,7 +19,7 @@ const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 const privyConfig: PrivyClientConfig = {
   loginMethods: ["wallet", "email"],
   appearance: {
-    theme: "light",
+    theme: "dark",
     showWalletLoginFirst: true,
   },
   embeddedWallets: {

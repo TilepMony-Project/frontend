@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light" className={poppins.variable}>
+    <html lang="en" data-theme="dark" className={`dark ${poppins.variable}`}>
       <head>
         <link rel="icon" type="image/png" href="/tilepmoney.png" />
       </head>

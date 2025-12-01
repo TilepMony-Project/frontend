@@ -6,9 +6,9 @@ type Theme = "dark" | "light";
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === "undefined" || !window.localStorage) {
-      return "light";
+      return "dark";
     }
-    return (localStorage.getItem(THEME_KEY) || "light") as Theme;
+    return (localStorage.getItem(THEME_KEY) || "dark") as Theme;
   });
 
   useEffect(() => {
