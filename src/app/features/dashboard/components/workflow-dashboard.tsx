@@ -1112,7 +1112,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Button
-            className="min-w-[180px] px-6 py-3 text-base rounded-full border border-border"
+            className="min-w-[180px] px-6 py-3 text-base rounded-full border-[1px] border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500"
             onClick={openTemplateModal}
             disabled={creatingTemplate || isLoading}
             variant="outline"

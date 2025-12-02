@@ -108,7 +108,7 @@ export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGenerator
       <Button
         onClick={() => setIsOpen(true)}
         variant="outline"
-        className="gap-2 min-w-[180px] px-6 py-3 text-base rounded-full"
+        className="gap-2 min-w-[180px] px-6 py-3 text-base rounded-full border-[1px] border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500"
         size="lg"
       >
         <Sparkles size={18} />
