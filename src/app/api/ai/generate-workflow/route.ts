@@ -1,64 +1,114 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { requirePrivySession, PrivyUnauthorizedError } from "@/lib/auth/privy";
 
+// Import node schemas for property information
+import { schema as depositSchema } from "@/data/nodes/deposit/schema";
+import { schema as mintSchema } from "@/data/nodes/mint/schema";
+import { schema as swapSchema } from "@/data/nodes/swap/schema";
+import { schema as bridgeSchema } from "@/data/nodes/bridge/schema";
+import { schema as redeemSchema } from "@/data/nodes/redeem/schema";
+import { schema as transferSchema } from "@/data/nodes/transfer/schema";
+import { schema as vaultSchema } from "@/data/nodes/vault/schema";
+import { schema as waitSchema } from "@/data/nodes/wait/schema";
+import { schema as partitionSchema } from "@/data/nodes/partition/schema";
+
 const SUMOPOD_API_URL = "https://ai.sumopod.com/v1/chat/completions";
 const SUMOPOD_API_KEY = process.env.OPENAI_API_KEY;
 
-// Node registry for LLM context
+// Helper function to extract property information from schema
+function extractPropertyInfo(schema: { properties: Record<string, any> }) {
+  const propertyInfo: Record<string, any> = {};
+  
+  for (const [key, value] of Object.entries(schema.properties)) {
+    const info: any = {
+      type: value.type,
+    };
+    
+    if (value.options) {
+      info.options = value.options.map((opt: any) => 
+        typeof opt === 'object' ? opt.value : opt
+      );
+      info.optionLabels = value.options.map((opt: any) => 
+        typeof opt === 'object' ? opt.label : opt
+      );
+    }
+    
+    if (value.minimum !== undefined) info.minimum = value.minimum;
+    if (value.maximum !== undefined) info.maximum = value.maximum;
+    if (value.pattern) info.pattern = value.pattern;
+    if (value.readOnly) info.readOnly = value.readOnly;
+    if (value.placeholder) info.placeholder = value.placeholder;
+    
+    propertyInfo[key] = info;
+  }
+  
+  return propertyInfo;
+}
+
+// Node registry for LLM context with property details
 const NODE_REGISTRY = {
   deposit: {
     description: "Entry point: Receives fiat (USD/IDR) from payment gateway",
     inputs: [],
     outputs: ["USD", "IDR"],
     requiredFields: ["amount", "currency", "paymentGateway"],
+    properties: extractPropertyInfo(depositSchema),
   },
   mint: {
     description: "Converts fiat to stablecoin (USD→mUSDT, IDR→IDRX)",
     inputs: ["USD", "IDR"],
     outputs: ["mUSDT", "IDRX"],
-    requiredFields: ["amount", "currency"],
+    requiredFields: ["amount", "currency", "issuer", "receivingWallet"],
+    properties: extractPropertyInfo(mintSchema),
   },
   swap: {
     description: "Exchanges one token for another (e.g., IDRX→mUSDT)",
     inputs: ["mUSDT", "IDRX"],
     outputs: ["mUSDT", "IDRX"],
-    requiredFields: ["amount", "fromToken", "toToken"],
+    requiredFields: ["amount", "inputToken", "outputToken"],
+    properties: extractPropertyInfo(swapSchema),
   },
   bridge: {
     description: "Moves tokens across blockchains",
     inputs: ["mUSDT", "IDRX"],
     outputs: ["mUSDT", "IDRX"],
-    requiredFields: ["amount", "fromNetwork", "toNetwork"],
+    requiredFields: ["amount", "bridgeProvider", "receiverWallet"],
+    properties: extractPropertyInfo(bridgeSchema),
   },
   redeem: {
     description: "Converts stablecoin back to fiat (mUSDT→USD, IDRX→IDR)",
     inputs: ["mUSDT", "IDRX"],
     outputs: ["USD", "IDR"],
-    requiredFields: ["amount", "currency"],
+    requiredFields: ["amount", "currency", "recipientWallet"],
+    properties: extractPropertyInfo(redeemSchema),
   },
   transfer: {
     description: "Sends stablecoins to a wallet address",
     inputs: ["mUSDT", "IDRX"],
     outputs: [],
-    requiredFields: ["amount", "toAddress", "token"],
+    requiredFields: ["amount", "recipientWallet"],
+    properties: extractPropertyInfo(transferSchema),
   },
   vault: {
     description: "Deposits into yield vault with stop conditions",
     inputs: ["mUSDT"],
     outputs: ["vaultShares"],
-    requiredFields: ["amount", "stopCondition"],
+    requiredFields: ["amount", "yieldModel", "stopCondition"],
+    properties: extractPropertyInfo(vaultSchema),
   },
   wait: {
     description: "Delays execution for specified duration",
     inputs: ["*"],
     outputs: ["*"],
-    requiredFields: ["duration", "unit"],
+    requiredFields: ["delayDuration", "timeUnit"],
+    properties: extractPropertyInfo(waitSchema),
   },
   partition: {
     description: "Splits amount into multiple branches (percentages must sum to 100%)",
     inputs: ["mUSDT", "IDRX"],
     outputs: ["mUSDT", "IDRX"],
-    requiredFields: ["percentages"],
+    requiredFields: ["numberOfBranches", "branches"],
+    properties: extractPropertyInfo(partitionSchema),
   },
 };
 
@@ -158,6 +208,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Helper to format property information for prompt
+    function formatPropertyInfo(properties: Record<string, any>): string {
+      return Object.entries(properties)
+        .map(([key, info]) => {
+          let propDesc = `    - ${key} (${info.type})`;
+          
+          if (info.options) {
+            propDesc += `\n      Options: ${info.optionLabels?.join(", ") || info.options.join(", ")}`;
+          }
+          
+          if (info.minimum !== undefined || info.maximum !== undefined) {
+            const range = [];
+            if (info.minimum !== undefined) range.push(`min: ${info.minimum}`);
+            if (info.maximum !== undefined) range.push(`max: ${info.maximum}`);
+            propDesc += `\n      Range: ${range.join(", ")}`;
+          }
+          
+          if (info.pattern) {
+            propDesc += `\n      Pattern: ${info.pattern}`;
+          }
+          
+          if (info.readOnly) {
+            propDesc += "\n      (read-only - can be omitted or set to null)";
+          }
+          
+          if (info.placeholder) {
+            propDesc += `\n      Placeholder: ${info.placeholder}`;
+          }
+          
+          return propDesc;
+        })
+        .join("\n");
+    }
+
     // System prompt with context
     const systemPrompt = `You are a TilepMoney workflow generator. You convert natural language descriptions into stablecoin workflow configurations.
 
@@ -165,17 +249,22 @@ Available Node Types:
 ${Object.entries(NODE_REGISTRY)
         .map(
           ([type, info]) =>
-            `- ${type.toUpperCase()}: ${info.description}\n  Inputs: ${info.inputs?.join(", ") || "None"}\n  Outputs: ${info.outputs?.join(", ") || "None"}\n  Required Fields: ${info.requiredFields.join(", ")}`
+            `- ${type.toUpperCase()}: ${info.description}\n  Inputs: ${info.inputs?.join(", ") || "None"}\n  Outputs: ${info.outputs?.join(", ") || "None"}\n  Required Fields: ${info.requiredFields.join(", ")}\n  Available Properties:\n${formatPropertyInfo(info.properties)}`
         )
-        .join("\n")}
+        .join("\n\n")}
 
 Rules:
 1. All workflows must start with a Deposit node (fiat entry point)
 2. Fiat-to-fiat flows must go: Deposit → Mint → [Processing] → Redeem
 3. Token compatibility: USD→mUSDT, IDR→IDRX
-4. Always include ALL required fields for each node type
-5. Generate logical node positions (x increases left-to-right by 320px, y for parallel branches)
-6. Always include proper edge connections
+4. Always include ALL required fields for each node type (see Required Fields above)
+5. Use property names exactly as specified in Available Properties
+6. For Select fields, use the exact option values (not labels)
+7. For wallet addresses, use valid Ethereum addresses (0x followed by 40 hex characters)
+8. Read-only fields can be omitted or set to null
+9. Generate logical node positions (x increases left-to-right by 320px, y for parallel branches)
+10. Always include proper edge connections
+11. Include label and description properties for all nodes
 
 Example:
 Prompt: "Deposit 10,000 USD, mint to stablecoin, wait 7 days, then redeem to USD"
@@ -188,6 +277,7 @@ Response: {
       type: "deposit", 
       label: "Deposit USD",
       properties: { 
+        label: "Deposit USD",
         amount: 10000, 
         currency: "USD",
         paymentGateway: "DummyGatewayA",
@@ -200,11 +290,11 @@ Response: {
       type: "mint", 
       label: "Mint mUSDT",
       properties: { 
+        label: "Mint mUSDT",
         amount: 10000, 
-        currency: "USD",
-        issuer: "IssuerA",
+        issuer: "DummyIssuerA",
         receivingWallet: "0x1111111111111111111111111111111111111111",
-        exchangeRate: 1,
+        exchangeRate: null,
         description: "Convert USD to mUSDT stablecoin"
       },
       position: { x: 320, y: 0 }
@@ -214,9 +304,10 @@ Response: {
       type: "wait", 
       label: "Wait 7 Days",
       properties: { 
+        label: "Wait 7 Days",
         delayDuration: 7, 
         timeUnit: "days",
-        reason: "Waiting period",
+        reason: "Waiting period before redemption",
         description: "Wait for 7 days"
       },
       position: { x: 640, y: 0 }
@@ -226,10 +317,11 @@ Response: {
       type: "redeem", 
       label: "Redeem to USD",
       properties: { 
+        label: "Redeem to USD",
         amount: 10000, 
         currency: "USD",
-        recipientWallet: "Bank-Account-001",
-        conversionRate: 1,
+        recipientWallet: "0x2222222222222222222222222222222222222222",
+        conversionRate: null,
         description: "Convert mUSDT back to USD"
       },
       position: { x: 960, y: 0 }
