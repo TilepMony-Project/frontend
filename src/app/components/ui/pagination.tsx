@@ -11,12 +11,7 @@ interface PaginationProps {
   className?: string;
 }
 
-export function Pagination({
-  currentPage,
-  totalPages,
-  onPageChange,
-  className,
-}: PaginationProps) {
+export function Pagination({ currentPage, totalPages, onPageChange, className }: PaginationProps) {
   if (totalPages <= 1) {
     return null;
   }
@@ -98,8 +93,7 @@ export function Pagination({
               onClick={() => onPageChange(pageNum)}
               className={cn(
                 "h-9 min-w-9 px-3",
-                currentPage === pageNum &&
-                  "bg-primary text-primary-foreground hover:bg-primary/90"
+                currentPage === pageNum && "bg-primary text-primary-foreground hover:bg-primary/90"
               )}
               aria-label={`Go to page ${pageNum}`}
               aria-current={currentPage === pageNum ? "page" : undefined}
@@ -123,4 +117,3 @@ export function Pagination({
     </div>
   );
 }
-

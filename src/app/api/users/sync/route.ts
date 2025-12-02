@@ -35,22 +35,13 @@ export async function POST(request: Request) {
     }
 
     if (privyUserId !== userId) {
-      return NextResponse.json(
-        { success: false, error: "Privy user mismatch" },
-        { status: 403 }
-      );
+      return NextResponse.json({ success: false, error: "Privy user mismatch" }, { status: 403 });
     }
 
     await connectDB();
 
-    const email =
-      body.email ||
-      body.privyUser?.email?.address ||
-      null;
-    const walletAddress =
-      body.walletAddress ||
-      body.privyUser?.wallet?.address ||
-      null;
+    const email = body.email || body.privyUser?.email?.address || null;
+    const walletAddress = body.walletAddress || body.privyUser?.wallet?.address || null;
 
     const update = {
       email: email ?? undefined,
@@ -72,15 +63,15 @@ export async function POST(request: Request) {
       lastSyncedAt: result.lastSyncedAt,
     });
 
-    return NextResponse.json({ success: true, user: { id: result._id, privyUserId: result.privyUserId } });
+    return NextResponse.json({
+      success: true,
+      user: { id: result._id, privyUserId: result.privyUserId },
+    });
   } catch (error) {
     if (error instanceof PrivyUnauthorizedError) {
       return NextResponse.json({ success: false, error: error.message }, { status: 401 });
     }
     console.error("Failed to sync Privy user", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to sync user" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Failed to sync user" }, { status: 500 });
   }
 }

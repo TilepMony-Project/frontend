@@ -52,7 +52,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (!privyAppId) {
-    throw new Error("Missing NEXT_PUBLIC_PRIVY_APP_ID. Set it in your environment to enable Privy auth.");
+    throw new Error(
+      "Missing NEXT_PUBLIC_PRIVY_APP_ID. Set it in your environment to enable Privy auth."
+    );
   }
 
   return (

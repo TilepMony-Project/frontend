@@ -62,9 +62,7 @@ export function SelectWrapper({
               {displayIcon}
             </span>
           )}
-          <SelectValue placeholder={placeholder}>
-            {selectedItem?.label}
-          </SelectValue>
+          <SelectValue placeholder={placeholder}>{selectedItem?.label}</SelectValue>
         </div>
       </SelectTrigger>
       <SelectContent className="rounded-xl border border-gray-200/80 bg-white p-1 text-sm shadow-xl dark:border-gray-700 dark:bg-[#1c1c20]">

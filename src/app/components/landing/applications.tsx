@@ -2,10 +2,7 @@
 
 import type React from "react";
 import { Button } from "@/components/ui/button";
-import {
-  useFadeInOnScroll,
-  useStaggerFade,
-} from "@/hooks/use-scroll-animations";
+import { useFadeInOnScroll, useStaggerFade } from "@/hooks/use-scroll-animations";
 
 interface ApplicationCardProps {
   icon: string;
@@ -32,15 +29,9 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
     >
       <div className="flex flex-col items-start gap-2">
         <div className="flex items-center justify-center pt-1 rounded-lg flex-shrink-0">
-          <img
-            alt={iconAlt}
-            className="w-8 h-8 dark:brightness-0 dark:invert"
-            src={icon}
-          />
+          <img alt={iconAlt} className="w-8 h-8 dark:brightness-0 dark:invert" src={icon} />
         </div>
-        <p className="text-lg font-semibold text-left text-foreground">
-          {title}
-        </p>
+        <p className="text-lg font-semibold text-left text-foreground">{title}</p>
       </div>
       <p className="text-base text-left text-muted-foreground leading-relaxed min-h-24">
         {description}
@@ -52,35 +43,35 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 
 const Applications: React.FC = () => {
   // Cinematic animation refs with enhanced effects
-  const badgeRef = useFadeInOnScroll({ 
-    delay: 0, 
-    y: 20, 
+  const badgeRef = useFadeInOnScroll({
+    delay: 0,
+    y: 20,
     scale: 0.95,
     duration: 1.0,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const headlineRef = useFadeInOnScroll({ 
-    delay: 0.1, 
-    y: 30, 
+  const headlineRef = useFadeInOnScroll({
+    delay: 0.1,
+    y: 30,
     scale: 0.95,
     blur: 4,
     duration: 1.2,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const descriptionRef = useFadeInOnScroll({ 
-    delay: 0.2, 
-    y: 20, 
+  const descriptionRef = useFadeInOnScroll({
+    delay: 0.2,
+    y: 20,
     scale: 0.98,
     duration: 1.1,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const cardsRef = useStaggerFade({ 
-    stagger: 0.08, 
-    y: 30, 
+  const cardsRef = useStaggerFade({
+    stagger: 0.08,
+    y: 30,
     scale: 0.92,
     blur: 4,
     duration: 1.0,
-    ease: "power3.out"
+    ease: "power3.out",
   });
 
   return (
@@ -109,9 +100,7 @@ const Applications: React.FC = () => {
                 ref={headlineRef as React.RefObject<HTMLHeadingElement>}
                 className="w-full max-w-4xl mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold text-center leading-tight"
               >
-                <span className="text-gray-900 dark:text-gray-100">
-                  Enterprise Use Cases for{" "}
-                </span>
+                <span className="text-gray-900 dark:text-gray-100">Enterprise Use Cases for </span>
                 <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                   B2B Payments
                 </span>
@@ -122,9 +111,8 @@ const Applications: React.FC = () => {
               className="flex items-center gap-2 px-4 lg:px-5"
             >
               <p className="w-full max-w-3xl opacity-80 text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
-                From corporate payments to treasury automation, TilepMoney
-                provides clear pathways to real-world commercial use cases for
-                stablecoin payment infrastructure.
+                From corporate payments to treasury automation, TilepMoney provides clear pathways
+                to real-world commercial use cases for stablecoin payment infrastructure.
               </p>
             </div>
           </div>

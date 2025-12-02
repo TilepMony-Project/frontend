@@ -65,7 +65,7 @@ function buildProfileUpdate(payload: ProfilePayload) {
   update.location = sanitizeString(payload.location, 120);
   update.timezone =
     typeof payload.timezone === "string" &&
-      PROFILE_TIMEZONE_VALUES.includes(payload.timezone as any)
+    PROFILE_TIMEZONE_VALUES.includes(payload.timezone as any)
       ? payload.timezone
       : undefined;
   update.phone = sanitizePhone(payload.phone);
@@ -112,10 +112,8 @@ function serializeProfile(profile: any) {
     bio: profile.bio ?? "",
     avatarUrl: profile.avatarUrl ?? "",
     notificationPreferences: {
-      workflowAlerts:
-        profile.notificationPreferences?.workflowAlerts ?? true,
-      productUpdates:
-        profile.notificationPreferences?.productUpdates ?? true,
+      workflowAlerts: profile.notificationPreferences?.workflowAlerts ?? true,
+      productUpdates: profile.notificationPreferences?.productUpdates ?? true,
     },
     updatedAt: profile.updatedAt,
   };
@@ -128,7 +126,7 @@ export async function GET(request: Request) {
 
     // Try to find by userId or privyUserId
     let profile = await User.findOne({
-      $or: [{ userId }, { privyUserId: userId }]
+      $or: [{ userId }, { privyUserId: userId }],
     });
 
     if (!profile) {
@@ -142,16 +140,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ profile: serializeProfile(profile) });
   } catch (error) {
     if (error instanceof PrivyUnauthorizedError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 401 });
     }
     console.error("Failed to fetch profile", error);
-    return NextResponse.json(
-      { error: "Failed to fetch profile" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
   }
 }
 
@@ -170,10 +162,8 @@ export async function PUT(request: Request) {
 
     if (update.notificationPreferences) {
       updateObject.notificationPreferences = {
-        workflowAlerts:
-          update.notificationPreferences.workflowAlerts ?? true,
-        productUpdates:
-          update.notificationPreferences.productUpdates ?? true,
+        workflowAlerts: update.notificationPreferences.workflowAlerts ?? true,
+        productUpdates: update.notificationPreferences.productUpdates ?? true,
       };
     }
 
@@ -195,16 +185,9 @@ export async function PUT(request: Request) {
     });
   } catch (error) {
     if (error instanceof PrivyUnauthorizedError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 401 });
     }
     console.error("Failed to update profile", error);
-    return NextResponse.json(
-      { error: "Failed to update profile" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }
 }
-

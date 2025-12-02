@@ -41,4 +41,3 @@ export const workflowTemplates: WorkflowTemplate[] = rawTemplates.map((template)
     type: edge.type ?? "labelEdge",
   })),
 }));
-

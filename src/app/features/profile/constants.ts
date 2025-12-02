@@ -12,4 +12,3 @@ export const PROFILE_TIMEZONES = [
 ] as const;
 
 export const PROFILE_TIMEZONE_VALUES = PROFILE_TIMEZONES.map((tz) => tz.value);
-

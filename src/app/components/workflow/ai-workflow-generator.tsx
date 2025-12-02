@@ -122,17 +122,10 @@ export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGenerator
         size="large"
         footer={
           <div className="flex justify-end gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setIsOpen(false)}
-              disabled={isGenerating}
-            >
+            <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isGenerating}>
               Cancel
             </Button>
-            <Button
-              onClick={handleGenerate}
-              disabled={isGenerating || !prompt.trim()}
-            >
+            <Button onClick={handleGenerate} disabled={isGenerating || !prompt.trim()}>
               {isGenerating ? (
                 <>
                   <Loader2 size={18} className="animate-spin mr-2" />
@@ -150,9 +143,7 @@ export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGenerator
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Describe your workflow
-            </label>
+            <label className="block text-sm font-medium mb-2">Describe your workflow</label>
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
@@ -170,8 +161,14 @@ export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGenerator
             <p className="text-sm font-medium">Example prompts:</p>
             <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
               <li>"Deposit 10,000 USD, mint to stablecoin, wait 7 days, then redeem to USD"</li>
-              <li>"Create a treasury workflow: deposit IDR → mint → vault with 120 mUSDT target → partition 60/40 to transfer and redeem"</li>
-              <li>"I need to receive USD, convert to stablecoin, bridge to Mantle, then transfer to wallet 0xABC"</li>
+              <li>
+                "Create a treasury workflow: deposit IDR → mint → vault with 120 mUSDT target →
+                partition 60/40 to transfer and redeem"
+              </li>
+              <li>
+                "I need to receive USD, convert to stablecoin, bridge to Mantle, then transfer to
+                wallet 0xABC"
+              </li>
             </ul>
           </div>
         </div>
@@ -179,4 +176,3 @@ export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGenerator
     </>
   );
 }
-

@@ -3,47 +3,41 @@
 import type React from "react";
 import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import Link from "next/link";
-import {
-  useFadeInOnScroll,
-  useStaggerFade,
-} from "@/hooks/use-scroll-animations";
+import { useFadeInOnScroll, useStaggerFade } from "@/hooks/use-scroll-animations";
 import { useTheme } from "@/hooks/use-theme";
 
 const Footer: React.FC = () => {
   const { theme } = useTheme();
-  
+
   // Cinematic animation refs with enhanced effects
-  const logoRef = useFadeInOnScroll({ 
-    delay: 0, 
-    y: 30, 
+  const logoRef = useFadeInOnScroll({
+    delay: 0,
+    y: 30,
     scale: 0.9,
     duration: 1.2,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const columnsRef = useStaggerFade({ 
-    stagger: 0.15, 
-    y: 40, 
+  const columnsRef = useStaggerFade({
+    stagger: 0.15,
+    y: 40,
     scale: 0.92,
     blur: 4,
     duration: 1.1,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const bottomRef = useFadeInOnScroll({ 
-    delay: 0.2, 
-    y: 20, 
+  const bottomRef = useFadeInOnScroll({
+    delay: 0.2,
+    y: 20,
     scale: 0.95,
     duration: 1,
-    ease: "power3.out"
+    ease: "power3.out",
   });
 
   return (
     <div className="flex flex-col gap-16 px-8 lg:px-24 pt-16 lg:pt-20 pb-10">
       <div className="flex flex-col gap-16">
         {/* Logo Section */}
-        <div 
-          ref={logoRef as React.RefObject<HTMLDivElement>}
-          className="flex items-center gap-5"
-        >
+        <div ref={logoRef as React.RefObject<HTMLDivElement>} className="flex items-center gap-5">
           <div className="flex items-center gap-1">
             {theme === "dark" ? (
               <img
@@ -65,7 +59,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Footer Links */}
-        <div 
+        <div
           ref={columnsRef as React.RefObject<HTMLDivElement>}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
@@ -197,7 +191,7 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div 
+      <div
         ref={bottomRef as React.RefObject<HTMLDivElement>}
         className="border-t border-border pt-6"
       >

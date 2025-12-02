@@ -49,7 +49,8 @@ export function ImportModal() {
     ({ shouldIgnoreWarnings }: { shouldIgnoreWarnings: boolean }) => {
       // Use "{}" for validation if value is empty (placeholder case)
       const valueToValidate = jsonToParse.trim() || "{}";
-      const { errors, warnings, validatedIntegrationData } = validateIntegrationData(valueToValidate);
+      const { errors, warnings, validatedIntegrationData } =
+        validateIntegrationData(valueToValidate);
 
       setJsonValidation({
         errors,

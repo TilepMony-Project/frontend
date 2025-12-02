@@ -5,47 +5,42 @@ import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { AuroraText } from "@/components/ui/aurora-text";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 
 const Hero: React.FC = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   // Cinematic animation refs with enhanced effects
-  const badgeRef = useFadeInOnScroll({ 
-    delay: 0, 
-    y: 20, 
-    scale: 0.95, 
+  const badgeRef = useFadeInOnScroll({
+    delay: 0,
+    y: 20,
+    scale: 0.95,
     duration: 1.0,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const headlineRef = useFadeInOnScroll({ 
-    delay: 0.1, 
-    y: 40, 
+  const headlineRef = useFadeInOnScroll({
+    delay: 0.1,
+    y: 40,
     scale: 0.95,
     blur: 5,
     duration: 1.2,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const descriptionRef = useFadeInOnScroll({ 
-    delay: 0.2, 
-    y: 30, 
+  const descriptionRef = useFadeInOnScroll({
+    delay: 0.2,
+    y: 30,
     scale: 0.98,
     duration: 1.1,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const cardRef = useFadeInOnScroll({ 
-    delay: 0.3, 
-    y: 40, 
+  const cardRef = useFadeInOnScroll({
+    delay: 0.3,
+    y: 40,
     scale: 0.95,
     blur: 8,
     duration: 1.4,
-    ease: "power3.out"
+    ease: "power3.out",
   });
 
   return (
@@ -89,9 +84,9 @@ const Hero: React.FC = () => {
               className="flex items-start gap-2 px-4 lg:px-5 mt-2"
             >
               <p className="w-full max-w-3xl text-sm lg:text-base text-center text-muted-foreground leading-[1.3] lg:leading-[1.6]">
-                Integrating stablecoin is hard, we made it easier using drag and
-                drop. A visual drag-and-drop builder that allows businesses to
-                design stablecoin movement workflows on Mantle L2.
+                Integrating stablecoin is hard, we made it easier using drag and drop. A visual
+                drag-and-drop builder that allows businesses to design stablecoin movement workflows
+                on Mantle L2.
               </p>
             </div>
           </div>
@@ -128,13 +123,9 @@ const Hero: React.FC = () => {
                   Watch demo video
                 </p>
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <p className="opacity-80 text-xs sm:text-sm text-muted-foreground">
-                    5 mins
-                  </p>
+                  <p className="opacity-80 text-xs sm:text-sm text-muted-foreground">5 mins</p>
                   <div className="w-1 h-1 rounded-full bg-muted" />
-                  <p className="text-xs sm:text-sm font-medium text-primary">
-                    Play video
-                  </p>
+                  <p className="text-xs sm:text-sm font-medium text-primary">Play video</p>
                 </div>
               </div>
             </div>

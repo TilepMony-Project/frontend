@@ -82,12 +82,7 @@ export function withIntegrationThroughLocalStorage<WProps extends object>(
     }, [isClient]);
 
     return (
-      <IntegrationWrapper
-        name={name}
-        nodes={nodes}
-        edges={edges}
-        onSave={handleSave}
-      >
+      <IntegrationWrapper name={name} nodes={nodes} edges={edges} onSave={handleSave}>
         <WrappedComponent {...props} />
       </IntegrationWrapper>
     );

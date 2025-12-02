@@ -3,30 +3,30 @@ function formatPropertyInfo(properties: Record<string, any>): string {
   return Object.entries(properties)
     .map(([key, info]) => {
       let propDesc = `    - ${key} (${info.type})`;
-      
+
       if (info.options) {
         propDesc += `\n      Options: ${info.optionLabels?.join(", ") || info.options.join(", ")}`;
       }
-      
+
       if (info.minimum !== undefined || info.maximum !== undefined) {
         const range = [];
         if (info.minimum !== undefined) range.push(`min: ${info.minimum}`);
         if (info.maximum !== undefined) range.push(`max: ${info.maximum}`);
         propDesc += `\n      Range: ${range.join(", ")}`;
       }
-      
+
       if (info.pattern) {
         propDesc += `\n      Pattern: ${info.pattern}`;
       }
-      
+
       if (info.readOnly) {
         propDesc += "\n      (read-only - can be omitted or set to null)";
       }
-      
+
       if (info.placeholder) {
         propDesc += `\n      Placeholder: ${info.placeholder}`;
       }
-      
+
       return propDesc;
     })
     .join("\n");
@@ -120,13 +120,18 @@ Response: {
  * @param nodeRegistry - The node registry with property information
  * @returns The formatted system prompt string
  */
-export function generateSystemPrompt(nodeRegistry: Record<string, {
-  description: string;
-  inputs: string[];
-  outputs: string[];
-  requiredFields: string[];
-  properties: Record<string, any>;
-}>): string {
+export function generateSystemPrompt(
+  nodeRegistry: Record<
+    string,
+    {
+      description: string;
+      inputs: string[];
+      outputs: string[];
+      requiredFields: string[];
+      properties: Record<string, any>;
+    }
+  >
+): string {
   const nodeTypesSection = Object.entries(nodeRegistry)
     .map(
       ([type, info]) =>
@@ -143,4 +148,3 @@ ${RULES}
 
 ${EXAMPLE}`;
 }
-

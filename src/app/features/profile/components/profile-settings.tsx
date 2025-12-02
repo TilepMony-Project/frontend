@@ -261,9 +261,7 @@ export function ProfileSettings() {
         <section className="space-y-4">
           <div className="space-y-1">
             <h2 className="text-lg font-semibold">Contact & timezone</h2>
-            <p className="text-sm text-muted-foreground">
-              Keep your contact details up to date.
-            </p>
+            <p className="text-sm text-muted-foreground">Keep your contact details up to date.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <Input
@@ -396,4 +394,3 @@ export function ProfileSettings() {
     </div>
   );
 }
-

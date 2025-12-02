@@ -19,30 +19,28 @@ const SUMOPOD_API_KEY = process.env.OPENAI_API_KEY;
 // Helper function to extract property information from schema
 function extractPropertyInfo(schema: { properties: Record<string, any> }) {
   const propertyInfo: Record<string, any> = {};
-  
+
   for (const [key, value] of Object.entries(schema.properties)) {
     const info: any = {
       type: value.type,
     };
-    
+
     if (value.options) {
-      info.options = value.options.map((opt: any) => 
-        typeof opt === 'object' ? opt.value : opt
-      );
-      info.optionLabels = value.options.map((opt: any) => 
-        typeof opt === 'object' ? opt.label : opt
+      info.options = value.options.map((opt: any) => (typeof opt === "object" ? opt.value : opt));
+      info.optionLabels = value.options.map((opt: any) =>
+        typeof opt === "object" ? opt.label : opt
       );
     }
-    
+
     if (value.minimum !== undefined) info.minimum = value.minimum;
     if (value.maximum !== undefined) info.maximum = value.maximum;
     if (value.pattern) info.pattern = value.pattern;
     if (value.readOnly) info.readOnly = value.readOnly;
     if (value.placeholder) info.placeholder = value.placeholder;
-    
+
     propertyInfo[key] = info;
   }
-  
+
   return propertyInfo;
 }
 
@@ -203,10 +201,7 @@ export async function POST(request: NextRequest) {
     const { prompt } = body;
 
     if (!prompt || typeof prompt !== "string") {
-      return NextResponse.json(
-        { error: "Prompt is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
     // Generate system prompt with node registry
@@ -217,7 +212,7 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${SUMOPOD_API_KEY}`,
+        Authorization: `Bearer ${SUMOPOD_API_KEY}`,
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
@@ -236,7 +231,9 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error?.message || `API request failed with status ${response.status}`);
+      throw new Error(
+        errorData.error?.message || `API request failed with status ${response.status}`
+      );
     }
 
     const completion = await response.json();
@@ -244,10 +241,7 @@ export async function POST(request: NextRequest) {
     const functionCall = completion.choices[0]?.message?.function_call;
 
     if (!functionCall || functionCall.name !== "generate_workflow") {
-      return NextResponse.json(
-        { error: "Failed to generate workflow structure" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to generate workflow structure" }, { status: 500 });
     }
 
     const workflowConfig = JSON.parse(functionCall.arguments);
@@ -337,4 +331,3 @@ function validateAndEnhanceWorkflow(config: any) {
     edges: edgesWithReactFlowFormat,
   };
 }
-

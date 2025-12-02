@@ -214,12 +214,7 @@ export function withIntegrationThroughServerAction<WProps extends object>(
     return (
       <>
         {(isLoadingWorkflow || (workflowId && !accessToken)) && <WorkflowLoadingOverlay />}
-        <IntegrationWrapper
-          name={name}
-          nodes={nodes}
-          edges={edges}
-          onSave={handleSave}
-        >
+        <IntegrationWrapper name={name} nodes={nodes} edges={edges} onSave={handleSave}>
           <WrappedComponent {...(restProps as WProps)} />
         </IntegrationWrapper>
       </>

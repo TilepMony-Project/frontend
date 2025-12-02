@@ -25,9 +25,9 @@ export function showToast({ title, subtitle, variant, action, id }: ShowToastPar
     id,
     action: action
       ? {
-        label: action.label,
-        onClick: action.onClick,
-      }
+          label: action.label,
+          onClick: action.onClick,
+        }
       : undefined,
   };
 

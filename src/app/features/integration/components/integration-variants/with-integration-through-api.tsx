@@ -45,8 +45,7 @@ export function withIntegrationThroughApi<WProps extends object>(
       return "error";
     }, []);
 
-    const [{ name, nodes, edges }, setData] =
-      useState<IntegrationDataFormatOptional>({});
+    const [{ name, nodes, edges }, setData] = useState<IntegrationDataFormatOptional>({});
 
     useEffect(() => {
       (async () => {
@@ -74,12 +73,7 @@ export function withIntegrationThroughApi<WProps extends object>(
     }, []);
 
     return (
-      <IntegrationWrapper
-        name={name}
-        nodes={nodes}
-        edges={edges}
-        onSave={handleSave}
-      >
+      <IntegrationWrapper name={name} nodes={nodes} edges={edges} onSave={handleSave}>
         <WrappedComponent {...props} />
       </IntegrationWrapper>
     );

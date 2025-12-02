@@ -7,10 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  useFadeInOnScroll,
-  useStaggerFade,
-} from "@/hooks/use-scroll-animations";
+import { useFadeInOnScroll, useStaggerFade } from "@/hooks/use-scroll-animations";
 
 const FAQ: React.FC = () => {
   const faqItems = [
@@ -47,46 +44,49 @@ const FAQ: React.FC = () => {
   ];
 
   // Cinematic animation refs with enhanced effects
-  const badgeRef = useFadeInOnScroll({ 
-    delay: 0, 
-    y: 20, 
+  const badgeRef = useFadeInOnScroll({
+    delay: 0,
+    y: 20,
     scale: 0.95,
     duration: 1.0,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const headlineRef = useFadeInOnScroll({ 
-    delay: 0.1, 
-    y: 30, 
+  const headlineRef = useFadeInOnScroll({
+    delay: 0.1,
+    y: 30,
     scale: 0.95,
     blur: 4,
     duration: 1.2,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const descriptionRef = useFadeInOnScroll({ 
-    delay: 0.2, 
-    y: 20, 
+  const descriptionRef = useFadeInOnScroll({
+    delay: 0.2,
+    y: 20,
     scale: 0.98,
     duration: 1.1,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const faqItemsRef = useStaggerFade({ 
-    stagger: 0.1, 
-    y: 30, 
+  const faqItemsRef = useStaggerFade({
+    stagger: 0.1,
+    y: 30,
     scale: 0.95,
     blur: 3,
     duration: 1.0,
-    ease: "power3.out"
+    ease: "power3.out",
   });
 
   return (
-    <div id="faq" className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28">
+    <div
+      id="faq"
+      className="flex flex-col items-center gap-4 px-8 lg:px-24 pt-20 lg:pt-32 pb-20 lg:pb-28"
+    >
       <div className="flex flex-col items-center gap-4 w-full max-w-7xl">
         <div className="flex flex-col items-center gap-10 w-full">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full">
             {/* Text Content */}
             <div className="flex flex-col gap-6 lg:pr-10 w-full lg:w-auto lg:min-w-[380px]">
               <div className="flex flex-col gap-4">
-                <div 
+                <div
                   ref={badgeRef as React.RefObject<HTMLDivElement>}
                   className="group flex items-center gap-2 px-3 py-2 rounded-2xl border-[1px] bg-card shadow-lg hover:shadow-xl border-primary dark:border-white/40 hover:border-primary dark:hover:border-primary transition-all duration-300 hover:bg-gradient-to-r hover:from-card hover:to-primary/5 hover:cursor-default w-fit"
                 >
@@ -100,19 +100,17 @@ const FAQ: React.FC = () => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <h2 
+                  <h2
                     ref={headlineRef as React.RefObject<HTMLHeadingElement>}
                     className="w-full lg:w-96 text-2xl sm:text-3xl lg:text-4xl font-bold text-left leading-tight"
                   >
-                    <span className="text-gray-900 dark:text-gray-100">
-                      Frequently asked{" "}
-                    </span>
+                    <span className="text-gray-900 dark:text-gray-100">Frequently asked </span>
                     <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                       questions
                     </span>
                   </h2>
                 </div>
-                <div 
+                <div
                   ref={descriptionRef as React.RefObject<HTMLDivElement>}
                   className="flex items-center gap-2 lg:pr-6"
                 >

@@ -78,7 +78,7 @@ const WorkflowNodeTemplateComponent = memo(
               <div className="absolute inset-0 z-50 bg-white/50 dark:bg-black/50 backdrop-blur-[0.5px] rounded-xl pointer-events-none" />
             </>
           )}
-          
+
           <NodePanel.Root
             selected={selected}
             className={cn(

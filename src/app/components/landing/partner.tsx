@@ -42,34 +42,34 @@ const Partner: React.FC = () => {
   const router = useRouter();
 
   // Cinematic animation refs with enhanced effects
-  const badgeRef = useFadeInOnScroll({ 
-    delay: 0, 
-    y: 20, 
+  const badgeRef = useFadeInOnScroll({
+    delay: 0,
+    y: 20,
     scale: 0.95,
     duration: 1.0,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const headlineRef = useFadeInOnScroll({ 
-    delay: 0.1, 
-    y: 30, 
+  const headlineRef = useFadeInOnScroll({
+    delay: 0.1,
+    y: 30,
     scale: 0.95,
     blur: 4,
     duration: 1.2,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const descriptionRef = useFadeInOnScroll({ 
-    delay: 0.2, 
-    y: 20, 
+  const descriptionRef = useFadeInOnScroll({
+    delay: 0.2,
+    y: 20,
     scale: 0.98,
     duration: 1.1,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const buttonRef = useFadeInOnScroll({ 
-    delay: 0.3, 
-    y: 20, 
+  const buttonRef = useFadeInOnScroll({
+    delay: 0.3,
+    y: 20,
     scale: 0.95,
     duration: 1.0,
-    ease: "power3.out"
+    ease: "power3.out",
   });
 
   const handleBrowseIntegrations = () => {
@@ -85,10 +85,7 @@ const Partner: React.FC = () => {
   };
 
   return (
-    <div
-      id="integrations"
-      className="flex flex-col items-center gap-8 px-8 lg:px-24 pt-16 pb-16"
-    >
+    <div id="integrations" className="flex flex-col items-center gap-8 px-8 lg:px-24 pt-16 pb-16">
       {/* Header Section */}
       <div className="flex flex-col items-center gap-6">
         <div
@@ -110,9 +107,7 @@ const Partner: React.FC = () => {
           ref={headlineRef as React.RefObject<HTMLHeadingElement>}
           className="max-w-lg mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight flex flex-col items-center gap-2"
         >
-          <span className="text-gray-900 dark:text-gray-100">
-            Seamlessly connect
-          </span>
+          <span className="text-gray-900 dark:text-gray-100">Seamlessly connect</span>
           <span className="flex flex-wrap justify-center gap-x-1.5">
             <span className="text-gray-900 dark:text-gray-100">with</span>
             <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
@@ -124,8 +119,8 @@ const Partner: React.FC = () => {
           ref={descriptionRef as React.RefObject<HTMLParagraphElement>}
           className="text-gray-600 dark:text-gray-400 text-sm lg:text-base max-w-lg mx-auto"
         >
-          Build powerful stablecoin workflows with support for major DeFi
-          protocols and blockchain networks
+          Build powerful stablecoin workflows with support for major DeFi protocols and blockchain
+          networks
         </p>
       </div>
 

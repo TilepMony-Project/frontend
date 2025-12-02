@@ -36,9 +36,9 @@ export function registerComponentDecorator<P>(
     name: plugin.name ?? ((plugin as DecoratorWithContent)?.content as { name: string })?.name,
   };
 
-  pluginRegistryComponents.get(componentName)!.push(
-    decoratedPlugin as ComponentDecoratorOptions<unknown>
-  );
+  pluginRegistryComponents
+    .get(componentName)!
+    .push(decoratedPlugin as ComponentDecoratorOptions<unknown>);
 }
 
 export function hasRegisteredComponentDecorator(componentName: string, pluginName: string) {
@@ -51,9 +51,9 @@ export function withOptionalComponentPlugins<TProps extends object>(
 ) {
   const DecoratedComponent = memo((props: TProps) => {
     const plugins =
-      (pluginRegistryComponents.get(componentName)?.sort(
-        sortByPriority
-      ) as ComponentDecoratorOptions<TProps>[]) || [];
+      (pluginRegistryComponents
+        .get(componentName)
+        ?.sort(sortByPriority) as ComponentDecoratorOptions<TProps>[]) || [];
 
     const modifiedProps = useMemo(() => {
       let result = { ...props };

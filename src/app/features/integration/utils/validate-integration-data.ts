@@ -60,8 +60,6 @@ export function validateIntegrationData(input?: object | string): IntegrationDat
     validatedIntegrationData.name = objectToCheck.name;
   }
 
-
-
   if (Array.isArray(objectToCheck.nodes)) {
     const { knownNodes, unknownNodes } = objectToCheck.nodes.reduce(
       (

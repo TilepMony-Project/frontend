@@ -10,47 +10,31 @@ interface StrategyCardProps {
   description: string;
 }
 
-const StrategyCard: React.FC<StrategyCardProps> = ({
-  icon,
-  iconAlt,
-  title,
-  description,
-}) => {
+const StrategyCard: React.FC<StrategyCardProps> = ({ icon, iconAlt, title, description }) => {
   return (
     <div className="flex flex-col items-start gap-4 p-6 rounded-xl bg-card border-[1px] border-primary/20 dark:border-white/40 hover:border-primary border[1px] dark:hover:border-[1.5px] dark:hover:border-primary  transition-all duration-200 cursor-pointer">
       <div className="flex items-start gap-3">
         <div className="flex items-center justify-center min-w-8 min-h-8 p-2 rounded-lg bg-primary/10 flex-shrink-0">
-          <img
-            alt={iconAlt}
-            className="w-5 h-5 dark:brightness-0 dark:invert"
-            src={icon}
-          />
+          <img alt={iconAlt} className="w-5 h-5 dark:brightness-0 dark:invert" src={icon} />
         </div>
-        <p className="text-lg font-semibold text-left text-foreground">
-          {title}
-        </p>
+        <p className="text-lg font-semibold text-left text-foreground">{title}</p>
       </div>
-      <p className="text-base text-left text-muted-foreground leading-relaxed">
-        {description}
-      </p>
+      <p className="text-base text-left text-muted-foreground leading-relaxed">{description}</p>
     </div>
   );
 };
 
 import WorkflowPreview from "./workflow-preview/workflow-preview";
-import {
-  useFadeInOnScroll,
-  useStaggerFade,
-} from "@/hooks/use-scroll-animations";
+import { useFadeInOnScroll, useStaggerFade } from "@/hooks/use-scroll-animations";
 
 const StrategyCardBackground: React.FC = () => {
-  const workflowRef = useFadeInOnScroll({ 
-    delay: 0.4, 
-    y: 40, 
+  const workflowRef = useFadeInOnScroll({
+    delay: 0.4,
+    y: 40,
     scale: 0.95,
     blur: 8,
     duration: 1.4,
-    ease: "power3.out"
+    ease: "power3.out",
   });
 
   return (
@@ -65,35 +49,35 @@ const StrategyCardBackground: React.FC = () => {
 
 const OurStrategies: React.FC = () => {
   // Cinematic animation refs with enhanced effects
-  const badgeRef = useFadeInOnScroll({ 
-    delay: 0, 
-    y: 20, 
+  const badgeRef = useFadeInOnScroll({
+    delay: 0,
+    y: 20,
     scale: 0.95,
     duration: 1.0,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const headlineRef = useFadeInOnScroll({ 
-    delay: 0.1, 
-    y: 30, 
+  const headlineRef = useFadeInOnScroll({
+    delay: 0.1,
+    y: 30,
     scale: 0.95,
     blur: 4,
     duration: 1.2,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const descriptionRef = useFadeInOnScroll({ 
-    delay: 0.2, 
-    y: 20, 
+  const descriptionRef = useFadeInOnScroll({
+    delay: 0.2,
+    y: 20,
     scale: 0.98,
     duration: 1.1,
-    ease: "power3.out"
+    ease: "power3.out",
   });
-  const cardsRef = useStaggerFade({ 
-    stagger: 0.1, 
-    y: 30, 
+  const cardsRef = useStaggerFade({
+    stagger: 0.1,
+    y: 30,
     scale: 0.92,
     blur: 4,
     duration: 1.0,
-    ease: "power3.out"
+    ease: "power3.out",
   });
 
   return (
@@ -136,8 +120,8 @@ const OurStrategies: React.FC = () => {
               className="flex items-center gap-2 px-4 lg:px-5"
             >
               <p className="w-full max-w-xl opacity-80 text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
-                Design, test, and automate your payment and treasury routes with
-                complete routing transparency and provider-agnostic flexibility.
+                Design, test, and automate your payment and treasury routes with complete routing
+                transparency and provider-agnostic flexibility.
               </p>
             </div>
           </div>

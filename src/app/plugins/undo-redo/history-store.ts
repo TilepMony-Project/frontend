@@ -62,9 +62,7 @@ export function undoWorkflowStep() {
     return;
   }
 
-  const snapshotToRestore = deepCloneSnapshot(
-    historyState.past[historyState.past.length - 1]
-  );
+  const snapshotToRestore = deepCloneSnapshot(historyState.past[historyState.past.length - 1]);
 
   useUndoRedoHistoryStore.setState((state) => {
     const updatedPast = state.past.slice(0, -1);

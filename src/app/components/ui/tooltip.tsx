@@ -32,4 +32,3 @@ export function Tooltip({ children, content, side = "bottom", className }: Toolt
     </span>
   );
 }
-

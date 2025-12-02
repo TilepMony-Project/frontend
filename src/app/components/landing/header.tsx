@@ -47,7 +47,8 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollTop =
+        window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
       setIsScrolled(scrollTop > 10);
     };
 
@@ -62,7 +63,8 @@ const Header: React.FC = () => {
     if (element) {
       const headerOffset = 100;
       const elementPosition = element.getBoundingClientRect().top;
-      const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollTop =
+        window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
       const offsetPosition = elementPosition + scrollTop - headerOffset;
 
       // Try scrolling body first as it's the likely container due to global styles
@@ -86,15 +88,23 @@ const Header: React.FC = () => {
   const isConnected = ready && authenticated;
   const primaryWalletAddress = wallets[0]?.address ?? user?.wallet?.address;
   const linkedAccounts =
-    (user as { linkedAccounts?: Array<{ type?: string; walletClientType?: string; address?: string }> })?.linkedAccounts ??
-    [];
+    (
+      user as {
+        linkedAccounts?: Array<{ type?: string; walletClientType?: string; address?: string }>;
+      }
+    )?.linkedAccounts ?? [];
   const externalWallet = linkedAccounts.find(
     (account) => account?.type === "wallet" && account.address
   );
   const walletClientType =
-    externalWallet?.walletClientType || user?.wallet?.walletClientType || wallets[0]?.walletClientType || "embedded";
+    externalWallet?.walletClientType ||
+    user?.wallet?.walletClientType ||
+    wallets[0]?.walletClientType ||
+    "embedded";
   const originalWallet =
-    linkedAccounts.find((account) => account?.type === "wallet" && account.walletClientType !== "privy")?.address || null;
+    linkedAccounts.find(
+      (account) => account?.type === "wallet" && account.walletClientType !== "privy"
+    )?.address || null;
   const loginIdentifier = originalWallet || user?.email?.address || primaryWalletAddress;
 
   type WalletMeta = {
@@ -214,7 +224,6 @@ const Header: React.FC = () => {
 
         {/* Connect Wallet Button and Theme Toggle */}
         <div className="flex items-center gap-3 w-full sm:w-auto justify-center lg:justify-end">
-
           {isConnected ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

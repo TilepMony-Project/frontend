@@ -120,7 +120,7 @@ export function ExecutionMonitor() {
 
     // Reset hasNoExecution when workflowId changes
     setHasNoExecution(false);
-    
+
     // Initial fetch
     fetchStatusRef.current?.();
 
@@ -187,9 +187,7 @@ export function ExecutionMonitor() {
         if (status === "idle") monitorStatus = "pending";
 
         const nodeLabel =
-          typeof node.data?.properties?.label === "string"
-            ? node.data.properties.label
-            : undefined;
+          typeof node.data?.properties?.label === "string" ? node.data.properties.label : undefined;
 
         return {
           id: node.id,
@@ -215,9 +213,7 @@ export function ExecutionMonitor() {
           ? "pending"
           : "pending");
       const nodeLabel =
-        typeof node.data?.properties?.label === "string"
-          ? node.data.properties.label
-          : undefined;
+        typeof node.data?.properties?.label === "string" ? node.data.properties.label : undefined;
       return {
         id: node.id,
         label: nodeLabel ?? node.type ?? "Node",
@@ -236,7 +232,7 @@ export function ExecutionMonitor() {
       const isRunning = nodes.some((n) => n.data?.executionStatus === "running");
       const isFailed = nodes.some((n) => n.data?.executionStatus === "error");
       const isComplete = nodes.every((n) => n.data?.executionStatus === "success");
-      
+
       if (isRunning) return "running";
       if (isFailed) return "failed";
       if (isComplete) return "finished";
@@ -269,49 +265,62 @@ export function ExecutionMonitor() {
           aria-expanded={isExpanded}
           aria-label={isExpanded ? "Collapse execution monitor" : "Expand execution monitor"}
         >
-        <div className="flex items-center gap-3">
-          <div className={cn(
-            "flex items-center justify-center w-8 h-8 rounded-full",
-            overallStatus === "running" ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" :
-            overallStatus === "finished" ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400" :
-            overallStatus === "failed" ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400" :
-            "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
-          )}>
-            {overallStatus === "running" ? <Loader2 className="w-4 h-4 animate-spin" /> :
-             overallStatus === "finished" ? <Icon name="Check" size={16} /> :
-             overallStatus === "failed" ? <Icon name="X" size={16} /> :
-             <Icon name="Activity" size={16} />}
-          </div>
-          
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-              {statusLabel}
-            </span>
-            {isExpanded && (
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                {progress}% completed
-              </span>
-            )}
-          </div>
-        </div>
+          <div className="flex items-center gap-3">
+            <div
+              className={cn(
+                "flex items-center justify-center w-8 h-8 rounded-full",
+                overallStatus === "running"
+                  ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                  : overallStatus === "finished"
+                    ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                    : overallStatus === "failed"
+                      ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                      : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+              )}
+            >
+              {overallStatus === "running" ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : overallStatus === "finished" ? (
+                <Icon name="Check" size={16} />
+              ) : overallStatus === "failed" ? (
+                <Icon name="X" size={16} />
+              ) : (
+                <Icon name="Activity" size={16} />
+              )}
+            </div>
 
-        <div className="flex items-center gap-1">
-          {!isExpanded && (
-             <div className="flex items-center gap-2 mr-2">
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                {statusLabel}
+              </span>
+              {isExpanded && (
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {progress}% completed
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1">
+            {!isExpanded && (
+              <div className="flex items-center gap-2 mr-2">
                 <div className="w-16 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-blue-500 rounded-full transition-all duration-300"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-             </div>
-          )}
-          <Icon
-            name="ChevronDown"
-            size={16}
-            className={cn("text-gray-400 transition-transform duration-200", !isExpanded && "rotate-180")}
-          />
-        </div>
+              </div>
+            )}
+            <Icon
+              name="ChevronDown"
+              size={16}
+              className={cn(
+                "text-gray-400 transition-transform duration-200",
+                !isExpanded && "rotate-180"
+              )}
+            />
+          </div>
         </button>
       </header>
 
@@ -327,8 +336,11 @@ export function ExecutionMonitor() {
               <div
                 className={cn(
                   "h-full rounded-full transition-all duration-500 ease-out",
-                  overallStatus === "failed" ? "bg-red-500" : 
-                  overallStatus === "finished" ? "bg-green-500" : "bg-blue-500"
+                  overallStatus === "failed"
+                    ? "bg-red-500"
+                    : overallStatus === "finished"
+                      ? "bg-green-500"
+                      : "bg-blue-500"
                 )}
                 style={{ width: `${progress}%` }}
               />
@@ -360,24 +372,27 @@ export function ExecutionMonitor() {
                     ) : (
                       <div className="w-3.5 h-3.5 rounded-full border-2 border-gray-300 dark:border-gray-600" />
                     )}
-                    
+
                     <div className="flex flex-col">
                       <span className="text-xs font-medium text-gray-700 dark:text-gray-200">
                         {node.label}
                       </span>
-                      <span className="text-[10px] text-gray-400 capitalize">
-                        {node.type}
-                      </span>
+                      <span className="text-[10px] text-gray-400 capitalize">{node.type}</span>
                     </div>
                   </div>
-                  
-                  <span className={cn(
-                    "text-[10px] font-medium px-1.5 py-0.5 rounded capitalize",
-                    node.status === "processing" ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" :
-                    node.status === "complete" ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400" :
-                    node.status === "failed" ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400" :
-                    "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
-                  )}>
+
+                  <span
+                    className={cn(
+                      "text-[10px] font-medium px-1.5 py-0.5 rounded capitalize",
+                      node.status === "processing"
+                        ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                        : node.status === "complete"
+                          ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                          : node.status === "failed"
+                            ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                            : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+                    )}
+                  >
                     {node.status}
                   </span>
                 </div>
@@ -388,7 +403,7 @@ export function ExecutionMonitor() {
           {/* Transactions (Only show if real execution) */}
           {!hasLocalExecution && transactions.length > 0 && (
             <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
-               {/* ... existing transaction log code ... */}
+              {/* ... existing transaction log code ... */}
             </div>
           )}
         </div>
@@ -413,4 +428,3 @@ function getStatusLabel(status: ExecutionStatus): string {
       return "Ready";
   }
 }
-

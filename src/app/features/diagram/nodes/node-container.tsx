@@ -13,8 +13,7 @@ type Props = NodeProps<WorkflowBuilderNode>;
 export const NodeContainer = memo(({ id, data, selected }: Props) => {
   const { icon, properties } = data;
   const label = typeof properties?.label === "string" ? properties.label : "";
-  const description =
-    typeof properties?.description === "string" ? properties.description : "";
+  const description = typeof properties?.description === "string" ? properties.description : "";
   const iconName = icon ?? "Circle";
   const isValid = getIsValidFromProperties(properties);
 

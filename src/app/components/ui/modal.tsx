@@ -54,9 +54,9 @@ export function Modal({
       >
         <DialogHeader>
           <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {icon && <div className="flex-shrink-0">{icon}</div>}
-            <DialogTitle>{title}</DialogTitle>
+            <div className="flex items-center gap-2">
+              {icon && <div className="flex-shrink-0">{icon}</div>}
+              <DialogTitle>{title}</DialogTitle>
               {titleActions && <div className="flex items-center gap-2">{titleActions}</div>}
             </div>
           </div>

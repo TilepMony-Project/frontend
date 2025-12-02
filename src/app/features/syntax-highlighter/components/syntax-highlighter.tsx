@@ -72,7 +72,8 @@ export function SyntaxHighlighter(props: SyntaxHighlighterProps) {
           textIndent: "none",
           minHeight: "300px",
           boxSizing: "border-box",
-          fontFamily: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
+          fontFamily:
+            "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
         }}
         setOptions={{
           enableBasicAutocompletion: false,
