@@ -1,6 +1,5 @@
 "use client";
 
-import clsx from "clsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -39,16 +38,12 @@ const TERMINAL_STATUSES: ExecutionStatus[] = ["finished", "failed", "stopped"];
 export function ExecutionMonitor() {
   const nodes = useStore((state) => state.nodes);
   const setExecutionMonitorActive = useStore((state) => state.setExecutionMonitorActive);
-  const isPropertiesBarExpanded = useStore((state) => state.isPropertiesBarExpanded);
   const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
   const { accessToken } = usePrivySession();
   const getFreshToken = useGetFreshToken();
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [execution, setExecution] = useState<ExecutionResponse["execution"] | null>(null);
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [hasNoExecution, setHasNoExecution] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const fetchStatusRef = useRef<() => Promise<void>>(undefined);
@@ -74,7 +69,6 @@ export function ExecutionMonitor() {
     }
 
     try {
-      setIsFetching(true);
       const freshToken = await getFreshToken();
       if (!freshToken) {
         throw new Error("Unable to get authentication token");
@@ -90,7 +84,6 @@ export function ExecutionMonitor() {
       if (response.status === 404) {
         setExecution(null);
         setHasNoExecution(true);
-        setError(null);
         // Clear interval to stop polling
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
@@ -106,16 +99,8 @@ export function ExecutionMonitor() {
       const payload = (await response.json()) as ExecutionResponse;
       setExecution(payload.execution ?? null);
       setHasNoExecution(false);
-      setLastUpdated(new Date());
-      setError(null);
     } catch (err) {
       console.error("Execution monitor error:", err);
-      // Don't show error if we are just simulating locally
-      if (!hasLocalExecution) {
-        setError("Unable to fetch execution status");
-      }
-    } finally {
-      setIsFetching(false);
     }
   };
 
@@ -276,10 +261,14 @@ export function ExecutionMonitor() {
         isExpanded ? "w-80 max-h-[450px]" : "w-auto max-h-[60px]"
       )}
     >
-      <header 
-        className="flex items-center justify-between gap-3 p-3 bg-gray-50/50 dark:bg-[#242427]/50 border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-gray-100/50 dark:hover:bg-[#2a2a2d]/50 transition-colors"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
+      <header className="flex items-center justify-between gap-3 p-3 bg-gray-50/50 dark:bg-[#242427]/50 border-b border-gray-100 dark:border-gray-800">
+        <button
+          type="button"
+          className="flex items-center justify-between gap-3 w-full cursor-pointer hover:bg-gray-100/50 dark:hover:bg-[#2a2a2d]/50 transition-colors -m-3 p-3 rounded-t-xl"
+          onClick={() => setIsExpanded(!isExpanded)}
+          aria-expanded={isExpanded}
+          aria-label={isExpanded ? "Collapse execution monitor" : "Expand execution monitor"}
+        >
         <div className="flex items-center gap-3">
           <div className={cn(
             "flex items-center justify-center w-8 h-8 rounded-full",
@@ -323,6 +312,7 @@ export function ExecutionMonitor() {
             className={cn("text-gray-400 transition-transform duration-200", !isExpanded && "rotate-180")}
           />
         </div>
+        </button>
       </header>
 
       {isExpanded && (
@@ -424,17 +414,3 @@ function getStatusLabel(status: ExecutionStatus): string {
   }
 }
 
-function getStatusClass(status: ExecutionStatus) {
-  // ... existing helper if needed, but we used inline classes
-  return "";
-}
-function getStatusChipClass(status: string) {
-  // ... existing helper if needed
-  return "";
-}
-function shortenHash(hash: string) {
-  if (hash.length <= 12) {
-    return hash;
-  }
-  return `${hash.slice(0, 6)}…${hash.slice(-4)}`;
-}
