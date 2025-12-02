@@ -27,18 +27,45 @@ export function PropertiesBarContainer() {
     }
   }
 
+  const setNodeData = useStore((state) => state.setNodeData);
+
   function handleRunNodeClick() {
     if (!selection?.node) {
       return;
     }
 
-    const nodeLabel = getNodeLabel(selection.node.data?.properties);
+    const node = selection.node;
+    const nodeLabel = getNodeLabel(node.data?.properties);
+
+    // Set status to running
+    setNodeData(node.id, {
+      ...node.data,
+      executionStatus: "running",
+    });
 
     showToast({
-      title: `${nodeLabel} execution coming soon`,
-      subtitle: "Node-level execution preview will be available soon.",
+      title: `Executing ${nodeLabel}`,
+      subtitle: "Node execution started...",
       variant: ToastType.INFO,
     });
+
+    // Simulate execution delay
+    setTimeout(() => {
+      // 80% success rate for demo purposes
+      const isSuccess = Math.random() > 0.2;
+      const status = isSuccess ? "success" : "error";
+
+      setNodeData(node.id, {
+        ...node.data,
+        executionStatus: status,
+      });
+
+      showToast({
+        title: isSuccess ? "Execution Successful" : "Execution Failed",
+        subtitle: `${nodeLabel} execution ${isSuccess ? "completed successfully" : "failed"}.`,
+        variant: isSuccess ? ToastType.SUCCESS : ToastType.ERROR,
+      });
+    }, 2000);
   }
 
   return (
