@@ -1,7 +1,9 @@
 name: frontend-ci
 
 on:
-  deployment_status:
+ push:
+   branches: 
+     - 'main'
 
 jobs:
   notify:
