@@ -49,6 +49,7 @@ export function ExecutionMonitor() {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [hasNoExecution, setHasNoExecution] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const fetchStatusRef = useRef<() => Promise<void>>(undefined);
 
@@ -85,12 +86,26 @@ export function ExecutionMonitor() {
         },
       });
 
+      // Handle 404 - no execution exists, stop polling
+      if (response.status === 404) {
+        setExecution(null);
+        setHasNoExecution(true);
+        setError(null);
+        // Clear interval to stop polling
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("Failed to fetch execution status");
       }
 
       const payload = (await response.json()) as ExecutionResponse;
       setExecution(payload.execution ?? null);
+      setHasNoExecution(false);
       setLastUpdated(new Date());
       setError(null);
     } catch (err) {
@@ -118,6 +133,10 @@ export function ExecutionMonitor() {
       return;
     }
 
+    // Reset hasNoExecution when workflowId changes
+    setHasNoExecution(false);
+    
+    // Initial fetch
     fetchStatusRef.current?.();
 
     return () => {
@@ -138,7 +157,11 @@ export function ExecutionMonitor() {
       intervalRef.current = null;
     }
 
-    if (!hasTerminalStatus) {
+    // Only poll if:
+    // 1. Execution doesn't have a terminal status
+    // 2. We haven't confirmed there's no execution (hasNoExecution is false)
+    // 3. We have local execution OR we have an execution OR we're waiting for one
+    if (!hasTerminalStatus && !hasNoExecution && (hasLocalExecution || execution)) {
       intervalRef.current = setInterval(() => {
         fetchStatusRef.current?.();
       }, 4000);
@@ -150,7 +173,7 @@ export function ExecutionMonitor() {
         intervalRef.current = null;
       }
     };
-  }, [workflowId, hasTerminalStatus, accessToken]);
+  }, [workflowId, hasTerminalStatus, accessToken, hasNoExecution, hasLocalExecution, execution]);
 
   const progress = useMemo(() => {
     // Priority to local simulation
