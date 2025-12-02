@@ -100,3 +100,6 @@ storybook-static
 
 # dummy data folder
 dummy-data/
+
+# docs 
+docs/

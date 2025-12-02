@@ -45,6 +45,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, XAxis, YAxis } from "recharts";
 import { ToastType, showToast } from "@/utils/toast-utils";
 import { workflowTemplates, type WorkflowTemplate } from "@/features/dashboard/data/templates";
+import { AIWorkflowGenerator } from "@/components/workflow/ai-workflow-generator";
 
 type ViewMode = "grid" | "list";
 
@@ -1124,6 +1125,12 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
               </>
             )}
           </Button>
+          <AIWorkflowGenerator onWorkflowGenerated={() => {
+            // Refresh workflows after AI generation
+            if (!initialWorkflows) {
+              void fetchWorkflows();
+            }
+          }} />
           <Button
             className="min-w-[180px] px-6 py-3 text-base rounded-full"
             onClick={openCreateWorkflowModal}
