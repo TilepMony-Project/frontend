@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Header: React.FC = () => {
   const { ready, authenticated, login, logout, user } = usePrivy();
@@ -82,6 +83,40 @@ const Header: React.FC = () => {
         top: offsetPosition,
         behavior: "smooth",
       });
+
+      // Refresh ScrollTrigger and force animations to show
+      // This ensures GSAP animations recalculate and display properly
+      // Immediate refresh to handle fast scrolls
+      setTimeout(() => {
+        if (typeof window !== "undefined" && ScrollTrigger) {
+          ScrollTrigger.refresh();
+          
+          // Force all ScrollTrigger animations in the target section to their "end" state
+          // This ensures elements are visible even if they were in a "reversed" state
+          const triggers = ScrollTrigger.getAll();
+          triggers.forEach((trigger) => {
+            if (trigger.trigger && element.contains(trigger.trigger)) {
+              // Progress to 1 means animation is at its completed state (visible)
+              trigger.animation?.progress(1);
+            }
+          });
+        }
+      }, 100);
+      
+      // Delayed refresh to handle smooth scroll completion
+      setTimeout(() => {
+        if (typeof window !== "undefined" && ScrollTrigger) {
+          ScrollTrigger.refresh();
+          
+          // Force animations again after scroll completes
+          const triggers = ScrollTrigger.getAll();
+          triggers.forEach((trigger) => {
+            if (trigger.trigger && element.contains(trigger.trigger)) {
+              trigger.animation?.progress(1);
+            }
+          });
+        }
+      }, 1000);
     }
   };
 
@@ -174,13 +209,17 @@ const Header: React.FC = () => {
       {/* Main navigation */}
       <div className="flex flex-col lg:flex-row justify-between items-center px-8 lg:px-24 py-4 lg:py-5 gap-4">
         <div className="flex items-center gap-4 lg:gap-10">
-          <Link href="/" className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => scrollToSection("demo")}
+            className="flex items-center gap-1 cursor-pointer bg-transparent border-none outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md p-0"
+          >
             <img
               alt="TilepMoney Logo"
               className="w-10 h-10 sm:w-12 sm:h-12"
               src="/tilepmoney.png"
             />
-          </Link>
+          </button>
 
           {/* Navigation menu */}
           <div className="hidden md:flex items-center gap-4 lg:gap-8">
