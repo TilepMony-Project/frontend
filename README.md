@@ -233,10 +233,10 @@ Deposit (IDR) → Mint (IDRX) → Swap (USDT) → Bridge (mUSDT) → Partition (
 
 ## 📝 License
 
-[Add your license here]
+MIT
 
 ## 🙏 Acknowledgments
-
+l
 TilepMoney combines ideas from:
 - xWeave (real-time cross-border routing)
 - Studio.Factor (visual node-based automation)
