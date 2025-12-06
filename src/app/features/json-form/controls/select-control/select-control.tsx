@@ -40,6 +40,9 @@ import NetworkScroll from "@web3icons/react/icons/networks/NetworkScroll";
 import NetworkLinea from "@web3icons/react/icons/networks/NetworkLinea";
 import NetworkStarknet from "@web3icons/react/icons/networks/NetworkStarknet";
 import TokenIDRX from "@/components/icons/TokenIDRX";
+// Import exchange icons for swap providers
+import ExchangeUniswap from "@web3icons/react/icons/exchanges/ExchangeUniswap";
+import Exchange1inch from "@web3icons/react/icons/exchanges/Exchange1inch";
 
 // Web3icon mapping
 const web3IconMap: Record<string, FC<SVGProps<SVGSVGElement>>> = {
@@ -72,6 +75,9 @@ const web3IconMap: Record<string, FC<SVGProps<SVGSVGElement>>> = {
   NetworkScroll,
   NetworkLinea,
   NetworkStarknet,
+  // Exchange/Protocol icons for swap providers
+  ExchangeUniswap,
+  Exchange1inch,
 };
 
 // Helper to render icon (web3icon or lucide icon)
@@ -91,14 +97,15 @@ function renderIcon(iconName: string | undefined): React.ReactNode {
 function SelectControl(props: SelectControlProps) {
   const { data, handleChange, path, enabled, schema } = props;
 
-  const items = ((schema as PrimitiveFieldSchema).options as ItemOption[] | undefined)?.map(
-    (option) =>
-      option.type === "separator" || !option.icon
-        ? option
-        : {
-            ...option,
-            icon: renderIcon(option.icon as string),
-          }
+  const items = (
+    (schema as PrimitiveFieldSchema).options as ItemOption[] | undefined
+  )?.map((option) =>
+    option.type === "separator" || !option.icon
+      ? option
+      : {
+          ...option,
+          icon: renderIcon(option.icon as string),
+        }
   );
 
   const onChange: SelectProps["onChange"] = (_event, value) => {
@@ -125,4 +132,7 @@ function SelectControl(props: SelectControlProps) {
   );
 }
 
-export const selectControlRenderer = createControlRenderer("Select", SelectControl);
+export const selectControlRenderer = createControlRenderer(
+  "Select",
+  SelectControl
+);
