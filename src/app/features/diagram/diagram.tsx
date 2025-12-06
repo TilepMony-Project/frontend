@@ -29,15 +29,23 @@ import { useDeleteConfirmation } from "@/features/modals/delete-confirmation/use
 import { withOptionalComponentPlugins } from "@/features/plugins-core/adapters/adapter-components";
 import { usePaletteDrop } from "@/hooks/use-palette-drop";
 import type { WorkflowBuilderOnSelectionChangeParams } from "@/types/common";
-import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
+import type {
+  WorkflowBuilderEdge,
+  WorkflowBuilderNode,
+} from "@/types/node-data";
 import { LabelEdge } from "./edges/label-edge/label-edge";
 import { TemporaryEdge } from "./edges/temporary-edge/temporary-edge";
 import {
   callNodeDragStartListeners,
   destroyNodeDragStartListeners,
 } from "./listeners/node-drag-start-listeners";
+import { EmptyWorkflowPlaceholder } from "./components/empty-workflow-placeholder";
 
-function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }) {
+function DiagramContainerComponent({
+  edgeTypes = {},
+}: {
+  edgeTypes?: EdgeTypes;
+}) {
   const {
     nodes,
     edges,
@@ -54,7 +62,9 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
 
   const { openDeleteConfirmationModal } = useDeleteConfirmation();
 
-  const setConnectionBeingDragged = useStore((store) => store.setConnectionBeingDragged);
+  const setConnectionBeingDragged = useStore(
+    (store) => store.setConnectionBeingDragged
+  );
   const togglePropertiesBar = useStore((store) => store.togglePropertiesBar);
   const nodeTypes = useMemo(getNodeTypesObject, []);
 
@@ -124,9 +134,15 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
     destroyNodeDragStartListeners();
   }, []);
 
-  const diagramEdgeTypes = useMemo(() => ({ labelEdge: LabelEdge, ...edgeTypes }), [edgeTypes]);
+  const diagramEdgeTypes = useMemo(
+    () => ({ labelEdge: LabelEdge, ...edgeTypes }),
+    [edgeTypes]
+  );
 
-  const onBeforeDelete: OnBeforeDelete<WorkflowBuilderNode, WorkflowBuilderEdge> = useCallback(
+  const onBeforeDelete: OnBeforeDelete<
+    WorkflowBuilderNode,
+    WorkflowBuilderEdge
+  > = useCallback(
     async ({ nodes, edges }) => {
       if (isReadOnlyMode) {
         return false;
@@ -150,6 +166,8 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
   const isPanMode = canvasInteractionMode === "pan";
   const panOnDrag = isPanMode ? [0, 1, 2] : [1, 2];
   const selectionOnDrag = !isPanMode;
+
+  const isWorkflowEmpty = nodes.length === 0;
 
   return (
     <div className="w-screen h-screen [&_.react-flow__edgelabel-renderer]:z-[1001]">
@@ -187,6 +205,7 @@ function DiagramContainerComponent({ edgeTypes = {} }: { edgeTypes?: EdgeTypes }
         proOptions={{ hideAttribution: true }}
       >
         <Background />
+        {isWorkflowEmpty && <EmptyWorkflowPlaceholder />}
       </ReactFlow>
     </div>
   );
