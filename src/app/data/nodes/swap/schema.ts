@@ -8,9 +8,9 @@ export const tokenOptions = [
 ];
 
 export const swapProviderOptions = [
-  { label: "Uniswap", value: "DummyDEXA", icon: "ProtocolUniswap" },
-  { label: "1INCH", value: "DummyDEXB", icon: "Protocol1INCH" },
-  { label: "Curve", value: "DummyDEXC", icon: "ProtocolCurve" },
+  { label: "Uniswap", value: "DummyDEXA", icon: "ExchangeUniswap" },
+  { label: "1INCH", value: "DummyDEXB", icon: "Exchange1inch" },
+  { label: "Curve", value: "DummyDEXC", icon: "TokenCRV" },
 ];
 
 export const routeOptions = [

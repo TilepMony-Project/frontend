@@ -56,6 +56,14 @@ import {
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
+// Import web3 icons for dynamic node icons
+import TokenUSDT from "@web3icons/react/icons/tokens/TokenUSDT";
+import TokenUSDC from "@web3icons/react/icons/tokens/TokenUSDC";
+import TokenDAI from "@web3icons/react/icons/tokens/TokenDAI";
+import TokenCRV from "@web3icons/react/icons/tokens/TokenCRV";
+import ExchangeUniswap from "@web3icons/react/icons/exchanges/ExchangeUniswap";
+import Exchange1inch from "@web3icons/react/icons/exchanges/Exchange1inch";
+
 export type IconProps = SVGProps<SVGSVGElement> & {
   size?: number | string;
   className?: string;
@@ -126,6 +134,14 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   RefreshCw: RefreshCw, // Schedule
   Clock: Clock, // Wait
   GitBranch: GitBranch, // Partition
+
+  // Web3 icons for dynamic node icons (swap providers, issuers)
+  TokenUSDT: TokenUSDT as unknown as ComponentType<IconProps>,
+  TokenUSDC: TokenUSDC as unknown as ComponentType<IconProps>,
+  TokenDAI: TokenDAI as unknown as ComponentType<IconProps>,
+  TokenCRV: TokenCRV as unknown as ComponentType<IconProps>,
+  ExchangeUniswap: ExchangeUniswap as unknown as ComponentType<IconProps>,
+  Exchange1inch: Exchange1inch as unknown as ComponentType<IconProps>,
 };
 
 // Try to get icon from mapping
@@ -140,7 +156,12 @@ function getIconComponent(name?: string): ComponentType<IconProps> | null {
   return null;
 }
 
-export const Icon: ComponentType<IconProps> = ({ size = 24, className, name, ...props }) => {
+export const Icon: ComponentType<IconProps> = ({
+  size = 24,
+  className,
+  name,
+  ...props
+}) => {
   if (!name) {
     return null;
   }
@@ -161,12 +182,20 @@ export const Icon: ComponentType<IconProps> = ({ size = 24, className, name, ...
     const spinnerClassName =
       name === "Loader2" ? `${className || ""} animate-spin`.trim() : className;
 
-    return <IconComponent size={iconSize} className={spinnerClassName} {...props} />;
+    return (
+      <IconComponent size={iconSize} className={spinnerClassName} {...props} />
+    );
   }
 
   // Final fallback: show placeholder with icon name
   const iconSize =
-    typeof size === "string" ? (size === "large" ? 32 : size === "small" ? 16 : 24) : size;
+    typeof size === "string"
+      ? size === "large"
+        ? 32
+        : size === "small"
+        ? 16
+        : 24
+      : size;
 
   return (
     <svg

@@ -5,7 +5,12 @@ import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { AuroraText } from "@/components/ui/aurora-text";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 
 const Hero: React.FC = () => {
@@ -62,32 +67,36 @@ const Hero: React.FC = () => {
                 src="/landing/Sparkle.svg"
               />
               <p className="text-sm lg:text-base font-medium text-center text-muted-foreground group-hover:text-primary transition-colors duration-300">
-                Codeless Stablecoin Orchestration Builder
+                AI-Powered Orchestration
               </p>
             </div>
             <p
               ref={headlineRef as React.RefObject<HTMLParagraphElement>}
               className="w-full max-w-4xl text-2xl sm:text-4xl lg:text-6xl font-bold text-center text-foreground leading-tight lg:leading-[1.3]"
             >
-              Stablecoin creation made as easy as{" "}
+              The{" "}
               <AuroraText
                 className="text-wrap break-words whitespace-nowrap"
                 colors={["#f5c0b1", "#a79ee2", "#1296e7", "#91e5e8"]}
                 speed={1.4}
               >
-                drag-and-drop
-              </AuroraText>
+                AI-Powered
+              </AuroraText>{" "}
+              Stablecoin Orchestration Studio
             </p>
 
             <div
               ref={descriptionRef as React.RefObject<HTMLDivElement>}
-              className="flex items-start gap-2 px-4 lg:px-5 mt-2"
+              className="flex flex-col items-center gap-6 px-4 lg:px-5 mt-2"
             >
               <p className="w-full max-w-3xl text-sm lg:text-base text-center text-muted-foreground leading-[1.3] lg:leading-[1.6]">
-                Integrating stablecoin is hard, we made it easier using drag and drop. A visual
-                drag-and-drop builder that allows businesses to design stablecoin movement workflows
-                on Mantle L2.
+                Stop hard-coding crypto payments. Describe your treasury
+                strategy in plain English, and let our AI architect, simulate,
+                and automate your cross-border infrastructure instantly.
               </p>
+              <Button className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                Generate Workflow with AI
+              </Button>
             </div>
           </div>
 
@@ -123,9 +132,13 @@ const Hero: React.FC = () => {
                   Watch demo video
                 </p>
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <p className="opacity-80 text-xs sm:text-sm text-muted-foreground">5 mins</p>
+                  <p className="opacity-80 text-xs sm:text-sm text-muted-foreground">
+                    5 mins
+                  </p>
                   <div className="w-1 h-1 rounded-full bg-muted" />
-                  <p className="text-xs sm:text-sm font-medium text-primary">Play video</p>
+                  <p className="text-xs sm:text-sm font-medium text-primary">
+                    Play video
+                  </p>
                 </div>
               </div>
             </div>
