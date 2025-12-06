@@ -40,6 +40,7 @@ import {
   destroyNodeDragStartListeners,
 } from "./listeners/node-drag-start-listeners";
 import { EmptyWorkflowPlaceholder } from "./components/empty-workflow-placeholder";
+import { FloatingAIGenerator } from "./components/floating-ai-generator";
 
 function DiagramContainerComponent({
   edgeTypes = {},
@@ -207,6 +208,8 @@ function DiagramContainerComponent({
         <Background />
         {isWorkflowEmpty && <EmptyWorkflowPlaceholder />}
       </ReactFlow>
+      {/* AI Generation floating button - only show when not in read-only mode */}
+      {!isReadOnlyMode && <FloatingAIGenerator />}
     </div>
   );
 }
