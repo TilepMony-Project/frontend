@@ -7,14 +7,18 @@ import { WorkflowNodeTemplate } from "./workflow-node-template/workflow-node-tem
 import { NodeAsPortWrapper } from "@synergycodes/overflow-ui";
 import { getHandlePosition } from "../handles/get-handle-position";
 import { getIsValidFromProperties } from "@/utils/validation/get-is-valid-from-properties";
+import { resolveDynamicNodeIcon } from "@/utils/resolve-dynamic-node-icon";
 
 type Props = NodeProps<WorkflowBuilderNode>;
 
 export const NodeContainer = memo(({ id, data, selected }: Props) => {
-  const { icon, properties } = data;
+  const { icon, properties, type } = data;
   const label = typeof properties?.label === "string" ? properties.label : "";
-  const description = typeof properties?.description === "string" ? properties.description : "";
-  const iconName = icon ?? "Circle";
+  const description =
+    typeof properties?.description === "string" ? properties.description : "";
+  const defaultIcon = icon ?? "Circle";
+  // Use dynamic icon based on selected property (e.g., swap provider, issuer)
+  const iconName = resolveDynamicNodeIcon(type, properties, defaultIcon);
   const isValid = getIsValidFromProperties(properties);
 
   const layoutDirection = useStore((store) => store.layoutDirection);
@@ -22,7 +26,9 @@ export const NodeContainer = memo(({ id, data, selected }: Props) => {
     direction: layoutDirection,
     handleType: "target",
   });
-  const connectionBeingDragged = useStore((store) => store.connectionBeingDragged);
+  const connectionBeingDragged = useStore(
+    (store) => store.connectionBeingDragged
+  );
 
   return (
     <NodeAsPortWrapper
