@@ -16,6 +16,7 @@ import { getHandlePosition } from "../../handles/get-handle-position";
 
 import { withOptionalComponentPlugins } from "@/features/plugins-core/adapters/adapter-components";
 import type { NodeData } from "@/types/node-data";
+import { AddNodeButton } from "../components/add-node-button/add-node-button";
 
 export type WorkflowNodeTemplateProps = {
   id: string;
@@ -56,17 +57,22 @@ const WorkflowNodeTemplateComponent = memo(
       handleType: "source",
     });
 
-    const iconElement = useMemo(() => <Icon name={icon} size="large" />, [icon]);
+    const iconElement = useMemo(
+      () => <Icon name={icon} size="large" />,
+      [icon]
+    );
 
     const hasContent = !!children;
 
-    const handlesAlignment = hasContent && layoutDirection === "horizontal" ? "header" : "center";
+    const handlesAlignment =
+      hasContent && layoutDirection === "horizontal" ? "header" : "center";
 
     const executionStatus = data?.executionStatus || "idle";
 
     return (
       <Collapsible>
-        <div className="relative">
+        {/* Added 'group' class to enable hover effect for AddNodeButton */}
+        <div className="relative group">
           {executionStatus === "running" && (
             <>
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] pointer-events-none">
@@ -83,9 +89,12 @@ const WorkflowNodeTemplateComponent = memo(
             selected={selected}
             className={cn(
               "[--ax-public-node-gap:0] workflow-node-with-border relative transition-all duration-300",
-              executionStatus === "success" && "!border-green-500 !ring-2 !ring-green-500/20",
-              executionStatus === "error" && "!border-red-500 !ring-2 !ring-red-500/20",
-              executionStatus === "running" && "!border-blue-500 ring-2 ring-blue-500/20"
+              executionStatus === "success" &&
+                "!border-green-500 !ring-2 !ring-green-500/20",
+              executionStatus === "error" &&
+                "!border-red-500 !ring-2 !ring-red-500/20",
+              executionStatus === "running" &&
+                "!border-blue-500 ring-2 ring-blue-500/20"
             )}
           >
             <NodePanel.Header>
@@ -101,11 +110,25 @@ const WorkflowNodeTemplateComponent = memo(
                 <div className="pt-2">{children}</div>
               </Collapsible.Content>
             </NodePanel.Content>
-            <NodePanel.Handles isVisible={showHandles} alignment={handlesAlignment}>
-              <Handle id={handleTargetId} position={handleTargetPosition} type="target" />
-              <Handle id={handleSourceId} position={handleSourcePosition} type="source" />
+            <NodePanel.Handles
+              isVisible={showHandles}
+              alignment={handlesAlignment}
+            >
+              <Handle
+                id={handleTargetId}
+                position={handleTargetPosition}
+                type="target"
+              />
+              <Handle
+                id={handleSourceId}
+                position={handleSourcePosition}
+                type="source"
+              />
             </NodePanel.Handles>
           </NodePanel.Root>
+
+          {/* Add Node Button - appears on hover, opens Nodes Library */}
+          <AddNodeButton nodeId={id} layoutDirection={layoutDirection} />
         </div>
       </Collapsible>
     );
