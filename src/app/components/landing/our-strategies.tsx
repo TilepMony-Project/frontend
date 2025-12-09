@@ -19,6 +19,7 @@ interface StepCardProps {
   icon: React.ElementType;
   gifSrc: string;
   className?: string;
+  focusArea?: "top-left" | "top-right" | "bottom-right" | "center";
 }
 
 const StepCard: React.FC<StepCardProps> = ({
@@ -28,7 +29,36 @@ const StepCard: React.FC<StepCardProps> = ({
   icon: Icon,
   gifSrc,
   className = "",
+  focusArea = "center",
 }) => {
+  // Determine object position and scale based on focus area
+  const getImageClasses = () => {
+    const baseClasses = "object-cover opacity-80 group-hover:opacity-100 transition-all duration-500";
+    
+    if (focusArea === "top-left") {
+      return cn(
+        baseClasses,
+        "object-[0%_25%] scale-100 group-hover:scale-135"
+      );
+    }
+    if (focusArea === "top-right") {
+      return cn(
+        baseClasses,
+        "object-[90%_0%] scale-85 group-hover:scale-135"
+      );
+    }
+    if (focusArea === "bottom-right") {
+      return cn(
+        baseClasses,
+        "object-[90%_90%] scale-85 group-hover:scale-135"
+      );
+    }
+    return cn(
+      baseClasses,
+      "group-hover:scale-105"
+    );
+  };
+
   return (
     <div
       className={cn(
@@ -45,7 +75,7 @@ const StepCard: React.FC<StepCardProps> = ({
           src={gifSrc}
           alt={title}
           fill
-          className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+          className={getImageClasses()}
           unoptimized // For GIF support
         />
         {/* Gradient overlay */}
@@ -124,6 +154,7 @@ const OurStrategies: React.FC = () => {
         "Build your workflow visually. Drag nodes from the library and drop them onto the canvas. Connect them to create your money flow.",
       icon: MousePointerClick,
       gifSrc: "/drag_and_drop.gif",
+      focusArea: "top-left" as const,
     },
     {
       step: 2,
@@ -132,6 +163,7 @@ const OurStrategies: React.FC = () => {
         "Configure each node with your preferred providers. Select issuers, swap DEXes, and bridge protocols that fit your strategy.",
       icon: Settings2,
       gifSrc: "/choose_provider.gif",
+      focusArea: "top-right" as const,
     },
     {
       step: 3,
@@ -140,6 +172,7 @@ const OurStrategies: React.FC = () => {
         "Execute your workflow with one click. Watch real-time progress as funds flow through each node from start to finish.",
       icon: PlayCircle,
       gifSrc: "/run_workflow.gif",
+      focusArea: "bottom-right" as const,
     },
   ];
 
@@ -205,6 +238,7 @@ const OurStrategies: React.FC = () => {
                 description={step.description}
                 icon={step.icon}
                 gifSrc={step.gifSrc}
+                focusArea={step.focusArea}
               />
             ))}
           </div>
