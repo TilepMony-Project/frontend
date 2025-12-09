@@ -94,9 +94,6 @@ const Hero: React.FC = () => {
                 strategy in plain English, and let our AI architect, simulate,
                 and automate your cross-border infrastructure instantly.
               </p>
-              <Button className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                Generate Workflow with AI
-              </Button>
             </div>
           </div>
 
