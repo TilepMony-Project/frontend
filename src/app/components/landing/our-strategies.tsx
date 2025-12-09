@@ -50,6 +50,12 @@ const StepCard: React.FC<StepCardProps> = ({
         />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
+        
+        {/* Inner border glow effect */}
+        <div className="absolute inset-0 rounded-t-xl border-2 border-white/10 dark:border-white/5 pointer-events-none" />
+        
+        {/* Bottom shadow for contrast */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/20 via-black/10 to-transparent dark:from-black/30 dark:via-black/20 pointer-events-none" />
 
         {/* Step badge */}
         <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/90 backdrop-blur-sm">
