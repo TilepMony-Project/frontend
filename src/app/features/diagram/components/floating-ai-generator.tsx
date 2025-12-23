@@ -300,7 +300,7 @@ export function FloatingAIGenerator({
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Example: I want a workflow that converts IDR to USD, splits the funds between corporate wallet and vault..."
+              placeholder="Describe the fiat-to-fiat flow you want..."
               className="min-h-[150px]"
               disabled={isGenerating}
             />

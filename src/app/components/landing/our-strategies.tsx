@@ -48,8 +48,8 @@ const StepCard: React.FC<StepCardProps> = ({
           className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
           unoptimized // For GIF support
         />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
+        {/* Gradient overlay - Dark mode only */}
+        <div className="hidden dark:block absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-card to-transparent" />
 
         {/* Step badge */}
         <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/90 backdrop-blur-sm">

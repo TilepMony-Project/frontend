@@ -16,7 +16,7 @@ import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 const Hero: React.FC = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
-  // Cinematic animation refs with enhanced effects
+  // Animation refs
   const badgeRef = useFadeInOnScroll({
     delay: 0,
     y: 20,
@@ -67,22 +67,21 @@ const Hero: React.FC = () => {
                 src="/landing/Sparkle.svg"
               />
               <p className="text-sm lg:text-base font-medium text-center text-muted-foreground group-hover:text-primary transition-colors duration-300">
-                AI-Powered Orchestration
+                Design. Automate. Move Money.
               </p>
             </div>
             <p
               ref={headlineRef as React.RefObject<HTMLParagraphElement>}
               className="w-full max-w-4xl text-2xl sm:text-4xl lg:text-6xl font-bold text-center text-foreground leading-tight lg:leading-[1.3]"
             >
-              The{" "}
+              Visual Builder for{" "}
               <AuroraText
                 className="text-wrap break-words whitespace-nowrap"
                 colors={["#f5c0b1", "#a79ee2", "#1296e7", "#91e5e8"]}
                 speed={1.4}
               >
-                AI-Powered
-              </AuroraText>{" "}
-              Stablecoin Orchestration Studio
+                Stablecoin Workflows
+              </AuroraText>
             </p>
 
             <div
@@ -90,10 +89,15 @@ const Hero: React.FC = () => {
               className="flex flex-col items-center gap-6 px-4 lg:px-5 mt-2"
             >
               <p className="w-full max-w-3xl text-sm lg:text-base text-center text-muted-foreground leading-[1.3] lg:leading-[1.6]">
-                Stop hard-coding crypto payments. Describe your treasury
-                strategy in plain English, and let our AI architect, simulate,
-                and automate your cross-border infrastructure instantly.
+                Design, test, and deploy crypto treasury operations without
+                coding. Drag-and-drop to create secure, automated payment flows
+                that connect specific issuers, DEXes, and bridges.
               </p>
+              {/* <p className="w-full max-w-3xl text-sm lg:text-base text-center text-muted-foreground leading-[1.3] lg:leading-[1.6]">
+                Design, test, and deploy crypto treasury operations without
+                coding. Drag-and-drop to create secure, automated payment flows
+                that connect specific issuers, DEXes, and bridges.
+              </p> */}
               <Button className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                 Generate Workflow with AI
               </Button>
@@ -103,7 +107,7 @@ const Hero: React.FC = () => {
           {/* Card Background */}
           <div
             ref={cardRef as React.RefObject<HTMLDivElement>}
-            className="w-full max-w-6xl h-64 sm:h-80 lg:h-96 relative overflow-hidden rounded-2xl lg:rounded-3xl bg-primary/20 border border-border mx-2 sm:mx-4 flex items-center justify-center"
+            className="w-full max-w-6xl h-64 sm:h-80 lg:h-96 relative overflow-hidden rounded-2xl lg:rounded-3xl bg-primary/5 dark:bg-primary/20 border border-border mx-2 sm:mx-4 flex items-center justify-center"
           >
             <Image
               alt="Card Background"
@@ -133,7 +137,7 @@ const Hero: React.FC = () => {
                 </p>
                 <div className="flex items-center gap-1 sm:gap-2">
                   <p className="opacity-80 text-xs sm:text-sm text-muted-foreground">
-                    5 mins
+                    2 mins
                   </p>
                   <div className="w-1 h-1 rounded-full bg-muted" />
                   <p className="text-xs sm:text-sm font-medium text-primary">
@@ -155,7 +159,7 @@ const Hero: React.FC = () => {
           <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
             <iframe
               className="absolute top-0 left-0 w-full h-full rounded-lg"
-              src="https://www.youtube.com/embed/J7g9R8PETHc?si=DdWOgIBKA8Easuck"
+              src="https://www.youtube.com/embed/nR1dC-XY6gI"
               title="TilepMoney Introduction Video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
