@@ -18,7 +18,11 @@ export const NodeContainer = memo(({ id, data, selected }: Props) => {
     typeof properties?.description === "string" ? properties.description : "";
   const defaultIcon = icon ?? "Circle";
   // Use dynamic icon based on selected property (e.g., swap provider, issuer)
-  const iconName = resolveDynamicNodeIcon(type, properties, defaultIcon);
+  const iconName = resolveDynamicNodeIcon(
+    typeof type === "string" ? type : undefined,
+    properties,
+    defaultIcon
+  );
   const isValid = getIsValidFromProperties(properties);
 
   const layoutDirection = useStore((store) => store.layoutDirection);

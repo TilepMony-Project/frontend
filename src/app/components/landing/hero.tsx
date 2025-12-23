@@ -93,14 +93,6 @@ const Hero: React.FC = () => {
                 coding. Drag-and-drop to create secure, automated payment flows
                 that connect specific issuers, DEXes, and bridges.
               </p>
-              {/* <p className="w-full max-w-3xl text-sm lg:text-base text-center text-muted-foreground leading-[1.3] lg:leading-[1.6]">
-                Design, test, and deploy crypto treasury operations without
-                coding. Drag-and-drop to create secure, automated payment flows
-                that connect specific issuers, DEXes, and bridges.
-              </p> */}
-              <Button className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                Generate Workflow with AI
-              </Button>
             </div>
           </div>
 
