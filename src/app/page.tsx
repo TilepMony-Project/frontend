@@ -7,6 +7,7 @@ import Footer from "./components/landing/footer";
 import Header from "./components/landing/header";
 import Hero from "./components/landing/hero";
 import OurStrategies from "./components/landing/our-strategies";
+import TemplateShowcase from "./components/landing/template-showcase";
 import Partner from "./components/landing/partner";
 
 export default function LandingPage() {
@@ -19,7 +20,10 @@ export default function LandingPage() {
         {/* Hero */}
         <Hero />
 
-        {/* Partner */}
+        {/* Template Showcase */}
+        <TemplateShowcase />
+
+        {/* Partner / Integrations */}
         <Partner />
 
         {/* Our Strategies */}
