@@ -74,13 +74,20 @@ const Hero: React.FC = () => {
               ref={headlineRef as React.RefObject<HTMLParagraphElement>}
               className="w-full max-w-4xl text-2xl sm:text-4xl lg:text-6xl font-bold text-center text-foreground leading-tight lg:leading-[1.3]"
             >
+              <AuroraText
+                className="text-wrap break-words whitespace-nowrap"
+                colors={["#91e5e8", "#1296e7", "#a79ee2", "#f5c0b1"]}
+                speed={1.4}
+              >
+                AI-Powered
+              </AuroraText>{" "}
               Visual Builder for{" "}
               <AuroraText
                 className="text-wrap break-words whitespace-nowrap"
                 colors={["#f5c0b1", "#a79ee2", "#1296e7", "#91e5e8"]}
                 speed={1.4}
               >
-                Stablecoin Workflows
+                Stablecoin Orchestration
               </AuroraText>
             </p>
 
