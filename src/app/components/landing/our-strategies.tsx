@@ -33,30 +33,19 @@ const StepCard: React.FC<StepCardProps> = ({
 }) => {
   // Determine object position and scale based on focus area
   const getImageClasses = () => {
-    const baseClasses = "object-cover opacity-80 group-hover:opacity-100 transition-all duration-500";
-    
+    const baseClasses =
+      "object-cover opacity-80 group-hover:opacity-100 transition-all duration-500";
+
     if (focusArea === "top-left") {
-      return cn(
-        baseClasses,
-        "object-[0%_25%] scale-100 group-hover:scale-135"
-      );
+      return cn(baseClasses, "object-[0%_25%] scale-100 group-hover:scale-135");
     }
     if (focusArea === "top-right") {
-      return cn(
-        baseClasses,
-        "object-[90%_0%] scale-85 group-hover:scale-135"
-      );
+      return cn(baseClasses, "object-[90%_0%] scale-85 group-hover:scale-135");
     }
     if (focusArea === "bottom-right") {
-      return cn(
-        baseClasses,
-        "object-[90%_90%] scale-85 group-hover:scale-135"
-      );
+      return cn(baseClasses, "object-[90%_90%] scale-85 group-hover:scale-135");
     }
-    return cn(
-      baseClasses,
-      "group-hover:scale-105"
-    );
+    return cn(baseClasses, "group-hover:scale-105");
   };
 
   return (
@@ -78,12 +67,12 @@ const StepCard: React.FC<StepCardProps> = ({
           className={getImageClasses()}
           unoptimized // For GIF support
         />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
-        
+        {/* Gradient overlay - Dark mode only */}
+        <div className="hidden dark:block absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-card to-transparent" />
+
         {/* Inner border glow effect */}
         <div className="absolute inset-0 rounded-t-xl border-2 border-white/10 dark:border-white/5 pointer-events-none" />
-        
+
         {/* Bottom shadow for contrast */}
         <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/20 via-black/10 to-transparent dark:from-black/30 dark:via-black/20 pointer-events-none" />
 
