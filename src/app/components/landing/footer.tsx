@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { Twitter, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 import { useTheme } from "@/hooks/use-theme";
@@ -33,81 +33,31 @@ const Footer: React.FC = () => {
                 {theme === "dark" ? (
                   <img
                     alt="TilepMoney"
-                    className="h-8 w-auto"
+                    className="h-12 w-auto"
                     src="/tilepmoney_white_text.png"
                   />
                 ) : (
                   <img
                     alt="TilepMoney"
-                    className="h-8 w-auto"
+                    className="h-12 w-auto"
                     src="/tilepmoney_dark_text.png"
                   />
                 )}
-                {/* <span className="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-mono text-primary uppercase tracking-wider">
+                <span className="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-mono text-primary uppercase tracking-wider">
                   Beta
-                </span> */}
+                </span>
               </div>
-              <p className="text-lg md:text-xl font-medium text-foreground/80 max-w-sm">
-                The smartest way to move stablecoins.
+              <p className="opacity-80 text-sm lg:text-base text-muted-foreground leading-relaxed max-w-md">
+                Visual workflow builder for stablecoin orchestration.
               </p>
             </div>
-
-            {/* <div className="space-y-2">
-              <p className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
-                Built With
-              </p>
-              <div className="flex items-center gap-2 text-sm text-foreground/60">
-                <span>Next.js</span>
-                <span className="w-1 h-1 rounded-full bg-muted-foreground/30" />
-                <span>Smart Contracts</span>
-                <span className="w-1 h-1 rounded-full bg-muted-foreground/30" />
-                <span>AI Orchestration</span>
-              </div>
-            </div> */}
-
             <div className="pt-4 md:pt-8 text-sm text-muted-foreground">
               © 2025 TilepMoney. All rights reserved.
             </div>
           </div>
 
           {/* Right Side: Navigation & Status */}
-          <div className="flex flex-col gap-10 md:items-end">
-            {/* System Status */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/5 border border-emerald-500/20 w-fit">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                All systems operational
-              </span>
-            </div>
-
-            {/* Navigation Links */}
-            <div className="flex flex-wrap gap-x-8 gap-y-4 md:justify-end">
-              <Link
-                href="/dashboard"
-                className="group flex items-center gap-1 text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
-              >
-                Launch App
-                <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-300" />
-              </Link>
-              <Link
-                href="https://tilepmoney.gitbook.io/tilepmoney-docs"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
-              >
-                Documentation
-              </Link>
-              <Link
-                href="mailto:tilepmoney@gmail.com"
-                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
-              >
-                Support
-              </Link>
-            </div>
-
+          <div className="flex flex-col gap-10 mt-8 md:items-end">
             {/* Social CTA */}
             <Link
               href="https://x.com/TilepMoney"
@@ -116,8 +66,12 @@ const Footer: React.FC = () => {
               className="group relative flex items-center gap-3 px-5 py-3 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-all duration-300 md:ml-auto overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent translate-x-[-100%] group-hover:animate-shimmer" />
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-black text-white dark:bg-white dark:text-black">
-                <Twitter className="w-4 h-4 fill-current" />
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg">
+                <img
+                  alt="X (Twitter)"
+                  className="w-8 h-8 object-contain"
+                  src="/logos/x_logo.jpg"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors">
@@ -128,6 +82,37 @@ const Footer: React.FC = () => {
                 </span>
               </div>
             </Link>
+
+            {/* Navigation Links */}
+            <div className="flex flex-wrap gap-x-8 gap-y-4 md:justify-end">
+              <Link
+                href="#"
+                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                href="https://tilepmoney.gitbook.io/tilepmoney-docs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
+              >
+                Docs
+              </Link>
+              <Link
+                href="mailto:tilepmoney@gmail.com"
+                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
+              >
+                Support
+              </Link>
+              <Link
+                href="/dashboard"
+                className="group flex items-center gap-1 text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
+              >
+                Launch App
+                <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-300" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

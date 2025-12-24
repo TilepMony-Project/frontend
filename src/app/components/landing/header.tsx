@@ -242,7 +242,7 @@ const Header: React.FC = () => {
               onClick={() => scrollToSection("features")}
               className="flex items-center gap-1 cursor-pointer text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-105 active:scale-95 min-h-12 px-2 bg-transparent border-none outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md shadow-none hover:!shadow-none"
             >
-              <p className="text-sm lg:text-base font-medium">Our strategies</p>
+              <p className="text-sm lg:text-base font-medium">How It Works</p>
             </button>
             <button
               type="button"
