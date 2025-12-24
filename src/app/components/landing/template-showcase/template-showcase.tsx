@@ -2,12 +2,14 @@
 
 import type React from "react";
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Sparkles, ArrowRight } from "lucide-react";
+import { usePrivy } from "@privy-io/react-auth";
 import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 import { TemplateMiniPreview } from "./template-mini-preview";
 import { workflowTemplates } from "@/features/dashboard/data/templates";
 import { cn } from "@/lib/utils";
+import { showToast, ToastType } from "@/utils/toast-utils";
 
 // Template metadata for display
 const TEMPLATE_DISPLAY_DATA: Record<string, { shortDescription: string }> = {
@@ -32,6 +34,8 @@ const TemplateShowcase: React.FC = () => {
   const [activeTemplateId, setActiveTemplateId] = useState(
     workflowTemplates[0]?.id || ""
   );
+  const { ready, authenticated } = usePrivy();
+  const router = useRouter();
 
   // Animation refs
   const badgeRef = useFadeInOnScroll({
@@ -68,6 +72,42 @@ const TemplateShowcase: React.FC = () => {
   const activeTemplate = workflowTemplates.find(
     (t) => t.id === activeTemplateId
   );
+
+  const handleUseTemplate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    if (!ready) return;
+
+    if (!authenticated) {
+      showToast({
+        title: "Wallet connection required",
+        subtitle: "Please connect your wallet to use templates",
+        variant: ToastType.WARNING,
+      });
+      return;
+    }
+
+    // Navigate to dashboard with template
+    router.push(`/dashboard?template=${activeTemplateId}`);
+  };
+
+  const handleBuildOwnWorkflow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    if (!ready) return;
+
+    if (!authenticated) {
+      showToast({
+        title: "Wallet connection required",
+        subtitle: "Please connect your wallet to build your own workflow",
+        variant: ToastType.WARNING,
+      });
+      return;
+    }
+
+    // Navigate to dashboard
+    router.push("/dashboard");
+  };
 
   return (
     <div
@@ -120,6 +160,7 @@ const TemplateShowcase: React.FC = () => {
             <div className="flex flex-wrap gap-2 p-3 border-b border-border bg-gradient-to-b from-muted/50 to-muted/20">
               {workflowTemplates.map((template) => (
                 <button
+                  type="button"
                   key={template.id}
                   onClick={() => setActiveTemplateId(template.id)}
                   className={cn(
@@ -161,18 +202,19 @@ const TemplateShowcase: React.FC = () => {
               ))}
 
               {/* Trigger Tab - "You can" */}
-              <Link
-                href="/dashboard"
+              <button
+                type="button"
+                onClick={handleBuildOwnWorkflow}
                 className="group relative flex flex-col items-start gap-1 px-4 py-3 rounded-xl text-left transition-all duration-300 min-w-[160px] border border-dashed border-primary/40 hover:border-primary hover:bg-gradient-to-br hover:from-primary/5 hover:to-primary/10 hover:shadow-lg"
               >
                 <span className="text-sm font-bold text-primary flex items-center gap-1.5">
-                  You
-                  <span className="text-foreground">can</span>
+                  It's your
+                  <span className="text-foreground">time to</span>
                 </span>
                 <span className="text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors flex items-center gap-1">
                   🚀 Build your own workflow
                 </span>
-              </Link>
+              </button>
             </div>
 
             {/* Preview Canvas */}
@@ -201,13 +243,14 @@ const TemplateShowcase: React.FC = () => {
                     activeTemplate?.description}
                 </p>
               </div>
-              <Link
-                href={`/dashboard?template=${activeTemplateId}`}
+              <button
+                type="button"
+                onClick={handleUseTemplate}
                 className="group flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-medium text-sm hover:bg-primary/90 transition-colors shrink-0"
               >
                 Use Template
                 <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
+              </button>
             </div>
           </div>
         </div>
