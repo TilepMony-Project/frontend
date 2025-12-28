@@ -61,6 +61,16 @@ export function useWorkflowExecution() {
         ],
       });
 
+      // 3. Update Execution Record with Tx Hash
+      await fetch(`/api/executions/${executionId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+            status: "running", 
+            transactionHash: hash 
+        }),
+      });
+
       setResult({ status: "processing", txHash: hash, executionId });
       
       return { hash, executionId };

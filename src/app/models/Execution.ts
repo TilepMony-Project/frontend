@@ -3,7 +3,7 @@ import mongoose, { Schema, type Document } from "mongoose";
 export interface IExecution extends Document {
   workflowId: string;
   userId: string;
-  status: "running" | "running_waiting" | "stopped" | "finished" | "failed";
+  status: "pending_signature" | "running" | "running_waiting" | "stopped" | "finished" | "failed";
   startedAt: Date;
   finishedAt?: Date;
   currentNodeId?: string;
@@ -16,6 +16,8 @@ export interface IExecution extends Document {
     error?: string;
   }>;
   totalGasUsed?: string;
+  transactionHash?: string; // Main controller tx hash
+  runCount?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,8 +36,8 @@ const ExecutionSchema = new Schema<IExecution>(
     },
     status: {
       type: String,
-      enum: ["running", "running_waiting", "stopped", "finished", "failed"],
-      default: "running",
+      enum: ["pending_signature", "running", "running_waiting", "stopped", "finished", "failed"],
+      default: "pending_signature",
     },
     startedAt: {
       type: Date,
@@ -63,6 +65,13 @@ const ExecutionSchema = new Schema<IExecution>(
     totalGasUsed: {
       type: String,
     },
+    transactionHash: {
+      type: String,
+    },
+    runCount: {
+      type: Number,
+      default: 1,
+    }
   },
   {
     timestamps: true,
