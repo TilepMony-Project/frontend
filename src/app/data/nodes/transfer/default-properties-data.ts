@@ -4,10 +4,8 @@ import type { TransferNodeSchema } from "./schema";
 export const defaultPropertiesData: NodeDataProperties<TransferNodeSchema> = {
   label: "Transfer",
   description: "",
-  amount: 1000,
-  recipientWallet: "",
-  network: "Mantle Testnet",
-  gasFee: 0,
-  maxSlippage: 0.5,
+  token: "DYNAMIC", // Use previous output by default
+  recipientAddress: "",
+  percentageOfInput: 10000, // 100% in basis points
   memo: "",
 };

@@ -2,10 +2,11 @@ import type { NodeDataProperties } from "@/features/json-form/types/default-prop
 import type { VaultNodeSchema } from "./schema";
 
 export const defaultPropertiesData: NodeDataProperties<VaultNodeSchema> = {
-  label: "Vault",
+  label: "Yield Deposit",
   description: "",
-  amount: 1000,
-  yieldModel: "Moderate 5% APR",
+  underlyingToken: "IDRX",
+  yieldAdapter: "MethLabAdapter",
+  percentageOfInput: 10000, // 100% in basis points
   stopCondition: "targetAmount",
   targetAmount: 1200,
   timePeriod: 30,

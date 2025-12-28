@@ -39,15 +39,15 @@ export const uischema: UISchema = {
         },
         {
           type: "Text",
-          label: "Amount to Swap",
-          scope: scope("properties.amount"),
+          label: "% of Input (Basis Points)",
+          scope: scope("properties.percentageOfInput"),
           inputType: "number",
-          placeholder: "Enter amount",
+          placeholder: "10000 = 100%",
         },
         {
           type: "Select",
-          label: "Swap Provider",
-          scope: scope("properties.swapProvider"),
+          label: "Swap Adapter",
+          scope: scope("properties.swapAdapter"),
         },
         {
           type: "Text",

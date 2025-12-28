@@ -23,28 +23,16 @@ export const uischema: UISchema = {
       label: "Mint Configuration",
       elements: [
         {
+          type: "Select",
+          label: "Token to Mint",
+          scope: scope("properties.token"),
+        },
+        {
           type: "Text",
           label: "Amount to Mint",
           scope: scope("properties.amount"),
           inputType: "number",
           placeholder: "Enter amount",
-        },
-        {
-          type: "Select",
-          label: "Stablecoin Issuer",
-          scope: scope("properties.issuer"),
-        },
-        {
-          type: "Text",
-          label: "Receiving Wallet Address",
-          scope: scope("properties.receivingWallet"),
-          placeholder: "0x...",
-        },
-        {
-          type: "Text",
-          label: "Exchange Rate",
-          scope: scope("properties.exchangeRate"),
-          readOnly: true,
         },
       ],
     },

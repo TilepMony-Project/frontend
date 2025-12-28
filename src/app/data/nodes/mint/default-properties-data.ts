@@ -4,8 +4,6 @@ import type { MintNodeSchema } from "./schema";
 export const defaultPropertiesData: NodeDataProperties<MintNodeSchema> = {
   label: "Mint",
   description: "",
-  amount: 1000,
-  issuer: "DummyIssuerA",
-  receivingWallet: "",
-  exchangeRate: 1,
+  token: "IDRX",
+  amount: 1000000, // 1 million IDRX (common for IDR-pegged tokens)
 };

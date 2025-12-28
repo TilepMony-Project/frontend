@@ -23,36 +23,22 @@ export const uischema: UISchema = {
       label: "Transfer Configuration",
       elements: [
         {
+          type: "Select",
+          label: "Token to Transfer",
+          scope: scope("properties.token"),
+        },
+        {
           type: "Text",
-          label: "Amount to Transfer",
-          scope: scope("properties.amount"),
+          label: "Recipient Address",
+          scope: scope("properties.recipientAddress"),
+          placeholder: "0x... (wallet address)",
+        },
+        {
+          type: "Text",
+          label: "% of Input (Basis Points)",
+          scope: scope("properties.percentageOfInput"),
           inputType: "number",
-          placeholder: "Enter amount",
-        },
-        {
-          type: "Text",
-          label: "Recipient Wallet Address",
-          scope: scope("properties.recipientWallet"),
-          placeholder: "0x... (default: current user)",
-        },
-        {
-          type: "Text",
-          label: "Gas Fee Estimate",
-          scope: scope("properties.gasFee"),
-          readOnly: true,
-        },
-        {
-          type: "Text",
-          label: "Network",
-          scope: scope("properties.network"),
-          readOnly: true,
-        },
-        {
-          type: "Text",
-          label: "Max Slippage (%)",
-          scope: scope("properties.maxSlippage"),
-          inputType: "number",
-          placeholder: "0.1 - 2",
+          placeholder: "10000 = 100%",
         },
         {
           type: "TextArea",

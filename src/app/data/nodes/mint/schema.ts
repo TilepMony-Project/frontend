@@ -1,9 +1,13 @@
 import type { NodeSchema } from "@/types/node-schema";
 
-export const issuerOptions = [
-  { label: "DummyIssuerA", value: "DummyIssuerA", icon: "TokenUSDT" },
-  { label: "DummyIssuerB", value: "DummyIssuerB", icon: "TokenUSDC" },
-  { label: "DummyIssuerC", value: "DummyIssuerC", icon: "TokenDAI" },
+/**
+ * Token options for minting
+ * These are the stablecoins that can be minted from user's fiat balance
+ */
+export const tokenOptions = [
+  { label: "IDRX", value: "IDRX", icon: "TokenIDRX" },
+  { label: "USDC", value: "USDC", icon: "TokenUSDC" },
+  { label: "USDT", value: "USDT", icon: "TokenUSDT" },
 ];
 
 export const schema = {
@@ -14,21 +18,13 @@ export const schema = {
     description: {
       type: "string",
     },
+    token: {
+      type: "string",
+      options: tokenOptions,
+    },
     amount: {
       type: "number",
-      minimum: 0,
-    },
-    issuer: {
-      type: "string",
-      options: issuerOptions,
-    },
-    receivingWallet: {
-      type: "string",
-      pattern: "^0x[a-fA-F0-9]{40}$",
-    },
-    exchangeRate: {
-      type: "number",
-      readOnly: true,
+      minimum: 1,
     },
   },
 } satisfies NodeSchema;

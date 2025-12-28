@@ -1,26 +1,31 @@
 /**
  * Utility to resolve dynamic node icon based on selected properties.
- * This allows node icons to change when user selects different providers/issuers.
+ * This allows node icons to change when user selects different providers/adapters.
  */
 
-import { swapProviderOptions } from "@/data/nodes/swap/schema";
-import { issuerOptions } from "@/data/nodes/mint/schema";
+import { swapAdapterOptions } from "@/data/nodes/swap/schema";
+import { tokenOptions as mintTokenOptions } from "@/data/nodes/mint/schema";
+import { yieldAdapterOptions } from "@/data/nodes/vault/schema";
 
 // Map of node type to property key and options for dynamic icon resolution
 const DYNAMIC_ICON_CONFIG: Record<
   string,
   {
     propertyKey: string;
-    options: { value: string; icon: string }[];
+    options: { value: string; icon?: string }[];
   }
 > = {
   swap: {
-    propertyKey: "swapProvider",
-    options: swapProviderOptions,
+    propertyKey: "swapAdapter",
+    options: swapAdapterOptions,
   },
   mint: {
-    propertyKey: "issuer",
-    options: issuerOptions,
+    propertyKey: "token",
+    options: mintTokenOptions,
+  },
+  vault: {
+    propertyKey: "yieldAdapter",
+    options: yieldAdapterOptions,
   },
 };
 

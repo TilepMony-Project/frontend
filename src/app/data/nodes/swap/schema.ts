@@ -1,16 +1,23 @@
 import type { NodeSchema } from "@/types/node-schema";
 
+/**
+ * Token options for swap operations
+ * Uses actual token symbols that map to deployed contract addresses
+ */
 export const tokenOptions = [
-  { label: "USDT", value: "USDT", icon: "TokenUSDT" },
-  { label: "USDX", value: "USDX", icon: "TokenUSDC" },
   { label: "IDRX", value: "IDRX", icon: "TokenIDRX" },
-  { label: "mUSDT", value: "mUSDT", icon: "TokenUSDT" },
+  { label: "USDC", value: "USDC", icon: "TokenUSDC" },
+  { label: "USDT", value: "USDT", icon: "TokenUSDT" },
+  { label: "Dynamic (Previous Output)", value: "DYNAMIC", icon: "ArrowRight" },
 ];
 
-export const swapProviderOptions = [
-  { label: "Uniswap", value: "DummyDEXA", icon: "ExchangeUniswap" },
-  { label: "1INCH", value: "DummyDEXB", icon: "Exchange1inch" },
-  { label: "Curve", value: "DummyDEXC", icon: "TokenCRV" },
+/**
+ * Swap adapter options - real adapters from deployed contracts
+ */
+export const swapAdapterOptions = [
+  { label: "FusionX", value: "FusionXAdapter", icon: "ExchangeFusionX" },
+  { label: "MerchantMoe", value: "MerchantMoeAdapter", icon: "ExchangeMerchantMoe" },
+  { label: "Vertex", value: "VertexAdapter", icon: "ExchangeVertex" },
 ];
 
 export const routeOptions = [
@@ -32,15 +39,17 @@ export const schema = {
     },
     outputToken: {
       type: "string",
-      options: tokenOptions,
+      options: tokenOptions.filter((t) => t.value !== "DYNAMIC"), // Output cannot be dynamic
     },
-    amount: {
+    percentageOfInput: {
       type: "number",
-      minimum: 0,
+      minimum: 1,
+      maximum: 10000,
+      default: 10000,
     },
-    swapProvider: {
+    swapAdapter: {
       type: "string",
-      options: swapProviderOptions,
+      options: swapAdapterOptions,
     },
     slippageTolerance: {
       type: "number",

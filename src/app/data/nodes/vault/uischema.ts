@@ -16,32 +16,43 @@ export const uischema: UISchema = {
       type: "TextArea",
       label: "Description",
       scope: scope("properties.description"),
-      placeholder: "Optional description for this vault deposit",
+      placeholder: "Optional description for this yield deposit",
     },
     {
       type: "Accordion",
-      label: "Vault Configuration",
+      label: "Yield Configuration",
       elements: [
         {
+          type: "Select",
+          label: "Underlying Token",
+          scope: scope("properties.underlyingToken"),
+        },
+        {
+          type: "Select",
+          label: "Yield Adapter",
+          scope: scope("properties.yieldAdapter"),
+        },
+        {
           type: "Text",
-          label: "Amount to Deposit",
-          scope: scope("properties.amount"),
+          label: "% of Input (Basis Points)",
+          scope: scope("properties.percentageOfInput"),
           inputType: "number",
-          placeholder: "Enter amount",
+          placeholder: "10000 = 100%",
         },
+      ],
+    },
+    {
+      type: "Accordion",
+      label: "Stop Conditions (Optional)",
+      elements: [
         {
           type: "Select",
-          label: "Yield Model",
-          scope: scope("properties.yieldModel"),
-        },
-        {
-          type: "Select",
-          label: "Vault Stop Condition",
+          label: "Stop Condition",
           scope: scope("properties.stopCondition"),
         },
         {
           type: "Text",
-          label: "Target Amount (mUSDT)",
+          label: "Target Amount",
           scope: scope("properties.targetAmount"),
           inputType: "number",
           placeholder: "e.g., 120",

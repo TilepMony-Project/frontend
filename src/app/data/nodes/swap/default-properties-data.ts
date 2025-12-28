@@ -5,9 +5,9 @@ export const defaultPropertiesData: NodeDataProperties<SwapNodeSchema> = {
   label: "Swap",
   description: "",
   inputToken: "IDRX",
-  outputToken: "USDT",
-  amount: 1000,
-  swapProvider: "DummyDEXA",
+  outputToken: "USDC",
+  percentageOfInput: 10000, // 100% in basis points
+  swapAdapter: "FusionXAdapter",
   slippageTolerance: 0.5,
   preferredRoute: "Direct",
 };
