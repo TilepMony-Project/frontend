@@ -73,17 +73,17 @@ function validateGraphStructure(nodes: WorkflowNode[], edges: WorkflowEdge[]) {
   const warnings: ValidationMessage[] = [];
   const checks: ValidationChecklistItem[] = [];
 
-  const depositNodes = nodes.filter((node) => node.type === "deposit");
-  if (depositNodes.length === 0) {
+  const entryNodes = nodes.filter((node) => node.type === "deposit" || node.type === "mint");
+  if (entryNodes.length === 0) {
     errors.push({
       section: "graph",
-      message: "Workflow must include at least one Deposit node.",
+      message: "Workflow must include at least one Mint or Deposit node.",
     });
     checks.push({
       id: "entry-node",
       label: "Entry node present",
       status: "fail",
-      details: "Add a Deposit node to start the workflow.",
+      details: "Add a Mint or Deposit node to start the workflow.",
     });
   } else {
     checks.push({
@@ -146,7 +146,7 @@ function validateGraphStructure(nodes: WorkflowNode[], edges: WorkflowEdge[]) {
   }
 
   const reachable = new Set<string>();
-  const startNodes = depositNodes.map((node) => node.id);
+  const startNodes = entryNodes.map((node) => node.id);
   const stack = [...startNodes];
 
   while (stack.length > 0) {
@@ -234,13 +234,7 @@ function validateNodeConfigurations(nodes: WorkflowNode[]) {
         break;
       }
       case "mint": {
-        const wallet = props.receivingWallet as string | undefined;
-        if (!wallet || !ETH_ADDRESS_REGEX.test(wallet)) {
-          errors.push({
-            section: "configuration",
-            message: `Mint node "${getNodeLabel(node)}" requires a valid receiving wallet address.`,
-          });
-        }
+        // Mint automatically goes to user wallet, so no wallet check needed
         if (toNumber(props.amount) <= 0) {
           errors.push({
             section: "configuration",
@@ -268,17 +262,12 @@ function validateNodeConfigurations(nodes: WorkflowNode[]) {
         break;
       }
       case "transfer": {
-        const wallet = props.recipientWallet as string | undefined;
+        const wallet = props.recipientAddress as string | undefined;
+        // Transfer uses percentageOfInput instead of absolute amount usually, but we check if configured
         if (!wallet || !ETH_ADDRESS_REGEX.test(wallet)) {
           errors.push({
             section: "configuration",
             message: `Transfer node "${getNodeLabel(node)}" requires a valid recipient wallet address.`,
-          });
-        }
-        if (toNumber(props.amount) <= 0) {
-          errors.push({
-            section: "configuration",
-            message: `Transfer node "${getNodeLabel(node)}" amount must be greater than zero.`,
           });
         }
         break;
