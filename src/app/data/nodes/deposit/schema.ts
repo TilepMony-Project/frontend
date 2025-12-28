@@ -29,6 +29,12 @@ export const schema = {
       options: currencyOptions,
       placeholder: "Select currency",
     },
+    currentBalanceText: {
+      type: "string",
+    },
+    projectedBalanceText: {
+      type: "string",
+    },
     paymentGateway: {
       type: "string",
       options: paymentGatewayOptions,

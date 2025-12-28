@@ -79,7 +79,6 @@ import {
 } from "@/features/dashboard/data/templates";
 import { AIWorkflowGenerator } from "@/components/workflow/ai-workflow-generator";
 import { ProfileCheckAlert } from "@/components/profile-check-alert";
-import { WalletBalanceCard } from "./wallet-balance-card";
 
 type ViewMode = "grid" | "list";
 
@@ -750,6 +749,33 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const deletingWorkflowId =
     pendingAction.type === "delete" ? pendingAction.workflowId : null;
 
+  // Fetch user balance
+  const [balances, setBalances] = useState<{ IDR: number; USD: number }>({
+    IDR: 0,
+    USD: 0,
+  });
+
+  useEffect(() => {
+    async function fetchBalance() {
+      const freshToken = await getFreshToken();
+      if (!freshToken) return;
+      try {
+        const response = await fetch("/api/user/profile", {
+          headers: { Authorization: `Bearer ${freshToken}` },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setBalances(data.fiatBalances || { IDR: 0, USD: 0 });
+        }
+      } catch (error) {
+        console.error("Failed to fetch balance", error);
+      }
+    }
+    if (accessToken) {
+      void fetchBalance();
+    }
+  }, [accessToken]);
+
   return (
     <div className="min-h-screen p-8 flex flex-col gap-6 bg-[#eeeff3] dark:bg-[#151516]">
       <ProfileCheckAlert />
@@ -764,6 +790,27 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          {/* Balance Display */}
+          <div className="hidden md:flex items-center gap-4 mr-2">
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                USD Balance
+              </span>
+              <span className="text-sm font-bold text-gray-900 dark:text-white">
+                ${balances.USD.toLocaleString()}
+              </span>
+            </div>
+            <div className="h-8 w-px bg-gray-200 dark:bg-gray-700 mx-2" />
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                IDR Balance
+              </span>
+              <span className="text-sm font-bold text-gray-900 dark:text-white">
+                Rp {balances.IDR.toLocaleString()}
+              </span>
+            </div>
+          </div>
+
           <Button
             type="button"
             variant="ghost"
@@ -849,7 +896,6 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       <section className="grid gap-6">
         {/* KPI Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <WalletBalanceCard />
           <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
               <div className="flex flex-col space-y-3">

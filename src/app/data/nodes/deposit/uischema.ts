@@ -41,6 +41,16 @@ export const uischema: UISchema = {
           ],
         },
         {
+          type: "Text",
+          scope: scope("properties.currentBalanceText"),
+          options: { readonly: true },
+        },
+        {
+          type: "Text",
+          scope: scope("properties.projectedBalanceText"),
+          options: { readonly: true },
+        },
+        {
           type: "Select",
           label: "Payment Gateway",
           scope: scope("properties.paymentGateway"),

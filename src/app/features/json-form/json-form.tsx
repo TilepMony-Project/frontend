@@ -16,7 +16,10 @@ import { horizontalLayoutRenderer } from "./layouts/horizontal-layout/horizontal
 import { verticalLayoutRenderer } from "./layouts/vertical-layout/vertical-layout";
 import { unknownRenderer } from "./utils/unknown-renderer";
 
-type Props = Pick<ComponentProps<typeof JsonForms>, "onChange" | "data" | "uischema" | "schema"> & {
+type Props = Pick<
+  ComponentProps<typeof JsonForms>,
+  "onChange" | "data" | "uischema" | "schema"
+> & {
   readonly?: boolean;
 };
 
