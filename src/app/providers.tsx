@@ -11,6 +11,7 @@ import { PrivyUserSync } from "@/components/privy-user-sync";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "@/config/wagmiConfig";
+import { mantleSepoliaTestnet } from "@/config/chains";
 
 // Disable immer's automatic object freezing because ReactFlow mutates objects under the hood
 // and requires this to be turned off to function properly, especially when node size is updated
@@ -20,6 +21,7 @@ const queryClient = new QueryClient();
 const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
 const privyConfig: PrivyClientConfig = {
+  supportedChains: [mantleSepoliaTestnet],
   loginMethods: ["wallet", "email"],
   appearance: {
     theme: "dark",
