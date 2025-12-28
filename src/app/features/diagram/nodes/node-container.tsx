@@ -34,6 +34,12 @@ export const NodeContainer = memo(({ id, data, selected }: Props) => {
     (store) => store.connectionBeingDragged
   );
 
+  const nodeType = typeof type === "string" ? type : undefined;
+  // Deposit: Output only (Right only) -> Hide Target
+  const hideTargetHandle = nodeType === "deposit";
+  // Redeem & Transfer: Input only (Left only) -> Hide Source
+  const hideSourceHandle = nodeType === "redeem" || nodeType === "transfer";
+
   return (
     <NodeAsPortWrapper
       isConnecting={!!connectionBeingDragged}
@@ -48,6 +54,8 @@ export const NodeContainer = memo(({ id, data, selected }: Props) => {
         description={description}
         icon={iconName}
         isValid={isValid}
+        hideTargetHandle={hideTargetHandle}
+        hideSourceHandle={hideSourceHandle}
       />
     </NodeAsPortWrapper>
   );

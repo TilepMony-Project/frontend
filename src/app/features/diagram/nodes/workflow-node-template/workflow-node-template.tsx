@@ -30,6 +30,8 @@ export type WorkflowNodeTemplateProps = {
   showHandles?: boolean;
   isValid?: boolean;
   children?: React.ReactNode;
+  hideTargetHandle?: boolean;
+  hideSourceHandle?: boolean;
 };
 
 const WorkflowNodeTemplateComponent = memo(
@@ -44,6 +46,8 @@ const WorkflowNodeTemplateComponent = memo(
     showHandles = true,
     isValid,
     children,
+    hideTargetHandle = false,
+    hideSourceHandle = false,
   }: WorkflowNodeTemplateProps) => {
     const handleTargetId = getHandleId({ nodeId: id, handleType: "target" });
     const handleSourceId = getHandleId({ nodeId: id, handleType: "source" });
@@ -114,16 +118,20 @@ const WorkflowNodeTemplateComponent = memo(
               isVisible={showHandles}
               alignment={handlesAlignment}
             >
-              <Handle
-                id={handleTargetId}
-                position={handleTargetPosition}
-                type="target"
-              />
-              <Handle
-                id={handleSourceId}
-                position={handleSourcePosition}
-                type="source"
-              />
+              {!hideTargetHandle && (
+                <Handle
+                  id={handleTargetId}
+                  position={handleTargetPosition}
+                  type="target"
+                />
+              )}
+              {!hideSourceHandle && (
+                <Handle
+                  id={handleSourceId}
+                  position={handleSourcePosition}
+                  type="source"
+                />
+              )}
             </NodePanel.Handles>
           </NodePanel.Root>
 
