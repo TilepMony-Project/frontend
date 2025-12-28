@@ -4,7 +4,6 @@
  */
 
 import { swapAdapterOptions } from "@/data/nodes/swap/schema";
-import { tokenOptions as mintTokenOptions } from "@/data/nodes/mint/schema";
 import { yieldAdapterOptions } from "@/data/nodes/vault/schema";
 
 // Map of node type to property key and options for dynamic icon resolution
@@ -18,10 +17,6 @@ const DYNAMIC_ICON_CONFIG: Record<
   swap: {
     propertyKey: "swapAdapter",
     options: swapAdapterOptions,
-  },
-  mint: {
-    propertyKey: "token",
-    options: mintTokenOptions,
   },
   vault: {
     propertyKey: "yieldAdapter",
