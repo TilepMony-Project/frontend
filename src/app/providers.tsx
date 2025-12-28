@@ -9,6 +9,8 @@ import TagManager from "react-gtm-module";
 import type { PrivyClientConfig } from "@privy-io/react-auth";
 import { PrivyUserSync } from "@/components/privy-user-sync";
 import { ThemeProvider } from "@/hooks/use-theme";
+import { WagmiProvider } from "wagmi";
+import { wagmiConfig } from "@/config/wagmiConfig";
 
 // Disable immer's automatic object freezing because ReactFlow mutates objects under the hood
 // and requires this to be turned off to function properly, especially when node size is updated
@@ -36,7 +38,10 @@ const PrivyProviderNoSSR = dynamic(
 );
 
 const SmartWalletsProviderNoSSR = dynamic(
-  () => import("@privy-io/react-auth/smart-wallets").then((mod) => mod.SmartWalletsProvider),
+  () =>
+    import("@privy-io/react-auth/smart-wallets").then(
+      (mod) => mod.SmartWalletsProvider
+    ),
   { ssr: false }
 );
 
@@ -60,14 +65,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <PrivyProviderNoSSR appId={privyAppId} config={privyConfig}>
       <SmartWalletsProviderNoSSR>
-        <QueryClientProvider client={queryClient}>
-          <ReactFlowProvider>
-            <ThemeProvider>
-              <PrivyUserSync />
-              {children}
-            </ThemeProvider>
-          </ReactFlowProvider>
-        </QueryClientProvider>
+        <WagmiProvider config={wagmiConfig}>
+          <QueryClientProvider client={queryClient}>
+            <ReactFlowProvider>
+              <ThemeProvider>
+                <PrivyUserSync />
+                {children}
+              </ThemeProvider>
+            </ReactFlowProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
       </SmartWalletsProviderNoSSR>
     </PrivyProviderNoSSR>
   );
