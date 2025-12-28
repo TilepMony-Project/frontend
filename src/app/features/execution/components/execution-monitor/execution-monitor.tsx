@@ -8,9 +8,17 @@ import { usePrivySession } from "@/hooks/use-privy-session";
 import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
 import useStore from "@/store/store";
 import { copy } from "@/utils/copy";
-import { Loader2 } from "lucide-react";
+import { Loader2, ExternalLink } from "lucide-react";
+import { getExplorerTxUrl } from "@/config/chains";
 
-type ExecutionStatus = "running" | "running_waiting" | "stopped" | "finished" | "failed" | "draft";
+type ExecutionStatus =
+  | "running"
+  | "running_waiting"
+  | "stopped"
+  | "finished"
+  | "failed"
+  | "draft"
+  | "pending_signature";
 
 type ExecutionLogEntry = {
   nodeId: string;
@@ -30,6 +38,7 @@ type ExecutionResponse = {
     finishedAt?: string;
     currentNodeId?: string;
     executionLog: ExecutionLogEntry[];
+    transactionHash?: string;
   };
 };
 
@@ -37,12 +46,16 @@ const TERMINAL_STATUSES: ExecutionStatus[] = ["finished", "failed", "stopped"];
 
 export function ExecutionMonitor() {
   const nodes = useStore((state) => state.nodes);
-  const setExecutionMonitorActive = useStore((state) => state.setExecutionMonitorActive);
+  const setExecutionMonitorActive = useStore(
+    (state) => state.setExecutionMonitorActive
+  );
   const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
   const { accessToken } = usePrivySession();
   const getFreshToken = useGetFreshToken();
   const [workflowId, setWorkflowId] = useState<string | null>(null);
-  const [execution, setExecution] = useState<ExecutionResponse["execution"] | null>(null);
+  const [execution, setExecution] = useState<
+    ExecutionResponse["execution"] | null
+  >(null);
   const [isExpanded, setIsExpanded] = useState(true);
   const [hasNoExecution, setHasNoExecution] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -50,18 +63,24 @@ export function ExecutionMonitor() {
 
   // Check if any node has local execution status
   const hasLocalExecution = useMemo(() => {
-    return nodes.some((n) => n.data?.executionStatus && n.data.executionStatus !== "idle");
+    return nodes.some(
+      (n) => n.data?.executionStatus && n.data.executionStatus !== "idle"
+    );
   }, [nodes]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
-    const storedWorkflowId = localStorage.getItem("tilepmoney_current_workflow_id");
+    const storedWorkflowId = localStorage.getItem(
+      "tilepmoney_current_workflow_id"
+    );
     setWorkflowId(storedWorkflowId);
   }, []);
 
-  const hasTerminalStatus = execution ? TERMINAL_STATUSES.includes(execution.status) : false;
+  const hasTerminalStatus = execution
+    ? TERMINAL_STATUSES.includes(execution.status)
+    : false;
 
   fetchStatusRef.current = async () => {
     if (!workflowId) {
@@ -106,12 +125,36 @@ export function ExecutionMonitor() {
 
   useEffect(() => {
     if ((!execution && !hasLocalExecution) || hasTerminalStatus) {
-      setExecutionMonitorActive(false);
-      return;
+      // Keep showing if we have an execution even if terminal, unless dismissed?
+      // Logic says: if terminal, hide?
+      // No, we want to see result.
+      // Only hide if we explicitly dismiss or new draft starts?
+      // The original logic was:
+      // if ((!execution && !hasLocalExecution)) setExecutionMonitorActive(false);
+      // But it also had || hasTerminalStatus.
+
+      // Let's modify logic: Show if execution exists regardless of status, until user closes it?
+      // For now keep original logic but verify if "hasTerminalStatus" hides it too fast.
+      // Actually, we want to see "Success" or "Failed" state.
+
+      // The original code:
+      // if ((!execution && !hasLocalExecution) || hasTerminalStatus) { ... return; }
+      // This hides the monitor immediately when finished. That's bad UX for async blockchain tx.
+      // I'll remove `|| hasTerminalStatus` from the "hide" logic so it stays visible.
+
+      if (!execution && !hasLocalExecution) {
+        setExecutionMonitorActive(false);
+        return;
+      }
     }
     setExecutionMonitorActive(true);
     return () => setExecutionMonitorActive(false);
-  }, [execution, hasLocalExecution, hasTerminalStatus, setExecutionMonitorActive]);
+  }, [
+    execution,
+    hasLocalExecution,
+    hasTerminalStatus,
+    setExecutionMonitorActive,
+  ]);
 
   useEffect(() => {
     if (!workflowId || !accessToken) {
@@ -143,10 +186,15 @@ export function ExecutionMonitor() {
     }
 
     // Only poll if:
-    // 1. Execution doesn't have a terminal status
-    // 2. We haven't confirmed there's no execution (hasNoExecution is false)
-    // 3. We have local execution OR we have an execution OR we're waiting for one
-    if (!hasTerminalStatus && !hasNoExecution && (hasLocalExecution || execution)) {
+    // 1. We haven't confirmed there's no execution (hasNoExecution is false)
+    // 2. We have local execution OR we have an execution
+    // AND NOT TERMINAL? No, we should stop polling if terminal.
+
+    if (
+      !hasTerminalStatus &&
+      !hasNoExecution &&
+      (hasLocalExecution || execution)
+    ) {
       intervalRef.current = setInterval(() => {
         fetchStatusRef.current?.();
       }, 4000);
@@ -158,28 +206,40 @@ export function ExecutionMonitor() {
         intervalRef.current = null;
       }
     };
-  }, [workflowId, hasTerminalStatus, accessToken, hasNoExecution, hasLocalExecution, execution]);
+  }, [
+    workflowId,
+    hasTerminalStatus,
+    accessToken,
+    hasNoExecution,
+    hasLocalExecution,
+    execution,
+  ]);
 
   const progress = useMemo(() => {
     // Priority to local simulation
     if (hasLocalExecution) {
-      const completed = nodes.filter((n) => n.data?.executionStatus === "success").length;
+      const completed = nodes.filter(
+        (n) => n.data?.executionStatus === "success"
+      ).length;
       return Math.min(100, Math.round((completed / nodes.length) * 100));
     }
 
     if (!execution || nodes.length === 0) {
       return 0;
     }
-    const completed = execution.executionLog.filter((entry) => entry.status === "complete").length;
+
+    if (execution.status === "pending_signature") return 5;
+
+    const completed = execution.executionLog.filter(
+      (entry) => entry.status === "complete"
+    ).length;
     return Math.min(100, Math.round((completed / nodes.length) * 100));
   }, [execution, nodes, hasLocalExecution]);
 
   const nodeStatuses = useMemo(() => {
-    // If local execution is active, use that
     if (hasLocalExecution) {
       return nodes.map((node) => {
         const status = (node.data?.executionStatus as string) || "pending";
-        // Map local status to monitor status
         let monitorStatus = "pending";
         if (status === "running") monitorStatus = "processing";
         if (status === "success") monitorStatus = "complete";
@@ -187,7 +247,9 @@ export function ExecutionMonitor() {
         if (status === "idle") monitorStatus = "pending";
 
         const nodeLabel =
-          typeof node.data?.properties?.label === "string" ? node.data.properties.label : undefined;
+          typeof node.data?.properties?.label === "string"
+            ? node.data.properties.label
+            : undefined;
 
         return {
           id: node.id,
@@ -207,13 +269,11 @@ export function ExecutionMonitor() {
     }
 
     return nodes.map((node) => {
-      const status =
-        statusByNodeId.get(node.id) ??
-        (execution?.status === "running" || execution?.status === "running_waiting"
-          ? "pending"
-          : "pending");
+      const status = statusByNodeId.get(node.id) ?? "pending";
       const nodeLabel =
-        typeof node.data?.properties?.label === "string" ? node.data.properties.label : undefined;
+        typeof node.data?.properties?.label === "string"
+          ? node.data.properties.label
+          : undefined;
       return {
         id: node.id,
         label: nodeLabel ?? node.type ?? "Node",
@@ -223,20 +283,24 @@ export function ExecutionMonitor() {
     });
   }, [execution?.executionLog, execution?.status, nodes, hasLocalExecution]);
 
-  const logEntries = execution?.executionLog ?? [];
-  const transactions = logEntries.filter((entry) => entry.transactionHash);
+  const mainTxHash = execution?.transactionHash;
 
   // Determine overall status
   const overallStatus = useMemo(() => {
     if (hasLocalExecution) {
-      const isRunning = nodes.some((n) => n.data?.executionStatus === "running");
+      // ... existing logic ...
+      const isRunning = nodes.some(
+        (n) => n.data?.executionStatus === "running"
+      );
       const isFailed = nodes.some((n) => n.data?.executionStatus === "error");
-      const isComplete = nodes.every((n) => n.data?.executionStatus === "success");
+      const isComplete = nodes.every(
+        (n) => n.data?.executionStatus === "success"
+      );
 
       if (isRunning) return "running";
       if (isFailed) return "failed";
       if (isComplete) return "finished";
-      return "running"; // Default to running if started
+      return "running";
     }
     return execution?.status || "draft";
   }, [hasLocalExecution, nodes, execution]);
@@ -263,22 +327,28 @@ export function ExecutionMonitor() {
           className="flex items-center justify-between gap-3 w-full cursor-pointer hover:bg-gray-100/50 dark:hover:bg-[#2a2a2d]/50 transition-colors -m-3 p-3 rounded-t-xl"
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
-          aria-label={isExpanded ? "Collapse execution monitor" : "Expand execution monitor"}
+          aria-label={
+            isExpanded
+              ? "Collapse execution monitor"
+              : "Expand execution monitor"
+          }
         >
           <div className="flex items-center gap-3">
             <div
               className={cn(
                 "flex items-center justify-center w-8 h-8 rounded-full",
-                overallStatus === "running"
+                overallStatus === "running" ||
+                  overallStatus === "pending_signature"
                   ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
                   : overallStatus === "finished"
-                    ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
-                    : overallStatus === "failed"
-                      ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
-                      : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                  ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                  : overallStatus === "failed"
+                  ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                  : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
               )}
             >
-              {overallStatus === "running" ? (
+              {overallStatus === "running" ||
+              overallStatus === "pending_signature" ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : overallStatus === "finished" ? (
                 <Icon name="Check" size={16} />
@@ -289,7 +359,7 @@ export function ExecutionMonitor() {
               )}
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col text-left">
               <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                 {statusLabel}
               </span>
@@ -339,13 +409,35 @@ export function ExecutionMonitor() {
                   overallStatus === "failed"
                     ? "bg-red-500"
                     : overallStatus === "finished"
-                      ? "bg-green-500"
-                      : "bg-blue-500"
+                    ? "bg-green-500"
+                    : "bg-blue-500"
                 )}
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
+
+          {/* Transaction Link */}
+          {mainTxHash && (
+            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="text-xs font-medium text-blue-800 dark:text-blue-300">
+                  Transaction Sent
+                </span>
+                <span className="text-[10px] text-blue-600 dark:text-blue-400 truncate max-w-[200px]">
+                  {mainTxHash}
+                </span>
+              </div>
+              <a
+                href={getExplorerTxUrl(mainTxHash)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+              >
+                <ExternalLink size={14} />
+              </a>
+            </div>
+          )}
 
           {/* Nodes List */}
           <div className="space-y-2">
@@ -377,7 +469,9 @@ export function ExecutionMonitor() {
                       <span className="text-xs font-medium text-gray-700 dark:text-gray-200">
                         {node.label}
                       </span>
-                      <span className="text-[10px] text-gray-400 capitalize">{node.type}</span>
+                      <span className="text-[10px] text-gray-400 capitalize">
+                        {node.type}
+                      </span>
                     </div>
                   </div>
 
@@ -387,10 +481,10 @@ export function ExecutionMonitor() {
                       node.status === "processing"
                         ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
                         : node.status === "complete"
-                          ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
-                          : node.status === "failed"
-                            ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
-                            : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+                        ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                        : node.status === "failed"
+                        ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                        : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
                     )}
                   >
                     {node.status}
@@ -399,13 +493,6 @@ export function ExecutionMonitor() {
               ))}
             </div>
           </div>
-
-          {/* Transactions (Only show if real execution) */}
-          {!hasLocalExecution && transactions.length > 0 && (
-            <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
-              {/* ... existing transaction log code ... */}
-            </div>
-          )}
         </div>
       )}
     </aside>
@@ -416,6 +503,8 @@ function getStatusLabel(status: ExecutionStatus): string {
   switch (status) {
     case "running":
       return "Running...";
+    case "pending_signature":
+      return "Sign Transaction...";
     case "running_waiting":
       return "Waiting";
     case "failed":
