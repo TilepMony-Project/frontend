@@ -50,12 +50,36 @@ import { Pagination } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Modal } from "@/components/ui/modal";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, XAxis, YAxis } from "recharts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { ToastType, showToast } from "@/utils/toast-utils";
-import { workflowTemplates, type WorkflowTemplate } from "@/features/dashboard/data/templates";
+import {
+  workflowTemplates,
+  type WorkflowTemplate,
+} from "@/features/dashboard/data/templates";
 import { AIWorkflowGenerator } from "@/components/workflow/ai-workflow-generator";
+import { ProfileCheckAlert } from "@/components/profile-check-alert";
+import { WalletBalanceCard } from "./wallet-balance-card";
 
 type ViewMode = "grid" | "list";
 
@@ -83,7 +107,10 @@ type WorkflowApiPayload = {
   edgesCount?: number;
 };
 
-const STATUS_OPTIONS: Array<{ label: string; value: WorkflowSummary["status"] | "all" }> = [
+const STATUS_OPTIONS: Array<{
+  label: string;
+  value: WorkflowSummary["status"] | "all";
+}> = [
   { label: "All statuses", value: "all" },
   { label: "Draft", value: "draft" },
   { label: "Running", value: "running" },
@@ -126,8 +153,12 @@ function normalizeWorkflow(workflow: WorkflowApiPayload): WorkflowSummary {
     lastExecutedAt: workflow.lastExecutedAt
       ? new Date(workflow.lastExecutedAt).toISOString()
       : null,
-    nodesCount: Array.isArray(workflow.nodes) ? workflow.nodes.length : (workflow.nodesCount ?? 0),
-    edgesCount: Array.isArray(workflow.edges) ? workflow.edges.length : (workflow.edgesCount ?? 0),
+    nodesCount: Array.isArray(workflow.nodes)
+      ? workflow.nodes.length
+      : workflow.nodesCount ?? 0,
+    edgesCount: Array.isArray(workflow.edges)
+      ? workflow.edges.length
+      : workflow.edgesCount ?? 0,
   };
 }
 
@@ -136,9 +167,10 @@ function formatDate(value?: string | null) {
     return "Not executed yet";
   }
   try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(
-      new Date(value)
-    );
+    return new Intl.DateTimeFormat(undefined, {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(new Date(value));
   } catch {
     return value;
   }
@@ -149,20 +181,27 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const { accessToken, user, isLoadingToken } = usePrivySession();
   const { ready, authenticated, login, logout, getAccessToken } = usePrivy();
   const { wallets } = useWallets();
-  const [workflows, setWorkflows] = useState<WorkflowSummary[]>(initialWorkflows ?? []);
+  const [workflows, setWorkflows] = useState<WorkflowSummary[]>(
+    initialWorkflows ?? []
+  );
   const [isLoading, setIsLoading] = useState(!initialWorkflows);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | WorkflowSummary["status"]>("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | WorkflowSummary["status"]
+  >("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
-  const [pendingAction, setPendingAction] = useState<PendingAction>({ type: null });
+  const [pendingAction, setPendingAction] = useState<PendingAction>({
+    type: null,
+  });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newWorkflowName, setNewWorkflowName] = useState("");
   const [newWorkflowDescription, setNewWorkflowDescription] = useState("");
-  const [workflowToDelete, setWorkflowToDelete] = useState<WorkflowSummary | null>(null);
+  const [workflowToDelete, setWorkflowToDelete] =
+    useState<WorkflowSummary | null>(null);
   const [hasCopied, setHasCopied] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const isBusy = isLoading || isLoadingToken;
@@ -173,7 +212,11 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const linkedAccounts =
     (
       user as {
-        linkedAccounts?: Array<{ type?: string; walletClientType?: string; address?: string }>;
+        linkedAccounts?: Array<{
+          type?: string;
+          walletClientType?: string;
+          address?: string;
+        }>;
       }
     )?.linkedAccounts ?? [];
   const externalWallet = linkedAccounts.find(
@@ -186,9 +229,11 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     "embedded";
   const originalWallet =
     linkedAccounts.find(
-      (account) => account?.type === "wallet" && account.walletClientType !== "privy"
+      (account) =>
+        account?.type === "wallet" && account.walletClientType !== "privy"
     )?.address || null;
-  const loginIdentifier = originalWallet || user?.email?.address || primaryWalletAddress;
+  const loginIdentifier =
+    originalWallet || user?.email?.address || primaryWalletAddress;
 
   type WalletMeta = {
     label: string;
@@ -231,8 +276,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const connectButtonLabel = !ready
     ? "Loading..."
     : isConnected
-      ? formatIdentifier(loginIdentifier)
-      : "Connect Wallet";
+    ? formatIdentifier(loginIdentifier)
+    : "Connect Wallet";
 
   const handleAuthClick = () => {
     if (!ready) {
@@ -281,7 +326,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       console.error("Error fetching workflows:", error);
       showToast({
         title: "Failed to load workflows",
-        subtitle: error instanceof Error ? error.message : "Please try refreshing the page",
+        subtitle:
+          error instanceof Error
+            ? error.message
+            : "Please try refreshing the page",
         variant: ToastType.ERROR,
       });
     } finally {
@@ -306,7 +354,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const filteredWorkflows = useMemo(() => {
     const lowerSearch = searchTerm.toLowerCase().trim();
     return workflows.filter((workflow) => {
-      const matchesStatus = statusFilter === "all" || workflow.status === statusFilter;
+      const matchesStatus =
+        statusFilter === "all" || workflow.status === statusFilter;
       const matchesSearch =
         lowerSearch.length === 0 ||
         workflow.name.toLowerCase().includes(lowerSearch) ||
@@ -385,20 +434,26 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     }
   }
 
-  async function createWorkflow(nameOverride?: string, descriptionOverride?: string) {
+  async function createWorkflow(
+    nameOverride?: string,
+    descriptionOverride?: string
+  ) {
     // Get a fresh token to avoid expiration issues
     const freshToken = await getFreshToken();
     if (!freshToken) {
       showToast({
         title: "Session not ready",
-        subtitle: "Please wait for your Privy session before creating a workflow.",
+        subtitle:
+          "Please wait for your Privy session before creating a workflow.",
         variant: ToastType.ERROR,
       });
       return;
     }
     try {
       setPendingAction({ type: "create" });
-      const workflowName = nameOverride?.trim() ? nameOverride.trim() : "Untitled workflow";
+      const workflowName = nameOverride?.trim()
+        ? nameOverride.trim()
+        : "Untitled workflow";
 
       const response = await fetch("/api/workflows", {
         method: "POST",
@@ -535,7 +590,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         throw new Error("Failed to delete workflow");
       }
 
-      setWorkflows((prev) => prev.filter((workflow) => workflow.id !== workflowId));
+      setWorkflows((prev) =>
+        prev.filter((workflow) => workflow.id !== workflowId)
+      );
       showToast({ title: "Workflow deleted", variant: ToastType.SUCCESS });
       setIsDeleteModalOpen(false);
       setWorkflowToDelete(null);
@@ -593,7 +650,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       const { workflow } = await response.json();
       const normalized = normalizeWorkflow(workflow);
 
-      setWorkflows((prev) => prev.map((w) => (w.id === workflowId ? normalized : w)));
+      setWorkflows((prev) =>
+        prev.map((w) => (w.id === workflowId ? normalized : w))
+      );
 
       showToast({
         title: "Workflow completed",
@@ -682,14 +741,19 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     }, 100);
   }
 
-  const [isOpeningWorkflow, setIsOpeningWorkflow] = useState<string | null>(null);
+  const [isOpeningWorkflow, setIsOpeningWorkflow] = useState<string | null>(
+    null
+  );
   const creating = pendingAction.type === "create";
   const creatingTemplate = pendingAction.type === "template";
   const mutatingWorkflowId = pendingAction.workflowId;
-  const deletingWorkflowId = pendingAction.type === "delete" ? pendingAction.workflowId : null;
+  const deletingWorkflowId =
+    pendingAction.type === "delete" ? pendingAction.workflowId : null;
 
   return (
     <div className="min-h-screen p-8 flex flex-col gap-6 bg-[#eeeff3] dark:bg-[#151516]">
+      <ProfileCheckAlert />
+
       <section className="flex flex-wrap justify-between gap-4 items-center">
         <div className="titleGroup">
           <h1 className="m-0 text-3xl font-semibold text-gray-900 dark:text-white">
@@ -785,6 +849,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       <section className="grid gap-6">
         {/* KPI Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <WalletBalanceCard />
           <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
               <div className="flex flex-col space-y-3">
@@ -800,7 +865,11 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   )}
                 </p>
               </div>
-              <Icon name="FileText" size={24} className="text-gray-500 dark:text-gray-400" />
+              <Icon
+                name="FileText"
+                size={24}
+                className="text-gray-500 dark:text-gray-400"
+              />
             </CardHeader>
           </Card>
 
@@ -813,9 +882,15 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 <div className="text-3xl font-bold text-gray-900 dark:text-white">
                   {workflows.reduce((sum, w) => sum + w.nodesCount, 0)}
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Across all workflows</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Across all workflows
+                </p>
               </div>
-              <Icon name="Box" size={24} className="text-gray-500 dark:text-gray-400" />
+              <Icon
+                name="Box"
+                size={24}
+                className="text-gray-500 dark:text-gray-400"
+              />
             </CardHeader>
           </Card>
 
@@ -828,9 +903,15 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 <div className="text-3xl font-bold text-gray-900 dark:text-white">
                   {workflows.reduce((sum, w) => sum + w.edgesCount, 0)}
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Total connections</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Total connections
+                </p>
               </div>
-              <Icon name="GitBranch" size={24} className="text-gray-500 dark:text-gray-400" />
+              <Icon
+                name="GitBranch"
+                size={24}
+                className="text-gray-500 dark:text-gray-400"
+              />
             </CardHeader>
           </Card>
 
@@ -843,7 +924,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 <div className="text-3xl font-bold text-gray-900 dark:text-white">
                   {workflows.length > 0
                     ? Math.round(
-                        (workflows.filter((w) => w.status === "finished").length /
+                        (workflows.filter((w) => w.status === "finished")
+                          .length /
                           workflows.length) *
                           100
                       )
@@ -851,11 +933,15 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   %
                 </div>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {workflows.filter((w) => w.status === "finished").length} of {workflows.length}{" "}
-                  completed
+                  {workflows.filter((w) => w.status === "finished").length} of{" "}
+                  {workflows.length} completed
                 </p>
               </div>
-              <Icon name="CheckCircle2" size={24} className="text-gray-500 dark:text-gray-400" />
+              <Icon
+                name="CheckCircle2"
+                size={24}
+                className="text-gray-500 dark:text-gray-400"
+              />
             </CardHeader>
           </Card>
         </div>
@@ -877,7 +963,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 config={{
                   draft: { label: "Draft", color: "hsl(var(--chart-1))" },
                   running: { label: "Running", color: "hsl(var(--chart-2))" },
-                  running_waiting: { label: "Running (Waiting)", color: "hsl(var(--chart-3))" },
+                  running_waiting: {
+                    label: "Running (Waiting)",
+                    color: "hsl(var(--chart-3))",
+                  },
                   stopped: { label: "Stopped", color: "hsl(var(--chart-4))" },
                   finished: { label: "Finished", color: "hsl(var(--chart-5))" },
                   failed: { label: "Failed", color: "hsl(var(--chart-6))" },
@@ -885,37 +974,47 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 className="mx-auto aspect-square max-h-[250px]"
               >
                 <PieChart>
-                  <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
                   <Pie
                     data={[
                       {
                         name: "Draft",
-                        value: workflows.filter((w) => w.status === "draft").length,
+                        value: workflows.filter((w) => w.status === "draft")
+                          .length,
                         fill: "var(--color-draft)",
                       },
                       {
                         name: "Running",
-                        value: workflows.filter((w) => w.status === "running").length,
+                        value: workflows.filter((w) => w.status === "running")
+                          .length,
                         fill: "var(--color-running)",
                       },
                       {
                         name: "Running (Waiting)",
-                        value: workflows.filter((w) => w.status === "running_waiting").length,
+                        value: workflows.filter(
+                          (w) => w.status === "running_waiting"
+                        ).length,
                         fill: "var(--color-running_waiting)",
                       },
                       {
                         name: "Stopped",
-                        value: workflows.filter((w) => w.status === "stopped").length,
+                        value: workflows.filter((w) => w.status === "stopped")
+                          .length,
                         fill: "var(--color-stopped)",
                       },
                       {
                         name: "Finished",
-                        value: workflows.filter((w) => w.status === "finished").length,
+                        value: workflows.filter((w) => w.status === "finished")
+                          .length,
                         fill: "var(--color-finished)",
                       },
                       {
                         name: "Failed",
-                        value: workflows.filter((w) => w.status === "failed").length,
+                        value: workflows.filter((w) => w.status === "failed")
+                          .length,
                         fill: "var(--color-failed)",
                       },
                     ].filter((item) => item.value > 0)}
@@ -932,7 +1031,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           {/* Activity Timeline Chart */}
           <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="text-gray-900 dark:text-white">Recent Activity</CardTitle>
+              <CardTitle className="text-gray-900 dark:text-white">
+                Recent Activity
+              </CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-400">
                 Workflows updated in the last 7 days
               </CardDescription>
@@ -958,7 +1059,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                         day: "numeric",
                       }),
                       count: workflows.filter((w) => {
-                        const workflowDate = new Date(w.updatedAt).toISOString().split("T")[0];
+                        const workflowDate = new Date(w.updatedAt)
+                          .toISOString()
+                          .split("T")[0];
                         return workflowDate === date;
                       }).length,
                     }));
@@ -981,11 +1084,22 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                     className="text-xs text-gray-600 dark:text-gray-400"
                   />
                   <YAxis domain={[0, "auto"]} hide />
-                  <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="dot" />}
+                  />
                   <defs>
                     <linearGradient id="fillCount" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--color-count)" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="var(--color-count)" stopOpacity={0.1} />
+                      <stop
+                        offset="5%"
+                        stopColor="var(--color-count)"
+                        stopOpacity={0.8}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor="var(--color-count)"
+                        stopOpacity={0.1}
+                      />
                     </linearGradient>
                   </defs>
                   <Area
@@ -1023,15 +1137,17 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
               disabled={isBusy}
               className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white px-4 min-w-[200px] flex items-center justify-between disabled:opacity-50"
             >
-              {STATUS_OPTIONS.find((option) => option.value === statusFilter)?.label ??
-                "All statuses"}
+              {STATUS_OPTIONS.find((option) => option.value === statusFilter)
+                ?.label ?? "All statuses"}
               <Icon name="ChevronDown" size={16} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuRadioGroup
               value={statusFilter}
-              onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}
+              onValueChange={(value) =>
+                setStatusFilter(value as typeof statusFilter)
+              }
             >
               {STATUS_OPTIONS.map((status) => (
                 <DropdownMenuRadioItem key={status.value} value={status.value}>
@@ -1045,7 +1161,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           <button
             className={clsx(
               "h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
-              viewMode === "grid" && "bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white"
+              viewMode === "grid" &&
+                "bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white"
             )}
             type="button"
             onClick={() => setViewMode("grid")}
@@ -1057,7 +1174,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           <button
             className={clsx(
               "h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
-              viewMode === "list" && "bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white"
+              viewMode === "list" &&
+                "bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white"
             )}
             type="button"
             onClick={() => setViewMode("list")}
@@ -1075,20 +1193,29 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             {isLoading ? (
               <span className="flex items-center gap-2">
                 <Icon name="Loader2" size={16} className="animate-spin" />
-                {isLoadingToken ? "Preparing your workspace..." : "Loading workflows..."}
+                {isLoadingToken
+                  ? "Preparing your workspace..."
+                  : "Loading workflows..."}
               </span>
             ) : (
               <>
-                Showing {startIndex + 1}-{Math.min(endIndex, filteredWorkflows.length)} of{" "}
+                Showing {startIndex + 1}-
+                {Math.min(endIndex, filteredWorkflows.length)} of{" "}
                 {filteredWorkflows.length} workflows
-                {filteredWorkflows.length !== workflows.length && ` (${workflows.length} total)`}
+                {filteredWorkflows.length !== workflows.length &&
+                  ` (${workflows.length} total)`}
               </>
             )}
           </span>
           {!isLoading && filteredWorkflows.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 text-xs" disabled={isBusy}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-9 text-xs"
+                  disabled={isBusy}
+                >
                   {itemsPerPage} per page
                   <Icon name="ChevronDown" size={14} className="ml-1" />
                 </Button>
@@ -1192,7 +1319,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           <h3 className="m-0 mb-2 text-gray-900 dark:text-white text-lg font-semibold">
             No workflows found
           </h3>
-          <p>Try adjusting your filters or create a new workflow to get started.</p>
+          <p>
+            Try adjusting your filters or create a new workflow to get started.
+          </p>
         </div>
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
@@ -1261,7 +1390,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   className="px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 cursor-pointer font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={() => handleDuplicateWorkflow(workflow.id)}
                   disabled={
-                    pendingAction.type === "duplicate" && mutatingWorkflowId === workflow.id
+                    pendingAction.type === "duplicate" &&
+                    mutatingWorkflowId === workflow.id
                   }
                   title="Duplicate workflow"
                 >
@@ -1271,7 +1401,10 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   type="button"
                   className="px-4 py-3 rounded-xl border border-red-200 dark:border-red-900/50 bg-transparent text-red-600 dark:text-red-400 cursor-pointer font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={() => openDeleteWorkflowModal(workflow)}
-                  disabled={pendingAction.type === "delete" && mutatingWorkflowId === workflow.id}
+                  disabled={
+                    pendingAction.type === "delete" &&
+                    mutatingWorkflowId === workflow.id
+                  }
                   title="Delete workflow"
                 >
                   <Icon name="Trash2" size={18} />
@@ -1282,10 +1415,12 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                       type="button"
                       className="px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 cursor-pointer font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={
-                        pendingAction.type === "update" && mutatingWorkflowId === workflow.id
+                        pendingAction.type === "update" &&
+                        mutatingWorkflowId === workflow.id
                       }
                     >
-                      {pendingAction.type === "update" && mutatingWorkflowId === workflow.id ? (
+                      {pendingAction.type === "update" &&
+                      mutatingWorkflowId === workflow.id ? (
                         <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin" />
                       ) : (
                         <Icon name="MoreHorizontal" size={18} />
@@ -1337,7 +1472,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 <tr key={workflow.id}>
                   <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white max-w-xs">
                     <div className="max-w-xs">
-                      <strong className="block truncate">{workflow.name}</strong>
+                      <strong className="block truncate">
+                        {workflow.name}
+                      </strong>
                       <p className="text-gray-600 dark:text-gray-400 text-sm truncate">
                         {workflow.description || "No description"}
                       </p>
@@ -1385,7 +1522,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                         className="rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={() => handleDuplicateWorkflow(workflow.id)}
                         disabled={
-                          pendingAction.type === "duplicate" && mutatingWorkflowId === workflow.id
+                          pendingAction.type === "duplicate" &&
+                          mutatingWorkflowId === workflow.id
                         }
                       >
                         <Icon name="Copy" size={18} />
@@ -1395,7 +1533,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                         className="rounded-lg border border-red-200 dark:border-red-900/50 bg-transparent text-red-600 dark:text-red-400 px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={() => openDeleteWorkflowModal(workflow)}
                         disabled={
-                          pendingAction.type === "delete" && mutatingWorkflowId === workflow.id
+                          pendingAction.type === "delete" &&
+                          mutatingWorkflowId === workflow.id
                         }
                       >
                         <Icon name="Trash2" size={18} />
@@ -1406,7 +1545,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                             type="button"
                             className="rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={
-                              pendingAction.type === "update" && mutatingWorkflowId === workflow.id
+                              pendingAction.type === "update" &&
+                              mutatingWorkflowId === workflow.id
                             }
                           >
                             {pendingAction.type === "update" &&
@@ -1419,11 +1559,17 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
-                            onClick={() => handleSetStatusCompleted(workflow.id)}
+                            onClick={() =>
+                              handleSetStatusCompleted(workflow.id)
+                            }
                             disabled={workflow.status === "finished"}
                             className="cursor-pointer dark:border dark:border-gray-700"
                           >
-                            <Icon name="CheckCircle2" size={16} className="mr-2" />
+                            <Icon
+                              name="CheckCircle2"
+                              size={16}
+                              className="mr-2"
+                            />
                             Set as Completed
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -1452,10 +1598,18 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         <Modal
           open={isCreateModalOpen}
           title="Create workflow"
-          onClose={pendingAction.type === "create" ? undefined : closeCreateWorkflowModal}
+          onClose={
+            pendingAction.type === "create"
+              ? undefined
+              : closeCreateWorkflowModal
+          }
           footer={
             <div className="flex justify-end gap-3">
-              <Button variant="default" disabled={creating} onClick={handleConfirmCreateWorkflow}>
+              <Button
+                variant="default"
+                disabled={creating}
+                onClick={handleConfirmCreateWorkflow}
+              >
                 {creating ? "Creating…" : "Create workflow"}
               </Button>
             </div>
@@ -1492,7 +1646,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
               value={newWorkflowDescription}
               className="w-full min-h-[100px]"
               placeholder="Describe your workflow..."
-              onChange={(event) => setNewWorkflowDescription(event.target.value)}
+              onChange={(event) =>
+                setNewWorkflowDescription(event.target.value)
+              }
             />
           </div>
         </Modal>
@@ -1522,7 +1678,8 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {workflowTemplates.map((template) => {
-              const isProcessingTemplate = creatingTemplate && mutatingWorkflowId === template.id;
+              const isProcessingTemplate =
+                creatingTemplate && mutatingWorkflowId === template.id;
               return (
                 <article
                   key={template.id}
@@ -1532,7 +1689,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                     <p className="text-base font-semibold text-gray-900 dark:text-white">
                       {template.name}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{template.category}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {template.category}
+                    </p>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                     {template.description}
@@ -1550,12 +1709,18 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   <Button
                     variant="default"
                     className="mt-auto"
-                    onClick={() => void handleCreateWorkflowFromTemplate(template)}
+                    onClick={() =>
+                      void handleCreateWorkflowFromTemplate(template)
+                    }
                     disabled={isProcessingTemplate}
                   >
                     {isProcessingTemplate ? (
                       <>
-                        <Icon name="Loader2" size={18} className="animate-spin" />
+                        <Icon
+                          name="Loader2"
+                          size={18}
+                          className="animate-spin"
+                        />
                         Applying...
                       </>
                     ) : (
@@ -1575,7 +1740,11 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         <Modal
           open={isDeleteModalOpen}
           title="Delete workflow"
-          onClose={pendingAction.type === "delete" ? undefined : closeDeleteWorkflowModal}
+          onClose={
+            pendingAction.type === "delete"
+              ? undefined
+              : closeDeleteWorkflowModal
+          }
           footer={
             <div className="flex justify-end gap-3">
               <Button
@@ -1591,15 +1760,18 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                 onClick={() => handleDeleteWorkflow(workflowToDelete.id)}
                 disabled={deletingWorkflowId === workflowToDelete.id}
               >
-                {deletingWorkflowId === workflowToDelete.id ? "Deleting…" : "Delete workflow"}
+                {deletingWorkflowId === workflowToDelete.id
+                  ? "Deleting…"
+                  : "Delete workflow"}
               </Button>
             </div>
           }
         >
           <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
             <p>
-              You are about to delete <strong>{workflowToDelete.name}</strong>. This action cannot
-              be undone and the workflow will be permanently removed from your dashboard.
+              You are about to delete <strong>{workflowToDelete.name}</strong>.
+              This action cannot be undone and the workflow will be permanently
+              removed from your dashboard.
             </p>
             <p>If you’re sure, click “Delete workflow” below.</p>
           </div>
@@ -1607,7 +1779,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       )}
       <footer className="mt-72 w-full border-t border-gray-200 pt-6 dark:border-gray-800">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">©2025 TilepMoney · All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">
+            ©2025 TilepMoney · All rights reserved.
+          </p>
           <div className="flex items-center gap-6">
             <Link
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300"

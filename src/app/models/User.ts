@@ -10,17 +10,25 @@ export interface IUser extends Document {
   privyUser?: Record<string, unknown>;
   lastSyncedAt?: Date;
   // Profile Information
-  fullName?: string;
-  jobTitle?: string;
-  company?: string;
-  location?: string;
-  timezone?: string;
-  phone?: string;
-  website?: string;
-  linkedinUrl?: string;
-  githubUrl?: string;
-  bio?: string;
-  avatarUrl?: string;
+  profiles?: Array<{
+    fullName?: string;
+    jobTitle?: string;
+    company?: string;
+    location?: string;
+    timezone?: string;
+    phone?: string;
+    website?: string;
+    linkedinUrl?: string;
+    githubUrl?: string;
+    bio?: string;
+    avatarUrl?: string;
+    notificationPreferences?: {
+      workflowAlerts: boolean;
+      productUpdates: boolean;
+    };
+    updatedAt?: Date;
+  }>;
+
   notificationPreferences: {
     workflowAlerts: boolean;
     productUpdates: boolean;
@@ -35,6 +43,28 @@ export interface IUser extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+const ProfileSchema = new Schema(
+  {
+    fullName: { type: String, trim: true, maxLength: 120 },
+    jobTitle: { type: String, trim: true, maxLength: 80 },
+    company: { type: String, trim: true, maxLength: 120 },
+    location: { type: String, trim: true, maxLength: 120 },
+    timezone: { type: String, trim: true, default: "UTC" },
+    phone: { type: String, trim: true, maxLength: 40 },
+    website: { type: String, trim: true },
+    linkedinUrl: { type: String, trim: true },
+    githubUrl: { type: String, trim: true },
+    bio: { type: String, trim: true, maxLength: 1000 },
+    avatarUrl: { type: String, trim: true },
+    notificationPreferences: {
+      workflowAlerts: { type: Boolean, default: true },
+      productUpdates: { type: Boolean, default: true },
+    },
+    updatedAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
 
 const UserSchema = new Schema<IUser>(
   {
@@ -64,57 +94,13 @@ const UserSchema = new Schema<IUser>(
       lowercase: true,
       trim: true,
     },
-    fullName: {
-      type: String,
-      trim: true,
-      maxLength: 120,
+    
+    // Profiles Array (Source of Truth)
+    profiles: {
+      type: [ProfileSchema],
+      default: [],
     },
-    jobTitle: {
-      type: String,
-      trim: true,
-      maxLength: 80,
-    },
-    company: {
-      type: String,
-      trim: true,
-      maxLength: 120,
-    },
-    location: {
-      type: String,
-      trim: true,
-      maxLength: 120,
-    },
-    timezone: {
-      type: String,
-      trim: true,
-      default: "UTC",
-    },
-    phone: {
-      type: String,
-      trim: true,
-      maxLength: 40,
-    },
-    website: {
-      type: String,
-      trim: true,
-    },
-    linkedinUrl: {
-      type: String,
-      trim: true,
-    },
-    githubUrl: {
-      type: String,
-      trim: true,
-    },
-    bio: {
-      type: String,
-      trim: true,
-      maxLength: 1000,
-    },
-    avatarUrl: {
-      type: String,
-      trim: true,
-    },
+
     notificationPreferences: {
       workflowAlerts: {
         type: Boolean,
@@ -157,4 +143,10 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-export default mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
+// Prevent Mongoose MstUser model overwrite error in development
+// Delete the model if it exists to ensure new schema changes are picked up
+if (mongoose.models.User) {
+  delete mongoose.models.User;
+}
+
+export default mongoose.model<IUser>("User", UserSchema);

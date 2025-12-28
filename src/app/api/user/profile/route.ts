@@ -20,12 +20,19 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // Get latest profile from array
+    const latestProfile =
+      user.profiles && user.profiles.length > 0
+        ? user.profiles[user.profiles.length - 1]
+        : {};
+
     return NextResponse.json({
-      fullName: user.fullName ?? "",
-      email: user.email ?? "",
-      phone: user.phone ?? "",
-      company: user.company ?? "",
-      location: user.location ?? "",
+      fullName: latestProfile.fullName ?? "",
+      email: user.email ?? "", // Email is typically on root
+      phone: latestProfile.phone ?? "",
+      jobTitle: latestProfile.jobTitle ?? "",
+      company: latestProfile.company ?? "",
+      location: latestProfile.location ?? "",
       fiatBalances: user.fiatBalances ?? { IDR: 0, USD: 0 },
       tokenBalances: user.tokenBalances ?? {},
     });

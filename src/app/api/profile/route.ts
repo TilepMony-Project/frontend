@@ -91,31 +91,41 @@ function buildProfileUpdate(payload: ProfilePayload) {
   return update;
 }
 
-function serializeProfile(profile: any) {
-  if (!profile) {
-    return null;
-  }
+function serializeProfile(user: any) {
+  if (!user) return null;
+
+  // Get latest profile from array
+  const latestProfile =
+    user.profiles && user.profiles.length > 0
+      ? user.profiles[user.profiles.length - 1]
+      : {};
 
   return {
-    userId: profile.userId || profile.privyUserId,
-    walletAddress: profile.walletAddress ?? null,
-    email: profile.email ?? null,
-    fullName: profile.fullName ?? "",
-    jobTitle: profile.jobTitle ?? "",
-    company: profile.company ?? "",
-    location: profile.location ?? "",
-    timezone: profile.timezone ?? "UTC",
-    phone: profile.phone ?? "",
-    website: profile.website ?? "",
-    linkedinUrl: profile.linkedinUrl ?? "",
-    githubUrl: profile.githubUrl ?? "",
-    bio: profile.bio ?? "",
-    avatarUrl: profile.avatarUrl ?? "",
+    userId: user.userId || user.privyUserId,
+    walletAddress: user.walletAddress ?? null,
+    email: user.email ?? null,
+    fullName: latestProfile.fullName ?? "",
+    jobTitle: latestProfile.jobTitle ?? "",
+    company: latestProfile.company ?? "",
+    location: latestProfile.location ?? "",
+    timezone: latestProfile.timezone ?? "UTC",
+    phone: latestProfile.phone ?? "",
+    website: latestProfile.website ?? "",
+    linkedinUrl: latestProfile.linkedinUrl ?? "",
+    githubUrl: latestProfile.githubUrl ?? "",
+    bio: latestProfile.bio ?? "",
+    avatarUrl: latestProfile.avatarUrl ?? "",
     notificationPreferences: {
-      workflowAlerts: profile.notificationPreferences?.workflowAlerts ?? true,
-      productUpdates: profile.notificationPreferences?.productUpdates ?? true,
+      workflowAlerts:
+        latestProfile.notificationPreferences?.workflowAlerts ??
+        user.notificationPreferences?.workflowAlerts ??
+        true,
+      productUpdates:
+        latestProfile.notificationPreferences?.productUpdates ??
+        user.notificationPreferences?.productUpdates ??
+        true,
     },
-    updatedAt: profile.updatedAt,
+    updatedAt: latestProfile.updatedAt ?? user.updatedAt,
   };
 }
 
@@ -124,7 +134,6 @@ export async function GET(request: Request) {
     const { userId } = await requirePrivySession(request);
     await connectDB();
 
-    // Try to find by userId or privyUserId
     let profile = await User.findOne({
       $or: [{ userId }, { privyUserId: userId }],
     });
@@ -133,7 +142,7 @@ export async function GET(request: Request) {
       profile = await User.create({
         privyUserId: userId,
         userId,
-        timezone: "UTC",
+        profiles: [{ timezone: "UTC", updatedAt: new Date() }],
       });
     }
 
@@ -155,13 +164,15 @@ export async function PUT(request: Request) {
     await connectDB();
 
     const update = buildProfileUpdate(payload);
-    const updateObject: Record<string, unknown> = {
+
+    // Create new profile entry
+    const newProfileEntry = {
       ...update,
       updatedAt: new Date(),
     };
 
     if (update.notificationPreferences) {
-      updateObject.notificationPreferences = {
+      newProfileEntry.notificationPreferences = {
         workflowAlerts: update.notificationPreferences.workflowAlerts ?? true,
         productUpdates: update.notificationPreferences.productUpdates ?? true,
       };
@@ -170,10 +181,8 @@ export async function PUT(request: Request) {
     const profile = await User.findOneAndUpdate(
       { $or: [{ userId }, { privyUserId: userId }] },
       {
-        $set: {
-          timezone: update.timezone ?? undefined,
-          ...updateObject,
-        },
+        $push: { profiles: newProfileEntry }, // Push to profiles array
+        $set: { updatedAt: new Date() }, // Update root timestamp
         $setOnInsert: { privyUserId: userId, userId },
       },
       { upsert: true, new: true, setDefaultsOnInsert: true }
