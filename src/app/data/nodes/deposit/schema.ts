@@ -1,9 +1,12 @@
 import type { NodeSchema } from "@/types/node-schema";
 
 export const paymentGatewayOptions = [
-  { label: "DummyGatewayA", value: "DummyGatewayA" },
-  { label: "DummyGatewayB", value: "DummyGatewayB" },
-  { label: "DummyGatewayC", value: "DummyGatewayC" },
+  { label: "Midtrans", value: "Midtrans" },
+  { label: "Xendit", value: "Xendit" },
+  { label: "DOKU", value: "DOKU" },
+  { label: "PayPal", value: "PayPal" },
+  { label: "Stripe", value: "Stripe" },
+  { label: "Amazon Pay", value: "Amazon Pay" },
 ];
 
 export const currencyOptions = [
