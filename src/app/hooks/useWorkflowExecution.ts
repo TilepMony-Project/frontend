@@ -4,6 +4,7 @@ import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/config/contractConfig";
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { useSmartWallets } from "@privy-io/react-auth/smart-wallets";
 import useStore from "@/store/store";
+import { parseEventLogs } from "viem";
 
 export interface ExecutionResult {
   txHash?: string;
@@ -30,9 +31,89 @@ export function useWorkflowExecution() {
   // Handle transaction confirmation
   useEffect(() => {
     const finalizeExecution = async () => {
-        if (isConfirmed && result.executionId && accessToken) {
+        const updateNodeStatus = async (nodeId: string, status: "complete" | "failed") => {
+            await fetch(`/api/executions/${result.executionId}`, {
+                method: "PATCH",
+                headers: { 
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`
+                },
+                body: JSON.stringify({ 
+                    nodeUpdates: [{ nodeId, status }]
+                }),
+            });
+        };
+
+        if (
+            isConfirmed && 
+            result.status === "processing" && 
+            result.executionId && 
+            accessToken && 
+            receipt
+        ) {
             try {
-                // Update overall status and all nodes to complete
+                // 1. Mark Deposit (off-chain) nodes as complete immediately
+                const offChainNodes = nodes.filter(n => {
+                    if (targetNodeId && n.id !== targetNodeId) return false;
+                    const type = n.data?.type || n.type;
+                    return type === "deposit";
+                });
+
+                for (const node of offChainNodes) {
+                    await updateNodeStatus(node.id, "complete");
+                }
+
+                // 2. Identify on-chain nodes and parse events
+                const onChainNodes = nodes.filter(n => {
+                    if (targetNodeId && n.id !== targetNodeId) return false;
+                    const type = n.data?.type || n.type;
+                    return type !== "deposit";
+                });
+
+                const logs = parseEventLogs({
+                    abi: CONTRACT_ABI,
+                    logs: receipt.logs,
+                    eventName: "ActionExecuted",
+                });
+
+                // 3. Sequential Animation for on-chain progress
+                for (let i = 0; i < onChainNodes.length; i++) {
+                    const node = onChainNodes[i];
+                    // Map node index to action index in contract
+                    const log = logs.find(l => (l.args as any).index === BigInt(i));
+                    const isNodeSuccess = log ? (log.args as any).success : true;
+
+                    await updateNodeStatus(node.id, isNodeSuccess ? "complete" : "failed");
+
+                    if (i < onChainNodes.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                    }
+                }
+
+                // 4. Finalize overall status
+                await fetch(`/api/executions/${result.executionId}`, {
+                    method: "PATCH",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify({ 
+                        status: "finished",
+                        transactionHash: result.txHash
+                    }),
+                });
+
+                setResult(prev => ({ ...prev, status: "success" }));
+            } catch (e) {
+                console.error("Failed to finalize execution:", e);
+            }
+        } else if (isReverted && result.executionId && accessToken) {
+            try {
+                // On revert, mark all targeted nodes as failed
+                const failedNodes = nodes
+                    .filter(n => !targetNodeId || n.id === targetNodeId)
+                    .map(n => ({ nodeId: n.id, status: "failed" }));
+
                 await fetch(`/api/executions/${result.executionId}`, {
                     method: "PATCH",
                     headers: { 
@@ -42,28 +123,7 @@ export function useWorkflowExecution() {
                     body: JSON.stringify({ 
                         status: "finished",
                         transactionHash: result.txHash,
-                        nodeUpdates: nodes
-                            .filter(n => !targetNodeId || n.id === targetNodeId)
-                            .map(n => ({
-                                nodeId: n.id,
-                                status: "complete"
-                            }))
-                    }),
-                });
-                setResult(prev => ({ ...prev, status: "success" }));
-            } catch (e) {
-                console.error("Failed to finalize execution:", e);
-            }
-        } else if (isReverted && result.executionId && accessToken) {
-            try {
-                await fetch(`/api/executions/${result.executionId}`, {
-                    method: "PATCH",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                    body: JSON.stringify({ 
-                        status: "failed",
+                        nodeUpdates: failedNodes,
                         error: receiptError?.message || "Transaction reverted"
                     }),
                 });

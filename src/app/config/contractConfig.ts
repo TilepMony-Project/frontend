@@ -75,6 +75,18 @@ export const MAIN_CONTROLLER_ABI = [
     name: "WorkflowExecuted",
     type: "event",
   },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      { indexed: false, internalType: "enum IMainController.ActionType", name: "actionType", type: "uint8" },
+      { indexed: false, internalType: "uint256", name: "index", type: "uint256" },
+      { indexed: false, internalType: "address", name: "target", type: "address" },
+      { indexed: false, internalType: "bool", name: "success", type: "bool" }
+    ],
+    name: "ActionExecuted",
+    type: "event",
+  },
 ] as const;
 
 // Contract Addresses on Mantle Sepolia
