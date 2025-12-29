@@ -65,9 +65,16 @@ export async function POST(
            currency = "IDR";
        }
 
-       // We no longer update the balance here. 
-       // The deposit info is part of the workflow nodes and will be processed 
-       // atomicity at the end of the execution in PATCH /api/executions/[id].
+       if (amount > 0) {
+           if (!user.fiatBalances) user.fiatBalances = { USD: 0, IDR: 0 };
+           
+           if (currency === "IDR") {
+               user.fiatBalances.IDR = (user.fiatBalances.IDR || 0) + amount;
+           } else {
+               user.fiatBalances.USD = (user.fiatBalances.USD || 0) + amount;
+           }
+           await user.save();
+       }
     }
 
     // 1. Check Balance if MINT is involved (Do not deduct yet)
