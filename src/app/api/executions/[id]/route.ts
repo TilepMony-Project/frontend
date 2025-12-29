@@ -19,7 +19,7 @@ export async function PATCH(
     await connectDB();
     
     const body = await request.json();
-    const { status, transactionHash, error } = body;
+    const { status, transactionHash, error, nodeUpdates } = body;
 
     const execution = await Execution.findOne({ _id: id, userId });
 
@@ -29,6 +29,20 @@ export async function PATCH(
 
     if (status) execution.status = status;
     if (transactionHash) execution.transactionHash = transactionHash;
+    
+    // Update individual nodes if provided
+    if (nodeUpdates && Array.isArray(nodeUpdates)) {
+        for (const update of nodeUpdates) {
+            const nodeIndex = execution.executionLog.findIndex((log: any) => log.nodeId === update.nodeId);
+            if (nodeIndex > -1) {
+                if (update.status) execution.executionLog[nodeIndex].status = update.status;
+                if (update.transactionHash) execution.executionLog[nodeIndex].transactionHash = update.transactionHash;
+                if (update.error) execution.executionLog[nodeIndex].error = update.error;
+                execution.executionLog[nodeIndex].timestamp = new Date();
+            }
+        }
+    }
+
     if (error) {
         // Log global error
         execution.executionLog.push({

@@ -12,9 +12,11 @@ import {
   getTokenAddress,
   getSwapAdapterAddress,
   getYieldAdapterAddress,
+  getTokenDecimals,
 } from "../config/contractConfig";
 import type { Node, Edge } from "@xyflow/react";
 import type { Address } from "viem";
+import { parseUnits } from "viem";
 
 /**
  * Maps frontend node types to smart contract Action structs
@@ -24,15 +26,24 @@ import type { Address } from "viem";
 export async function buildWorkflowActions(
   nodes: Node[],
   edges: Edge[],
-  userAddress: string
+  userAddress: string,
+  targetNodeId?: string
 ): Promise<{ actions: Action[]; initialToken: string; initialAmount: bigint }> {
+  // If targetNodeId is provided, only execute that node
+  let nodesToProcess = nodes;
+  if (targetNodeId) {
+    const targetNode = nodes.find((n) => n.id === targetNodeId);
+    if (!targetNode) throw new Error(`Target node ${targetNodeId} not found`);
+    nodesToProcess = [targetNode];
+  }
+
   // Sort nodes based on edges to determine execution order
-  // For MVP, we assume a linear chain: Mint -> Swap/Action -> ... -> Transfer
-  const sortedNodes = sortNodesMock(nodes, edges);
+  const sortedNodes = targetNodeId ? nodesToProcess : sortNodesMock(nodes, edges);
 
   const actions: Action[] = [];
   let initialToken = ZERO_ADDRESS as string;
   let initialAmount = BigInt(0);
+  let lastOutputToken = ZERO_ADDRESS as string;
 
   for (const node of sortedNodes) {
     const properties = node.data as Record<string, any>;
@@ -40,35 +51,44 @@ export async function buildWorkflowActions(
     switch (node.type) {
       case "mint": {
         const tokenAddress = getTokenAddress(properties.token);
-        const amount = BigInt(properties.amount || 0);
+        const decimals = getTokenDecimals(tokenAddress);
+        const amount = parseUnits((properties.amount || 0).toString(), decimals);
 
         if (actions.length === 0) {
           initialToken = tokenAddress;
-          initialAmount = amount;
+          initialAmount = BigInt(0);
         }
 
         const action: Action = {
           actionType: ActionType.MINT,
           targetContract: tokenAddress as Address,
           data: encodeMintData(tokenAddress, amount),
-          inputAmountPercentage: BigInt(0), 
+          inputAmountPercentage: BigInt(10000),
         };
         actions.push(action);
+        lastOutputToken = tokenAddress;
         break;
       }
 
       case "swap": {
         const adapterAddress = getSwapAdapterAddress(properties.swapAdapter);
-        if (!adapterAddress) throw new Error(`Invalid swap adapter: ${properties.swapAdapter}`);
+        if (!adapterAddress)
+          throw new Error(`Invalid swap adapter: ${properties.swapAdapter}`);
 
-        const tokenIn = properties.inputToken === "DYNAMIC" 
-          ? ZERO_ADDRESS 
-          : getTokenAddress(properties.inputToken);
-        
+        const tokenIn =
+          properties.inputToken === "DYNAMIC"
+            ? ZERO_ADDRESS
+            : getTokenAddress(properties.inputToken);
+
         const tokenOut = getTokenAddress(properties.outputToken);
-        
         const percentage = BigInt(properties.percentageOfInput || 10000);
-        
+
+        if (actions.length === 0) {
+          initialToken = tokenIn;
+          const decimals = getTokenDecimals(tokenIn);
+          initialAmount = parseUnits((properties.amount || 0).toString(), decimals);
+        }
+
         const action: Action = {
           actionType: ActionType.SWAP,
           targetContract: adapterAddress as Address,
@@ -76,57 +96,83 @@ export async function buildWorkflowActions(
             adapterAddress,
             tokenIn,
             tokenOut,
-            BigInt(0), 
-            BigInt(0), 
-            ZERO_ADDRESS 
+            BigInt(0),
+            BigInt(0),
+            ZERO_ADDRESS
           ),
           inputAmountPercentage: percentage,
         };
         actions.push(action);
+        lastOutputToken = tokenOut;
         break;
       }
 
       case "vault": {
         const adapterAddress = getYieldAdapterAddress(properties.yieldAdapter);
-        if (!adapterAddress) throw new Error(`Invalid yield adapter: ${properties.yieldAdapter}`);
-        
-        const token = properties.underlyingToken === "DYNAMIC"
-          ? ZERO_ADDRESS
-          : getTokenAddress(properties.underlyingToken);
-          
+        if (!adapterAddress)
+          throw new Error(`Invalid yield adapter: ${properties.yieldAdapter}`);
+
+        const token =
+          properties.underlyingToken === "DYNAMIC"
+            ? ZERO_ADDRESS
+            : getTokenAddress(properties.underlyingToken);
+
         const percentage = BigInt(properties.percentageOfInput || 10000);
+
+        if (actions.length === 0) {
+          initialToken = token;
+          const decimals = getTokenDecimals(token);
+          initialAmount = parseUnits((properties.amount || 0).toString(), decimals);
+        }
 
         const action: Action = {
           actionType: ActionType.YIELD,
           targetContract: adapterAddress as Address,
-          data: encodeYieldDepositData(
-            adapterAddress,
-            token,
-            BigInt(0)
-          ),
+          data: encodeYieldDepositData(adapterAddress, token, BigInt(0)),
           inputAmountPercentage: percentage,
         };
         actions.push(action);
+        lastOutputToken = ZERO_ADDRESS; 
         break;
       }
 
       case "transfer": {
-        const token = properties.token === "DYNAMIC"
-          ? ZERO_ADDRESS
-          : getTokenAddress(properties.token);
-          
+        const token =
+          properties.token === "DYNAMIC"
+            ? ZERO_ADDRESS
+            : getTokenAddress(properties.token);
+
         const percentage = BigInt(properties.percentageOfInput || 10000);
-        
+
+        if (actions.length === 0) {
+          initialToken = token;
+          const decimals = getTokenDecimals(token);
+          initialAmount = parseUnits((properties.amount || 0).toString(), decimals);
+        }
+
         const action: Action = {
           actionType: ActionType.TRANSFER,
-          targetContract: (token === ZERO_ADDRESS ? ZERO_ADDRESS : token) as Address,
+          targetContract: (properties.recipientAddress || ZERO_ADDRESS) as Address,
           data: encodeTransferData(token),
           inputAmountPercentage: percentage,
         };
         actions.push(action);
+        lastOutputToken = ZERO_ADDRESS;
         break;
       }
     }
+  }
+
+  // If there is an output token and last action was NOT a transfer/vault, 
+  // we implicitly transfer the balance to the user.
+  if (lastOutputToken !== ZERO_ADDRESS && userAddress) {
+    const transferAction: Action = {
+      actionType: ActionType.TRANSFER,
+      targetContract: userAddress as Address,
+      data: encodeTransferData(lastOutputToken),
+      inputAmountPercentage: BigInt(10000), // 100% of remaining balance
+    };
+    actions.push(transferAction);
   }
 
   return { actions, initialToken, initialAmount };

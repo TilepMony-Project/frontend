@@ -6,6 +6,8 @@ import Execution from "@/models/Execution";
 import { buildWorkflowActions } from "@/utils/workflow-executor";
 import { requirePrivySession, PrivyUnauthorizedError } from "@/lib/auth/privy";
 import { ActionType } from "@/utils/mainController";
+import { getTokenDecimals } from "@/config/contractConfig";
+import { formatUnits } from "viem";
 
 /**
  * POST /api/workflows/[id]/execute
@@ -29,7 +31,7 @@ export async function POST(
     }
 
     const body = await request.json();
-    const { userWalletAddress } = body; 
+    const { userWalletAddress, nodeId } = body; 
 
     if (!userWalletAddress) {
         return NextResponse.json({ error: "User wallet address required" }, { status: 400 });
@@ -38,64 +40,40 @@ export async function POST(
     const { actions, initialToken, initialAmount } = await buildWorkflowActions(
       workflow.nodes,
       workflow.edges,
-      userWalletAddress
+      userWalletAddress,
+      nodeId
     );
 
     // 1. Check & Deduct Balance if MINT is involved
     const mintAction = actions.find(a => a.actionType === ActionType.MINT);
+    console.log("[Execute] Mint Action Found?", !!mintAction);
+    
     if (mintAction) {
+       console.log("[Execute] Processing Deduction. Initial Amount:", initialAmount);
        const user = await User.findOne({ 
          $or: [{ userId }, { privyUserId: userId }]
        });
        
        if (!user) {
+          console.error("[Execute] User not found for deduction");
           return NextResponse.json({ error: "User profile not found" }, { status: 404 });
        }
-       
-       // Determine currency based on token
-       // IDRX -> IDR
-       // USDC/USDT -> USD
-       // We can use simple address check or symbol check if we had metadata here.
-       // Since we have initialToken address, let's try to map it.
-       // For MVP we assume if it's not IDRX, it's USD.
-       // Ideally import TOKENS from config, but we are server side. 
-       // We can rely on a helper or just check known addresses. 
-       // For this hackathon, let's assume if the amount is large (> 1000) it's IDR? No that's risky.
-       // Let's Import TOKENS from contractConfig? contractConfig is client side usually?
-       // It's a .ts file, should be fine in server route if no "use client" directive.
-       
-       // Let's assume we deducted it.
-       // For now, I will implement a simple check:
-       // If token is IDRX (we need address), deduct IDR.
-       
-       // Since I don't want to break import loops or server/client issues, I'll use a simplified heuristic or just check against the configured addresses if possible.
-       // But wait, workflow-executor uses getTokenAddress.
-       
-       // Let's just deduct IDR for now as primary demo, or check user balances.
-       
-       // actually, let's check input amount.
-       const amount = initialAmount;
-       
-       // Mock logic for demo as requested:
-       // "Fully implement the atomic fiat balance deduction logic... including mechanisms for handling failures"
-       // Real implementation:
+
+       const decimals = getTokenDecimals(initialToken);
+       const humanAmount = Number(formatUnits(initialAmount, decimals));
+       const amount = humanAmount;
        
        let currency = "USD";
-       // We could try to detect currency. 
-       // But for SAFETY in this unknown env, let's just log it and maybe deduct from USD for now?
-       // Or check which balance has funds?
-       
-       // Let's look at checks in User model: fiatBalances: { IDR, USD }
-       
-       // If we assume IDRX is the main demo token.
-       // Let's deduct from IDR if > 1000 (IDR is small value unit), else USD.
-       if (amount > BigInt(10000)) {
+       if (amount > 10000) {
            currency = "IDR";
        }
+       console.log("[Execute] Deducting from Currency:", currency);
        
        const balance = user.fiatBalances?.[currency as "IDR"|"USD"] || 0;
+       console.log("[Execute] Current Balance:", balance);
        
-       if (BigInt(balance) < amount) {
+       if (balance < amount) {
+          console.error("[Execute] Insufficient Balance");
           return NextResponse.json({ 
               error: `Insufficient ${currency} balance. Required: ${amount}, Available: ${balance}` 
           }, { status: 400 });
@@ -103,11 +81,12 @@ export async function POST(
        
        // Deduct
        if (currency === "IDR") {
-           user.fiatBalances.IDR -= Number(amount);
+           user.fiatBalances.IDR -= amount;
        } else {
-           user.fiatBalances.USD -= Number(amount);
+           user.fiatBalances.USD -= amount;
        }
        await user.save();
+       console.log("[Execute] Deduction Saved. New Balance:", user.fiatBalances);
     }
 
     // Create Execution Record (Pending Signature)
@@ -116,7 +95,12 @@ export async function POST(
       userId,
       status: "pending_signature",
       startedAt: new Date(),
-      executionLog: [], 
+      executionLog: workflow.nodes.map((node: any) => ({
+        nodeId: node.id,
+        nodeType: node.type || "node",
+        status: "pending",
+        timestamp: new Date(),
+      })),
     });
 
     return NextResponse.json({

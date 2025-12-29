@@ -3,13 +3,16 @@ import { useEffect, useState } from "react";
 
 import { useSingleSelectedElement } from "@/features/properties-bar/use-single-selected-element";
 import { useRemoveElements } from "@/hooks/use-remove-elements";
+import { useWorkflowExecution } from "@/hooks/useWorkflowExecution";
 import useStore from "@/store/store";
 
 import { PropertiesBar } from "./components/properties-bar/properties-bar";
 
 export function PropertiesBarContainer() {
   const { removeElements } = useRemoveElements();
-  const isPropertiesBarExpanded = useStore((state) => state.isPropertiesBarExpanded);
+  const isPropertiesBarExpanded = useStore(
+    (state) => state.isPropertiesBarExpanded
+  );
   const togglePropertiesBar = useStore((state) => state.togglePropertiesBar);
 
   const [selectedTab, setSelectedTab] = useState("properties");
@@ -29,43 +32,41 @@ export function PropertiesBarContainer() {
 
   const setNodeData = useStore((state) => state.setNodeData);
 
-  function handleRunNodeClick() {
+  const { executeWorkflow } = useWorkflowExecution();
+
+  async function handleRunNodeClick() {
     if (!selection?.node) {
+      return;
+    }
+
+    const workflowId = localStorage.getItem("tilepmoney_current_workflow_id");
+    if (!workflowId) {
+      showToast({
+        title: "Error",
+        subtitle: "Workflow ID not found.",
+        variant: ToastType.ERROR,
+      });
       return;
     }
 
     const node = selection.node;
     const nodeLabel = getNodeLabel(node.data?.properties);
 
-    // Set status to running
-    setNodeData(node.id, {
-      ...node.data,
-      executionStatus: "running",
-    });
-
-    showToast({
-      title: `Executing ${nodeLabel}`,
-      subtitle: "Node execution started...",
-      variant: ToastType.INFO,
-    });
-
-    // Simulate execution delay
-    setTimeout(() => {
-      // 80% success rate for demo purposes
-      const isSuccess = Math.random() > 0.2;
-      const status = isSuccess ? "success" : "error";
-
-      setNodeData(node.id, {
-        ...node.data,
-        executionStatus: status,
-      });
+    try {
+      await executeWorkflow(workflowId, node.id);
 
       showToast({
-        title: isSuccess ? "Execution Successful" : "Execution Failed",
-        subtitle: `${nodeLabel} execution ${isSuccess ? "completed successfully" : "failed"}.`,
-        variant: isSuccess ? ToastType.SUCCESS : ToastType.ERROR,
+        title: "Execution Started",
+        subtitle: `${nodeLabel} execution initiated successfully.`,
+        variant: ToastType.SUCCESS,
       });
-    }, 2000);
+    } catch (error: any) {
+      showToast({
+        title: "Execution Failed",
+        subtitle: error.message || `${nodeLabel} execution failed to start.`,
+        variant: ToastType.ERROR,
+      });
+    }
   }
 
   return (
