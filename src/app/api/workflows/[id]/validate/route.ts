@@ -236,6 +236,12 @@ function validateNodeConfigurations(nodes: WorkflowNode[]) {
             message: `Deposit node "${getNodeLabel(node)}" must have a currency selected.`,
           });
         }
+        if (!props.paymentGateway) {
+          errors.push({
+            section: "configuration",
+            message: `Deposit node "${getNodeLabel(node)}" must have a payment gateway selected.`,
+          });
+        }
         break;
       }
       case "mint": {

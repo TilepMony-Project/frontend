@@ -44,6 +44,7 @@ export const schema = {
       placeholder: "Choose payment processor",
     },
   },
+  required: ["amount", "currency", "paymentGateway"],
 } satisfies NodeSchema;
 
 export type DepositNodeSchema = typeof schema;
