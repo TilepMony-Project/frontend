@@ -1,5 +1,6 @@
 import { ToastType, showToast } from "@/utils/toast-utils";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { IntegrationContext } from "@/features/integration/components/integration-variants/context/integration-context-wrapper";
 
 import { useSingleSelectedElement } from "@/features/properties-bar/use-single-selected-element";
 import { useRemoveElements } from "@/hooks/use-remove-elements";
@@ -33,6 +34,7 @@ export function PropertiesBarContainer() {
   const setNodeData = useStore((state) => state.setNodeData);
 
   const { executeWorkflow } = useWorkflowExecution();
+  const { onSave } = useContext(IntegrationContext);
 
   async function handleRunNodeClick() {
     if (!selection?.node) {
@@ -51,6 +53,17 @@ export function PropertiesBarContainer() {
 
     const node = selection.node;
     const nodeLabel = getNodeLabel(node.data?.properties);
+
+    // 0. Auto-save first
+    const saveResult = await onSave({ isAutoSave: false });
+    if (saveResult === "error") {
+      showToast({
+        title: "Save Failed",
+        subtitle: "Failed to save workflow before running node.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
 
     try {
       await executeWorkflow(workflowId, node.id);

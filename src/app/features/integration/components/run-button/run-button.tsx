@@ -9,6 +9,8 @@ import { useWorkflowExecution } from "@/hooks/useWorkflowExecution";
 import { useWorkflowValidation } from "@/hooks/useWorkflowValidation";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useContext } from "react";
+import { IntegrationContext } from "@/features/integration/components/integration-variants/context/integration-context-wrapper";
 
 export function RunButton() {
   const params = useParams();
@@ -20,6 +22,7 @@ export function RunButton() {
     error: executionError,
   } = useWorkflowExecution();
   const { validateWorkflow, validating } = useWorkflowValidation();
+  const { onSave } = useContext(IntegrationContext);
 
   const isExecuting =
     status === "preparing" ||
@@ -29,6 +32,14 @@ export function RunButton() {
 
   async function handleRun() {
     if (!workflowId) return;
+
+    // 0. Auto-save first to ensure backend has latest data
+    const saveResult = await onSave({ isAutoSave: false });
+
+    if (saveResult === "error") {
+      toast.error("Failed to save workflow before execution");
+      return;
+    }
 
     // 1. Validate
     const validation = await validateWorkflow(workflowId);
