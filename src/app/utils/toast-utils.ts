@@ -19,9 +19,18 @@ type ShowToastParams = {
   id?: string | number;
 };
 
+const MAX_TOAST_LENGTH = 120;
+
+export function truncateText(text?: string): string | undefined {
+  if (!text) return undefined;
+  if (text.length <= MAX_TOAST_LENGTH) return text;
+  return text.substring(0, MAX_TOAST_LENGTH) + "...";
+}
+
 export function showToast({ title, subtitle, variant, action, id }: ShowToastParams) {
+  const truncatedSubtitle = truncateText(subtitle);
   const options = {
-    description: subtitle,
+    description: truncatedSubtitle,
     id,
     action: action
       ? {

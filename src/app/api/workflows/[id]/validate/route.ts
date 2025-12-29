@@ -435,11 +435,6 @@ function validateWalletAndAddresses(nodes: WorkflowNode[]) {
   }
 
   if (errors.filter((e) => e.section === "wallet").length === 0) {
-    warnings.push({
-      section: "wallet",
-      message:
-        "Wallet connection verification is not yet implemented. Ensure your wallet is connected before running.",
-    });
     checks.push({
       id: "wallet-connection",
       label: "Wallet connected",

@@ -2,7 +2,7 @@ import { Icon } from "@/components/icons";
 
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
-import { showToast, ToastType } from "@/utils/toast-utils";
+import { showToast, ToastType, truncateText } from "@/utils/toast-utils";
 
 import { useParams } from "next/navigation";
 import { useWorkflowExecution } from "@/hooks/useWorkflowExecution";
@@ -40,7 +40,9 @@ export function RunButton() {
 
     if (!validation.valid) {
       toast.error("Workflow has errors", {
-        description: validation.errors.map((e) => e.message).join("\n"),
+        description: truncateText(
+          validation.errors.map((e) => e.message).join("\n")
+        ),
         duration: 5000,
       });
       return;
@@ -48,7 +50,9 @@ export function RunButton() {
 
     if (validation.warnings.length > 0) {
       toast.warning("Workflow has warnings", {
-        description: validation.warnings.map((w) => w.message).join("\n"),
+        description: truncateText(
+          validation.warnings.map((w) => w.message).join("\n")
+        ),
         duration: 4000,
       });
     }
@@ -58,7 +62,7 @@ export function RunButton() {
       await executeWorkflow(workflowId);
     } catch (e: any) {
       toast.error("Execution failed", {
-        description: e.message || "Unknown error",
+        description: truncateText(e.message || "Unknown error"),
       });
     }
   }
