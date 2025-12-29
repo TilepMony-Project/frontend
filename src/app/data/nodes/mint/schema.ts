@@ -26,6 +26,12 @@ export const schema = {
       type: "number",
       minimum: 1,
     },
+    currentBalanceText: {
+      type: "string",
+    },
+    projectedBalanceText: {
+      type: "string",
+    },
   },
 } satisfies NodeSchema;
 

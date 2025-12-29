@@ -47,22 +47,30 @@ export const NodeProperties = memo(({ node }: Props) => {
     return;
   }
 
-  // Ad-hoc logic for Deposit Node: Fetch balance and calculate projection
-  // This avoids creating a custom JSON Form control
   const { accessToken } = usePrivySession();
   const getFreshToken = useGetFreshToken();
-
-  const currency = propertiesData.currency as string | undefined;
   const amount = Number(propertiesData.amount || 0);
 
-  useEffect(() => {
-    if (nodeType !== "deposit" || !accessToken) return;
+  // Consolidate balance logic for both Deposit and Mint
+  const mintToken = propertiesData.token as string | undefined;
+  // If deposit, use explicitly selected currency. If mint, map token to currency.
+  const activeCurrency =
+    nodeType === "deposit"
+      ? (propertiesData.currency as string | undefined)
+      : mintToken === "IDRX"
+      ? "IDR"
+      : mintToken
+      ? "USD"
+      : undefined;
 
-    if (!currency) return;
+  useEffect(() => {
+    if ((nodeType !== "deposit" && nodeType !== "mint") || !accessToken) return;
+
+    if (!activeCurrency) return;
 
     let active = true;
 
-    async function updateDepositInfo() {
+    async function updateBalanceInfo() {
       const freshToken = await getFreshToken();
       if (!freshToken) return;
 
@@ -75,21 +83,27 @@ export const NodeProperties = memo(({ node }: Props) => {
 
         const profile = await response.json();
         const balances = profile.fiatBalances || { IDR: 0, USD: 0 };
-        const currentBalance = balances[currency as keyof typeof balances] || 0;
-        const projectedBalance = currentBalance + amount;
+        const currentBalance =
+          balances[activeCurrency as keyof typeof balances] || 0;
+
+        // Deduction for mint, addition for deposit
+        const balanceModifier = nodeType === "mint" ? -1 : 1;
+        const projectedBalance = currentBalance + amount * balanceModifier;
 
         const formatter = new Intl.NumberFormat(
-          currency === "IDR" ? "id-ID" : "en-US",
+          activeCurrency === "IDR" ? "id-ID" : "en-US",
           {
             style: "currency",
-            currency: currency!,
+            currency: activeCurrency!,
           }
         );
 
         const currentBalanceText = `Current Balance: ${formatter.format(
           currentBalance
         )}`;
-        const projectedBalanceText = `After Deposit: ${formatter.format(
+        const projectedLabel =
+          nodeType === "mint" ? "After Mint" : "After Deposit";
+        const projectedBalanceText = `${projectedLabel}: ${formatter.format(
           projectedBalance
         )}`;
 
@@ -105,12 +119,12 @@ export const NodeProperties = memo(({ node }: Props) => {
           });
         }
       } catch (error) {
-        console.error("Failed to fetch balance for deposit node", error);
+        console.error(`Failed to fetch balance for ${nodeType} node`, error);
       }
     }
 
     const timer = setTimeout(() => {
-      void updateDepositInfo();
+      void updateBalanceInfo();
     }, 500);
 
     return () => {
@@ -120,14 +134,14 @@ export const NodeProperties = memo(({ node }: Props) => {
   }, [
     nodeType,
     accessToken,
-    currency,
+    activeCurrency,
     amount,
     id,
     getFreshToken,
     setNodeProperties,
     propertiesData.currentBalanceText,
     propertiesData.projectedBalanceText,
-    propertiesData, // Include this because we use propertiesData spread in setNodeProperties
+    propertiesData,
   ]);
 
   const onChange: JsonFormsReactProps["onChange"] = ({ data, errors }) => {

@@ -34,6 +34,16 @@ export const uischema: UISchema = {
           inputType: "number",
           placeholder: "Enter amount",
         },
+        {
+          type: "Text",
+          scope: scope("properties.currentBalanceText"),
+          options: { readonly: true },
+        },
+        {
+          type: "Text",
+          scope: scope("properties.projectedBalanceText"),
+          options: { readonly: true },
+        },
       ],
     },
   ],
