@@ -75,50 +75,57 @@ export async function PATCH(
              await Workflow.findByIdAndUpdate(execution.workflowId, {
                 $inc: { runCount: 1 }
              });
+        }
 
-             // --- Post-Mint Balance Deduction ---
+        if (
+            (status === "finished" || status === "failed") && 
+            execution.status !== "finished" && 
+            execution.status !== "failed"
+        ) {
+             // --- Consolidated Atomic Balance Update (Deposit & Mint) ---
              try {
                 const workflow = await Workflow.findById(execution.workflowId);
                 if (workflow) {
-                    const user = await User.findOne({ $or: [{ userId }, { privyUserId: userId }] });
-                    if (user) {
-                        let totalIDR = 0;
-                        let totalUSD = 0;
-                        
-                        // We only deduct for nodes that were actually part of this execution and are "mint"
-                        const nodeStatuses = new Map(
-                            (nodeUpdates || []).map((u: any) => [u.nodeId, u.status])
-                        );
+                    let netIDR = 0;
+                    let netUSD = 0;
 
-                        for (const node of workflow.nodes) {
-                            const status = nodeStatuses.get(node.id);
-                            if (status !== "complete") continue;
+                    for (const node of workflow.nodes) {
+                        const type = node.data?.type || node.type;
+                        const props = node.data?.properties || {};
+                        const amount = Number(props.amount || 0);
+
+                        if (type === "deposit") {
+                            // Deposits are credited even if the transaction fails, 
+                            // as they happen off-chain before the mint.
+                            let currency = props.currency || "USD";
+                            if (!props.currency && amount > 10000) currency = "IDR";
                             
-                            const type = node.data?.type || node.type;
-                            if (type === "mint") {
-                                const props = node.data?.properties || {};
-                                const amount = Number(props.amount || 0);
-                                
-                                // Determine currency based on token symbol
-                                const token = props.token || "";
-                                const currency = token === "IDRX" ? "IDR" : "USD";
-                                
-                                if (currency === "IDR") totalIDR += amount;
-                                else totalUSD += amount;
-                            }
+                            if (currency === "IDR") netIDR += amount;
+                            else netUSD += amount;
+                        } else if (type === "mint" && status === "finished") {
+                            // Mints are subtracted only on workflow SUCCESS
+                            const token = props.token || "";
+                            const currency = token === "IDRX" ? "IDR" : "USD";
+                            
+                            if (currency === "IDR") netIDR -= amount;
+                            else netUSD -= amount;
                         }
+                    }
 
-                        if (totalIDR > 0 || totalUSD > 0) {
-                            if (!user.fiatBalances) user.fiatBalances = { USD: 0, IDR: 0 };
-                            user.fiatBalances.IDR = Math.max(0, (user.fiatBalances.IDR || 0) - totalIDR);
-                            user.fiatBalances.USD = Math.max(0, (user.fiatBalances.USD || 0) - totalUSD);
-                            await user.save();
-                        }
+                    if (netIDR !== 0 || netUSD !== 0) {
+                        await User.updateOne(
+                            { $or: [{ userId }, { privyUserId: userId }] },
+                            { 
+                                $inc: { 
+                                    "fiatBalances.IDR": netIDR,
+                                    "fiatBalances.USD": netUSD
+                                } 
+                            }
+                        );
                     }
                 }
              } catch (err) {
-                console.error("Failed to deduct balance after mint:", err);
-                // We don't fail the whole request here as the tx was successful
+                console.error("Failed to update balances atomically:", err);
              }
         }
     }
