@@ -76,7 +76,6 @@ export function useWorkflowExecution() {
 
   const executeWorkflow = async (workflowId: string, nodeId?: string) => {
     try {
-      setLastExecutionRun(Date.now());
       setResult({ status: "preparing" });
 
       if (!accessToken) throw new Error("Authentication token not ready");
@@ -137,6 +136,10 @@ export function useWorkflowExecution() {
             }))
         }),
       });
+
+      // Signal ExecutionMonitor to fetch the new execution data
+      // This must happen AFTER the execution is created and updated
+      setLastExecutionRun(Date.now());
 
       setResult({ status: "processing", txHash: hash, executionId });
       

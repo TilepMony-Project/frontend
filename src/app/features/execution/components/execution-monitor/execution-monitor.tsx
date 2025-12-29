@@ -75,6 +75,7 @@ export function ExecutionMonitor() {
   useEffect(() => {
     if (lastExecutionRun) {
       setHasNoExecution(false);
+      setExecution(null); // Clear stale execution data
       // Force immediate fetch and let the polling effect handle the interval
       fetchStatusRef.current?.();
     }
@@ -344,7 +345,7 @@ export function ExecutionMonitor() {
             <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-between">
               <div className="flex flex-col">
                 <span className="text-xs font-medium text-blue-800 dark:text-blue-300">
-                  Transaction Sent
+                  Transaction Hash
                 </span>
                 <span className="text-[10px] text-blue-600 dark:text-blue-400 truncate max-w-[200px]">
                   {mainTxHash}
