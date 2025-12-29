@@ -4,8 +4,10 @@ export type UserPreferencesState = {
   shouldSkipShowingConfirmation: boolean;
   isExecutionMonitorActive: boolean;
   isPropertiesBarExpanded: boolean;
+  lastExecutionRun: number | null;
   setShouldSkipShowDeleteConfirmation: (value: boolean) => void;
   setExecutionMonitorActive: (value: boolean) => void;
+  setLastExecutionRun: (value: number) => void;
   togglePropertiesBar: (value?: boolean) => void;
 };
 
@@ -17,6 +19,7 @@ export function useUserPreferencesSlice(
     shouldSkipShowingConfirmation: false,
     isExecutionMonitorActive: false,
     isPropertiesBarExpanded: true,
+    lastExecutionRun: null,
     setShouldSkipShowDeleteConfirmation: (value: boolean) => {
       set((state) => ({
         ...state,
@@ -27,6 +30,12 @@ export function useUserPreferencesSlice(
       set((state) => ({
         ...state,
         isExecutionMonitorActive: value,
+      }));
+    },
+    setLastExecutionRun: (value: number) => {
+      set((state) => ({
+        ...state,
+        lastExecutionRun: value,
       }));
     },
     togglePropertiesBar: (value) => {
