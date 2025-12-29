@@ -77,44 +77,51 @@ export async function POST(
        }
     }
 
-    // 1. Check & Deduct Balance if MINT is involved
-    const mintAction = actions.find(a => a.actionType === ActionType.MINT);
+    // 1. Check Balance if MINT is involved (Do not deduct yet)
+    const mintNodes = workflow.nodes.filter((n: any) => {
+        const type = n.data?.type || n.type;
+        return type === "mint" && (!nodeId || n.id === nodeId);
+    });
     
-    if (mintAction) {
-       const user = await User.findOne({ 
-         $or: [{ userId }, { privyUserId: userId }]
-       });
-       
-       if (!user) {
-          console.error("[Execute] User not found for deduction");
-          return NextResponse.json({ error: "User profile not found" }, { status: 404 });
-       }
+    if (mintNodes.length > 0) {
+        const user = await User.findOne({ 
+          $or: [{ userId }, { privyUserId: userId }]
+        });
+        
+        if (!user) {
+           return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+        }
 
-       const decimals = getTokenDecimals(initialToken);
-       const humanAmount = Number(formatUnits(initialAmount, decimals));
-       const amount = humanAmount;
-       
-       let currency = "USD";
-       if (amount > 10000) {
-           currency = "IDR";
-       }
-       
-       const balance = user.fiatBalances?.[currency as "IDR"|"USD"] || 0;
-       
-       if (balance < amount) {
-          console.error("[Execute] Insufficient Balance");
-          return NextResponse.json({ 
-              error: `Insufficient ${currency} balance. Required: ${amount}, Available: ${balance}` 
-          }, { status: 400 });
-       }
-       
-       // Deduct
-       if (currency === "IDR") {
-           user.fiatBalances.IDR -= amount;
-       } else {
-           user.fiatBalances.USD -= amount;
-       }
-       await user.save();
+        let totalIDR = 0;
+        let totalUSD = 0;
+
+        for (const node of mintNodes) {
+            const props = node.data?.properties || {};
+            const amount = Number(props.amount || 0);
+            
+            // Determine currency based on token symbol
+            const token = props.token || "";
+            const currency = token === "IDRX" ? "IDR" : "USD";
+            
+            if (currency === "IDR") totalIDR += amount;
+            else totalUSD += amount;
+        }
+        
+        const balanceIDR = user.fiatBalances?.IDR || 0;
+        const balanceUSD = user.fiatBalances?.USD || 0;
+        
+        if (balanceIDR < totalIDR) {
+           return NextResponse.json({ 
+               error: `Insufficient IDR balance. Required: ${totalIDR}, Available: ${balanceIDR}` 
+           }, { status: 400 });
+        }
+        if (balanceUSD < totalUSD) {
+           return NextResponse.json({ 
+               error: `Insufficient USD balance. Required: ${totalUSD}, Available: ${balanceUSD}` 
+           }, { status: 400 });
+        }
+        // Balance is sufficient, proceed with preparing execution record
+        // Actual deduction will happen in PATCH /api/executions/[id] upon success
     }
 
     // Create Execution Record (Pending Signature)

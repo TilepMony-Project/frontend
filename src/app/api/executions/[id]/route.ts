@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Execution from "@/models/Execution";
 import Workflow from "@/models/Workflow";
+import User from "@/models/User";
 import { requirePrivySession, PrivyUnauthorizedError } from "@/lib/auth/privy";
 
 /**
@@ -74,6 +75,51 @@ export async function PATCH(
              await Workflow.findByIdAndUpdate(execution.workflowId, {
                 $inc: { runCount: 1 }
              });
+
+             // --- Post-Mint Balance Deduction ---
+             try {
+                const workflow = await Workflow.findById(execution.workflowId);
+                if (workflow) {
+                    const user = await User.findOne({ $or: [{ userId }, { privyUserId: userId }] });
+                    if (user) {
+                        let totalIDR = 0;
+                        let totalUSD = 0;
+                        
+                        // We only deduct for nodes that were actually part of this execution and are "mint"
+                        const nodeStatuses = new Map(
+                            (nodeUpdates || []).map((u: any) => [u.nodeId, u.status])
+                        );
+
+                        for (const node of workflow.nodes) {
+                            const status = nodeStatuses.get(node.id);
+                            if (status !== "complete") continue;
+                            
+                            const type = node.data?.type || node.type;
+                            if (type === "mint") {
+                                const props = node.data?.properties || {};
+                                const amount = Number(props.amount || 0);
+                                
+                                // Determine currency based on token symbol
+                                const token = props.token || "";
+                                const currency = token === "IDRX" ? "IDR" : "USD";
+                                
+                                if (currency === "IDR") totalIDR += amount;
+                                else totalUSD += amount;
+                            }
+                        }
+
+                        if (totalIDR > 0 || totalUSD > 0) {
+                            if (!user.fiatBalances) user.fiatBalances = { USD: 0, IDR: 0 };
+                            user.fiatBalances.IDR = Math.max(0, (user.fiatBalances.IDR || 0) - totalIDR);
+                            user.fiatBalances.USD = Math.max(0, (user.fiatBalances.USD || 0) - totalUSD);
+                            await user.save();
+                        }
+                    }
+                }
+             } catch (err) {
+                console.error("Failed to deduct balance after mint:", err);
+                // We don't fail the whole request here as the tx was successful
+             }
         }
     }
 

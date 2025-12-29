@@ -18,6 +18,7 @@ export function useWorkflowExecution() {
   const nodes = useStore((state) => state.nodes);
   const setLastExecutionRun = useStore((state) => state.setLastExecutionRun);
   const [result, setResult] = useState<ExecutionResult>({ status: "idle" });
+  const [targetNodeId, setTargetNodeId] = useState<string | null>(null);
 
   const { writeContractAsync } = useWriteContract();
 
@@ -41,10 +42,12 @@ export function useWorkflowExecution() {
                     body: JSON.stringify({ 
                         status: "finished",
                         transactionHash: result.txHash,
-                        nodeUpdates: nodes.map(n => ({
-                            nodeId: n.id,
-                            status: "complete"
-                        }))
+                        nodeUpdates: nodes
+                            .filter(n => !targetNodeId || n.id === targetNodeId)
+                            .map(n => ({
+                                nodeId: n.id,
+                                status: "complete"
+                            }))
                     }),
                 });
                 setResult(prev => ({ ...prev, status: "success" }));
@@ -76,6 +79,7 @@ export function useWorkflowExecution() {
 
   const executeWorkflow = async (workflowId: string, nodeId?: string) => {
     try {
+      setTargetNodeId(nodeId || null);
       setResult({ status: "preparing" });
 
       if (!accessToken) throw new Error("Authentication token not ready");
@@ -130,10 +134,12 @@ export function useWorkflowExecution() {
         body: JSON.stringify({ 
             status: "running", 
             transactionHash: hash,
-            nodeUpdates: nodes.map(n => ({
-                nodeId: n.id,
-                status: "processing"
-            }))
+            nodeUpdates: nodes
+                .filter(n => !nodeId || n.id === nodeId)
+                .map(n => ({
+                    nodeId: n.id,
+                    status: "processing"
+                }))
         }),
       });
 
