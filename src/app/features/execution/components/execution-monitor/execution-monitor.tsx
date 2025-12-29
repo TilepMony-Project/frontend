@@ -7,7 +7,6 @@ import { Icon } from "@/components/icons";
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
 import useStore from "@/store/store";
-import { copy } from "@/utils/copy";
 import { Loader2, ExternalLink } from "lucide-react";
 import { getExplorerTxUrl } from "@/config/chains";
 
@@ -49,6 +48,7 @@ export function ExecutionMonitor() {
   const setExecutionMonitorActive = useStore(
     (state) => state.setExecutionMonitorActive
   );
+  const lastExecutionRun = useStore((state) => state.lastExecutionRun);
   const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
   const { accessToken } = usePrivySession();
   const getFreshToken = useGetFreshToken();
@@ -61,13 +61,6 @@ export function ExecutionMonitor() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const fetchStatusRef = useRef<() => Promise<void>>(undefined);
 
-  // Check if any node has local execution status
-  const hasLocalExecution = useMemo(() => {
-    return nodes.some(
-      (n) => n.data?.executionStatus && n.data.executionStatus !== "idle"
-    );
-  }, [nodes]);
-
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
@@ -77,6 +70,15 @@ export function ExecutionMonitor() {
     );
     setWorkflowId(storedWorkflowId);
   }, []);
+
+  // Reset polling when a new execution starts
+  useEffect(() => {
+    if (lastExecutionRun) {
+      setHasNoExecution(false);
+      // Force immediate fetch and let the polling effect handle the interval
+      fetchStatusRef.current?.();
+    }
+  }, [lastExecutionRun]);
 
   const hasTerminalStatus = execution
     ? TERMINAL_STATUSES.includes(execution.status)
@@ -99,11 +101,9 @@ export function ExecutionMonitor() {
         },
       });
 
-      // Handle 404 - no execution exists, stop polling
       if (response.status === 404) {
         setExecution(null);
         setHasNoExecution(true);
-        // Clear interval to stop polling
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
@@ -124,47 +124,19 @@ export function ExecutionMonitor() {
   };
 
   useEffect(() => {
-    if ((!execution && !hasLocalExecution) || hasTerminalStatus) {
-      // Keep showing if we have an execution even if terminal, unless dismissed?
-      // Logic says: if terminal, hide?
-      // No, we want to see result.
-      // Only hide if we explicitly dismiss or new draft starts?
-      // The original logic was:
-      // if ((!execution && !hasLocalExecution)) setExecutionMonitorActive(false);
-      // But it also had || hasTerminalStatus.
-
-      // Let's modify logic: Show if execution exists regardless of status, until user closes it?
-      // For now keep original logic but verify if "hasTerminalStatus" hides it too fast.
-      // Actually, we want to see "Success" or "Failed" state.
-
-      // The original code:
-      // if ((!execution && !hasLocalExecution) || hasTerminalStatus) { ... return; }
-      // This hides the monitor immediately when finished. That's bad UX for async blockchain tx.
-      // I'll remove `|| hasTerminalStatus` from the "hide" logic so it stays visible.
-
-      if (!execution && !hasLocalExecution) {
-        setExecutionMonitorActive(false);
-        return;
-      }
+    if (!execution) {
+      setExecutionMonitorActive(false);
+      return;
     }
     setExecutionMonitorActive(true);
     return () => setExecutionMonitorActive(false);
-  }, [
-    execution,
-    hasLocalExecution,
-    hasTerminalStatus,
-    setExecutionMonitorActive,
-  ]);
+  }, [execution, setExecutionMonitorActive]);
 
   useEffect(() => {
     if (!workflowId || !accessToken) {
       return;
     }
-
-    // Reset hasNoExecution when workflowId changes
     setHasNoExecution(false);
-
-    // Initial fetch
     fetchStatusRef.current?.();
 
     return () => {
@@ -185,16 +157,7 @@ export function ExecutionMonitor() {
       intervalRef.current = null;
     }
 
-    // Only poll if:
-    // 1. We haven't confirmed there's no execution (hasNoExecution is false)
-    // 2. We have local execution OR we have an execution
-    // AND NOT TERMINAL? No, we should stop polling if terminal.
-
-    if (
-      !hasTerminalStatus &&
-      !hasNoExecution &&
-      (hasLocalExecution || execution)
-    ) {
+    if (!hasTerminalStatus && !hasNoExecution && execution) {
       intervalRef.current = setInterval(() => {
         fetchStatusRef.current?.();
       }, 4000);
@@ -206,24 +169,9 @@ export function ExecutionMonitor() {
         intervalRef.current = null;
       }
     };
-  }, [
-    workflowId,
-    hasTerminalStatus,
-    accessToken,
-    hasNoExecution,
-    hasLocalExecution,
-    execution,
-  ]);
+  }, [workflowId, hasTerminalStatus, accessToken, hasNoExecution, execution]);
 
   const progress = useMemo(() => {
-    // Priority to local simulation
-    if (hasLocalExecution) {
-      const completed = nodes.filter(
-        (n) => n.data?.executionStatus === "success"
-      ).length;
-      return Math.min(100, Math.round((completed / nodes.length) * 100));
-    }
-
     if (!execution || nodes.length === 0) {
       return 0;
     }
@@ -233,33 +181,12 @@ export function ExecutionMonitor() {
     const completed = execution.executionLog.filter(
       (entry) => entry.status === "complete"
     ).length;
-    return Math.min(100, Math.round((completed / nodes.length) * 100));
-  }, [execution, nodes, hasLocalExecution]);
+
+    const total = execution.executionLog.length || nodes.length;
+    return Math.min(100, Math.round((completed / total) * 100));
+  }, [execution, nodes]);
 
   const nodeStatuses = useMemo(() => {
-    if (hasLocalExecution) {
-      return nodes.map((node) => {
-        const status = (node.data?.executionStatus as string) || "pending";
-        let monitorStatus = "pending";
-        if (status === "running") monitorStatus = "processing";
-        if (status === "success") monitorStatus = "complete";
-        if (status === "error") monitorStatus = "failed";
-        if (status === "idle") monitorStatus = "pending";
-
-        const nodeLabel =
-          typeof node.data?.properties?.label === "string"
-            ? node.data.properties.label
-            : undefined;
-
-        return {
-          id: node.id,
-          label: nodeLabel ?? node.type ?? "Node",
-          type: node.type ?? "node",
-          status: monitorStatus,
-        };
-      });
-    }
-
     const statusByNodeId = new Map<string, ExecutionLogEntry["status"]>();
 
     if (execution?.executionLog) {
@@ -268,6 +195,25 @@ export function ExecutionMonitor() {
       }
     }
 
+    // Prioritize nodes present in the execution log
+    if (execution?.executionLog && execution.executionLog.length > 0) {
+      return execution.executionLog.map((entry) => {
+        const node = nodes.find((n) => n.id === entry.nodeId);
+        const nodeLabel =
+          typeof node?.data?.properties?.label === "string"
+            ? node.data.properties.label
+            : undefined;
+
+        return {
+          id: entry.nodeId,
+          label: nodeLabel ?? entry.nodeType ?? "Node",
+          type: entry.nodeType ?? "node",
+          status: entry.status,
+        };
+      });
+    }
+
+    // Default to workspace nodes if no log entries yet
     return nodes.map((node) => {
       const status = statusByNodeId.get(node.id) ?? "pending";
       const nodeLabel =
@@ -281,34 +227,12 @@ export function ExecutionMonitor() {
         status,
       };
     });
-  }, [execution?.executionLog, execution?.status, nodes, hasLocalExecution]);
+  }, [execution?.executionLog, execution?.status, nodes]);
 
   const mainTxHash = execution?.transactionHash;
-
-  // Determine overall status
-  const overallStatus = useMemo(() => {
-    if (hasLocalExecution) {
-      // ... existing logic ...
-      const isRunning = nodes.some(
-        (n) => n.data?.executionStatus === "running"
-      );
-      const isFailed = nodes.some((n) => n.data?.executionStatus === "error");
-      const isComplete = nodes.every(
-        (n) => n.data?.executionStatus === "success"
-      );
-
-      if (isRunning) return "running";
-      if (isFailed) return "failed";
-      if (isComplete) return "finished";
-      return "running";
-    }
-    return execution?.status || "draft";
-  }, [hasLocalExecution, nodes, execution]);
-
+  const overallStatus = execution?.status || "draft";
   const statusLabel = getStatusLabel(overallStatus as ExecutionStatus);
-
-  // Show if we have execution data OR local simulation is active
-  const shouldShow = (!!execution || hasLocalExecution) && !isReadOnlyMode;
+  const shouldShow = !!execution && !isReadOnlyMode;
 
   if (!shouldShow) {
     return null;
@@ -396,7 +320,6 @@ export function ExecutionMonitor() {
 
       {isExpanded && (
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {/* Progress Bar */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
               <span>Execution Progress</span>
@@ -417,7 +340,6 @@ export function ExecutionMonitor() {
             </div>
           </div>
 
-          {/* Transaction Link */}
           {mainTxHash && (
             <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-between">
               <div className="flex flex-col">
@@ -439,7 +361,6 @@ export function ExecutionMonitor() {
             </div>
           )}
 
-          {/* Nodes List */}
           <div className="space-y-2">
             <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
               Nodes Status
