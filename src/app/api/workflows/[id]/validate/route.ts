@@ -73,7 +73,10 @@ function validateGraphStructure(nodes: WorkflowNode[], edges: WorkflowEdge[]) {
   const warnings: ValidationMessage[] = [];
   const checks: ValidationChecklistItem[] = [];
 
-  const entryNodes = nodes.filter((node) => node.type === "deposit" || node.type === "mint");
+  const entryNodes = nodes.filter((node) => {
+    const nodeType = (node.data as any)?.type || node.type;
+    return nodeType === "deposit" || nodeType === "mint";
+  });
   if (entryNodes.length === 0) {
     errors.push({
       section: "graph",
@@ -216,7 +219,9 @@ function validateNodeConfigurations(nodes: WorkflowNode[]) {
       continue;
     }
 
-    switch (node.type) {
+    const nodeType = getNodeType(node);
+
+    switch (nodeType) {
       case "deposit": {
         const amount = toNumber(props.amount);
         if (amount < 100 || amount > 100_000_000) {
@@ -382,9 +387,10 @@ function validateWalletAndAddresses(nodes: WorkflowNode[]) {
   const warnings: ValidationMessage[] = [];
   const checks: ValidationChecklistItem[] = [];
 
-  const nodesWithWallets = nodes.filter((node) =>
-    ["mint", "transfer", "bridge"].includes(node.type)
-  );
+  const nodesWithWallets = nodes.filter((node) => {
+    const nodeType = getNodeType(node);
+    return ["transfer", "bridge"].includes(nodeType);
+  });
 
   let invalidAddresses = 0;
 
@@ -393,6 +399,7 @@ function validateWalletAndAddresses(nodes: WorkflowNode[]) {
     if (!props) continue;
 
     const address =
+      (props.recipientAddress as string | undefined) ||
       (props.recipientWallet as string | undefined) ||
       (props.receiverWallet as string | undefined) ||
       (props.receivingWallet as string | undefined);
@@ -444,13 +451,17 @@ function validateWalletAndAddresses(nodes: WorkflowNode[]) {
   return { errors, warnings, checks };
 }
 
+function getNodeType(node: WorkflowNode): string {
+  return (node.data as any)?.type || node.type || "";
+}
+
 function getNodeProperties(node: WorkflowNode) {
   return node.data?.properties as Record<string, unknown> | undefined;
 }
 
 function getNodeLabel(node: WorkflowNode) {
   const props = getNodeProperties(node);
-  return (props?.label as string) || node.type || node.id;
+  return (props?.label as string) || getNodeType(node) || node.id;
 }
 
 function toNumber(value: unknown) {
