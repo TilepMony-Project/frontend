@@ -44,6 +44,39 @@ export async function POST(
       nodeId
     );
 
+    // 0. Handle Deposit (Fiat Top-up)
+    const depositNode = workflow.nodes.find((n: any) => n.type === "deposit" || n.data?.type === "deposit");
+    
+    if (depositNode) {
+       const user = await User.findOne({ 
+         $or: [{ userId }, { privyUserId: userId }]
+       });
+
+       if (!user) {
+          return NextResponse.json({ error: "User profile not found for deposit" }, { status: 404 });
+       }
+
+       const props = depositNode.data?.properties || {};
+       const amount = Number(props.amount || 0);
+       
+       // Detect currency if not explicit, default rule: > 10000 is IDR
+       let currency = props.currency || "USD";
+       if (!props.currency && amount > 10000) {
+           currency = "IDR";
+       }
+
+       if (amount > 0) {
+           if (!user.fiatBalances) user.fiatBalances = { USD: 0, IDR: 0 };
+           
+           if (currency === "IDR") {
+               user.fiatBalances.IDR = (user.fiatBalances.IDR || 0) + amount;
+           } else {
+               user.fiatBalances.USD = (user.fiatBalances.USD || 0) + amount;
+           }
+           await user.save();
+       }
+    }
+
     // 1. Check & Deduct Balance if MINT is involved
     const mintAction = actions.find(a => a.actionType === ActionType.MINT);
     

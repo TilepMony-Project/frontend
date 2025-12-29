@@ -52,11 +52,11 @@ export const NodeProperties = memo(({ node }: Props) => {
   const { accessToken } = usePrivySession();
   const getFreshToken = useGetFreshToken();
 
+  const currency = propertiesData.currency as string | undefined;
+  const amount = Number(propertiesData.amount || 0);
+
   useEffect(() => {
     if (nodeType !== "deposit" || !accessToken) return;
-
-    const currency = propertiesData.currency as string | undefined;
-    const amount = Number(propertiesData.amount || 0);
 
     if (!currency) return;
 
@@ -82,7 +82,7 @@ export const NodeProperties = memo(({ node }: Props) => {
           currency === "IDR" ? "id-ID" : "en-US",
           {
             style: "currency",
-            currency: currency,
+            currency: currency!,
           }
         );
 
@@ -120,13 +120,14 @@ export const NodeProperties = memo(({ node }: Props) => {
   }, [
     nodeType,
     accessToken,
-    propertiesData.currency,
-    propertiesData.amount,
+    currency,
+    amount,
     id,
     getFreshToken,
     setNodeProperties,
     propertiesData.currentBalanceText,
     propertiesData.projectedBalanceText,
+    propertiesData, // Include this because we use propertiesData spread in setNodeProperties
   ]);
 
   const onChange: JsonFormsReactProps["onChange"] = ({ data, errors }) => {
