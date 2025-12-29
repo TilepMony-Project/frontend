@@ -158,14 +158,10 @@ export function AIWorkflowGenerator({
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe the fiat-to-fiat flow you want…"
+              placeholder="Describe the fiat-to-fiat flow you want to create. The AI will generate the appropriate nodes and connections."
               className="min-h-[150px]"
               disabled={isGenerating}
             />
-            <p className="text-xs text-muted-foreground mt-2">
-              Describe the fiat-to-fiat flow you want to create. The AI will
-              generate the appropriate nodes and connections.
-            </p>
           </div>
 
           <div className="bg-muted/50 rounded-lg p-4 space-y-2">
@@ -176,7 +172,7 @@ export function AIWorkflowGenerator({
                 redeem to USD"
               </li>
               <li>
-                "Create a treasury workflow: deposit IDR → mint → vault with 120
+                "Create a stablecoin workflow: deposit IDR → mint → vault with 120
                 mUSDT target → partition 60/40 to transfer and redeem"
               </li>
               <li>
