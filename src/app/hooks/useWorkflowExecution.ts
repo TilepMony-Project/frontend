@@ -103,13 +103,19 @@ export function useWorkflowExecution() {
       
       setResult({ status: "signing", executionId });
 
+      // Deserialize actions from API (strings back to BigInt)
+      const deserializedActions = config.actions.map((action: any) => ({
+        ...action,
+        inputAmountPercentage: BigInt(action.inputAmountPercentage),
+      }));
+
       // 2. Send Transaction
       const hash = await writeContractAsync({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
         functionName: "executeWorkflow",
         args: [
-            config.actions, 
+            deserializedActions, 
             config.initialToken, 
             BigInt(config.initialAmount)
         ],

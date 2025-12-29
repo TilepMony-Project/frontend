@@ -131,13 +131,19 @@ export async function POST(
       })),
     });
 
+    // Serialize actions for JSON (BigInt cannot be serialized)
+    const serializedActions = actions.map(action => ({
+      ...action,
+      inputAmountPercentage: action.inputAmountPercentage.toString(),
+    }));
+
     return NextResponse.json({
       success: true,
       executionId: execution._id,
       config: {
-        actions,
+        actions: serializedActions,
         initialToken,
-        initialAmount: initialAmount.toString() // Serialize bigint for JSON
+        initialAmount: initialAmount.toString()
       }
     });
 

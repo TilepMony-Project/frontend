@@ -46,16 +46,21 @@ export async function buildWorkflowActions(
   let lastOutputToken = ZERO_ADDRESS as string;
 
   for (const node of sortedNodes) {
-    const properties = node.data as Record<string, any>;
+    // Get properties from correct path: node.data.properties (not node.data directly)
+    const nodeData = node.data as Record<string, any>;
+    const properties = nodeData?.properties || nodeData || {};
+    
+    // Get node type from correct path: node.data.type or fallback to node.type
+    const nodeType = nodeData?.type || node.type;
 
-    switch (node.type) {
+    switch (nodeType) {
       case "mint": {
         const tokenAddress = getTokenAddress(properties.token);
         const decimals = getTokenDecimals(tokenAddress);
         const amount = parseUnits((properties.amount || 0).toString(), decimals);
 
         if (actions.length === 0) {
-          initialToken = tokenAddress;
+          initialToken = ZERO_ADDRESS; // External source (faucet/mint)
           initialAmount = BigInt(0);
         }
 
