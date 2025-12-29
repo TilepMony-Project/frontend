@@ -136,11 +136,28 @@ const WorkflowNodeTemplateComponent = memo(
           </NodePanel.Root>
 
           {/* Add Node Button - appears on hover, opens Nodes Library */}
-          <AddNodeButton
-            nodeId={id}
-            layoutDirection={layoutDirection}
-            side={hideSourceHandle ? "left" : "right"}
-          />
+          {["vault", "swap", "mint"].includes(
+            typeof data?.type === "string" ? data.type : ""
+          ) ? (
+            <>
+              <AddNodeButton
+                nodeId={id}
+                layoutDirection={layoutDirection}
+                side="left"
+              />
+              <AddNodeButton
+                nodeId={id}
+                layoutDirection={layoutDirection}
+                side="right"
+              />
+            </>
+          ) : (
+            <AddNodeButton
+              nodeId={id}
+              layoutDirection={layoutDirection}
+              side={hideSourceHandle ? "left" : "right"}
+            />
+          )}
         </div>
       </Collapsible>
     );
