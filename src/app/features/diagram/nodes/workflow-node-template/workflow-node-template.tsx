@@ -136,7 +136,11 @@ const WorkflowNodeTemplateComponent = memo(
           </NodePanel.Root>
 
           {/* Add Node Button - appears on hover, opens Nodes Library */}
-          <AddNodeButton nodeId={id} layoutDirection={layoutDirection} />
+          <AddNodeButton
+            nodeId={id}
+            layoutDirection={layoutDirection}
+            side={hideSourceHandle ? "left" : "right"}
+          />
         </div>
       </Collapsible>
     );

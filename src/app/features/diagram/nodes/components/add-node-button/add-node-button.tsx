@@ -10,6 +10,7 @@ interface AddNodeButtonProps {
   nodeId: string;
   layoutDirection?: LayoutDirection;
   className?: string;
+  side?: "left" | "right";
 }
 
 /**
@@ -22,6 +23,7 @@ export const AddNodeButton = memo(
     nodeId,
     layoutDirection = "horizontal",
     className,
+    side = "right",
   }: AddNodeButtonProps) => {
     const [isHovered, setIsHovered] = useState(false);
     const toggleSidebar = useStore((state) => state.toggleSidebar);
@@ -65,10 +67,12 @@ export const AddNodeButton = memo(
           "transition-all duration-200 ease-in-out",
           "shadow-sm hover:shadow-md",
           "cursor-pointer",
-          // Position to the right of source handle (horizontal) or below (vertical)
+          // Position relative to handle
           isHorizontal
-            ? "right-[-40px] top-1/2 -translate-y-1/2"
-            : "bottom-[-40px] left-1/2 -translate-x-1/2",
+            ? side === "left"
+              ? "left-[-40px] top-1/2 -translate-y-1/2"
+              : "right-[-40px] top-1/2 -translate-y-1/2"
+            : "bottom-[-40px] left-1/2 -translate-x-1/2", // TODO: Vertical support for left? Vertical usually doesn't have left/right sides for flow.
           // Show/hide with opacity for subtle effect
           "opacity-0 group-hover:opacity-100",
           isHovered && "opacity-100 scale-110",
