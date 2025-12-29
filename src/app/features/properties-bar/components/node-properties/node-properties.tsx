@@ -141,7 +141,6 @@ export const NodeProperties = memo(({ node }: Props) => {
     setNodeProperties,
     propertiesData.currentBalanceText,
     propertiesData.projectedBalanceText,
-    propertiesData,
   ]);
 
   const onChange: JsonFormsReactProps["onChange"] = ({ data, errors }) => {

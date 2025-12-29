@@ -107,7 +107,7 @@ export function useWorkflowExecution() {
             } catch (e) {
                 console.error("Failed to finalize execution:", e);
             }
-        } else if (isReverted && result.executionId && accessToken) {
+        } else if (isReverted && result.status === "processing" && result.executionId && accessToken) {
             try {
                 // On revert, mark all targeted nodes as failed
                 const failedNodes = nodes
