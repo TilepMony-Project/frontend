@@ -57,11 +57,6 @@ export async function POST(request: Request) {
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
-    console.log(`✅ User synced successfully: ${privyUserId}`, {
-      email: result.email,
-      walletAddress: result.walletAddress,
-      lastSyncedAt: result.lastSyncedAt,
-    });
 
     return NextResponse.json({
       success: true,

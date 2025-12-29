@@ -46,10 +46,8 @@ export async function POST(
 
     // 1. Check & Deduct Balance if MINT is involved
     const mintAction = actions.find(a => a.actionType === ActionType.MINT);
-    console.log("[Execute] Mint Action Found?", !!mintAction);
     
     if (mintAction) {
-       console.log("[Execute] Processing Deduction. Initial Amount:", initialAmount);
        const user = await User.findOne({ 
          $or: [{ userId }, { privyUserId: userId }]
        });
@@ -67,10 +65,8 @@ export async function POST(
        if (amount > 10000) {
            currency = "IDR";
        }
-       console.log("[Execute] Deducting from Currency:", currency);
        
        const balance = user.fiatBalances?.[currency as "IDR"|"USD"] || 0;
-       console.log("[Execute] Current Balance:", balance);
        
        if (balance < amount) {
           console.error("[Execute] Insufficient Balance");
@@ -86,7 +82,6 @@ export async function POST(
            user.fiatBalances.USD -= amount;
        }
        await user.save();
-       console.log("[Execute] Deduction Saved. New Balance:", user.fiatBalances);
     }
 
     // Create Execution Record (Pending Signature)
