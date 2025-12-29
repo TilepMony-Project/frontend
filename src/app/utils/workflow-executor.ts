@@ -168,17 +168,9 @@ export async function buildWorkflowActions(
     }
   }
 
-  // If there is an output token and last action was NOT a transfer/vault, 
-  // we implicitly transfer the balance to the user.
-  if (lastOutputToken !== ZERO_ADDRESS && userAddress) {
-    const transferAction: Action = {
-      actionType: ActionType.TRANSFER,
-      targetContract: userAddress as Address,
-      data: encodeTransferData(lastOutputToken),
-      inputAmountPercentage: BigInt(10000), // 100% of remaining balance
-    };
-    actions.push(transferAction);
-  }
+  // NOTE: No implicit transfer is added. 
+  // Users must explicitly add a Transfer node to move funds from MainController to their wallet.
+  // This gives full control over workflow composition.
 
   return { actions, initialToken, initialAmount };
 }
