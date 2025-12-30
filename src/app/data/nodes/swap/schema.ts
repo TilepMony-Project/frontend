@@ -51,15 +51,6 @@ export const schema = {
       type: "string",
       options: swapAdapterOptions,
     },
-    slippageTolerance: {
-      type: "number",
-      minimum: 0.1,
-      maximum: 5,
-    },
-    preferredRoute: {
-      type: "string",
-      options: routeOptions,
-    },
   },
 } satisfies NodeSchema;
 

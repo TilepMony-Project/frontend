@@ -49,18 +49,6 @@ export const uischema: UISchema = {
           label: "Swap Adapter",
           scope: scope("properties.swapAdapter"),
         },
-        {
-          type: "Text",
-          label: "Slippage Tolerance (%)",
-          scope: scope("properties.slippageTolerance"),
-          inputType: "number",
-          placeholder: "0.1 - 5",
-        },
-        {
-          type: "Select",
-          label: "Preferred Route",
-          scope: scope("properties.preferredRoute"),
-        },
       ],
     },
   ],

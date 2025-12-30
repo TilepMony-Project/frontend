@@ -13,6 +13,7 @@ import {
   getSwapAdapterAddress,
   getYieldAdapterAddress,
   getTokenDecimals,
+  ADDRESSES,
 } from "../config/contractConfig";
 import type { Node, Edge } from "@xyflow/react";
 import type { Address } from "viem";
@@ -96,14 +97,14 @@ export async function buildWorkflowActions(
 
         const action: Action = {
           actionType: ActionType.SWAP,
-          targetContract: adapterAddress as Address,
+          targetContract: ADDRESSES.CORE.SwapAggregator as Address,
           data: encodeSwapData(
             adapterAddress,
             tokenIn,
             tokenOut,
             BigInt(0),
             BigInt(0),
-            ZERO_ADDRESS
+            ADDRESSES.CORE.MainController
           ),
           inputAmountPercentage: percentage,
         };
