@@ -121,7 +121,7 @@ export function useWorkflowExecution() {
                         Authorization: `Bearer ${accessToken}`
                     },
                     body: JSON.stringify({ 
-                        status: "finished",
+                        status: "failed",
                         transactionHash: result.txHash,
                         nodeUpdates: failedNodes,
                         error: receiptError?.message || "Transaction reverted"

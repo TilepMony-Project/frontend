@@ -341,26 +341,27 @@ export function ExecutionMonitor() {
             </div>
           </div>
 
-          {mainTxHash && (
-            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-between">
-              <div className="flex flex-col">
-                <span className="text-xs font-medium text-blue-800 dark:text-blue-300">
-                  Transaction Hash
-                </span>
-                <span className="text-[10px] text-blue-600 dark:text-blue-400 truncate max-w-[200px]">
-                  {mainTxHash}
-                </span>
+          {mainTxHash &&
+            (overallStatus === "finished" || overallStatus === "failed") && (
+              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-between">
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-blue-800 dark:text-blue-300">
+                    Transaction Hash
+                  </span>
+                  <span className="text-[10px] text-blue-600 dark:text-blue-400 truncate max-w-[200px]">
+                    {mainTxHash}
+                  </span>
+                </div>
+                <a
+                  href={getExplorerTxUrl(mainTxHash)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                >
+                  <ExternalLink size={14} />
+                </a>
               </div>
-              <a
-                href={getExplorerTxUrl(mainTxHash)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-              >
-                <ExternalLink size={14} />
-              </a>
-            </div>
-          )}
+            )}
 
           <div className="space-y-2">
             <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
