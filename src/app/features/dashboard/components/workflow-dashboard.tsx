@@ -844,90 +844,94 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
       <ProfileCheckAlert />
 
       {/* Deposit Modal */}
-      <Modal
-        isOpen={isDepositModalOpen}
-        onClose={() => setIsDepositModalOpen(false)}
-        title="Deposit Funds"
-      >
-        <div className="space-y-6 py-4">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Select Currency
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => setDepositCurrency("USD")}
-                  className={cn(
-                    "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-200",
-                    depositCurrency === "USD"
-                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
-                      : "border-transparent bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-                  )}
-                >
-                  <span className="text-lg font-bold">USD</span>
-                  <span className="text-xs opacity-70">
-                    United States Dollar
-                  </span>
-                </button>
-                <button
-                  onClick={() => setDepositCurrency("IDR")}
-                  className={cn(
-                    "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-200",
-                    depositCurrency === "IDR"
-                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
-                      : "border-transparent bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-                  )}
-                >
-                  <span className="text-lg font-bold">IDR</span>
-                  <span className="text-xs opacity-70">Indonesian Rupiah</span>
-                </button>
-              </div>
+      {isDepositModalOpen && (
+        <Modal
+          open={isDepositModalOpen}
+          onClose={() => setIsDepositModalOpen(false)}
+          title="Deposit funds"
+          footer={
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setIsDepositModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="default"
+                onClick={handleDeposit}
+                disabled={isDepositing || !depositAmount}
+              >
+                {isDepositing ? (
+                  <>
+                    <Icon name="Loader2" size={18} className="animate-spin" />
+                    Processing
+                  </>
+                ) : (
+                  "Deposit"
+                )}
+              </Button>
+            </div>
+          }
+        >
+          <div className="flex flex-col gap-3 w-full">
+            <label className="font-semibold text-gray-900 dark:text-white">
+              Select Currency
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => setDepositCurrency("USD")}
+                className={cn(
+                  "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-200",
+                  depositCurrency === "USD"
+                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
+                    : "border-transparent bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                )}
+                type="button"
+              >
+                <span className="text-lg font-bold">USD</span>
+                <span className="text-xs opacity-70">United States Dollar</span>
+              </button>
+              <button
+                onClick={() => setDepositCurrency("IDR")}
+                className={cn(
+                  "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-200",
+                  depositCurrency === "IDR"
+                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
+                    : "border-transparent bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                )}
+                type="button"
+              >
+                <span className="text-lg font-bold">IDR</span>
+                <span className="text-xs opacity-70">Indonesian Rupiah</span>
+              </button>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Amount
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
-                  {depositCurrency === "USD" ? "$" : "Rp"}
-                </span>
-                <Input
-                  type="number"
-                  placeholder="0.00"
-                  value={depositAmount}
-                  onChange={(e) => setDepositAmount(e.target.value)}
-                  className="pl-9 h-12 text-lg"
-                />
-              </div>
+            <label className="font-semibold text-gray-900 dark:text-white mt-2">
+              Amount 
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+                {depositCurrency === "USD" ? "$" : "Rp"}
+              </span>
+              <Input
+                type="number"
+                placeholder="0.00"
+                value={depositAmount}
+                onChange={(e) => setDepositAmount(e.target.value)}
+                className="w-full pl-9"
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    handleDeposit();
+                  }
+                }}
+                autoFocus
+              />
             </div>
           </div>
-
-          <div className="flex justify-end gap-3 pt-2">
-            <Button
-              variant="ghost"
-              onClick={() => setIsDepositModalOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleDeposit}
-              disabled={isDepositing || !depositAmount}
-              className="bg-blue-600 hover:bg-blue-700 text-white min-w-[100px]"
-            >
-              {isDepositing ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processing
-                </>
-              ) : (
-                "Deposit"
-              )}
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        </Modal>
+      )}
 
       <section className="flex flex-wrap justify-between gap-4 items-center">
         <div className="titleGroup">
@@ -949,7 +953,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             <Icon name="User" size={18} />
             Profile
           </Button>
-          
+
           {/* Balance Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
