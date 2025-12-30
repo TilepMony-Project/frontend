@@ -57,7 +57,7 @@ export const AddNodeButton = memo(
         onMouseLeave={() => setIsHovered(false)}
         className={cn(
           "absolute z-20 flex items-center justify-center",
-          "w-6 h-6 rounded-md",
+          "w-5 h-5 rounded-md",
           "bg-gray-200 dark:bg-gray-700",
           "hover:bg-primary hover:scale-110",
           "border border-gray-300 dark:border-gray-600",
