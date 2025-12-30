@@ -23,6 +23,8 @@ import {
   Shield as ShieldIcon,
   Wallet as WalletIcon,
   Heart,
+  CreditCard,
+  Plus,
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import {
@@ -203,6 +205,13 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     useState<WorkflowSummary | null>(null);
   const [hasCopied, setHasCopied] = useState(false);
   const { theme, toggleTheme } = useTheme();
+
+  // Deposit Modal State
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [depositCurrency, setDepositCurrency] = useState<"USD" | "IDR">("USD");
+  const [depositAmount, setDepositAmount] = useState("");
+  const [isDepositing, setIsDepositing] = useState(false);
+
   const isBusy = isLoading || isLoadingToken;
 
   // Wallet connection logic
@@ -776,9 +785,149 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     }
   }, [accessToken]);
 
+  async function handleDeposit() {
+    if (!depositAmount || Number(depositAmount) <= 0) {
+      showToast({
+        title: "Invalid Amount",
+        subtitle: "Please enter a valid amount to deposit.",
+        variant: ToastType.ERROR,
+      });
+      return;
+    }
+
+    const freshToken = await getFreshToken();
+    if (!freshToken) return;
+
+    try {
+      setIsDepositing(true);
+      const response = await fetch("/api/user/topup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${freshToken}`,
+        },
+        body: JSON.stringify({
+          currency: depositCurrency,
+          amount: Number(depositAmount),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to deposit");
+      }
+
+      const data = await response.json();
+      setBalances(data.fiatBalances);
+      showToast({
+        title: "Deposit Successful",
+        subtitle: `Added ${depositCurrency} ${Number(
+          depositAmount
+        ).toLocaleString()} to your balance.`,
+        variant: ToastType.SUCCESS,
+      });
+      setIsDepositModalOpen(false);
+      setDepositAmount("");
+    } catch (error) {
+      console.error("Deposit error:", error);
+      showToast({
+        title: "Deposit Failed",
+        subtitle: "Failed to process deposit. Please try again.",
+        variant: ToastType.ERROR,
+      });
+    } finally {
+      setIsDepositing(false);
+    }
+  }
+
   return (
     <div className="min-h-screen p-8 flex flex-col gap-6 bg-[#eeeff3] dark:bg-[#151516]">
       <ProfileCheckAlert />
+
+      {/* Deposit Modal */}
+      <Modal
+        isOpen={isDepositModalOpen}
+        onClose={() => setIsDepositModalOpen(false)}
+        title="Deposit Funds"
+      >
+        <div className="space-y-6 py-4">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Select Currency
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setDepositCurrency("USD")}
+                  className={cn(
+                    "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-200",
+                    depositCurrency === "USD"
+                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
+                      : "border-transparent bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  )}
+                >
+                  <span className="text-lg font-bold">USD</span>
+                  <span className="text-xs opacity-70">
+                    United States Dollar
+                  </span>
+                </button>
+                <button
+                  onClick={() => setDepositCurrency("IDR")}
+                  className={cn(
+                    "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-200",
+                    depositCurrency === "IDR"
+                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
+                      : "border-transparent bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  )}
+                >
+                  <span className="text-lg font-bold">IDR</span>
+                  <span className="text-xs opacity-70">Indonesian Rupiah</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Amount
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+                  {depositCurrency === "USD" ? "$" : "Rp"}
+                </span>
+                <Input
+                  type="number"
+                  placeholder="0.00"
+                  value={depositAmount}
+                  onChange={(e) => setDepositAmount(e.target.value)}
+                  className="pl-9 h-12 text-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <Button
+              variant="ghost"
+              onClick={() => setIsDepositModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeposit}
+              disabled={isDepositing || !depositAmount}
+              className="bg-blue-600 hover:bg-blue-700 text-white min-w-[100px]"
+            >
+              {isDepositing ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Processing
+                </>
+              ) : (
+                "Deposit"
+              )}
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       <section className="flex flex-wrap justify-between gap-4 items-center">
         <div className="titleGroup">
@@ -790,27 +939,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          {/* Balance Display */}
-          <div className="hidden md:flex items-center gap-4 mr-2">
-            <div className="flex flex-col items-end">
-              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                USD Balance
-              </span>
-              <span className="text-sm font-bold text-gray-900 dark:text-white">
-                ${balances.USD.toLocaleString()}
-              </span>
-            </div>
-            <div className="h-8 w-px bg-gray-200 dark:bg-gray-700 mx-2" />
-            <div className="flex flex-col items-end">
-              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                IDR Balance
-              </span>
-              <span className="text-sm font-bold text-gray-900 dark:text-white">
-                Rp {balances.IDR.toLocaleString()}
-              </span>
-            </div>
-          </div>
-
+          {/* Profile Dropdown */}
           <Button
             type="button"
             variant="ghost"
@@ -820,6 +949,68 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             <Icon name="User" size={18} />
             Profile
           </Button>
+          
+          {/* Balance Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="h-12 items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-[#27282b]/80 px-5 text-sm font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-[#323336] shadow-sm hover:bg-accent/40"
+              >
+                <WalletIcon size={18} />
+                <span>Balance</span>
+                <ChevronDown size={14} className="text-gray-400" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[280px] p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-200">
+                  Wallet Balance
+                </h3>
+              </div>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center justify-between p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-xs font-bold">
+                      $
+                    </div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      USD
+                    </span>
+                  </div>
+                  <span className="font-mono font-medium text-gray-900 dark:text-gray-200">
+                    ${balances.USD.toLocaleString()}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-700 text-xs font-bold">
+                      Rp
+                    </div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      IDR
+                    </span>
+                  </div>
+                  <span className="font-mono font-medium text-gray-900 dark:text-gray-200">
+                    Rp {balances.IDR.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+
+              <Button
+                variant="default"
+                className="w-full gap-2"
+                onClick={() => setIsDepositModalOpen(true)}
+              >
+                <CreditCard size={16} />
+                Deposit Funds
+              </Button>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Wallet Dropdown */}
           {isConnected ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
