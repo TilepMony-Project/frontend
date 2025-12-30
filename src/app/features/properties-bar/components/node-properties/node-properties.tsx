@@ -9,6 +9,7 @@ import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes
 import { flatErrors } from "@/utils/validation/flat-errors";
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
+import { useAccount } from "wagmi";
 
 type Props = {
   node: WorkflowBuilderNode;
@@ -141,6 +142,30 @@ export const NodeProperties = memo(({ node }: Props) => {
     setNodeProperties,
     propertiesData.currentBalanceText,
     propertiesData.projectedBalanceText,
+  ]);
+
+  // Inject user wallet address for Transfer node if empty
+  const { address: userAddress } = useAccount();
+
+  useEffect(() => {
+    if (
+      nodeType !== "transfer" ||
+      !userAddress ||
+      propertiesData.recipientAddress
+    ) {
+      return;
+    }
+
+    setNodeProperties(id, {
+      ...propertiesData,
+      recipientAddress: userAddress,
+    });
+  }, [
+    nodeType,
+    userAddress,
+    propertiesData.recipientAddress,
+    id,
+    setNodeProperties,
   ]);
 
   const onChange: JsonFormsReactProps["onChange"] = ({ data, errors }) => {

@@ -31,7 +31,7 @@ export const uischema: UISchema = {
           type: "Text",
           label: "Recipient Address",
           scope: scope("properties.recipientAddress"),
-          placeholder: "0x... (wallet address)",
+          placeholder: "Leave empty to send to your wallet",
         },
         {
           type: "Text",

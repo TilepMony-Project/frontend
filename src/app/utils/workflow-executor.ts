@@ -158,7 +158,7 @@ export async function buildWorkflowActions(
 
         const action: Action = {
           actionType: ActionType.TRANSFER,
-          targetContract: (properties.recipientAddress || ZERO_ADDRESS) as Address,
+          targetContract: (properties.recipientAddress || userAddress || ZERO_ADDRESS) as Address,
           data: encodeTransferData(token),
           inputAmountPercentage: percentage,
         };
