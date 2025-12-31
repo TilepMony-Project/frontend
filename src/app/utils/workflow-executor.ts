@@ -12,6 +12,7 @@ import {
   getTokenAddress,
   getSwapAdapterAddress,
   getYieldAdapterAddress,
+  getShareTokenAddress,
   getTokenDecimals,
   ADDRESSES,
 } from "../config/contractConfig";
@@ -113,7 +114,7 @@ export async function buildWorkflowActions(
         break;
       }
 
-      case "vault": {
+      case "yield-deposit": {
         const adapterAddress = getYieldAdapterAddress(properties.yieldAdapter);
         if (!adapterAddress)
           throw new Error(`Invalid yield adapter: ${properties.yieldAdapter}`);
@@ -133,12 +134,43 @@ export async function buildWorkflowActions(
 
         const action: Action = {
           actionType: ActionType.YIELD,
-          targetContract: adapterAddress as Address,
+          targetContract: ADDRESSES.YIELD.ROUTER as Address,
           data: encodeYieldDepositData(adapterAddress, token, BigInt(0)),
           inputAmountPercentage: percentage,
         };
         actions.push(action);
-        lastOutputToken = ZERO_ADDRESS; 
+        lastOutputToken = ZERO_ADDRESS; // Vault share token
+        break;
+      }
+
+      case "yield-withdraw": {
+        const adapterAddress = getYieldAdapterAddress(properties.yieldAdapter);
+        if (!adapterAddress)
+          throw new Error(`Invalid yield adapter: ${properties.yieldAdapter}`);
+
+        // Share token can be DYNAMIC (from previous node) or specified
+        const shareToken =
+          properties.shareToken === "DYNAMIC"
+            ? ZERO_ADDRESS
+            : getShareTokenAddress(properties.shareToken);
+
+        const underlyingToken = getTokenAddress(properties.underlyingToken);
+        const percentage = BigInt(properties.percentageOfInput || 10000);
+
+        if (actions.length === 0) {
+          initialToken = shareToken;
+          const decimals = getTokenDecimals(shareToken);
+          initialAmount = parseUnits((properties.amount || 0).toString(), decimals);
+        }
+
+        const action: Action = {
+          actionType: ActionType.YIELD_WITHDRAW,
+          targetContract: ADDRESSES.YIELD.ROUTER as Address,
+          data: encodeYieldWithdrawData(adapterAddress, shareToken, underlyingToken, BigInt(0)),
+          inputAmountPercentage: percentage,
+        };
+        actions.push(action);
+        lastOutputToken = underlyingToken;
         break;
       }
 

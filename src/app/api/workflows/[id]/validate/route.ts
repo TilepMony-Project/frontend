@@ -73,28 +73,31 @@ function validateGraphStructure(nodes: WorkflowNode[], edges: WorkflowEdge[]) {
   const warnings: ValidationMessage[] = [];
   const checks: ValidationChecklistItem[] = [];
 
-  const entryNodes = nodes.filter((node) => {
-    const nodeType = (node.data as any)?.type || node.type;
-    return nodeType === "deposit" || nodeType === "mint";
-  });
-  if (entryNodes.length === 0) {
+  // Check if workflow has at least one node
+  if (nodes.length === 0) {
     errors.push({
       section: "graph",
-      message: "Workflow must include at least one Mint or Deposit node.",
+      message: "Workflow must have at least one node.",
     });
     checks.push({
-      id: "entry-node",
-      label: "Entry node present",
+      id: "has-nodes",
+      label: "Workflow has nodes",
       status: "fail",
-      details: "Add a Mint or Deposit node to start the workflow.",
+      details: "Add at least one node to the workflow.",
     });
   } else {
     checks.push({
-      id: "entry-node",
-      label: "Entry node present",
+      id: "has-nodes",
+      label: "Workflow has nodes",
       status: "pass",
     });
   }
+
+  // Find entry points (nodes with no incoming edges)
+  const entryNodes = nodes.filter((node) => {
+    const hasIncomingEdge = edges.some((edge) => edge.target === node.id);
+    return !hasIncomingEdge;
+  });
 
   const adjacency = new Map<string, string[]>();
   const inDegree = new Map<string, number>();

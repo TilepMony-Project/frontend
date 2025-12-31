@@ -234,6 +234,24 @@ export const getYieldAdapterAddress = (
   return adapters[adapterName];
 };
 
+/**
+ * Get vault share token address from symbol
+ * Supports MethLab (ml*) and InitCapital (in*) vault tokens
+ */
+export const getShareTokenAddress = (symbol: string): string => {
+  const shareTokens: Record<string, string> = {
+    // MethLab vault tokens
+    mlIDRX: ADDRESSES.YIELD.METHLAB.VAULTS.IDRX,
+    mlUSDC: ADDRESSES.YIELD.METHLAB.VAULTS.USDC,
+    mlUSDT: ADDRESSES.YIELD.METHLAB.VAULTS.USDT,
+    // InitCapital pool tokens
+    inIDRX: ADDRESSES.YIELD.INIT_CAPITAL.POOLS.IDRX,
+    inUSDC: ADDRESSES.YIELD.INIT_CAPITAL.POOLS.USDC,
+    inUSDT: ADDRESSES.YIELD.INIT_CAPITAL.POOLS.USDT,
+  };
+  return shareTokens[symbol] || "";
+};
+
 // Main Contract Address Export
 export const CONTRACT_ADDRESS = ADDRESSES.CORE.MainController;
 export const CONTRACT_ABI = MAIN_CONTROLLER_ABI;

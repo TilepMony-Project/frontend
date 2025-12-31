@@ -9,7 +9,9 @@ import { bridgeNode } from "./nodes/bridge/bridge";
 // Output Nodes
 import { redeemNode } from "./nodes/redeem/redeem";
 import { transferNode } from "./nodes/transfer/transfer";
-import { vaultNode } from "./nodes/vault/vault";
+// Yield Nodes
+import { yieldDepositNode } from "./nodes/yield-deposit/yield-deposit";
+import { yieldWithdrawNode } from "./nodes/yield-withdraw/yield-withdraw";
 // Utility Nodes
 import { waitNode } from "./nodes/wait/wait";
 import { partitionNode } from "./nodes/partition/partition";
@@ -23,10 +25,12 @@ export const paletteData: PaletteItem[] = [
   mintNode,
   swapNode,
   bridgeNode,
+  // Yield Nodes
+  yieldDepositNode,
+  yieldWithdrawNode,
   // Output Nodes
   redeemNode,
   transferNode,
-  vaultNode,
   // Utility Nodes
   scheduleNode,
   waitNode,
