@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { Icon } from "@/components/icons";
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
+import { useWorkflowExecution } from "@/hooks/useWorkflowExecution";
+import { getStatusLabel as getFrontendStatusLabel } from "@/utils/error-decoder";
 import useStore from "@/store/store";
 import { Loader2, ExternalLink } from "lucide-react";
 import { getExplorerTxUrl } from "@/config/chains";
@@ -52,6 +54,14 @@ export function ExecutionMonitor() {
   const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
   const { accessToken } = usePrivySession();
   const getFreshToken = useGetFreshToken();
+
+  // Frontend execution state (real-time logs and status)
+  const {
+    logs: frontendLogs,
+    status: frontendStatus,
+    estimatedGasCost,
+  } = useWorkflowExecution();
+
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [execution, setExecution] = useState<
     ExecutionResponse["execution"] | null
@@ -59,8 +69,16 @@ export function ExecutionMonitor() {
   const [isExpanded, setIsExpanded] = useState(true);
   const [hasNoExecution, setHasNoExecution] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const logsEndRef = useRef<HTMLDivElement>(null);
   const fetchStatusRef = useRef<() => Promise<void>>(undefined);
   const previousWorkflowIdRef = useRef<string | null>(null);
+
+  // Auto-scroll logs to bottom
+  useEffect(() => {
+    if (logsEndRef.current) {
+      logsEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [frontendLogs]);
 
   // Sync workflowId from localStorage and listen for changes
   useEffect(() => {
@@ -266,12 +284,21 @@ export function ExecutionMonitor() {
 
   const mainTxHash = execution?.transactionHash;
   const overallStatus = execution?.status || "draft";
-  const statusLabel = getStatusLabel(overallStatus as ExecutionStatus);
 
-  // Only show if we have an execution AND it belongs to the current workflow
+  // Prioritize frontend status label if it's active and more granular
+  const statusLabel =
+    frontendStatus !== "idle" && frontendStatus !== "success"
+      ? getFrontendStatusLabel(frontendStatus)
+      : getStatusLabel(overallStatus as ExecutionStatus);
+
+  // Show if we have a backend execution OR a frontend execution in progress
   const isExecutionForCurrentWorkflow = execution?.workflowId === workflowId;
+  const hasFrontendActivity =
+    frontendStatus !== "idle" || frontendLogs.length > 0;
+
   const shouldShow =
-    !!execution && !isReadOnlyMode && isExecutionForCurrentWorkflow;
+    ((!!execution && isExecutionForCurrentWorkflow) || hasFrontendActivity) &&
+    !isReadOnlyMode;
 
   if (!shouldShow) {
     return null;
@@ -400,6 +427,35 @@ export function ExecutionMonitor() {
                 </a>
               </div>
             )}
+
+          {/* Live Execution Logs (Frontend) */}
+          {frontendLogs.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Live Logs
+                </h3>
+                {estimatedGasCost && (
+                  <span className="text-[10px] text-green-600 dark:text-green-400">
+                    Est. Gas: {estimatedGasCost} ETH
+                  </span>
+                )}
+              </div>
+              <div className="bg-gray-900 dark:bg-black rounded-lg p-2 max-h-[120px] overflow-y-auto font-mono text-[10px] text-green-400">
+                {frontendLogs.map((log, i) => (
+                  <div key={i} className="leading-relaxed">
+                    {log}
+                  </div>
+                ))}
+              </div>
+              <div className="text-[10px] text-gray-500 dark:text-gray-400">
+                Status:{" "}
+                <span className="text-blue-500">
+                  {getFrontendStatusLabel(frontendStatus)}
+                </span>
+              </div>
+            </div>
+          )}
 
           <div className="space-y-2">
             <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">

@@ -26,8 +26,12 @@ export function RunButton() {
 
   const isExecuting =
     status === "preparing" ||
-    status === "signing" ||
-    status === "processing" ||
+    status === "checking-approval" ||
+    status === "signing-approval" ||
+    status === "processing-approval" ||
+    status === "estimating-gas" ||
+    status === "signing-execution" ||
+    status === "processing-execution" ||
     validating;
 
   async function handleRun() {
@@ -80,8 +84,15 @@ export function RunButton() {
 
   let tooltipText = "Run workflow";
   if (validating) tooltipText = "Validating...";
-  else if (status === "signing") tooltipText = "Sign in Wallet...";
-  else if (status === "processing") tooltipText = "Processing...";
+  else if (status === "signing-approval" || status === "signing-execution")
+    tooltipText = "Sign in Wallet...";
+  else if (
+    status === "processing-approval" ||
+    status === "processing-execution"
+  )
+    tooltipText = "Processing...";
+  else if (status === "estimating-gas") tooltipText = "Estimating gas...";
+  else if (status === "checking-approval") tooltipText = "Checking approval...";
 
   return (
     <Tooltip content={tooltipText}>

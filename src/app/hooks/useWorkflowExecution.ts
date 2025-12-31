@@ -1,16 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useWriteContract, useWaitForTransactionReceipt, usePublicClient } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS, VAULT_ABI, ERC20_ABI, ADDRESSES } from "@/config/contractConfig";
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { useSmartWallets } from "@privy-io/react-auth/smart-wallets";
 import useStore from "@/store/store";
-import { parseEventLogs } from "viem";
+import { parseEventLogs, formatEther } from "viem";
+import { decodeContractError } from "@/utils/error-decoder";
+
+export type ExecutionStatus = 
+  | "idle"
+  | "preparing"
+  | "checking-approval"
+  | "signing-approval"
+  | "processing-approval"
+  | "estimating-gas"
+  | "signing-execution"
+  | "processing-execution"
+  | "success"
+  | "error";
 
 export interface ExecutionResult {
   txHash?: string;
-  status: "idle" | "preparing" | "signing" | "processing" | "success" | "error";
+  status: ExecutionStatus;
   error?: string;
   executionId?: string;
+  estimatedGasCost?: string;
+  logs: string[];
 }
 
 export function useWorkflowExecution() {
@@ -18,8 +33,41 @@ export function useWorkflowExecution() {
   const { client } = useSmartWallets();
   const nodes = useStore((state) => state.nodes);
   const setLastExecutionRun = useStore((state) => state.setLastExecutionRun);
-  const [result, setResult] = useState<ExecutionResult>({ status: "idle" });
+  
+  // Execution state from global store
+  const logs = useStore((state) => state.executionLogs);
+  const status = useStore((state) => state.executionStatus) as ExecutionStatus;
+  const estimatedGasCost = useStore((state) => state.estimatedGasCost);
+  const setExecutionLogs = useStore((state) => state.setExecutionLogs);
+  const setExecutionStatus = useStore((state) => state.setExecutionStatus);
+  const setEstimatedGasCost = useStore((state) => state.setEstimatedGasCost);
+
+  const [result, setResultState] = useState<{ txHash?: string; executionId?: string; error?: string }>({});
   const [targetNodeId, setTargetNodeId] = useState<string | null>(null);
+
+  // Sync wrapper for backward compatibility with local state usage in the hook
+  const setResult = (update: Partial<ExecutionResult> | ((prev: ExecutionResult) => ExecutionResult)) => {
+    const prev: ExecutionResult = { 
+      ...result, 
+      status, 
+      logs, 
+      estimatedGasCost: estimatedGasCost || undefined 
+    };
+    const next = typeof update === "function" ? update(prev) : { ...prev, ...update };
+    
+    if (next.status !== status) setExecutionStatus(next.status);
+    if (next.estimatedGasCost !== undefined) setEstimatedGasCost(next.estimatedGasCost || null);
+    setResultState({ 
+      txHash: next.txHash, 
+      executionId: next.executionId, 
+      error: next.error 
+    });
+  };
+
+  const addLog = useCallback((message: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    setExecutionLogs(prev => [...prev, `[${timestamp}] ${message}`]);
+  }, [setExecutionLogs]);
 
   const publicClient = usePublicClient();
   const { writeContractAsync } = useWriteContract();
@@ -47,12 +95,13 @@ export function useWorkflowExecution() {
 
         if (
             isConfirmed && 
-            result.status === "processing" && 
+            status === "processing-execution" && 
             result.executionId && 
             accessToken && 
             receipt
         ) {
             try {
+                addLog("Transaction confirmed! Finalizing execution...");
                 // 1. Mark Deposit (off-chain) nodes as complete immediately
                 const offChainNodes = nodes.filter(n => {
                     if (targetNodeId && n.id !== targetNodeId) return false;
@@ -115,7 +164,7 @@ export function useWorkflowExecution() {
 
                         if (vaultAddress) {
                             try {
-                                const newRate = type === "yield-deposit" ? 1100000n : 1000000n;
+                                const newRate = type === "yield-deposit" ? BigInt(1100000) : BigInt(1000000);
                                 await writeContractAsync({
                                     address: vaultAddress,
                                     abi: VAULT_ABI,
@@ -148,7 +197,7 @@ export function useWorkflowExecution() {
             } catch (e) {
                 console.error("Failed to finalize execution:", e);
             }
-        } else if (isReverted && result.status === "processing" && result.executionId && accessToken) {
+        } else if (isReverted && status === "processing-execution" && result.executionId && accessToken) {
             try {
                 // On revert, mark all targeted nodes as failed
                 const failedNodes = nodes
@@ -181,7 +230,9 @@ export function useWorkflowExecution() {
   const executeWorkflow = async (workflowId: string, nodeId?: string) => {
     try {
       setTargetNodeId(nodeId || null);
-      setResult({ status: "preparing" });
+      setExecutionLogs([]);
+      setExecutionStatus("preparing");
+      addLog("Starting workflow execution...");
 
       if (!accessToken) throw new Error("Authentication token not ready");
 
@@ -204,8 +255,9 @@ export function useWorkflowExecution() {
       }
 
       const { config, executionId } = await response.json();
+      addLog(`Execution prepared. ID: ${executionId.slice(0, 8)}...`);
       
-      setResult({ status: "signing", executionId });
+      setResult({ status: "checking-approval", executionId });
 
       // Deserialize actions from API (strings back to BigInt)
       const deserializedActions = config.actions.map((action: any) => ({
@@ -229,7 +281,8 @@ export function useWorkflowExecution() {
          });
 
          if (allowance < BigInt(config.initialAmount)) {
-             setResult({ status: "signing" }); 
+             addLog("Approval required. Please sign the approval transaction...");
+             setResult(prev => ({ ...prev, status: "signing-approval" })); 
              const approveHash = await writeContractAsync({
                 address: config.initialToken as `0x${string}`,
                 abi: ERC20_ABI,
@@ -237,15 +290,51 @@ export function useWorkflowExecution() {
                 args: [CONTRACT_ADDRESS, BigInt(config.initialAmount)],
              });
              
-             setResult({ status: "processing" });
+             addLog(`Approval submitted: ${approveHash.slice(0, 10)}...`);
+             setResult(prev => ({ ...prev, status: "processing-approval" }));
              await publicClient.waitForTransactionReceipt({ hash: approveHash });
-             
-             // Reset status for next signature
-             setResult({ status: "signing" }); 
+             addLog("Approval confirmed!");
+         } else {
+             addLog("Sufficient approval already exists.");
          }
       }
 
-      // 2. Send Transaction
+      // 2. Estimate Gas
+      addLog("Estimating gas cost...");
+      setResult(prev => ({ ...prev, status: "estimating-gas" }));
+      
+      let gasLimit: bigint | undefined;
+      try {
+        if (publicClient) {
+          const gasEstimate = await publicClient.estimateContractGas({
+            address: CONTRACT_ADDRESS,
+            abi: CONTRACT_ABI,
+            functionName: "executeWorkflow",
+            args: [
+              deserializedActions, 
+              config.initialToken, 
+              BigInt(config.initialAmount)
+            ],
+            account: walletAddress as `0x${string}`,
+          });
+          
+          // Add 20% buffer
+          gasLimit = (gasEstimate * BigInt(120)) / BigInt(100);
+          
+          const gasPrice = await publicClient.getGasPrice();
+          const estimatedCost = formatEther(gasLimit * gasPrice);
+          addLog(`Estimated gas: ${estimatedCost} ETH (with 20% buffer)`);
+          setResult(prev => ({ ...prev, estimatedGasCost: estimatedCost }));
+        }
+      } catch (gasError) {
+        addLog("Warning: Could not estimate gas. Using default limit.");
+        console.warn("Gas estimation failed:", gasError);
+      }
+      
+      // 3. Send Transaction
+      addLog("Please sign the workflow execution transaction...");
+      setResult(prev => ({ ...prev, status: "signing-execution" }));
+      
       const hash = await writeContractAsync({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
@@ -255,6 +344,7 @@ export function useWorkflowExecution() {
             config.initialToken, 
             BigInt(config.initialAmount)
         ],
+        ...(gasLimit ? { gas: gasLimit } : {}),
       });
 
       // 3. Update Execution Record with Tx Hash and mark nodes as processing
@@ -280,16 +370,20 @@ export function useWorkflowExecution() {
       // This must happen AFTER the execution is created and updated
       setLastExecutionRun(Date.now());
 
-      setResult({ status: "processing", txHash: hash, executionId });
+      addLog(`Transaction submitted: ${hash.slice(0, 10)}...`);
+      addLog("Waiting for blockchain confirmation...");
+      setResult({ status: "processing-execution", txHash: hash, executionId });
       
       return { hash, executionId };
 
     } catch (error: any) {
+      const errorMessage = decodeContractError(error);
       console.error("Workflow Execution Failed:", error);
+      addLog(`Error: ${errorMessage}`);
       setResult((prev) => ({
         ...prev,
         status: "error",
-        error: error.message || "Execution failed",
+        error: errorMessage,
       }));
       throw error;
     }
@@ -297,9 +391,11 @@ export function useWorkflowExecution() {
 
   return {
     executeWorkflow,
-    status: result.status,
+    status,
     txHash: result.txHash,
     error: result.error,
     executionId: result.executionId,
+    estimatedGasCost,
+    logs,
   };
 }

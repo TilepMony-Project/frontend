@@ -5,9 +5,15 @@ export type UserPreferencesState = {
   isExecutionMonitorActive: boolean;
   isPropertiesBarExpanded: boolean;
   lastExecutionRun: number | null;
+  executionLogs: string[];
+  executionStatus: string;
+  estimatedGasCost: string | null;
   setShouldSkipShowDeleteConfirmation: (value: boolean) => void;
   setExecutionMonitorActive: (value: boolean) => void;
   setLastExecutionRun: (value: number) => void;
+  setExecutionLogs: (logs: string[] | ((prev: string[]) => string[])) => void;
+  setExecutionStatus: (status: string) => void;
+  setEstimatedGasCost: (cost: string | null) => void;
   togglePropertiesBar: (value?: boolean) => void;
 };
 
@@ -20,6 +26,9 @@ export function useUserPreferencesSlice(
     isExecutionMonitorActive: false,
     isPropertiesBarExpanded: true,
     lastExecutionRun: null,
+    executionLogs: [],
+    executionStatus: "idle",
+    estimatedGasCost: null,
     setShouldSkipShowDeleteConfirmation: (value: boolean) => {
       set((state) => ({
         ...state,
@@ -36,6 +45,24 @@ export function useUserPreferencesSlice(
       set((state) => ({
         ...state,
         lastExecutionRun: value,
+      }));
+    },
+    setExecutionLogs: (logs) => {
+      set((state) => ({
+        ...state,
+        executionLogs: typeof logs === "function" ? logs(state.executionLogs) : logs,
+      }));
+    },
+    setExecutionStatus: (status: string) => {
+      set((state) => ({
+        ...state,
+        executionStatus: status,
+      }));
+    },
+    setEstimatedGasCost: (cost: string | null) => {
+      set((state) => ({
+        ...state,
+        estimatedGasCost: cost,
       }));
     },
     togglePropertiesBar: (value) => {
