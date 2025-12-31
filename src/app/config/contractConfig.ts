@@ -239,6 +239,7 @@ export const getTokenSymbol = (address: string): string => {
 };
 
 export const getTokenAddress = (symbol: string): string => {
+  if (!symbol) return "";
   const tokenKey = symbol.toUpperCase() as keyof typeof ADDRESSES.TOKENS;
   return ADDRESSES.TOKENS[tokenKey] || "";
 };

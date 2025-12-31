@@ -23,15 +23,41 @@ export const uischema: UISchema = {
       label: "Redeem Configuration",
       elements: [
         {
+          type: "Select",
+          label: "Token to Redeem",
+          scope: scope("properties.token"),
+        },
+        {
           type: "Text",
-          label: "Amount to Redeem",
+          label: "Amount to Redeem (if specific)",
           scope: scope("properties.amount"),
           inputType: "number",
-          placeholder: "Enter amount",
+          placeholder: "e.g. 100",
+          rule: {
+            effect: "SHOW",
+            condition: {
+              scope: scope("properties.token"),
+              schema: { not: { const: "DYNAMIC" } },
+            },
+          },
+        },
+        {
+          type: "Text",
+          label: "% of Input (Basis Points)",
+          scope: scope("properties.percentageOfInput"),
+          inputType: "number",
+          placeholder: "10000 = 100%",
+          rule: {
+            effect: "SHOW",
+            condition: {
+              scope: scope("properties.token"),
+              schema: { const: "DYNAMIC" },
+            },
+          },
         },
         {
           type: "Select",
-          label: "Currency Type",
+          label: "Receive Currency (Fiat)",
           scope: scope("properties.currency"),
         },
         {

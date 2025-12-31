@@ -76,16 +76,16 @@ export async function PATCH(
                 $inc: { runCount: 1 }
              });
 
-             // --- Post-Mint Balance Deduction ---
+             // --- Post-Execution Balance Updates (Mint & Redeem) ---
              try {
                 const workflow = await Workflow.findById(execution.workflowId);
                 if (workflow) {
                     const user = await User.findOne({ $or: [{ userId }, { privyUserId: userId }] });
                     if (user) {
-                        let totalIDR = 0;
-                        let totalUSD = 0;
+                        let netIDR = 0;
+                        let netUSD = 0;
                         
-                        // We only deduct for nodes that were actually part of this execution and are "mint"
+                        // We only update for nodes that were actually part of this execution
                         const nodeStatuses = new Map(
                             (nodeUpdates || []).map((u: any) => [u.nodeId, u.status])
                         );
@@ -95,23 +95,34 @@ export async function PATCH(
                             if (status !== "complete") continue;
                             
                             const type = node.data?.type || node.type;
+                            const props = node.data?.properties || {};
+                            const amount = Number(props.amount || 0);
+
                             if (type === "mint") {
-                                const props = node.data?.properties || {};
-                                const amount = Number(props.amount || 0);
-                                
-                                // Determine currency based on token symbol
+                                // MINT: Deduct Fiat
                                 const token = props.token || "";
                                 const currency = token === "IDRX" ? "IDR" : "USD";
                                 
-                                if (currency === "IDR") totalIDR += amount;
-                                else totalUSD += amount;
+                                if (currency === "IDR") netIDR -= amount;
+                                else netUSD -= amount;
+
+                            } else if (type === "redeem") {
+                                // REDEEM: Add Fiat
+                                // Prefer explicit currency, fallback to token-based inference
+                                let currency = props.currency;
+                                if (!currency && props.token) {
+                                    currency = props.token === "IDRX" ? "IDR" : "USD";
+                                }
+                                
+                                if (currency === "IDR") netIDR += amount;
+                                else netUSD += amount;
                             }
                         }
 
-                        if (totalIDR > 0 || totalUSD > 0) {
+                        if (netIDR !== 0 || netUSD !== 0) {
                             if (!user.fiatBalances) user.fiatBalances = { USD: 0, IDR: 0 };
-                            user.fiatBalances.IDR = Math.max(0, (user.fiatBalances.IDR || 0) - totalIDR);
-                            user.fiatBalances.USD = Math.max(0, (user.fiatBalances.USD || 0) - totalUSD);
+                            user.fiatBalances.IDR = Math.max(0, (user.fiatBalances.IDR || 0) + netIDR);
+                            user.fiatBalances.USD = Math.max(0, (user.fiatBalances.USD || 0) + netUSD);
                             await user.save();
                         }
                     }

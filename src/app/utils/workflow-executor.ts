@@ -280,6 +280,52 @@ export async function buildWorkflowActions(
         actions.push(action);
         break;
       }
+
+      case "redeem": {
+        // Source Token: DYNAMIC (Previous Step) or Specific (User Wallet)
+        if (!properties.token) {
+             throw new Error("Please select a token for Redeem node");
+        }
+        const token =
+          properties.token === "DYNAMIC"
+            ? ZERO_ADDRESS
+            : getTokenAddress(properties.token);
+
+        // Destination: Main Controller (Treasury)
+        const recipient = ADDRESSES.CORE.MainController;
+
+        let amount = BigInt(0);
+        if (token !== ZERO_ADDRESS) {
+             const decimals = getTokenDecimals(token);
+             const rawAmount = properties.amount || 0;
+             if (Number(rawAmount) <= 0) {
+                 throw new Error(`Amount must be greater than 0 when using specific token (${properties.token})`);
+             }
+             amount = parseUnits(rawAmount.toString(), decimals);
+        }
+
+        const percentage = BigInt(properties.percentageOfInput || 10000);
+
+        if (actions.length === 0) {
+          initialToken = token;
+          initialAmount = amount;
+        }
+
+        console.log("Debug Redeem:", {
+            token,
+            amount: amount.toString(),
+            recipient,
+        });
+
+        const action: Action = {
+          actionType: ActionType.TRANSFER,
+          targetContract: recipient as Address,
+          data: encodeTransferData(token),
+          inputAmountPercentage: percentage,
+        };
+        actions.push(action);
+        break;
+      }
     }
   }
 
