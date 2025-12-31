@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/config/contractConfig";
+import { CONTRACT_ABI, CONTRACT_ADDRESS, VAULT_ABI, ADDRESSES } from "@/config/contractConfig";
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { useSmartWallets } from "@privy-io/react-auth/smart-wallets";
 import useStore from "@/store/store";
@@ -87,6 +87,44 @@ export function useWorkflowExecution() {
 
                     if (i < onChainNodes.length - 1) {
                         await new Promise(resolve => setTimeout(resolve, 800));
+                    }
+                }
+
+                // 3b. Yield Farming Simulation (Mock Exchange Rate)
+                const yieldNodes = onChainNodes.filter(n => ["yield-deposit", "yield-withdraw"].includes((n.data?.type || n.type) as string));
+                
+                if (yieldNodes.length > 0) {
+                    console.log("Simulating yield farming (setting exchange rates)...");
+                    for (const node of yieldNodes) {
+                        const type = (node.data?.type || node.type) as string;
+                        const props = node.data?.properties as any;
+                        const token = props?.underlyingToken;
+                        const adapter = props?.yieldAdapter;
+                        
+                        let vaultAddress = null;
+                        if (token && token !== "DYNAMIC" && adapter) {
+                             if (adapter === "MethLabAdapter") {
+                                vaultAddress = (ADDRESSES.YIELD.METHLAB.VAULTS as any)[token];
+                             } else if (adapter === "InitCapitalAdapter") {
+                                vaultAddress = (ADDRESSES.YIELD.INIT_CAPITAL.POOLS as any)[token];
+                             }
+                        }
+
+                        if (vaultAddress) {
+                            try {
+                                const newRate = type === "yield-deposit" ? 1100000n : 1000000n;
+                                await writeContractAsync({
+                                    address: vaultAddress,
+                                    abi: VAULT_ABI,
+                                    functionName: "setExchangeRate",
+                                    args: [newRate],
+                                });
+                                // Add small delay between simulations
+                                await new Promise(resolve => setTimeout(resolve, 500));
+                            } catch (simError) {
+                                console.warn("Yield simulation failed (user rejected or error):", simError);
+                            }
+                        }
                     }
                 }
 

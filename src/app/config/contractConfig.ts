@@ -89,6 +89,16 @@ export const MAIN_CONTROLLER_ABI = [
   },
 ] as const;
 
+export const VAULT_ABI = [
+  {
+    inputs: [{ internalType: "uint256", name: "newExchangeRate", type: "uint256" }],
+    name: "setExchangeRate",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+] as const;
+
 // Contract Addresses on Mantle Sepolia
 export const ADDRESSES = {
   CORE: {
