@@ -26,6 +26,11 @@ export const schema = {
       type: "string",
       pattern: "^0x[a-fA-F0-9]{40}$",
     },
+    amount: {
+      type: "number",
+      minimum: 0,
+      description: "Amount to transfer (Required if Token is specific)",
+    },
     percentageOfInput: {
       type: "number",
       minimum: 1,

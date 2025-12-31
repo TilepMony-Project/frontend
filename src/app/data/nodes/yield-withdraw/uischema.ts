@@ -39,10 +39,31 @@ export const uischema: UISchema = {
         },
         {
           type: "Text",
+          label: "Amount (if specific share token)",
+          scope: scope("properties.amount"),
+          inputType: "number",
+          placeholder: "e.g. 100",
+          rule: {
+            effect: "SHOW",
+            condition: {
+              scope: scope("properties.shareToken"),
+              schema: { not: { const: "DYNAMIC" } },
+            },
+          },
+        },
+        {
+          type: "Text",
           label: "% of Input (Basis Points)",
           scope: scope("properties.percentageOfInput"),
           inputType: "number",
           placeholder: "10000 = 100%",
+          rule: {
+            effect: "SHOW",
+            condition: {
+              scope: scope("properties.shareToken"),
+              schema: { const: "DYNAMIC" },
+            },
+          },
         },
       ],
     },

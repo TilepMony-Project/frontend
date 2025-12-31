@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { CONTRACT_ABI, CONTRACT_ADDRESS, VAULT_ABI, ADDRESSES } from "@/config/contractConfig";
+import { useWriteContract, useWaitForTransactionReceipt, usePublicClient } from "wagmi";
+import { CONTRACT_ABI, CONTRACT_ADDRESS, VAULT_ABI, ERC20_ABI, ADDRESSES } from "@/config/contractConfig";
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { useSmartWallets } from "@privy-io/react-auth/smart-wallets";
 import useStore from "@/store/store";
@@ -21,6 +21,7 @@ export function useWorkflowExecution() {
   const [result, setResult] = useState<ExecutionResult>({ status: "idle" });
   const [targetNodeId, setTargetNodeId] = useState<string | null>(null);
 
+  const publicClient = usePublicClient();
   const { writeContractAsync } = useWriteContract();
 
   const { data: receipt, isSuccess: isConfirmed, isError: isReverted, error: receiptError } = 
@@ -211,6 +212,38 @@ export function useWorkflowExecution() {
         ...action,
         inputAmountPercentage: BigInt(action.inputAmountPercentage),
       }));
+
+      // 1.5 Check Approval and Approve if needed
+      if (
+        config.initialToken && 
+        config.initialToken !== "0x0000000000000000000000000000000000000000" && 
+        BigInt(config.initialAmount) > BigInt(0)
+      ) {
+         if (!publicClient) throw new Error("Public Client not ready");
+         
+         const allowance = await publicClient.readContract({
+            address: config.initialToken as `0x${string}`,
+            abi: ERC20_ABI,
+            functionName: "allowance",
+            args: [walletAddress as `0x${string}`, CONTRACT_ADDRESS],
+         });
+
+         if (allowance < BigInt(config.initialAmount)) {
+             setResult({ status: "signing" }); 
+             const approveHash = await writeContractAsync({
+                address: config.initialToken as `0x${string}`,
+                abi: ERC20_ABI,
+                functionName: "approve",
+                args: [CONTRACT_ADDRESS, BigInt(config.initialAmount)],
+             });
+             
+             setResult({ status: "processing" });
+             await publicClient.waitForTransactionReceipt({ hash: approveHash });
+             
+             // Reset status for next signature
+             setResult({ status: "signing" }); 
+         }
+      }
 
       // 2. Send Transaction
       const hash = await writeContractAsync({

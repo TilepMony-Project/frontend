@@ -29,15 +29,36 @@ export const uischema: UISchema = {
         },
         {
           type: "Select",
-          label: "Yield Protocol",
+          label: "Adapter",
           scope: scope("properties.yieldAdapter"),
         },
         {
           type: "Text",
-          label: "% of Input (Basis Points)",
+          label: "Amount (if specific)",
+          scope: scope("properties.amount"),
+          inputType: "number",
+          placeholder: "e.g. 100",
+          rule: {
+            effect: "SHOW",
+            condition: {
+              scope: scope("properties.underlyingToken"),
+              schema: { not: { const: "DYNAMIC" } },
+            },
+          },
+        },
+        {
+          type: "Text",
+          label: "% of Input",
           scope: scope("properties.percentageOfInput"),
           inputType: "number",
           placeholder: "10000 = 100%",
+          rule: {
+            effect: "SHOW",
+            condition: {
+              scope: scope("properties.underlyingToken"),
+              schema: { const: "DYNAMIC" },
+            },
+          },
         },
       ],
     },

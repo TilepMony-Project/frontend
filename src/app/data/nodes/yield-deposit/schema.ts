@@ -35,6 +35,11 @@ export const schema = {
       type: "string",
       options: yieldAdapterOptions,
     },
+    amount: {
+      type: "number",
+      minimum: 0,
+      description: "Amount to deposit (Required if Token is specific)",
+    },
     percentageOfInput: {
       type: "number",
       minimum: 1,

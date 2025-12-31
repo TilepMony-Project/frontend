@@ -54,6 +54,11 @@ export const schema = {
       type: "string",
       options: yieldAdapterOptions,
     },
+    amount: {
+      type: "number",
+      minimum: 0,
+      description: "Amount to withdraw (Required if Share Token is specific)",
+    },
     percentageOfInput: {
       type: "number",
       minimum: 1,

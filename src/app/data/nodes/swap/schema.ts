@@ -41,6 +41,11 @@ export const schema = {
       type: "string",
       options: tokenOptions.filter((t) => t.value !== "DYNAMIC"), // Output cannot be dynamic
     },
+    amount: {
+      type: "number",
+      minimum: 0,
+      description: "Amount to swap (Required if Input Token is specific)",
+    },
     percentageOfInput: {
       type: "number",
       minimum: 1,
