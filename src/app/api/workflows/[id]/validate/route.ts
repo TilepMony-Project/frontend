@@ -35,7 +35,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const edges = (workflow.edges || []) as WorkflowEdge[];
 
     const graphResult = validateGraphStructure(nodes, edges);
-    const configResult = validateNodeConfigurations(nodes);
+    const configResult = validateNodeConfigurations(nodes, edges);
     const walletResult = validateWalletAndAddresses(nodes);
 
     const errors = [...graphResult.errors, ...configResult.errors, ...walletResult.errors];
@@ -207,7 +207,7 @@ function validateGraphStructure(nodes: WorkflowNode[], edges: WorkflowEdge[]) {
   return { errors, warnings, checks };
 }
 
-function validateNodeConfigurations(nodes: WorkflowNode[]) {
+function validateNodeConfigurations(nodes: WorkflowNode[], edges: WorkflowEdge[]) {
   const errors: ValidationMessage[] = [];
   const warnings: ValidationMessage[] = [];
   const checks: ValidationChecklistItem[] = [];
@@ -312,11 +312,19 @@ function validateNodeConfigurations(nodes: WorkflowNode[]) {
         break;
       }
       case "partition": {
-        const branches = Array.isArray(props.branches)
-          ? (props.branches as Array<{ percentage: number }>)
-          : [];
-        const total = branches.reduce((sum, branch) => sum + toNumber(branch.percentage), 0);
-        if (Math.round(total) !== 100) {
+        // Find downstream nodes connected to this partition
+        const downstreamEdges = edges.filter(e => e.source === node.id);
+        const downstreamNodeIds = downstreamEdges.map(e => e.target);
+        const downstreamNodes = nodes.filter(n => downstreamNodeIds.includes(n.id));
+        
+        // Sum percentageOfInput from downstream nodes (basis points, so 10000 = 100%)
+        const total = downstreamNodes.reduce((sum, n) => {
+          const nProps = getNodeProperties(n);
+          return sum + toNumber(nProps?.percentageOfInput || 10000);
+        }, 0);
+        
+        // Total should equal 10000 (100% in basis points)
+        if (downstreamNodes.length > 0 && Math.round(total) !== 10000) {
           partitionIssues.push(getNodeLabel(node));
         }
         break;

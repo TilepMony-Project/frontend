@@ -6,9 +6,9 @@ import { uischema } from "./uischema";
 
 export const partitionNode: PaletteItem<typeof defaultPropertiesData> = {
   label: "Partition",
-  description: "Split incoming amount into multiple branches with percentage allocation",
+  description: "Split funds into multiple streams by percentage",
   type: "partition",
-  icon: "GitBranch",
+  icon: "GitBranch", 
   defaultPropertiesData,
   schema,
   uischema,
