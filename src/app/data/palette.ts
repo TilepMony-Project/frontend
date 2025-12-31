@@ -19,20 +19,24 @@ import { scheduleNode } from "./nodes/schedule/schedule";
 
 // Organized by category for TilepMoney
 export const paletteData: PaletteItem[] = [
-  // Input Nodes
+  // Input/Redemption Nodes
   depositNode,
+  redeemNode,
+  
   // Processing Nodes
   mintNode,
   swapNode,
   bridgeNode,
+  
   // Yield Nodes
   yieldDepositNode,
   yieldWithdrawNode,
-  // Output Nodes
-  redeemNode,
+  
+  // Transfer Nodes
   transferNode,
-  // Utility Nodes
+  
+  // Logic/Utility Nodes
+  partitionNode,
   scheduleNode,
   waitNode,
-  partitionNode,
 ];
