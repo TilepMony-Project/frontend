@@ -60,18 +60,6 @@ export const uischema: UISchema = {
           label: "Receive Currency (Fiat)",
           scope: scope("properties.currency"),
         },
-        {
-          type: "Text",
-          label: "Recipient Wallet Address",
-          scope: scope("properties.recipientWallet"),
-          placeholder: "0x... (default: current user)",
-        },
-        {
-          type: "Text",
-          label: "Conversion Rate",
-          scope: scope("properties.conversionRate"),
-          readOnly: true,
-        },
       ],
     },
   ],

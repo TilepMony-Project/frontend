@@ -41,14 +41,6 @@ export const schema = {
       options: currencyOptions,
       description: "Fiat currency to receive",
     },
-    recipientWallet: {
-      type: "string",
-      pattern: "^0x[a-fA-F0-9]{40}$",
-    },
-    conversionRate: {
-      type: "number",
-      readOnly: true,
-    },
   },
 } satisfies NodeSchema;
 

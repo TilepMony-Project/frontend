@@ -49,6 +49,7 @@ export async function buildWorkflowActions(
   const actions: Action[] = [];
   let initialToken = ZERO_ADDRESS as string;
   let initialAmount = BigInt(0);
+  const partitionRemaining: Record<string, bigint> = {};
 
   for (const node of sortedNodes) {
     // Get properties from correct path: node.data.properties (not node.data directly)
@@ -58,7 +59,38 @@ export async function buildWorkflowActions(
     // Get node type from correct path: node.data.type or fallback to node.type
     const nodeType = nodeData?.type || node.type;
 
+    let percentage = BigInt(properties.percentageOfInput || 10000);
+
+    // Partition Logic: Recalculate percentage if parent is Partition
+    const incomingEdge = edges.find(e => e.target === node.id);
+    const parentNode = incomingEdge ? nodes.find(n => n.id === incomingEdge.source) : null;
+    const parentType = parentNode ? (parentNode.data?.type || parentNode.type) : "";
+
+    if (parentNode && parentType === "partition") {
+        const pId = parentNode.id;
+        if (partitionRemaining[pId] === undefined) {
+             partitionRemaining[pId] = BigInt(10000);
+        }
+        
+        const remaining = partitionRemaining[pId];
+        const desired = percentage; 
+        
+        // Formula: New% = (Desired / Remaining) * 10000
+        if (remaining > BigInt(0)) {
+            percentage = (desired * BigInt(10000)) / remaining;
+            if (percentage > BigInt(10000)) percentage = BigInt(10000);
+            
+            partitionRemaining[pId] = remaining - desired;
+        } else {
+            percentage = BigInt(0);
+        }
+    }
+
     switch (nodeType) {
+      case "partition":
+        // Partition node itself emits no action, just acts as a logic anchor
+        continue;
+
       case "mint": {
         const tokenAddress = getTokenAddress(properties.token);
         const decimals = getTokenDecimals(tokenAddress);
@@ -93,7 +125,7 @@ export async function buildWorkflowActions(
             : getTokenAddress(properties.inputToken);
 
         const tokenOut = getTokenAddress(properties.outputToken);
-        const percentage = BigInt(properties.percentageOfInput || 10000);
+
 
         // If source is specific, we use the specified amount
         let amountIn = BigInt(0);
@@ -161,7 +193,6 @@ export async function buildWorkflowActions(
             ? ZERO_ADDRESS
             : getTokenAddress(properties.underlyingToken);
 
-        const percentage = BigInt(properties.percentageOfInput || 10000);
 
         let amount = BigInt(0);
         if (token !== ZERO_ADDRESS) {
@@ -219,7 +250,7 @@ export async function buildWorkflowActions(
             : getShareTokenAddress(properties.shareToken);
 
         const underlyingToken = getTokenAddress(properties.underlyingToken);
-        const percentage = BigInt(properties.percentageOfInput || 10000);
+
 
         let amount = BigInt(0);
         if (shareToken !== ZERO_ADDRESS) {
@@ -264,7 +295,7 @@ export async function buildWorkflowActions(
              amount = parseUnits(rawAmount.toString(), decimals);
         }
 
-        const percentage = BigInt(properties.percentageOfInput || 10000);
+
 
         if (actions.length === 0) {
           initialToken = token;
@@ -304,7 +335,7 @@ export async function buildWorkflowActions(
              amount = parseUnits(rawAmount.toString(), decimals);
         }
 
-        const percentage = BigInt(properties.percentageOfInput || 10000);
+
 
         if (actions.length === 0) {
           initialToken = token;
@@ -350,26 +381,47 @@ function sortNodesMock(nodes: Node[], edges: Edge[]): Node[] {
   if (nodes.length === 0) return [];
 
   const nodeMap = new Map(nodes.map(n => [n.id, n]));
-  const incomingEdges = new Set(edges.map(e => e.target));
-  const startNode = nodes.find(n => !incomingEdges.has(n.id));
+  const inDegree = new Map<string, number>();
+  const adj = new Map<string, string[]>();
 
-  if (!startNode) return nodes;
+  // Initialize
+  nodes.forEach(n => {
+    inDegree.set(n.id, 0);
+    adj.set(n.id, []);
+  });
 
-  const sorted: Node[] = [startNode];
-  let current = startNode;
+  // Build Graph
+  edges.forEach(e => {
+    if (nodeMap.has(e.source) && nodeMap.has(e.target)) {
+      adj.get(e.source)?.push(e.target);
+      inDegree.set(e.target, (inDegree.get(e.target) || 0) + 1);
+    }
+  });
 
-  while (true) {
-    const edge = edges.find(e => e.source === current.id);
-    if (!edge) break;
-    
-    const nextNode = nodeMap.get(edge.target);
-    if (nextNode) {
-      sorted.push(nextNode);
-      current = nextNode;
-    } else {
-      break;
+  // Queue for Kahn's Algo
+  const queue: string[] = [];
+  inDegree.forEach((degree, id) => {
+    if (degree === 0) queue.push(id);
+  });
+
+  const sorted: Node[] = [];
+  
+  while (queue.length > 0) {
+    const u = queue.shift()!;
+    const node = nodeMap.get(u);
+    if (node) sorted.push(node);
+
+    const neighbors = adj.get(u) || [];
+    for (const v of neighbors) {
+        inDegree.set(v, (inDegree.get(v) || 0) - 1);
+        if (inDegree.get(v) === 0) {
+            queue.push(v);
+        }
     }
   }
 
+  // If sorted.length < nodes.length, there is a cycle. 
+  // For now, valid DAG assumed.
+  
   return sorted;
 }
