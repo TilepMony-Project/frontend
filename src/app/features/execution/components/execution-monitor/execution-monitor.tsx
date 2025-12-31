@@ -60,16 +60,50 @@ export function ExecutionMonitor() {
   const [hasNoExecution, setHasNoExecution] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const fetchStatusRef = useRef<() => Promise<void>>(undefined);
+  const previousWorkflowIdRef = useRef<string | null>(null);
 
+  // Sync workflowId from localStorage and listen for changes
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
-    const storedWorkflowId = localStorage.getItem(
-      "tilepmoney_current_workflow_id"
-    );
-    setWorkflowId(storedWorkflowId);
+
+    const syncWorkflowId = () => {
+      const storedWorkflowId = localStorage.getItem(
+        "tilepmoney_current_workflow_id"
+      );
+      setWorkflowId(storedWorkflowId);
+    };
+
+    syncWorkflowId();
+
+    // Listen for storage events (cross-tab changes)
+    window.addEventListener("storage", syncWorkflowId);
+
+    // Poll for same-tab changes (localStorage doesn't fire events in the same tab)
+    const pollInterval = setInterval(syncWorkflowId, 1000);
+
+    return () => {
+      window.removeEventListener("storage", syncWorkflowId);
+      clearInterval(pollInterval);
+    };
   }, []);
+
+  // Reset execution state when workflowId changes
+  useEffect(() => {
+    if (workflowId !== previousWorkflowIdRef.current) {
+      // Workflow changed, reset state
+      setExecution(null);
+      setHasNoExecution(false);
+      previousWorkflowIdRef.current = workflowId;
+
+      // Clear any existing polling interval
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+  }, [workflowId]);
 
   // Reset polling when a new execution starts
   useEffect(() => {
@@ -233,7 +267,11 @@ export function ExecutionMonitor() {
   const mainTxHash = execution?.transactionHash;
   const overallStatus = execution?.status || "draft";
   const statusLabel = getStatusLabel(overallStatus as ExecutionStatus);
-  const shouldShow = !!execution && !isReadOnlyMode;
+
+  // Only show if we have an execution AND it belongs to the current workflow
+  const isExecutionForCurrentWorkflow = execution?.workflowId === workflowId;
+  const shouldShow =
+    !!execution && !isReadOnlyMode && isExecutionForCurrentWorkflow;
 
   if (!shouldShow) {
     return null;

@@ -24,7 +24,9 @@ function AppComponent(_props: AppComponentProps) {
   const selectedNodesCount = useStore((state) => state.selectedNodesIds.length);
   const selectedEdgesCount = useStore((state) => state.selectedEdgesIds.length);
   const hasSingleSelection = selectedNodesCount + selectedEdgesCount === 1;
-  const isExecutionMonitorActive = useStore((state) => state.isExecutionMonitorActive);
+  const isExecutionMonitorActive = useStore(
+    (state) => state.isExecutionMonitorActive
+  );
 
   const shouldShowPropertiesPanel = hasSingleSelection;
 
