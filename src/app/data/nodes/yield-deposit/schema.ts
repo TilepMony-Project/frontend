@@ -16,6 +16,7 @@ export const tokenOptions = [
 export const yieldAdapterOptions = [
   { label: "MethLab", value: "MethLabAdapter", icon: "VaultMethLab" },
   { label: "InitCapital", value: "InitCapitalAdapter", icon: "VaultInitCapital" },
+  { label: "Compound", value: "CompoundAdapter", icon: "Building2" },
 ];
 
 export const schema = {

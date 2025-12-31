@@ -258,6 +258,10 @@ export const getShareTokenAddress = (symbol: string): string => {
     inIDRX: ADDRESSES.YIELD.INIT_CAPITAL.POOLS.IDRX,
     inUSDC: ADDRESSES.YIELD.INIT_CAPITAL.POOLS.USDC,
     inUSDT: ADDRESSES.YIELD.INIT_CAPITAL.POOLS.USDT,
+    // Compound comet tokens
+    cIDRXv3: ADDRESSES.YIELD.COMPOUND.COMETS.IDRX,
+    cUSDCv3: ADDRESSES.YIELD.COMPOUND.COMETS.USDC,
+    cUSDTv3: ADDRESSES.YIELD.COMPOUND.COMETS.USDT,
   };
   return shareTokens[symbol] || "";
 };

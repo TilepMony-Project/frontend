@@ -107,6 +107,8 @@ export function useWorkflowExecution() {
                                 vaultAddress = (ADDRESSES.YIELD.METHLAB.VAULTS as any)[token];
                              } else if (adapter === "InitCapitalAdapter") {
                                 vaultAddress = (ADDRESSES.YIELD.INIT_CAPITAL.POOLS as any)[token];
+                             } else if (adapter === "CompoundAdapter") {
+                                vaultAddress = (ADDRESSES.YIELD.COMPOUND.COMETS as any)[token];
                              }
                         }
 

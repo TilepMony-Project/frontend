@@ -20,6 +20,9 @@ export const shareTokenOptions = [
   { label: "inIDRX (InitCapital IDRX)", value: "inIDRX", icon: "VaultInitCapital" },
   { label: "inUSDC (InitCapital USDC)", value: "inUSDC", icon: "VaultInitCapital" },
   { label: "inUSDT (InitCapital USDT)", value: "inUSDT", icon: "VaultInitCapital" },
+  { label: "cIDRXv3 (Compound IDRX)", value: "cIDRXv3", icon: "Building2" },
+  { label: "cUSDCv3 (Compound USDC)", value: "cUSDCv3", icon: "Building2" },
+  { label: "cUSDTv3 (Compound USDT)", value: "cUSDTv3", icon: "Building2" },
 ];
 
 /**
@@ -28,6 +31,7 @@ export const shareTokenOptions = [
 export const yieldAdapterOptions = [
   { label: "MethLab", value: "MethLabAdapter", icon: "VaultMethLab" },
   { label: "InitCapital", value: "InitCapitalAdapter", icon: "VaultInitCapital" },
+  { label: "Compound", value: "CompoundAdapter", icon: "Building2" },
 ];
 
 export const schema = {

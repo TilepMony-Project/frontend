@@ -115,9 +115,22 @@ export async function buildWorkflowActions(
       }
 
       case "yield-deposit": {
-        const adapterAddress = getYieldAdapterAddress(properties.yieldAdapter);
+        let adapterName = properties.yieldAdapter;
+        
+        // Handle Compound implicit adapter naming
+        if (adapterName === "CompoundAdapter") {
+           const tokenSymbol = properties.underlyingToken;
+           if (tokenSymbol && tokenSymbol !== "DYNAMIC") {
+               adapterName = `CompoundAdapter${tokenSymbol}`;
+           } else {
+               // Only error if we actually fail to resolve, but Compound requires token-specific adapter
+               throw new Error("Compound Adapter requires specific underlying token (cannot be DYNAMIC)");
+           }
+        }
+
+        const adapterAddress = getYieldAdapterAddress(adapterName);
         if (!adapterAddress)
-          throw new Error(`Invalid yield adapter: ${properties.yieldAdapter}`);
+          throw new Error(`Invalid yield adapter: ${adapterName}`);
 
         const token =
           properties.underlyingToken === "DYNAMIC"
@@ -144,9 +157,21 @@ export async function buildWorkflowActions(
       }
 
       case "yield-withdraw": {
-        const adapterAddress = getYieldAdapterAddress(properties.yieldAdapter);
+        let adapterName = properties.yieldAdapter;
+
+        // Handle Compound implicit adapter naming
+        if (adapterName === "CompoundAdapter") {
+           const tokenSymbol = properties.underlyingToken;
+           if (tokenSymbol && tokenSymbol !== "DYNAMIC") {
+               adapterName = `CompoundAdapter${tokenSymbol}`;
+           } else {
+               throw new Error("Compound Adapter requires specific underlying token (cannot be DYNAMIC)");
+           }
+        }
+
+        const adapterAddress = getYieldAdapterAddress(adapterName);
         if (!adapterAddress)
-          throw new Error(`Invalid yield adapter: ${properties.yieldAdapter}`);
+          throw new Error(`Invalid yield adapter: ${adapterName}`);
 
         // Share token can be DYNAMIC (from previous node) or specified
         const shareToken =
