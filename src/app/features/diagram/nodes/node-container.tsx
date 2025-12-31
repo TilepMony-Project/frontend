@@ -30,8 +30,8 @@ export const NodeContainer = memo(({ id, data, selected }: Props) => {
   const nodeType = typeof type === "string" ? type : undefined;
   // Deposit: Output only (Right only) -> Hide Target
   const hideTargetHandle = nodeType === "deposit";
-  // Redeem & Transfer: Input only (Left only) -> Hide Source
-  const hideSourceHandle = nodeType === "redeem" || nodeType === "transfer";
+  // Redeem: Input only (Left only) -> Hide Source
+  const hideSourceHandle = nodeType === "redeem";
 
   return (
     <NodeAsPortWrapper

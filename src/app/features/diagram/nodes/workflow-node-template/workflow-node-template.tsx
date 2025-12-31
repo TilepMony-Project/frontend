@@ -136,9 +136,13 @@ const WorkflowNodeTemplateComponent = memo(
           </NodePanel.Root>
 
           {/* Add Node Button - appears on hover, opens Nodes Library */}
-          {["vault", "swap", "mint"].includes(
-            typeof data?.type === "string" ? data.type : ""
-          ) ? (
+          {[
+            "yield-deposit",
+            "yield-withdraw",
+            "swap",
+            "mint",
+            "transfer",
+          ].includes(typeof data?.type === "string" ? data.type : "") ? (
             <>
               <AddNodeButton
                 nodeId={id}
