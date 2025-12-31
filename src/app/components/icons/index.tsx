@@ -48,6 +48,8 @@ import {
   SlidersHorizontal,
   Sun,
   Trash2,
+  TrendingDown,
+  TrendingUp,
   Undo2,
   Upload,
   User,
@@ -134,6 +136,8 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   RefreshCw: RefreshCw, // Schedule
   Clock: Clock, // Wait
   GitBranch: GitBranch, // Partition
+  TrendingUp: TrendingUp, // Yield Deposit
+  TrendingDown: TrendingDown, // Yield Withdraw
 
   // Web3 icons for dynamic node icons (swap providers, issuers)
   TokenUSDT: TokenUSDT as unknown as ComponentType<IconProps>,
