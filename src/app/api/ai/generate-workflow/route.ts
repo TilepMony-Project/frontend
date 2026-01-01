@@ -9,39 +9,42 @@ import { schema as swapSchema } from "@/data/nodes/swap/schema";
 import { schema as bridgeSchema } from "@/data/nodes/bridge/schema";
 import { schema as redeemSchema } from "@/data/nodes/redeem/schema";
 import { schema as transferSchema } from "@/data/nodes/transfer/schema";
-import { schema as vaultSchema } from "@/data/nodes/vault/schema";
+import { schema as yieldDepositSchema } from "@/data/nodes/yield-deposit/schema";
+import { schema as yieldWithdrawSchema } from "@/data/nodes/yield-withdraw/schema";
 import { schema as waitSchema } from "@/data/nodes/wait/schema";
 import { schema as partitionSchema } from "@/data/nodes/partition/schema";
 
 const SUMOPOD_API_URL = "https://ai.sumopod.com/v1/chat/completions";
 const SUMOPOD_API_KEY = process.env.OPENAI_API_KEY;
 
-// Helper function to extract property information from schema
-function extractPropertyInfo(schema: { properties: Record<string, any> }) {
-  const propertyInfo: Record<string, any> = {};
+if (!SUMOPOD_API_KEY) {
+  throw new Error("Missing OPENAI_API_KEY environment variable");
+}
 
-  for (const [key, value] of Object.entries(schema.properties)) {
-    const info: any = {
-      type: value.type,
+// Helper to extract property info from schema
+function extractPropertyInfo(schema: any) {
+  const properties = schema.properties || {};
+  const result: Record<string, any> = {};
+
+  for (const [key, value] of Object.entries(properties)) {
+    const prop = value as any;
+    result[key] = {
+      type: prop.type,
+      description: prop.description,
+      minimum: prop.minimum,
+      maximum: prop.maximum,
+      pattern: prop.pattern,
+      readOnly: prop.readOnly,
+      placeholder: prop.placeholder,
     };
 
-    if (value.options) {
-      info.options = value.options.map((opt: any) => (typeof opt === "object" ? opt.value : opt));
-      info.optionLabels = value.options.map((opt: any) =>
-        typeof opt === "object" ? opt.label : opt
-      );
+    if (prop.options) {
+      result[key].options = prop.options.map((opt: any) => opt.value);
+      result[key].optionLabels = prop.options.map((opt: any) => opt.label);
     }
-
-    if (value.minimum !== undefined) info.minimum = value.minimum;
-    if (value.maximum !== undefined) info.maximum = value.maximum;
-    if (value.pattern) info.pattern = value.pattern;
-    if (value.readOnly) info.readOnly = value.readOnly;
-    if (value.placeholder) info.placeholder = value.placeholder;
-
-    propertyInfo[key] = info;
   }
 
-  return propertyInfo;
+  return result;
 }
 
 // Node registry for LLM context with property details
@@ -84,16 +87,23 @@ const NODE_REGISTRY = {
   transfer: {
     description: "Sends stablecoins to a wallet address",
     inputs: ["mUSDT", "IDRX"],
-    outputs: [],
-    requiredFields: ["amount", "recipientWallet"],
+    outputs: ["mUSDT", "IDRX"], // Transfer now has outputs
+    requiredFields: ["amount", "recipientAddress"],
     properties: extractPropertyInfo(transferSchema),
   },
-  vault: {
-    description: "Deposits into yield vault with stop conditions",
-    inputs: ["mUSDT"],
+  "yield-deposit": {
+    description: "Deposits stablecoins into yield protocols (Aave, etc.)",
+    inputs: ["mUSDT", "IDRX"],
     outputs: ["vaultShares"],
-    requiredFields: ["amount", "yieldModel", "stopCondition"],
-    properties: extractPropertyInfo(vaultSchema),
+    requiredFields: ["amount", "yieldAdapter", "underlyingToken"],
+    properties: extractPropertyInfo(yieldDepositSchema),
+  },
+  "yield-withdraw": {
+    description: "Withdraws from yield protocols back to stablecoins",
+    inputs: ["vaultShares"],
+    outputs: ["mUSDT", "IDRX"],
+    requiredFields: ["amount", "yieldAdapter"],
+    properties: extractPropertyInfo(yieldWithdrawSchema),
   },
   wait: {
     description: "Delays execution for specified duration",
@@ -110,6 +120,22 @@ const NODE_REGISTRY = {
     properties: extractPropertyInfo(partitionSchema),
   },
 };
+
+// ...
+
+// Icon mapping for each node type
+  const iconMap: Record<string, string> = {
+    deposit: "DollarSign",
+    mint: "Coins",
+    swap: "ArrowLeftRight",
+    bridge: "Link2",
+    redeem: "Building2",
+    transfer: "Send",
+    "yield-deposit": "TrendingUp",
+    "yield-withdraw": "TrendingDown",
+    wait: "Clock",
+    partition: "GitBranch",
+  };
 
 // Function definition for OpenAI function calling
 const generateWorkflowFunction = {
@@ -284,7 +310,8 @@ function validateAndEnhanceWorkflow(config: any) {
     bridge: "Link2",
     redeem: "Building2",
     transfer: "Send",
-    vault: "ShieldCheck",
+    "yield-deposit": "TrendingUp",
+    "yield-withdraw": "TrendingDown",
     wait: "Clock",
     partition: "GitBranch",
   };

@@ -48,10 +48,10 @@ const RULES = `Rules:
 
 // Example section
 const EXAMPLE = `Example:
-Prompt: "Deposit 10,000 USD, mint to stablecoin, wait 7 days, then redeem to USD"
+Prompt: "Deposit 10,000 USD, mint to stablecoin, deposit to Aave yield, wait 7 days, then withdraw"
 Response: {
-  workflowName: "USD Deposit and Redeem with Wait",
-  workflowDescription: "Deposit USD, convert to stablecoin, wait 7 days, then redeem back to USD",
+  workflowName: "USD Yield Farming with Wait",
+  workflowDescription: "Deposit USD, mint mUSDT, earn yield on Aave for 7 days, then withdraw",
   nodes: [
     { 
       id: "deposit-1", 
@@ -81,6 +81,19 @@ Response: {
       position: { x: 320, y: 0 }
     },
     { 
+      id: "yield-deposit-1", 
+      type: "yield-deposit", 
+      label: "Deposit to Aave",
+      properties: { 
+        label: "Deposit to Aave",
+        amount: 10000, 
+        token: "mUSDT",
+        yieldAdapter: "AaveAdapter",
+        description: "Deposit mUSDT to Aave Protocol"
+      },
+      position: { x: 640, y: 0 }
+    },
+    { 
       id: "wait-1", 
       type: "wait", 
       label: "Wait 7 Days",
@@ -88,30 +101,29 @@ Response: {
         label: "Wait 7 Days",
         delayDuration: 7, 
         timeUnit: "days",
-        reason: "Waiting period before redemption",
+        reason: "Yield farming period",
         description: "Wait for 7 days"
       },
-      position: { x: 640, y: 0 }
+      position: { x: 960, y: 0 }
     },
     { 
-      id: "redeem-1", 
-      type: "redeem", 
-      label: "Redeem to USD",
+      id: "yield-withdraw-1", 
+      type: "yield-withdraw", 
+      label: "Withdraw from Aave",
       properties: { 
-        label: "Redeem to USD",
+        label: "Withdraw from Aave",
         amount: 10000, 
-        currency: "USD",
-        recipientWallet: "0x2222222222222222222222222222222222222222",
-        conversionRate: null,
-        description: "Convert mUSDT back to USD"
+        yieldAdapter: "AaveAdapter",
+        description: "Withdraw principal + yield from Aave"
       },
-      position: { x: 960, y: 0 }
+      position: { x: 1280, y: 0 }
     }
   ],
   edges: [
     { id: "edge-1", source: "deposit-1", target: "mint-1" },
-    { id: "edge-2", source: "mint-1", target: "wait-1" },
-    { id: "edge-3", source: "wait-1", target: "redeem-1" }
+    { id: "edge-2", source: "mint-1", target: "yield-deposit-1" },
+    { id: "edge-3", source: "yield-deposit-1", target: "wait-1" },
+    { id: "edge-4", source: "wait-1", target: "yield-withdraw-1" }
   ]
 }`;
 
