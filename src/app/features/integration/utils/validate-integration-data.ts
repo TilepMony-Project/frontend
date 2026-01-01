@@ -1,10 +1,10 @@
-import type { Node } from "@xyflow/react";
 import type { WorkflowBuilderNode } from "@/types/node-data";
 import { getIsValidJson } from "@/utils/validation/get-is-valid-json";
-import { getNodeWithErrors } from "@/utils/validation/get-node-errors";
 import { getIsValidLayoutDirections } from "@/utils/validation/get-is-valid-layout-directions";
-import type { IntegrationDataFormat } from "../types";
 import { getNodeDefinition } from "@/utils/validation/get-node-definition";
+import { getNodeWithErrors } from "@/utils/validation/get-node-errors";
+import type { Node } from "@xyflow/react";
+import type { IntegrationDataFormat } from "../types";
 
 export type IntegrationDataError = {
   message: string;

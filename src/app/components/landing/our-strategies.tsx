@@ -1,15 +1,10 @@
 "use client";
 
-import type React from "react";
-import {
-  Sparkles,
-  MousePointerClick,
-  Settings2,
-  PlayCircle,
-} from "lucide-react";
 import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 import { cn } from "@/lib/utils";
+import { MousePointerClick, PlayCircle, Settings2, Sparkles } from "lucide-react";
 import Image from "next/image";
+import type React from "react";
 
 // Step card with GIF background
 interface StepCardProps {
@@ -94,9 +89,7 @@ const StepCard: React.FC<StepCardProps> = ({
           {title}
         </h3>
 
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {description}
-        </p>
+        <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
       </div>
     </div>
   );
@@ -188,16 +181,12 @@ const OurStrategies: React.FC = () => {
                 ref={headlineRef as React.RefObject<HTMLHeadingElement>}
                 className="w-full max-w-3xl mx-auto text-2xl sm:text-3xl lg:text-4xl font-bold text-center leading-tight"
               >
-                <span className="text-gray-900 dark:text-gray-100">
-                  Build Your{" "}
-                </span>
+                <span className="text-gray-900 dark:text-gray-100">Build Your </span>
                 <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                   Treasury Flow
                 </span>
                 <br />
-                <span className="text-gray-900 dark:text-gray-100">
-                  in 3 Simple Steps
-                </span>
+                <span className="text-gray-900 dark:text-gray-100">in 3 Simple Steps</span>
               </h2>
             </div>
             <div
@@ -205,19 +194,15 @@ const OurStrategies: React.FC = () => {
               className="flex items-center gap-2 px-4 lg:px-5"
             >
               <p className="w-full max-w-2xl opacity-80 text-sm lg:text-base text-center text-muted-foreground leading-relaxed">
-                No coding required. Design, configure, and execute your
-                stablecoin orchestration workflows with our intuitive visual
-                builder.
+                No coding required. Design, configure, and execute your stablecoin orchestration
+                workflows with our intuitive visual builder.
               </p>
             </div>
           </div>
         </div>
 
         {/* 3-Step Cards Grid */}
-        <div
-          ref={gridRef as React.RefObject<HTMLDivElement>}
-          className="w-full"
-        >
+        <div ref={gridRef as React.RefObject<HTMLDivElement>} className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
             {steps.map((step) => (
               <StepCard

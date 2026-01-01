@@ -1,10 +1,10 @@
 "use client";
 
-import { memo, useCallback, useState } from "react";
-import { Plus } from "lucide-react";
-import useStore from "@/store/store";
 import { cn } from "@/lib/utils";
+import useStore from "@/store/store";
 import type { LayoutDirection } from "@/types/common";
+import { Plus } from "lucide-react";
+import { memo, useCallback, useState } from "react";
 
 interface AddNodeButtonProps {
   nodeId: string;
@@ -19,12 +19,7 @@ interface AddNodeButtonProps {
  * a new node to connect to this one.
  */
 export const AddNodeButton = memo(
-  ({
-    nodeId,
-    layoutDirection = "horizontal",
-    className,
-    side = "right",
-  }: AddNodeButtonProps) => {
+  ({ nodeId, layoutDirection = "horizontal", className, side = "right" }: AddNodeButtonProps) => {
     const [isHovered, setIsHovered] = useState(false);
     const toggleSidebar = useStore((state) => state.toggleSidebar);
     const isSidebarExpanded = useStore((state) => state.isSidebarExpanded);

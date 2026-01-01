@@ -1,19 +1,19 @@
 "use client";
 
+import { Icon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Menu, type MenuItemProps } from "@/components/ui/menu";
 import { Tooltip } from "@/components/ui/tooltip";
-import { Icon } from "@/components/icons";
 import { CanvasToolToggle } from "@/features/app-bar/components/toolbar/canvas-tool-toggle";
 import { OptionalAppBarControls } from "@/features/plugins-core/components/optional-app-bar-controls";
+import { cn } from "@/lib/utils";
+import { MoreVertical } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { toast } from "sonner";
+import { getControlsDotsItems } from "../../functions/get-controls-dots-items";
 import { ToggleDarkMode } from "../toggle-dark-mode/toggle-dark-mode";
 import { ToggleReadyOnlyMode } from "../toggle-read-only-mode/toggle-read-only-mode";
-import { getControlsDotsItems } from "../../functions/get-controls-dots-items";
-import { MoreVertical } from "lucide-react";
-import { useMemo } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 
 // ... imports
 

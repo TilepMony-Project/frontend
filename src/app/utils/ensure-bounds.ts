@@ -1,4 +1,4 @@
-import type { NodeChange, Node } from "@xyflow/react";
+import type { Node, NodeChange } from "@xyflow/react";
 import {
   addNodeChangedListener,
   removeNodeChangedListener,

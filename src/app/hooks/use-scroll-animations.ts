@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef } from "react";
 
 // Register ScrollTrigger plugin
 if (typeof window !== "undefined") {
@@ -291,7 +291,7 @@ export function useRevealAnimation(options?: {
 
     const direction = options?.direction || "bottom";
     let clipPathFrom = "";
-    let clipPathTo = "inset(0% 0% 0% 0%)";
+    const clipPathTo = "inset(0% 0% 0% 0%)";
 
     switch (direction) {
       case "left":
@@ -338,7 +338,7 @@ export function useRevealAnimation(options?: {
  * NEW: Magnetic hover effect for interactive elements
  * Creates smooth follow-cursor animation
  */
-export function useMagneticHover(strength: number = 0.3) {
+export function useMagneticHover(strength = 0.3) {
   const elementRef = useRef<HTMLElement>(null);
 
   useEffect(() => {

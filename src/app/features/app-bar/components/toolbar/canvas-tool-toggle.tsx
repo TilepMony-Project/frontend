@@ -1,10 +1,10 @@
 "use client";
 
-import clsx from "clsx";
-import { useMemo } from "react";
 import { Icon } from "@/components/icons";
 import { Tooltip } from "@/components/ui/tooltip";
 import useStore from "@/store/store";
+import clsx from "clsx";
+import { useMemo } from "react";
 
 type CanvasTool = {
   id: "select" | "pan";

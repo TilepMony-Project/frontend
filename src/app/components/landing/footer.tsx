@@ -1,10 +1,10 @@
 "use client";
 
-import type React from "react";
-import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
 import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 import { useTheme } from "@/hooks/use-theme";
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import type React from "react";
 
 const Footer: React.FC = () => {
   const { theme } = useTheme();
@@ -31,17 +31,9 @@ const Footer: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 {theme === "dark" ? (
-                  <img
-                    alt="TilepMoney"
-                    className="h-12 w-auto"
-                    src="/tilepmoney_white_text.png"
-                  />
+                  <img alt="TilepMoney" className="h-12 w-auto" src="/tilepmoney_white_text.png" />
                 ) : (
-                  <img
-                    alt="TilepMoney"
-                    className="h-12 w-auto"
-                    src="/tilepmoney_dark_text.png"
-                  />
+                  <img alt="TilepMoney" className="h-12 w-auto" src="/tilepmoney_dark_text.png" />
                 )}
                 <span className="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-mono text-primary uppercase tracking-wider">
                   Beta
@@ -67,19 +59,13 @@ const Footer: React.FC = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent translate-x-[-100%] group-hover:animate-shimmer" />
               <div className="flex items-center justify-center w-8 h-8 rounded-lg">
-                <img
-                  alt="X (Twitter)"
-                  className="w-8 h-8 object-contain"
-                  src="/logos/x_logo.jpg"
-                />
+                <img alt="X (Twitter)" className="w-8 h-8 object-contain" src="/logos/x_logo.jpg" />
               </div>
               <div className="flex flex-col">
                 <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors">
                   Join the conversation
                 </span>
-                <span className="text-sm font-bold text-foreground">
-                  See what's cooking
-                </span>
+                <span className="text-sm font-bold text-foreground">See what's cooking</span>
               </div>
             </Link>
 

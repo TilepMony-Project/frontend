@@ -1,7 +1,7 @@
-import { useCallback } from "react";
 import useStore from "@/store/store";
-import { showToast, ToastType } from "@/utils/toast-utils";
 import type { WorkflowBuilderNode } from "@/types/node-data";
+import { ToastType, showToast } from "@/utils/toast-utils";
+import { useCallback } from "react";
 
 export function useExecutionSimulation() {
   const nodes = useStore((state) => state.nodes);

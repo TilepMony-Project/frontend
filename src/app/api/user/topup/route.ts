@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
-import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
+import { type NextRequest, NextResponse } from "next/server";
 
 interface TopupRequest {
   currency: "IDR" | "USD";
@@ -27,10 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!amount || amount <= 0) {
-      return NextResponse.json(
-        { error: "Amount must be a positive number" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Amount must be a positive number" }, { status: 400 });
     }
 
     await connectDB();
@@ -59,9 +56,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 401 });
     }
     console.error("Error processing topup:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

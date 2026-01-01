@@ -1,7 +1,7 @@
 import { paletteData } from "@/data/palette";
-import { getNodesDefinitionsByType } from "./get-nodes-definitions-by-type";
-import type { WorkflowBuilderNode } from "@/types/node-data";
 import type { PaletteItem } from "@/types/common";
+import type { WorkflowBuilderNode } from "@/types/node-data";
+import { getNodesDefinitionsByType } from "./get-nodes-definitions-by-type";
 
 const nodesDefinitionsByType: Record<string, PaletteItem> = getNodesDefinitionsByType(paletteData);
 

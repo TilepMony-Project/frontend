@@ -1,6 +1,6 @@
-import { useState } from "react";
 import useStore from "@/store/store";
 import { type EdgeState, useEdgeStyle } from "@synergycodes/overflow-ui";
+import { useState } from "react";
 
 type UseLabelEdgeHoverParams = {
   id: string;

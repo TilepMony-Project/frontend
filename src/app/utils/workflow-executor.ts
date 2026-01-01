@@ -1,24 +1,24 @@
-import {
-  ActionType,
-  encodeSwapData,
-  encodeYieldDepositData,
-  encodeYieldWithdrawData,
-  encodeTransferData,
-  encodeMintData,
-  ZERO_ADDRESS,
-  type Action,
-} from "./mainController";
-import {
-  getTokenAddress,
-  getSwapAdapterAddress,
-  getYieldAdapterAddress,
-  getShareTokenAddress,
-  getTokenDecimals,
-  ADDRESSES,
-} from "../config/contractConfig";
-import type { Node, Edge } from "@xyflow/react";
+import type { Edge, Node } from "@xyflow/react";
 import type { Address } from "viem";
 import { parseUnits } from "viem";
+import {
+  ADDRESSES,
+  getShareTokenAddress,
+  getSwapAdapterAddress,
+  getTokenAddress,
+  getTokenDecimals,
+  getYieldAdapterAddress,
+} from "../config/contractConfig";
+import {
+  type Action,
+  ActionType,
+  ZERO_ADDRESS,
+  encodeMintData,
+  encodeSwapData,
+  encodeTransferData,
+  encodeYieldDepositData,
+  encodeYieldWithdrawData,
+} from "./mainController";
 
 /**
  * Maps frontend node types to smart contract Action structs
@@ -55,35 +55,35 @@ export async function buildWorkflowActions(
     // Get properties from correct path: node.data.properties (not node.data directly)
     const nodeData = node.data as Record<string, any>;
     const properties = nodeData?.properties || nodeData || {};
-    
+
     // Get node type from correct path: node.data.type or fallback to node.type
     const nodeType = nodeData?.type || node.type;
 
     let percentage = BigInt(properties.percentageOfInput || 10000);
 
     // Partition Logic: Recalculate percentage if parent is Partition
-    const incomingEdge = edges.find(e => e.target === node.id);
-    const parentNode = incomingEdge ? nodes.find(n => n.id === incomingEdge.source) : null;
-    const parentType = parentNode ? (parentNode.data?.type || parentNode.type) : "";
+    const incomingEdge = edges.find((e) => e.target === node.id);
+    const parentNode = incomingEdge ? nodes.find((n) => n.id === incomingEdge.source) : null;
+    const parentType = parentNode ? parentNode.data?.type || parentNode.type : "";
 
     if (parentNode && parentType === "partition") {
-        const pId = parentNode.id;
-        if (partitionRemaining[pId] === undefined) {
-             partitionRemaining[pId] = BigInt(10000);
-        }
-        
-        const remaining = partitionRemaining[pId];
-        const desired = percentage; 
-        
-        // Formula: New% = (Desired / Remaining) * 10000
-        if (remaining > BigInt(0)) {
-            percentage = (desired * BigInt(10000)) / remaining;
-            if (percentage > BigInt(10000)) percentage = BigInt(10000);
-            
-            partitionRemaining[pId] = remaining - desired;
-        } else {
-            percentage = BigInt(0);
-        }
+      const pId = parentNode.id;
+      if (partitionRemaining[pId] === undefined) {
+        partitionRemaining[pId] = BigInt(10000);
+      }
+
+      const remaining = partitionRemaining[pId];
+      const desired = percentage;
+
+      // Formula: New% = (Desired / Remaining) * 10000
+      if (remaining > BigInt(0)) {
+        percentage = (desired * BigInt(10000)) / remaining;
+        if (percentage > BigInt(10000)) percentage = BigInt(10000);
+
+        partitionRemaining[pId] = remaining - desired;
+      } else {
+        percentage = BigInt(0);
+      }
     }
 
     switch (nodeType) {
@@ -98,7 +98,7 @@ export async function buildWorkflowActions(
 
         if (actions.length === 0) {
           // MINT source is always external (faucet), so initialToken is ZERO
-          initialToken = ZERO_ADDRESS; 
+          initialToken = ZERO_ADDRESS;
           initialAmount = BigInt(0);
         }
 
@@ -114,8 +114,7 @@ export async function buildWorkflowActions(
 
       case "swap": {
         const adapterAddress = getSwapAdapterAddress(properties.swapAdapter);
-        if (!adapterAddress)
-          throw new Error(`Invalid swap adapter: ${properties.swapAdapter}`);
+        if (!adapterAddress) throw new Error(`Invalid swap adapter: ${properties.swapAdapter}`);
 
         // DYNAMIC -> ZERO_ADDRESS (From previous output)
         // Specific -> Token Address (From User Wallet)
@@ -126,16 +125,17 @@ export async function buildWorkflowActions(
 
         const tokenOut = getTokenAddress(properties.outputToken);
 
-
         // If source is specific, we use the specified amount
         let amountIn = BigInt(0);
         if (tokenIn !== ZERO_ADDRESS) {
-             const decimals = getTokenDecimals(tokenIn);
-             const rawAmount = properties.amount || 0;
-             if (Number(rawAmount) <= 0) {
-                 throw new Error(`Amount must be greater than 0 when using specific input token (${properties.inputToken})`);
-             }
-             amountIn = parseUnits(rawAmount.toString(), decimals);
+          const decimals = getTokenDecimals(tokenIn);
+          const rawAmount = properties.amount || 0;
+          if (Number(rawAmount) <= 0) {
+            throw new Error(
+              `Amount must be greater than 0 when using specific input token (${properties.inputToken})`
+            );
+          }
+          amountIn = parseUnits(rawAmount.toString(), decimals);
         }
 
         if (actions.length === 0) {
@@ -143,12 +143,12 @@ export async function buildWorkflowActions(
           // If it's the first node, use the calculated amountIn as initialAmount
           // If tokenIn is specific, amountIn > 0. If DYNAMIC, amountIn=0 (but logic handles it)
           initialAmount = amountIn;
-          
+
           // Legacy check: properties.amount logic was here before, now streamlined above.
           if (tokenIn !== ZERO_ADDRESS && amountIn === BigInt(0)) {
-               // Fallback if amount wasn't parsed above? No, above logic covers it.
-               const decimals = getTokenDecimals(tokenIn);
-               initialAmount = parseUnits((properties.amount || 0).toString(), decimals);
+            // Fallback if amount wasn't parsed above? No, above logic covers it.
+            const decimals = getTokenDecimals(tokenIn);
+            initialAmount = parseUnits((properties.amount || 0).toString(), decimals);
           }
         }
 
@@ -171,20 +171,21 @@ export async function buildWorkflowActions(
 
       case "yield-deposit": {
         let adapterName = properties.yieldAdapter;
-        
+
         // Handle Compound implicit adapter naming
         if (adapterName === "CompoundAdapter") {
-           const tokenSymbol = properties.underlyingToken;
-           if (tokenSymbol && tokenSymbol !== "DYNAMIC") {
-               adapterName = `CompoundAdapter${tokenSymbol}`;
-           } else {
-               throw new Error("Compound Adapter requires specific underlying token (cannot be DYNAMIC)");
-           }
+          const tokenSymbol = properties.underlyingToken;
+          if (tokenSymbol && tokenSymbol !== "DYNAMIC") {
+            adapterName = `CompoundAdapter${tokenSymbol}`;
+          } else {
+            throw new Error(
+              "Compound Adapter requires specific underlying token (cannot be DYNAMIC)"
+            );
+          }
         }
 
         const adapterAddress = getYieldAdapterAddress(adapterName);
-        if (!adapterAddress)
-          throw new Error(`Invalid yield adapter: ${adapterName}`);
+        if (!adapterAddress) throw new Error(`Invalid yield adapter: ${adapterName}`);
 
         // DYNAMIC -> ZERO_ADDRESS (From previous output)
         // Specific -> Token Address (From User Wallet)
@@ -193,23 +194,17 @@ export async function buildWorkflowActions(
             ? ZERO_ADDRESS
             : getTokenAddress(properties.underlyingToken);
 
-
         let amount = BigInt(0);
         if (token !== ZERO_ADDRESS) {
-             const decimals = getTokenDecimals(token);
-             const rawAmount = properties.amount || 0;
-             if (Number(rawAmount) <= 0) {
-                 throw new Error(`Amount must be greater than 0 when using specific underlying token (${properties.underlyingToken})`);
-             }
-             amount = parseUnits(rawAmount.toString(), decimals);
+          const decimals = getTokenDecimals(token);
+          const rawAmount = properties.amount || 0;
+          if (Number(rawAmount) <= 0) {
+            throw new Error(
+              `Amount must be greater than 0 when using specific underlying token (${properties.underlyingToken})`
+            );
+          }
+          amount = parseUnits(rawAmount.toString(), decimals);
         }
-
-        console.log("Debug Yield Deposit:", {
-            token,
-            amount: amount.toString(),
-            isFirstNode: actions.length === 0,
-            propertiesAmount: properties.amount
-        });
 
         if (actions.length === 0) {
           initialToken = token;
@@ -231,17 +226,18 @@ export async function buildWorkflowActions(
 
         // Handle Compound implicit adapter naming
         if (adapterName === "CompoundAdapter") {
-           const tokenSymbol = properties.underlyingToken;
-           if (tokenSymbol && tokenSymbol !== "DYNAMIC") {
-               adapterName = `CompoundAdapter${tokenSymbol}`;
-           } else {
-               throw new Error("Compound Adapter requires specific underlying token (cannot be DYNAMIC)");
-           }
+          const tokenSymbol = properties.underlyingToken;
+          if (tokenSymbol && tokenSymbol !== "DYNAMIC") {
+            adapterName = `CompoundAdapter${tokenSymbol}`;
+          } else {
+            throw new Error(
+              "Compound Adapter requires specific underlying token (cannot be DYNAMIC)"
+            );
+          }
         }
 
         const adapterAddress = getYieldAdapterAddress(adapterName);
-        if (!adapterAddress)
-          throw new Error(`Invalid yield adapter: ${adapterName}`);
+        if (!adapterAddress) throw new Error(`Invalid yield adapter: ${adapterName}`);
 
         // Share token source: DYNAMIC (previous) or Specific (User Wallet)
         const shareToken =
@@ -251,15 +247,16 @@ export async function buildWorkflowActions(
 
         const underlyingToken = getTokenAddress(properties.underlyingToken);
 
-
         let amount = BigInt(0);
         if (shareToken !== ZERO_ADDRESS) {
-             const decimals = getTokenDecimals(shareToken);
-             const rawAmount = properties.amount || 0;
-             if (Number(rawAmount) <= 0) {
-                 throw new Error(`Amount must be greater than 0 when using specific share token (${properties.shareToken})`);
-             }
-             amount = parseUnits(rawAmount.toString(), decimals);
+          const decimals = getTokenDecimals(shareToken);
+          const rawAmount = properties.amount || 0;
+          if (Number(rawAmount) <= 0) {
+            throw new Error(
+              `Amount must be greater than 0 when using specific share token (${properties.shareToken})`
+            );
+          }
+          amount = parseUnits(rawAmount.toString(), decimals);
         }
 
         if (actions.length === 0) {
@@ -281,21 +278,19 @@ export async function buildWorkflowActions(
         // DYNAMIC -> ZERO_ADDRESS (From previous output)
         // Specific -> Token Address (From User Wallet)
         const token =
-          properties.token === "DYNAMIC"
-            ? ZERO_ADDRESS
-            : getTokenAddress(properties.token);
+          properties.token === "DYNAMIC" ? ZERO_ADDRESS : getTokenAddress(properties.token);
 
         let amount = BigInt(0);
         if (token !== ZERO_ADDRESS) {
-             const decimals = getTokenDecimals(token);
-             const rawAmount = properties.amount || 0;
-             if (Number(rawAmount) <= 0) {
-                 throw new Error(`Amount must be greater than 0 when using specific token (${properties.token})`);
-             }
-             amount = parseUnits(rawAmount.toString(), decimals);
+          const decimals = getTokenDecimals(token);
+          const rawAmount = properties.amount || 0;
+          if (Number(rawAmount) <= 0) {
+            throw new Error(
+              `Amount must be greater than 0 when using specific token (${properties.token})`
+            );
+          }
+          amount = parseUnits(rawAmount.toString(), decimals);
         }
-
-
 
         if (actions.length === 0) {
           initialToken = token;
@@ -315,38 +310,30 @@ export async function buildWorkflowActions(
       case "redeem": {
         // Source Token: DYNAMIC (Previous Step) or Specific (User Wallet)
         if (!properties.token) {
-             throw new Error("Please select a token for Redeem node");
+          throw new Error("Please select a token for Redeem node");
         }
         const token =
-          properties.token === "DYNAMIC"
-            ? ZERO_ADDRESS
-            : getTokenAddress(properties.token);
+          properties.token === "DYNAMIC" ? ZERO_ADDRESS : getTokenAddress(properties.token);
 
         // Destination: Main Controller (Treasury)
         const recipient = ADDRESSES.CORE.MainController;
 
         let amount = BigInt(0);
         if (token !== ZERO_ADDRESS) {
-             const decimals = getTokenDecimals(token);
-             const rawAmount = properties.amount || 0;
-             if (Number(rawAmount) <= 0) {
-                 throw new Error(`Amount must be greater than 0 when using specific token (${properties.token})`);
-             }
-             amount = parseUnits(rawAmount.toString(), decimals);
+          const decimals = getTokenDecimals(token);
+          const rawAmount = properties.amount || 0;
+          if (Number(rawAmount) <= 0) {
+            throw new Error(
+              `Amount must be greater than 0 when using specific token (${properties.token})`
+            );
+          }
+          amount = parseUnits(rawAmount.toString(), decimals);
         }
-
-
 
         if (actions.length === 0) {
           initialToken = token;
           initialAmount = amount;
         }
-
-        console.log("Debug Redeem:", {
-            token,
-            amount: amount.toString(),
-            recipient,
-        });
 
         const action: Action = {
           actionType: ActionType.TRANSFER,
@@ -360,16 +347,9 @@ export async function buildWorkflowActions(
     }
   }
 
-  // NOTE: No implicit transfer is added. 
+  // NOTE: No implicit transfer is added.
   // Users must explicitly add a Transfer node to move funds from MainController to their wallet.
   // This gives full control over workflow composition.
-
-  console.log("BuildWorkflowActions Result:", {
-    actionsCount: actions.length,
-    initialToken,
-    initialAmount: initialAmount.toString(),
-    userAddress
-  });
 
   return { actions, initialToken, initialAmount };
 }
@@ -380,18 +360,18 @@ export async function buildWorkflowActions(
 function sortNodesMock(nodes: Node[], edges: Edge[]): Node[] {
   if (nodes.length === 0) return [];
 
-  const nodeMap = new Map(nodes.map(n => [n.id, n]));
+  const nodeMap = new Map(nodes.map((n) => [n.id, n]));
   const inDegree = new Map<string, number>();
   const adj = new Map<string, string[]>();
 
   // Initialize
-  nodes.forEach(n => {
+  nodes.forEach((n) => {
     inDegree.set(n.id, 0);
     adj.set(n.id, []);
   });
 
   // Build Graph
-  edges.forEach(e => {
+  edges.forEach((e) => {
     if (nodeMap.has(e.source) && nodeMap.has(e.target)) {
       adj.get(e.source)?.push(e.target);
       inDegree.set(e.target, (inDegree.get(e.target) || 0) + 1);
@@ -405,7 +385,7 @@ function sortNodesMock(nodes: Node[], edges: Edge[]): Node[] {
   });
 
   const sorted: Node[] = [];
-  
+
   while (queue.length > 0) {
     const u = queue.shift()!;
     const node = nodeMap.get(u);
@@ -413,15 +393,15 @@ function sortNodesMock(nodes: Node[], edges: Edge[]): Node[] {
 
     const neighbors = adj.get(u) || [];
     for (const v of neighbors) {
-        inDegree.set(v, (inDegree.get(v) || 0) - 1);
-        if (inDegree.get(v) === 0) {
-            queue.push(v);
-        }
+      inDegree.set(v, (inDegree.get(v) || 0) - 1);
+      if (inDegree.get(v) === 0) {
+        queue.push(v);
+      }
     }
   }
 
-  // If sorted.length < nodes.length, there is a cycle. 
+  // If sorted.length < nodes.length, there is a cycle.
   // For now, valid DAG assumed.
-  
+
   return sorted;
 }

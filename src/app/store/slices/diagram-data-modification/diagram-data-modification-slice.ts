@@ -1,4 +1,5 @@
-import { type Draft, produce } from "immer";
+import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
+import type { GetDiagramState, SetDiagramState } from "@/store/store";
 import type {
   EdgeData,
   NodeData,
@@ -6,15 +7,14 @@ import type {
   WorkflowBuilderEdge,
   WorkflowBuilderNode,
 } from "@/types/node-data";
-import type { GetDiagramState, SetDiagramState } from "@/store/store";
 import {
   type OnEdgesChange,
   type OnNodesChange,
   applyEdgeChanges,
   applyNodeChanges,
 } from "@xyflow/react";
+import { type Draft, produce } from "immer";
 import { removeElements } from "./remove-elements";
-import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
 
 export type DiagramDataModificationState = {
   onNodesChange: OnNodesChange<WorkflowBuilderNode>;

@@ -24,8 +24,6 @@ export const mantleSepoliaTestnet = defineChain({
 
 export const EXPLORER_URL = "https://sepolia.mantlescan.xyz";
 
-export const getExplorerTxUrl = (txHash: string) =>
-  `${EXPLORER_URL}/tx/${txHash}`;
+export const getExplorerTxUrl = (txHash: string) => `${EXPLORER_URL}/tx/${txHash}`;
 
-export const getExplorerAddressUrl = (address: string) =>
-  `${EXPLORER_URL}/address/${address}`;
+export const getExplorerAddressUrl = (address: string) => `${EXPLORER_URL}/address/${address}`;

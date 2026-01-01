@@ -1,11 +1,11 @@
 "use client";
 
-import type React from "react";
 import { firstRowLogos, secondRowLogos } from "@/data/partner-logos";
-import { usePrivy } from "@privy-io/react-auth";
-import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
 import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
+import { usePrivy } from "@privy-io/react-auth";
+import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import type React from "react";
 
 const LogoBox = ({
   name,

@@ -1,18 +1,18 @@
+import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import { type NextRequest, NextResponse } from "next/server";
-import { requirePrivySession, PrivyUnauthorizedError } from "@/lib/auth/privy";
 import { generateSystemPrompt } from "./prompts";
 
+import { schema as bridgeSchema } from "@/data/nodes/bridge/schema";
 // Import node schemas for property information
 import { schema as depositSchema } from "@/data/nodes/deposit/schema";
 import { schema as mintSchema } from "@/data/nodes/mint/schema";
-import { schema as swapSchema } from "@/data/nodes/swap/schema";
-import { schema as bridgeSchema } from "@/data/nodes/bridge/schema";
+import { schema as partitionSchema } from "@/data/nodes/partition/schema";
 import { schema as redeemSchema } from "@/data/nodes/redeem/schema";
+import { schema as swapSchema } from "@/data/nodes/swap/schema";
 import { schema as transferSchema } from "@/data/nodes/transfer/schema";
+import { schema as waitSchema } from "@/data/nodes/wait/schema";
 import { schema as yieldDepositSchema } from "@/data/nodes/yield-deposit/schema";
 import { schema as yieldWithdrawSchema } from "@/data/nodes/yield-withdraw/schema";
-import { schema as waitSchema } from "@/data/nodes/wait/schema";
-import { schema as partitionSchema } from "@/data/nodes/partition/schema";
 
 const SUMOPOD_API_URL = "https://ai.sumopod.com/v1/chat/completions";
 const SUMOPOD_API_KEY = process.env.OPENAI_API_KEY;
@@ -124,18 +124,18 @@ const NODE_REGISTRY = {
 // ...
 
 // Icon mapping for each node type
-  const iconMap: Record<string, string> = {
-    deposit: "DollarSign",
-    mint: "Coins",
-    swap: "ArrowLeftRight",
-    bridge: "Link2",
-    redeem: "Building2",
-    transfer: "Send",
-    "yield-deposit": "TrendingUp",
-    "yield-withdraw": "TrendingDown",
-    wait: "Clock",
-    partition: "GitBranch",
-  };
+const iconMap: Record<string, string> = {
+  deposit: "DollarSign",
+  mint: "Coins",
+  swap: "ArrowLeftRight",
+  bridge: "Link2",
+  redeem: "Building2",
+  transfer: "Send",
+  "yield-deposit": "TrendingUp",
+  "yield-withdraw": "TrendingDown",
+  wait: "Clock",
+  partition: "GitBranch",
+};
 
 // Function definition for OpenAI function calling
 const generateWorkflowFunction = {

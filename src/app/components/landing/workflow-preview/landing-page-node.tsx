@@ -1,7 +1,7 @@
-import { Handle, Position, type NodeProps, type Node } from "@xyflow/react";
-import { memo, useMemo } from "react";
-import { Collapsible, NodeDescription, NodeIcon, NodePanel } from "@synergycodes/overflow-ui";
 import { Icon } from "@/components/icons";
+import { Collapsible, NodeDescription, NodeIcon, NodePanel } from "@synergycodes/overflow-ui";
+import { Handle, type Node, type NodeProps, Position } from "@xyflow/react";
+import { memo, useMemo } from "react";
 
 type LandingPageNode = Node<{
   icon?: string;

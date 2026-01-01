@@ -1,17 +1,12 @@
 "use client";
 
+import { AuroraText } from "@/components/ui/aurora-text";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
+import Image from "next/image";
 import type React from "react";
 import { useState } from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { AuroraText } from "@/components/ui/aurora-text";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useFadeInOnScroll } from "@/hooks/use-scroll-animations";
 
 const Hero: React.FC = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
@@ -96,9 +91,9 @@ const Hero: React.FC = () => {
               className="flex flex-col items-center gap-6 px-4 lg:px-5 mt-2"
             >
               <p className="w-full max-w-3xl text-sm lg:text-base text-center text-muted-foreground leading-[1.3] lg:leading-[1.6]">
-                Design, test, and deploy crypto treasury operations without
-                coding. Drag-and-drop to create secure, automated payment flows
-                that connect specific issuers, DEXes, and bridges.
+                Design, test, and deploy crypto treasury operations without coding. Drag-and-drop to
+                create secure, automated payment flows that connect specific issuers, DEXes, and
+                bridges.
               </p>
             </div>
           </div>
@@ -135,13 +130,9 @@ const Hero: React.FC = () => {
                   Watch demo video
                 </p>
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <p className="opacity-80 text-xs sm:text-sm text-muted-foreground">
-                    2 mins
-                  </p>
+                  <p className="opacity-80 text-xs sm:text-sm text-muted-foreground">2 mins</p>
                   <div className="w-1 h-1 rounded-full bg-muted" />
-                  <p className="text-xs sm:text-sm font-medium text-primary">
-                    Play video
-                  </p>
+                  <p className="text-xs sm:text-sm font-medium text-primary">Play video</p>
                 </div>
               </div>
             </div>

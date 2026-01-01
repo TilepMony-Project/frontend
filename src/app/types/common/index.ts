@@ -1,9 +1,9 @@
 // Type definitions for common types
 // TODO: Replace with proper type definitions
 
-import type { Edge, Node, ReactFlowInstance } from "@xyflow/react";
-import type { NodeType } from "@/types/node-types";
 import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
+import type { NodeType } from "@/types/node-types";
+import type { Edge, Node, ReactFlowInstance } from "@xyflow/react";
 
 export type LayoutDirection = "horizontal" | "vertical";
 

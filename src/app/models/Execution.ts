@@ -74,8 +74,8 @@ const ExecutionSchema = new Schema<IExecution>(
         // Granular fields moved to detailExecution
         // Detailed structured data
         detailExecution: {
-          type: Schema.Types.Mixed
-        }
+          type: Schema.Types.Mixed,
+        },
       },
     ],
     totalGasUsed: {
@@ -101,7 +101,7 @@ const ExecutionSchema = new Schema<IExecution>(
     runCount: {
       type: Number,
       default: 1,
-    }
+    },
   },
   {
     timestamps: true,

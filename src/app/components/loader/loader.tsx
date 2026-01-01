@@ -1,5 +1,5 @@
-import { type CSSProperties, memo } from "react";
 import { clsx } from "clsx";
+import { type CSSProperties, memo } from "react";
 
 type LoaderType = {
   isLoading?: boolean;

@@ -1,10 +1,10 @@
 import type { LayoutDirection } from "@/types/common";
 import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
 
-import crossBorderData from "./cross-border-treasury-transfer.json";
 import automatedOnRampData from "./automated-onramp-investment-vault.json";
-import salaryDistributionData from "./scheduled-salary-distribution.json";
 import invoiceSettlementData from "./corporate-invoice-settlement.json";
+import crossBorderData from "./cross-border-treasury-transfer.json";
+import salaryDistributionData from "./scheduled-salary-distribution.json";
 
 export type WorkflowTemplate = {
   id: string;

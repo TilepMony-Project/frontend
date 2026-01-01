@@ -1,6 +1,6 @@
 import type { NodeData, WorkflowBuilderNode } from "@/types/node-data";
-import type { NodeAddChange, XYPosition } from "@xyflow/react";
 import type { NodeType } from "@/types/node-types";
+import type { NodeAddChange, XYPosition } from "@xyflow/react";
 
 export function getNodeAddChange(
   templateType: NodeType,

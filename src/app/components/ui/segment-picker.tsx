@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
-import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
 import { cn } from "@/lib/utils";
+import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
+import * as React from "react";
 
 export interface SegmentPickerProps {
   value?: string;

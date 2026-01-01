@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { type User, usePrivy } from "@privy-io/react-auth";
+import { useEffect, useState } from "react";
 
 type PrivySessionState = {
   accessToken: string | null;

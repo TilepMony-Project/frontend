@@ -1,22 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Modal } from "@/components/ui/modal";
 import { Icon } from "@/components/icons";
-import { Sparkles, Loader2 } from "lucide-react";
-import { showToast, ToastType } from "@/utils/toast-utils";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
+import { Textarea } from "@/components/ui/textarea";
+import { ToastType, showToast } from "@/utils/toast-utils";
 import { usePrivy } from "@privy-io/react-auth";
+import { Loader2, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface AIWorkflowGeneratorProps {
   onWorkflowGenerated?: (workflow: any) => void;
 }
 
-export function AIWorkflowGenerator({
-  onWorkflowGenerated,
-}: AIWorkflowGeneratorProps) {
+export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGeneratorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -124,17 +122,10 @@ export function AIWorkflowGenerator({
         size="large"
         footer={
           <div className="flex justify-end gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setIsOpen(false)}
-              disabled={isGenerating}
-            >
+            <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isGenerating}>
               Cancel
             </Button>
-            <Button
-              onClick={handleGenerate}
-              disabled={isGenerating || !prompt.trim()}
-            >
+            <Button onClick={handleGenerate} disabled={isGenerating || !prompt.trim()}>
               {isGenerating ? (
                 <>
                   <Loader2 size={18} className="animate-spin mr-2" />
@@ -152,9 +143,7 @@ export function AIWorkflowGenerator({
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Describe your workflow
-            </label>
+            <label className="block text-sm font-medium mb-2">Describe your workflow</label>
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
@@ -167,17 +156,14 @@ export function AIWorkflowGenerator({
           <div className="bg-muted/50 rounded-lg p-4 space-y-2">
             <p className="text-sm font-medium">Example prompts:</p>
             <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li>"Deposit 10,000 USD, mint to stablecoin, wait 7 days, then redeem to USD"</li>
               <li>
-                "Deposit 10,000 USD, mint to stablecoin, wait 7 days, then
-                redeem to USD"
+                "Create a stablecoin workflow: deposit IDR → mint → vault with 120 mUSDT target →
+                partition 60/40 to transfer and redeem"
               </li>
               <li>
-                "Create a stablecoin workflow: deposit IDR → mint → vault with 120
-                mUSDT target → partition 60/40 to transfer and redeem"
-              </li>
-              <li>
-                "I need to receive USD, convert to stablecoin, bridge to Mantle,
-                then transfer to wallet 0xABC"
+                "I need to receive USD, convert to stablecoin, bridge to Mantle, then transfer to
+                wallet 0xABC"
               </li>
             </ul>
           </div>

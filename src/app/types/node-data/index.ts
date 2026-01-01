@@ -1,8 +1,8 @@
 // Type definitions for node-data
 // TODO: Replace with proper type definitions
 
-import type { Node, Edge } from "@xyflow/react";
 import type { IconType } from "@/types/common";
+import type { Edge, Node } from "@xyflow/react";
 
 export type NodePropertiesData = Record<string, unknown>;
 

@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
-import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
+import { NextResponse } from "next/server";
 
 /**
  * GET /api/user/profile
@@ -22,9 +22,7 @@ export async function GET(request: Request) {
 
     // Get latest profile from array
     const latestProfile =
-      user.profiles && user.profiles.length > 0
-        ? user.profiles[user.profiles.length - 1]
-        : {};
+      user.profiles && user.profiles.length > 0 ? user.profiles[user.profiles.length - 1] : {};
 
     return NextResponse.json({
       fullName: latestProfile.fullName ?? "",
@@ -41,9 +39,6 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 401 });
     }
     console.error("Error fetching user profile:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

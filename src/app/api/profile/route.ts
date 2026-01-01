@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
+import { PROFILE_TIMEZONE_VALUES } from "@/features/profile/constants";
 import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
-import { PROFILE_TIMEZONE_VALUES } from "@/features/profile/constants";
 
 type ProfilePayload = {
   fullName?: string;
@@ -96,9 +96,7 @@ function serializeProfile(user: any) {
 
   // Get latest profile from array
   const latestProfile =
-    user.profiles && user.profiles.length > 0
-      ? user.profiles[user.profiles.length - 1]
-      : {};
+    user.profiles && user.profiles.length > 0 ? user.profiles[user.profiles.length - 1] : {};
 
   return {
     userId: user.userId || user.privyUserId,

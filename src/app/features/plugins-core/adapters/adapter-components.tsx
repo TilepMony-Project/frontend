@@ -1,5 +1,5 @@
 import type React from "react";
-import { memo, useMemo, type ReactNode } from "react";
+import { type ReactNode, memo, useMemo } from "react";
 import { sortByPriority } from "./utils/sort-by-priority";
 
 type ModifyProps<P> = (props: P) => P;

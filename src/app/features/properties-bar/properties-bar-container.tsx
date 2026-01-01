@@ -1,6 +1,6 @@
-import { ToastType, showToast } from "@/utils/toast-utils";
-import { useEffect, useState, useContext } from "react";
 import { IntegrationContext } from "@/features/integration/components/integration-variants/context/integration-context-wrapper";
+import { ToastType, showToast } from "@/utils/toast-utils";
+import { useContext, useEffect, useState } from "react";
 
 import { useSingleSelectedElement } from "@/features/properties-bar/use-single-selected-element";
 import { useRemoveElements } from "@/hooks/use-remove-elements";
@@ -11,9 +11,7 @@ import { PropertiesBar } from "./components/properties-bar/properties-bar";
 
 export function PropertiesBarContainer() {
   const { removeElements } = useRemoveElements();
-  const isPropertiesBarExpanded = useStore(
-    (state) => state.isPropertiesBarExpanded
-  );
+  const isPropertiesBarExpanded = useStore((state) => state.isPropertiesBarExpanded);
   const togglePropertiesBar = useStore((state) => state.togglePropertiesBar);
 
   const [selectedTab, setSelectedTab] = useState("properties");

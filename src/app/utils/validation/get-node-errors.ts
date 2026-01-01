@@ -1,6 +1,6 @@
+import type { WorkflowBuilderNode } from "@/types/node-data";
 import Ajv from "ajv";
 import type { AnySchema } from "ajv";
-import type { WorkflowBuilderNode } from "@/types/node-data";
 import { flatErrors } from "./flat-errors";
 import { getNodeDefinition } from "./get-node-definition";
 

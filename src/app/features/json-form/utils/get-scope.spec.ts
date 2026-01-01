@@ -1,5 +1,5 @@
-import { getScope } from "./get-scope";
 import { describe, expect, it } from "vitest";
+import { getScope } from "./get-scope";
 
 describe("getScope", () => {
   const _schema = {

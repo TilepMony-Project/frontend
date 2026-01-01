@@ -1,6 +1,5 @@
 "use client";
 
-import type React from "react";
 import {
   Accordion,
   AccordionContent,
@@ -8,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useFadeInOnScroll, useStaggerFade } from "@/hooks/use-scroll-animations";
+import type React from "react";
 
 const FAQ: React.FC = () => {
   const faqItems = [

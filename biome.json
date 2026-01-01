@@ -75,10 +75,7 @@
       "quoteStyle": "double",
       "attributePosition": "auto"
     },
-    "globals": [
-      "React",
-      "JSX"
-    ]
+    "globals": ["React", "JSX"]
   },
   "json": {
     "formatter": {
@@ -107,4 +104,3 @@
     }
   ]
 }
-

@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 
 import { IntegrationWrapper } from "./wrapper/integration-wrapper";
 
-import type { IntegrationDataFormatOptional, OnSave } from "@/features/integration/types";
-import { usePrivySession } from "@/hooks/use-privy-session";
-import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
-import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
-import { showToast, ToastType } from "@/utils/toast-utils";
-import { showToast as showSnackbar } from "@/utils/toast-utils";
 import { WorkflowLoadingOverlay } from "@/components/workflow-loading-overlay";
+import type { IntegrationDataFormatOptional, OnSave } from "@/features/integration/types";
+import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
+import { usePrivySession } from "@/hooks/use-privy-session";
+import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
+import { ToastType, showToast } from "@/utils/toast-utils";
+import { showToast as showSnackbar } from "@/utils/toast-utils";
 import {
   showSnackbarSaveErrorIfNeeded,
   showSnackbarSaveSuccessIfNeeded,

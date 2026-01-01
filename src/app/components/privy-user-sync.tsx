@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { useEffect, useRef } from "react";
 
 export function PrivyUserSync() {
   const { ready, authenticated, user, getAccessToken } = usePrivy();

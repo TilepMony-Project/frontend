@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import { PrivyUnauthorizedError, requirePrivySession } from "@/lib/auth/privy";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
+import { NextResponse } from "next/server";
 
 type PrivyUserPayload = {
   id: string;
@@ -56,7 +56,6 @@ export async function POST(request: Request) {
       { $set: update, $setOnInsert: { privyUserId, userId: privyUserId } },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
-
 
     return NextResponse.json({
       success: true,

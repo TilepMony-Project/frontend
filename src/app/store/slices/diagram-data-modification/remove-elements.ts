@@ -1,5 +1,5 @@
-import type { Edge, Node } from "@xyflow/react";
 import type { GetDiagramState, SetDiagramState } from "@/store/store";
+import type { Edge, Node } from "@xyflow/react";
 
 export function removeElements(
   elements: { nodes?: Node[]; edges?: Edge[] },

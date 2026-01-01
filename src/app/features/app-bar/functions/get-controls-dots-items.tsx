@@ -1,7 +1,7 @@
 import { withOptionalFunctionPlugins } from "@/features/plugins-core/adapters/adapter-functions";
 
-import type { MenuItemProps } from "@/components/ui/menu";
 import { Icon } from "@/components/icons";
+import type { MenuItemProps } from "@/components/ui/menu";
 
 import { openExportModal } from "@/features/integration/components/import-export/export-modal/open-export-modal";
 import { openImportModal } from "@/features/integration/components/import-export/import-modal/open-import-modal";

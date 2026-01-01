@@ -1,8 +1,8 @@
 import { Icon } from "@/components/icons";
 import { Tooltip } from "@/components/ui/tooltip";
+import { useTheme } from "@/hooks/use-theme";
 import clsx from "clsx";
 import { useMemo } from "react";
-import { useTheme } from "@/hooks/use-theme";
 
 type ThemeTool = {
   id: "light" | "dark";

@@ -1,10 +1,10 @@
-import type { WorkflowBuilderEdge } from "@/types/node-data";
-import useStore from "@/store/store";
 import { Input } from "@/components/ui/input";
+import useStore from "@/store/store";
+import type { WorkflowBuilderEdge } from "@/types/node-data";
 
-import { useEffect, useState } from "react";
 import { FormControlWithLabel } from "@/components/form/form-control-with-label/form-control-with-label";
 import { OptionalEdgeProperties } from "@/features/plugins-core/components/optional-edge-properties";
+import { useEffect, useState } from "react";
 
 type Props = {
   edge: WorkflowBuilderEdge;

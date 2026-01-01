@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { usePrivySession } from "@/hooks/use-privy-session";
+import { useState } from "react";
 
 export type ValidationResult = {
   valid: boolean;
@@ -15,7 +15,7 @@ export function useWorkflowValidation() {
 
   const validateWorkflow = async (workflowId: string) => {
     if (!accessToken) return null;
-    
+
     setValidating(true);
     setResult(null);
 

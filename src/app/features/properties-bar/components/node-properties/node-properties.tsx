@@ -1,14 +1,14 @@
-import type { WorkflowBuilderNode } from "@/types/node-data";
-import useStore from "@/store/store";
-import type { JsonFormsReactProps } from "@jsonforms/react";
-import { JSONForm } from "@/features/json-form/json-form";
-import type { JsonFormsProps } from "@jsonforms/core";
-import { isDeepEqual } from "remeda";
-import { useRef, useEffect, memo } from "react";
 import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
-import { flatErrors } from "@/utils/validation/flat-errors";
-import { usePrivySession } from "@/hooks/use-privy-session";
+import { JSONForm } from "@/features/json-form/json-form";
 import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
+import { usePrivySession } from "@/hooks/use-privy-session";
+import useStore from "@/store/store";
+import type { WorkflowBuilderNode } from "@/types/node-data";
+import { flatErrors } from "@/utils/validation/flat-errors";
+import type { JsonFormsProps } from "@jsonforms/core";
+import type { JsonFormsReactProps } from "@jsonforms/react";
+import { memo, useEffect, useRef } from "react";
+import { isDeepEqual } from "remeda";
 import { useAccount } from "wagmi";
 
 type Props = {
@@ -24,9 +24,7 @@ export const NodeProperties = memo(({ node }: Props) => {
   const { properties, type } = data;
   const nodeType = typeof type === "string" ? type : undefined;
   const propertiesData =
-    properties && typeof properties === "object"
-      ? (properties as Record<string, unknown>)
-      : {};
+    properties && typeof properties === "object" ? (properties as Record<string, unknown>) : {};
 
   if (!nodeType) {
     return;
@@ -37,12 +35,8 @@ export const NodeProperties = memo(({ node }: Props) => {
     return;
   }
 
-  const schemaDefinition = nodeDefinition.schema as
-    | JsonFormsProps["schema"]
-    | undefined;
-  const uischemaDefinition = nodeDefinition.uischema as
-    | JsonFormsProps["uischema"]
-    | undefined;
+  const schemaDefinition = nodeDefinition.schema as JsonFormsProps["schema"] | undefined;
+  const uischemaDefinition = nodeDefinition.uischema as JsonFormsProps["uischema"] | undefined;
 
   if (!schemaDefinition || !uischemaDefinition) {
     return;
@@ -59,10 +53,10 @@ export const NodeProperties = memo(({ node }: Props) => {
     nodeType === "deposit"
       ? (propertiesData.currency as string | undefined)
       : mintToken === "IDRX"
-      ? "IDR"
-      : mintToken
-      ? "USD"
-      : undefined;
+        ? "IDR"
+        : mintToken
+          ? "USD"
+          : undefined;
 
   useEffect(() => {
     if ((nodeType !== "deposit" && nodeType !== "mint") || !accessToken) return;
@@ -84,29 +78,20 @@ export const NodeProperties = memo(({ node }: Props) => {
 
         const profile = await response.json();
         const balances = profile.fiatBalances || { IDR: 0, USD: 0 };
-        const currentBalance =
-          balances[activeCurrency as keyof typeof balances] || 0;
+        const currentBalance = balances[activeCurrency as keyof typeof balances] || 0;
 
         // Deduction for mint, addition for deposit
         const balanceModifier = nodeType === "mint" ? -1 : 1;
         const projectedBalance = currentBalance + amount * balanceModifier;
 
-        const formatter = new Intl.NumberFormat(
-          activeCurrency === "IDR" ? "id-ID" : "en-US",
-          {
-            style: "currency",
-            currency: activeCurrency!,
-          }
-        );
+        const formatter = new Intl.NumberFormat(activeCurrency === "IDR" ? "id-ID" : "en-US", {
+          style: "currency",
+          currency: activeCurrency!,
+        });
 
-        const currentBalanceText = `Current Balance: ${formatter.format(
-          currentBalance
-        )}`;
-        const projectedLabel =
-          nodeType === "mint" ? "After Mint" : "After Deposit";
-        const projectedBalanceText = `${projectedLabel}: ${formatter.format(
-          projectedBalance
-        )}`;
+        const currentBalanceText = `Current Balance: ${formatter.format(currentBalance)}`;
+        const projectedLabel = nodeType === "mint" ? "After Mint" : "After Deposit";
+        const projectedBalanceText = `${projectedLabel}: ${formatter.format(projectedBalance)}`;
 
         // Only update if changed to prevent loops
         if (
@@ -148,11 +133,7 @@ export const NodeProperties = memo(({ node }: Props) => {
   const { address: userAddress } = useAccount();
 
   useEffect(() => {
-    if (
-      nodeType !== "transfer" ||
-      !userAddress ||
-      propertiesData.recipientAddress
-    ) {
+    if (nodeType !== "transfer" || !userAddress || propertiesData.recipientAddress) {
       return;
     }
 
@@ -160,13 +141,7 @@ export const NodeProperties = memo(({ node }: Props) => {
       ...propertiesData,
       recipientAddress: userAddress,
     });
-  }, [
-    nodeType,
-    userAddress,
-    propertiesData.recipientAddress,
-    id,
-    setNodeProperties,
-  ]);
+  }, [nodeType, userAddress, propertiesData.recipientAddress, id, setNodeProperties]);
 
   const onChange: JsonFormsReactProps["onChange"] = ({ data, errors }) => {
     const flattenErrors = flatErrors(errors);

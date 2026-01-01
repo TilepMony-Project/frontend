@@ -1,5 +1,5 @@
-import { createPortal } from "react-dom";
 import { Modal } from "@/components/ui/modal";
+import { createPortal } from "react-dom";
 import { closeModal, useModalStore } from "../stores/use-modal-store";
 
 export function ModalProvider() {

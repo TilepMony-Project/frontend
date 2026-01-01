@@ -1,8 +1,8 @@
 import { Handle, type HandleType, Position } from "@xyflow/react";
 
-import clsx from "clsx";
 import { getHandleId } from "@/features/diagram/handles/get-handle-id";
 import useStore from "@/store/store";
+import clsx from "clsx";
 
 type Props = {
   nodeId: string;

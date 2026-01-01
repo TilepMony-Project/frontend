@@ -1,7 +1,7 @@
+import type { FooterVariant, Modal } from "@/components/ui/modal";
+import type { ComponentProps } from "react";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import type { ComponentProps } from "react";
-import type { FooterVariant, Modal } from "@/components/ui/modal";
 
 type ModalProps = {
   content: ComponentProps<typeof Modal>["children"];

@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
+import { Icon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SelectWrapper as Select, type SelectOption } from "@/components/ui/select-wrapper";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { PROFILE_TIMEZONES } from "@/features/profile/constants";
-import { usePrivySession } from "@/hooks/use-privy-session";
 import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
-import { showToast, ToastType } from "@/utils/toast-utils";
-import { Icon } from "@/components/icons";
+import { usePrivySession } from "@/hooks/use-privy-session";
+import { ToastType, showToast } from "@/utils/toast-utils";
 
 type ProfileResponse = {
   userId: string;

@@ -1,22 +1,5 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import type React from "react";
-import type { ComponentType, SVGProps } from "react";
-import { ChevronDown, Moon, Shield as ShieldIcon, Sun, Wallet as WalletIcon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { IconSwitch } from "@/components/ui/icon-switch";
-import { useTheme } from "@/hooks/use-theme";
-import { cn } from "@/lib/utils";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
-import {
-  WalletCoinbase,
-  WalletMetamask,
-  WalletRainbow,
-  WalletRabby,
-  WalletWalletConnect,
-} from "@web3icons/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,9 +8,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Copy, Check } from "lucide-react";
-import { toast } from "sonner";
+import { IconSwitch } from "@/components/ui/icon-switch";
+import { useTheme } from "@/hooks/use-theme";
+import { cn } from "@/lib/utils";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import {
+  WalletCoinbase,
+  WalletMetamask,
+  WalletRabby,
+  WalletRainbow,
+  WalletWalletConnect,
+} from "@web3icons/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ChevronDown, Moon, Shield as ShieldIcon, Sun, Wallet as WalletIcon } from "lucide-react";
+import { Check, Copy, LogOut } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import type React from "react";
+import type { ComponentType, SVGProps } from "react";
+import { toast } from "sonner";
 
 const Header: React.FC = () => {
   const { ready, authenticated, login, logout, user } = usePrivy();
@@ -90,7 +90,7 @@ const Header: React.FC = () => {
       setTimeout(() => {
         if (typeof window !== "undefined" && ScrollTrigger) {
           ScrollTrigger.refresh();
-          
+
           // Force all ScrollTrigger animations in the target section to their "end" state
           // This ensures elements are visible even if they were in a "reversed" state
           const triggers = ScrollTrigger.getAll();
@@ -102,12 +102,12 @@ const Header: React.FC = () => {
           });
         }
       }, 100);
-      
+
       // Delayed refresh to handle smooth scroll completion
       setTimeout(() => {
         if (typeof window !== "undefined" && ScrollTrigger) {
           ScrollTrigger.refresh();
-          
+
           // Force animations again after scroll completes
           const triggers = ScrollTrigger.getAll();
           triggers.forEach((trigger) => {

@@ -1,9 +1,9 @@
 "use client";
 
+import { usePrivy } from "@privy-io/react-auth";
 import { AlertTriangle, ArrowRight, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePrivy } from "@privy-io/react-auth";
 
 interface UserProfile {
   fullName?: string;
@@ -86,8 +86,7 @@ export function ProfileCheckAlert() {
             Complete Your Profile
           </h3>
           <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
-            Please complete your profile to enable full workflow execution
-            capabilities. Missing:{" "}
+            Please complete your profile to enable full workflow execution capabilities. Missing:{" "}
             <span className="font-medium">{missingFields.join(", ")}</span>
           </p>
           <Link

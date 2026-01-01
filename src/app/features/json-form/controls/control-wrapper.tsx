@@ -1,6 +1,6 @@
 import { FormControlWithLabel } from "@/components/form/form-control-with-label/form-control-with-label";
-import type { BaseControlProps } from "../types/controls";
 import { IndicatorDot } from "../components/indicator-dot/indicator-dot";
+import type { BaseControlProps } from "../types/controls";
 
 type Props = BaseControlProps & {
   children: React.ReactNode;

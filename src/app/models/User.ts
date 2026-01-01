@@ -94,7 +94,7 @@ const UserSchema = new Schema<IUser>(
       lowercase: true,
       trim: true,
     },
-    
+
     // Profiles Array (Source of Truth)
     profiles: {
       type: [ProfileSchema],

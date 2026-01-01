@@ -1,3 +1,7 @@
+import { Icon } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import type { DynamicCondition } from "@/features/json-form/types/controls";
+import { validateCondition } from "@/features/json-form/utils/conditional-transform";
 import {
   type ForwardedRef,
   forwardRef,
@@ -7,10 +11,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/icons";
-import type { DynamicCondition } from "@/features/json-form/types/controls";
-import { validateCondition } from "@/features/json-form/utils/conditional-transform";
 import { ConditionsFormField } from "../dynamic-conditions-form-field/conditions-form-field";
 
 import { closeModal } from "@/features/modals/stores/use-modal-store";

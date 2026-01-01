@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
 import { Textarea } from "@/components/ui/textarea";
+import React, { Suspense } from "react";
 
 import type { SyntaxHighlighterProps } from "./syntax-highlighter";
 

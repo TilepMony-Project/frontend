@@ -1,7 +1,8 @@
-import clsx from "clsx";
-import { useCallback, useMemo, useRef } from "react";
+import { Icon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import clsx from "clsx";
+import { useCallback, useMemo, useRef } from "react";
 import type { DynamicCondition, DynamicConditionsControlProps } from "../../types/controls";
 import { createControlRenderer } from "../../utils/rendering";
 import { ControlWrapper } from "../control-wrapper";
@@ -9,11 +10,10 @@ import {
   ConditionsForm,
   type ConditionsFormHandle,
 } from "./dynamic-conditions-form/conditions-form";
-import { Icon } from "@/components/icons";
 
+import { closeModal, openModal } from "@/features/modals/stores/use-modal-store";
 import { conditionsToDependencies } from "../../utils/conditional-transform";
 import { ConditionModalFooter } from "./dynamic-condition-modal-footer/condition-modal-footer";
-import { closeModal, openModal } from "@/features/modals/stores/use-modal-store";
 
 function DynamicConditionsControl(props: DynamicConditionsControlProps) {
   const { data = [], handleChange, path, enabled } = props;

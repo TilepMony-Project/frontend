@@ -1,26 +1,24 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
 import {
-  ReactFlow,
   Background,
-  Controls,
-  useNodesState,
-  useEdgesState,
-  addEdge,
   type Connection,
+  Controls,
   type Edge,
+  MarkerType,
   type Node,
   type NodeTypes,
   Position,
-  MarkerType,
-  useReactFlow,
+  ReactFlow,
   ReactFlowProvider,
+  addEdge,
+  useEdgesState,
+  useNodesState,
+  useReactFlow,
 } from "@xyflow/react";
+import { useCallback, useMemo, useState } from "react";
 import "@xyflow/react/dist/style.css";
-import { LandingPageNode } from "./landing-page-node";
 import { Icon } from "@/components/icons";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -29,16 +27,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { LandingPageNode } from "./landing-page-node";
 
-import { depositNode } from "@/data/nodes/deposit/deposit";
-import { swapNode } from "@/data/nodes/swap/swap";
-import { waitNode } from "@/data/nodes/wait/wait";
-import { transferNode } from "@/data/nodes/transfer/transfer";
 import { bridgeNode } from "@/data/nodes/bridge/bridge";
+import { depositNode } from "@/data/nodes/deposit/deposit";
 import { mintNode } from "@/data/nodes/mint/mint";
 import { partitionNode } from "@/data/nodes/partition/partition";
 import { redeemNode } from "@/data/nodes/redeem/redeem";
+import { swapNode } from "@/data/nodes/swap/swap";
+import { transferNode } from "@/data/nodes/transfer/transfer";
 import { vaultNode } from "@/data/nodes/vault/vault";
+import { waitNode } from "@/data/nodes/wait/wait";
 
 const ALL_NODES = [
   depositNode,

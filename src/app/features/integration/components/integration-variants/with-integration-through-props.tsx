@@ -5,11 +5,11 @@ import { IntegrationWrapper } from "./wrapper/integration-wrapper";
 import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
 
 import type { OnSave, OnSaveExternal } from "@/features/integration/types";
+import type { Prettify } from "@/utils/typescript";
 import {
   showSnackbarSaveErrorIfNeeded,
   showSnackbarSaveSuccessIfNeeded,
 } from "../../utils/show-snackbar";
-import type { Prettify } from "@/utils/typescript";
 
 type Props = Omit<React.ComponentProps<typeof IntegrationWrapper>, "onSave"> & {
   onDataSave: OnSaveExternal;

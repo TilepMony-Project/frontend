@@ -1,16 +1,16 @@
-import clsx from "clsx";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { SelectWrapper as Select } from "@/components/ui/select-wrapper";
-import { SegmentPicker } from "@/components/ui/segment-picker";
-import { useMemo } from "react";
 import { Icon } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { SegmentPicker } from "@/components/ui/segment-picker";
+import { SelectWrapper as Select } from "@/components/ui/select-wrapper";
+import clsx from "clsx";
+import { useMemo } from "react";
 
+import type { DynamicCondition } from "@/features/json-form/types/controls";
 import {
   comparisonsOperators,
   validateCondition,
 } from "@/features/json-form/utils/conditional-transform";
-import type { DynamicCondition } from "@/features/json-form/types/controls";
 
 type ConditionsFormFieldProps = {
   condition: Partial<DynamicCondition>;

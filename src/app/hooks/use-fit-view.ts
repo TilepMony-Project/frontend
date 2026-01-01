@@ -1,10 +1,10 @@
-import { useCallback } from "react";
-import useStore from "@/store/store";
 import {
   FIT_VIEW_DURATION_TIME,
   FIT_VIEW_MAX_ZOOM,
   FIT_VIEW_PADDING,
 } from "@/features/diagram/diagram.const";
+import useStore from "@/store/store";
+import { useCallback } from "react";
 
 export function useFitView() {
   const reactFlowInstance = useStore((store) => store.reactFlowInstance);

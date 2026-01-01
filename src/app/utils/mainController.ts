@@ -3,7 +3,7 @@
  * Used to construct Action structs for executeWorkflow calls
  */
 
-import { encodeAbiParameters, parseAbiParameters, type Hex } from "viem";
+import { type Hex, encodeAbiParameters, parseAbiParameters } from "viem";
 
 // Action Type Enum (matches smart contract)
 export const ActionType = {
@@ -71,9 +71,7 @@ export const encodeYieldDepositData = (
   adapterData: Hex = "0x"
 ): Hex => {
   return encodeAbiParameters(
-    parseAbiParameters(
-      "address adapter, address token, uint256 amount, bytes adapterData"
-    ),
+    parseAbiParameters("address adapter, address token, uint256 amount, bytes adapterData"),
     [adapter as `0x${string}`, token as `0x${string}`, amount, adapterData]
   );
 };
@@ -112,9 +110,7 @@ export const encodeYieldWithdrawData = (
  * @param token - Token to transfer (use 0x0 for dynamic from previous action)
  */
 export const encodeTransferData = (token: string): Hex => {
-  return encodeAbiParameters(parseAbiParameters("address token"), [
-    token as `0x${string}`,
-  ]);
+  return encodeAbiParameters(parseAbiParameters("address token"), [token as `0x${string}`]);
 };
 
 /**
@@ -123,25 +119,22 @@ export const encodeTransferData = (token: string): Hex => {
  * @param amount - Amount to mint (this IS used, unlike other actions)
  */
 export const encodeMintData = (token: string, amount: bigint): Hex => {
-  return encodeAbiParameters(
-    parseAbiParameters("address token, uint256 amount"),
-    [token as `0x${string}`, amount]
-  );
+  return encodeAbiParameters(parseAbiParameters("address token, uint256 amount"), [
+    token as `0x${string}`,
+    amount,
+  ]);
 };
 
 /**
  * Zero address constant for dynamic token resolution
  */
-export const ZERO_ADDRESS =
-  "0x0000000000000000000000000000000000000000" as const;
+export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000" as const;
 
 /**
  * Helper to check if address is zero (dynamic token)
  */
 export const isDynamicToken = (address: string): boolean => {
   return (
-    address.toLowerCase() === ZERO_ADDRESS.toLowerCase() ||
-    address === "" ||
-    address === "0x0"
+    address.toLowerCase() === ZERO_ADDRESS.toLowerCase() || address === "" || address === "0x0"
   );
 };

@@ -1,6 +1,6 @@
-import { Handle } from "@xyflow/react";
+import { Icon } from "@/components/icons";
+import { cn } from "@/lib/utils";
 import type { IconType, LayoutDirection } from "@/types/common";
-import { memo, useMemo } from "react";
 import {
   Collapsible,
   NodeDescription,
@@ -8,9 +8,9 @@ import {
   NodePanel,
   Status,
 } from "@synergycodes/overflow-ui";
-import { Icon } from "@/components/icons";
+import { Handle } from "@xyflow/react";
 import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { memo, useMemo } from "react";
 import { getHandleId } from "../../handles/get-handle-id";
 import { getHandlePosition } from "../../handles/get-handle-position";
 
@@ -61,15 +61,11 @@ const WorkflowNodeTemplateComponent = memo(
       handleType: "source",
     });
 
-    const iconElement = useMemo(
-      () => <Icon name={icon} size="large" />,
-      [icon]
-    );
+    const iconElement = useMemo(() => <Icon name={icon} size="large" />, [icon]);
 
     const hasContent = !!children;
 
-    const handlesAlignment =
-      hasContent && layoutDirection === "horizontal" ? "header" : "center";
+    const handlesAlignment = hasContent && layoutDirection === "horizontal" ? "header" : "center";
 
     const executionStatus = data?.executionStatus || "idle";
 
@@ -93,12 +89,9 @@ const WorkflowNodeTemplateComponent = memo(
             selected={selected}
             className={cn(
               "[--ax-public-node-gap:0] workflow-node-with-border relative transition-all duration-300",
-              executionStatus === "success" &&
-                "!border-green-500 !ring-2 !ring-green-500/20",
-              executionStatus === "error" &&
-                "!border-red-500 !ring-2 !ring-red-500/20",
-              executionStatus === "running" &&
-                "!border-blue-500 ring-2 ring-blue-500/20"
+              executionStatus === "success" && "!border-green-500 !ring-2 !ring-green-500/20",
+              executionStatus === "error" && "!border-red-500 !ring-2 !ring-red-500/20",
+              executionStatus === "running" && "!border-blue-500 ring-2 ring-blue-500/20"
             )}
           >
             <NodePanel.Header>
@@ -114,46 +107,23 @@ const WorkflowNodeTemplateComponent = memo(
                 <div className="pt-2">{children}</div>
               </Collapsible.Content>
             </NodePanel.Content>
-            <NodePanel.Handles
-              isVisible={showHandles}
-              alignment={handlesAlignment}
-            >
+            <NodePanel.Handles isVisible={showHandles} alignment={handlesAlignment}>
               {!hideTargetHandle && (
-                <Handle
-                  id={handleTargetId}
-                  position={handleTargetPosition}
-                  type="target"
-                />
+                <Handle id={handleTargetId} position={handleTargetPosition} type="target" />
               )}
               {!hideSourceHandle && (
-                <Handle
-                  id={handleSourceId}
-                  position={handleSourcePosition}
-                  type="source"
-                />
+                <Handle id={handleSourceId} position={handleSourcePosition} type="source" />
               )}
             </NodePanel.Handles>
           </NodePanel.Root>
 
           {/* Add Node Button - appears on hover, opens Nodes Library */}
-          {[
-            "yield-deposit",
-            "yield-withdraw",
-            "swap",
-            "mint",
-            "transfer",
-          ].includes(typeof data?.type === "string" ? data.type : "") ? (
+          {["yield-deposit", "yield-withdraw", "swap", "mint", "transfer"].includes(
+            typeof data?.type === "string" ? data.type : ""
+          ) ? (
             <>
-              <AddNodeButton
-                nodeId={id}
-                layoutDirection={layoutDirection}
-                side="left"
-              />
-              <AddNodeButton
-                nodeId={id}
-                layoutDirection={layoutDirection}
-                side="right"
-              />
+              <AddNodeButton nodeId={id} layoutDirection={layoutDirection} side="left" />
+              <AddNodeButton nodeId={id} layoutDirection={layoutDirection} side="right" />
             </>
           ) : (
             <AddNodeButton

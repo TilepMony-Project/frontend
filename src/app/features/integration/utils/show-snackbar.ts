@@ -1,4 +1,4 @@
-import { showToast, ToastType } from "@/utils/toast-utils";
+import { ToastType, showToast } from "@/utils/toast-utils";
 import type { OnSaveParams } from "../types";
 
 export function showSnackbarSaveSuccessIfNeeded(savingParams?: OnSaveParams) {

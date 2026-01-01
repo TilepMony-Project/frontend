@@ -1,8 +1,8 @@
 "use client";
 
-import type React from "react";
 import { Button } from "@/components/ui/button";
 import { useFadeInOnScroll, useStaggerFade } from "@/hooks/use-scroll-animations";
+import type React from "react";
 
 interface ApplicationCardProps {
   icon: string;

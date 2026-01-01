@@ -2,25 +2,21 @@ import { Icon } from "@/components/icons";
 
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
-import { showToast, ToastType, truncateText } from "@/utils/toast-utils";
+import { ToastType, showToast, truncateText } from "@/utils/toast-utils";
 
-import { useParams } from "next/navigation";
+import { IntegrationContext } from "@/features/integration/components/integration-variants/context/integration-context-wrapper";
 import { useWorkflowExecution } from "@/hooks/useWorkflowExecution";
 import { useWorkflowValidation } from "@/hooks/useWorkflowValidation";
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useParams } from "next/navigation";
 import { useContext } from "react";
-import { IntegrationContext } from "@/features/integration/components/integration-variants/context/integration-context-wrapper";
+import { toast } from "sonner";
 
 export function RunButton() {
   const params = useParams();
   const workflowId = params?.workflowId as string;
 
-  const {
-    executeWorkflow,
-    status,
-    error: executionError,
-  } = useWorkflowExecution();
+  const { executeWorkflow, status, error: executionError } = useWorkflowExecution();
   const { validateWorkflow, validating } = useWorkflowValidation();
   const { onSave } = useContext(IntegrationContext);
 
@@ -55,9 +51,7 @@ export function RunButton() {
 
     if (!validation.valid) {
       toast.error("Workflow has errors", {
-        description: truncateText(
-          validation.errors.map((e) => e.message).join("\n")
-        ),
+        description: truncateText(validation.errors.map((e) => e.message).join("\n")),
         duration: 5000,
       });
       return;
@@ -65,9 +59,7 @@ export function RunButton() {
 
     if (validation.warnings.length > 0) {
       toast.warning("Workflow has warnings", {
-        description: truncateText(
-          validation.warnings.map((w) => w.message).join("\n")
-        ),
+        description: truncateText(validation.warnings.map((w) => w.message).join("\n")),
         duration: 4000,
       });
     }
@@ -86,10 +78,7 @@ export function RunButton() {
   if (validating) tooltipText = "Validating...";
   else if (status === "signing-approval" || status === "signing-execution")
     tooltipText = "Sign in Wallet...";
-  else if (
-    status === "processing-approval" ||
-    status === "processing-execution"
-  )
+  else if (status === "processing-approval" || status === "processing-execution")
     tooltipText = "Processing...";
   else if (status === "estimating-gas") tooltipText = "Estimating gas...";
   else if (status === "checking-approval") tooltipText = "Checking approval...";

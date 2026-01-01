@@ -1,41 +1,35 @@
 "use client";
 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { usePrivySession } from "@/hooks/use-privy-session";
+import {
+  Activity,
+  ArrowLeftRight,
+  BarChart3,
+  Clock,
+  DollarSign,
+  PieChart as PieChartIcon,
+  TrendingDown,
+  TrendingUp,
+  Zap,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import {
-  BarChart,
+  Area,
+  AreaChart,
   Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  LabelList,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-  LabelList,
 } from "recharts";
-import {
-  TrendingUp,
-  TrendingDown,
-  Activity,
-  DollarSign,
-  BarChart3,
-  PieChart as PieChartIcon,
-  Zap,
-  Clock,
-  ArrowLeftRight,
-} from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { usePrivySession } from "@/hooks/use-privy-session";
 
 interface AnalyticsData {
   kpi: {
@@ -65,19 +59,11 @@ interface AnalyticsData {
   }>;
 }
 
-const COLORS = [
-  "#3b82f6",
-  "#10b981",
-  "#f59e0b",
-  "#ef4444",
-  "#8b5cf6",
-  "#ec4899",
-];
+const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
 
 const CustomTooltip = ({ active, payload, label, prefix = "" }: any) => {
   if (active && payload && payload.length) {
-    const title =
-      label || payload[0]?.name || payload[0]?.payload?._id || "Details";
+    const title = label || payload[0]?.name || payload[0]?.payload?._id || "Details";
     return (
       <div className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-gray-800 p-3 rounded-lg shadow-xl backdrop-blur-md bg-opacity-95">
         <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 mb-2 uppercase tracking-wider">
@@ -85,18 +71,13 @@ const CustomTooltip = ({ active, payload, label, prefix = "" }: any) => {
         </p>
         <div className="space-y-2">
           {payload.map((entry: any, index: number) => (
-            <div
-              key={index}
-              className="flex items-center justify-between gap-4 text-xs"
-            >
+            <div key={index} className="flex items-center justify-between gap-4 text-xs">
               <div className="flex items-center gap-2">
                 <div
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: entry.color || entry.fill }}
                 />
-                <span className="text-gray-600 dark:text-gray-300 font-medium">
-                  {entry.name}
-                </span>
+                <span className="text-gray-600 dark:text-gray-300 font-medium">{entry.name}</span>
               </div>
               <span className="text-gray-900 dark:text-white font-bold">
                 {prefix}
@@ -155,9 +136,7 @@ export function AnalyticsDashboard() {
 
   const successRate =
     data.kpi.totalExecutions > 0
-      ? Math.round(
-          (data.kpi.successfulExecutions / data.kpi.totalExecutions) * 100
-        )
+      ? Math.round((data.kpi.successfulExecutions / data.kpi.totalExecutions) * 100)
       : 0;
 
   return (
@@ -205,9 +184,7 @@ export function AnalyticsDashboard() {
               <BarChart3 size={20} className="text-primary" />
               Daily Execution Activity
             </CardTitle>
-            <CardDescription>
-              Number of workflow runs over the last 30 days
-            </CardDescription>
+            <CardDescription>Number of workflow runs over the last 30 days</CardDescription>
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -252,9 +229,7 @@ export function AnalyticsDashboard() {
               <TrendingUp size={20} className="text-green-500" />
               Volume Trend
             </CardTitle>
-            <CardDescription>
-              Fiat value movement across all workflows
-            </CardDescription>
+            <CardDescription>Fiat value movement across all workflows</CardDescription>
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -315,10 +290,7 @@ export function AnalyticsDashboard() {
                   nameKey="_id"
                 >
                   {data.tokenVolume.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip content={<CustomTooltip prefix="$" />} />
@@ -350,17 +322,9 @@ export function AnalyticsDashboard() {
                 <Tooltip content={<CustomTooltip />} />
                 <Bar dataKey="count" name="Usages" radius={[0, 4, 4, 0]}>
                   {data.nodeUsage.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
-                  <LabelList
-                    dataKey="count"
-                    position="right"
-                    fontSize={10}
-                    fill="currentColor"
-                  />
+                  <LabelList dataKey="count" position="right" fontSize={10} fill="currentColor" />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -390,20 +354,14 @@ function KPICard({
         <CardTitle className="text-sm font-medium text-gray-500 dark:text-gray-400">
           {title}
         </CardTitle>
-        <div className="p-2 bg-gray-100 dark:bg-[#1a1b1e] rounded-lg">
-          {icon}
-        </div>
+        <div className="p-2 bg-gray-100 dark:bg-[#1a1b1e] rounded-lg">{icon}</div>
       </CardHeader>
       <CardContent>
         <div className="flex items-baseline gap-1">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-gray-900 dark:text-white">{value}</div>
           {unit && <span className="text-xs text-gray-500">{unit}</span>}
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-          {description}
-        </p>
+        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{description}</p>
       </CardContent>
     </Card>
   );

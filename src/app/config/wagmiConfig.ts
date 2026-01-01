@@ -1,6 +1,6 @@
 import { http, createConfig } from "wagmi";
-import { mantleSepoliaTestnet } from "./chains";
 import { injected } from "wagmi/connectors";
+import { mantleSepoliaTestnet } from "./chains";
 
 export const wagmiConfig = createConfig({
   chains: [mantleSepoliaTestnet],

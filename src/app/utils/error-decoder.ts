@@ -12,20 +12,21 @@ const ERROR_MESSAGES: Record<string, string> = {
   "ActionFailed()": "One of the workflow actions failed to execute.",
   "Unauthorized()": "You don't have permission to perform this action.",
   "ZeroAmount()": "The amount cannot be zero.",
-  
+
   // Swap errors
   "SlippageExceeded()": "Price moved too much. Try increasing slippage tolerance.",
   "InsufficientLiquidity()": "Not enough liquidity in the pool for this swap.",
-  
+
   // Yield errors
   "DepositFailed()": "Failed to deposit into the yield vault.",
   "WithdrawFailed()": "Failed to withdraw from the yield vault.",
   "InsufficientShares()": "You don't have enough share tokens to withdraw.",
-  
+
   // ERC20 errors
   "ERC20InsufficientBalance(address,uint256,uint256)": "Insufficient token balance in your wallet.",
-  "ERC20InsufficientAllowance(address,uint256,uint256)": "Token approval is insufficient. Please approve more tokens.",
-  
+  "ERC20InsufficientAllowance(address,uint256,uint256)":
+    "Token approval is insufficient. Please approve more tokens.",
+
   // Generic
   "execution reverted": "Transaction was reverted by the contract.",
   "user rejected": "You cancelled the transaction.",
@@ -49,16 +50,20 @@ export function decodeContractError(error: unknown): string {
   // Handle viem/wagmi error structure
   const err = error as any;
   const message = err?.message || err?.reason || err?.shortMessage || String(error);
-  
+
   // Check for user rejection first
-  if (message.toLowerCase().includes("user rejected") || 
-      message.toLowerCase().includes("user denied")) {
+  if (
+    message.toLowerCase().includes("user rejected") ||
+    message.toLowerCase().includes("user denied")
+  ) {
     return "You cancelled the transaction.";
   }
 
   // Check for gas estimation failure
-  if (message.toLowerCase().includes("gas required exceeds") ||
-      message.toLowerCase().includes("out of gas")) {
+  if (
+    message.toLowerCase().includes("gas required exceeds") ||
+    message.toLowerCase().includes("out of gas")
+  ) {
     return "Transaction would fail. Please check your token balances and approvals.";
   }
 
@@ -70,17 +75,15 @@ export function decodeContractError(error: unknown): string {
   }
 
   // Try to extract revert reason from nested error
-  const revertReason = err?.cause?.reason || 
-                       err?.data?.message ||
-                       err?.error?.message;
-  
+  const revertReason = err?.cause?.reason || err?.data?.message || err?.error?.message;
+
   if (revertReason) {
     for (const [pattern, friendly] of Object.entries(ERROR_MESSAGES)) {
       if (revertReason.includes(pattern)) {
         return friendly;
       }
     }
-    
+
     // Return the raw revert reason if no mapping found
     if (revertReason.length < 200) {
       return `Contract error: ${revertReason}`;
@@ -100,16 +103,16 @@ export function decodeContractError(error: unknown): string {
  * Status message mapping for UI display
  */
 export const STATUS_LABELS: Record<string, string> = {
-  "idle": "Ready",
-  "preparing": "Preparing workflow...",
+  idle: "Ready",
+  preparing: "Preparing workflow...",
   "checking-approval": "Checking token approval...",
   "signing-approval": "Please sign approval in your wallet",
   "processing-approval": "Confirming approval...",
   "estimating-gas": "Estimating gas cost...",
   "signing-execution": "Please sign transaction in your wallet",
   "processing-execution": "Confirming transaction...",
-  "success": "Workflow completed successfully!",
-  "error": "Execution failed",
+  success: "Workflow completed successfully!",
+  error: "Execution failed",
 };
 
 /**

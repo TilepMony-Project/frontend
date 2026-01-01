@@ -313,16 +313,16 @@ function validateNodeConfigurations(nodes: WorkflowNode[], edges: WorkflowEdge[]
       }
       case "partition": {
         // Find downstream nodes connected to this partition
-        const downstreamEdges = edges.filter(e => e.source === node.id);
-        const downstreamNodeIds = downstreamEdges.map(e => e.target);
-        const downstreamNodes = nodes.filter(n => downstreamNodeIds.includes(n.id));
-        
+        const downstreamEdges = edges.filter((e) => e.source === node.id);
+        const downstreamNodeIds = downstreamEdges.map((e) => e.target);
+        const downstreamNodes = nodes.filter((n) => downstreamNodeIds.includes(n.id));
+
         // Sum percentageOfInput from downstream nodes (basis points, so 10000 = 100%)
         const total = downstreamNodes.reduce((sum, n) => {
           const nProps = getNodeProperties(n);
           return sum + toNumber(nProps?.percentageOfInput || 10000);
         }, 0);
-        
+
         // Total should equal 10000 (100% in basis points)
         if (downstreamNodes.length > 0 && Math.round(total) !== 10000) {
           partitionIssues.push(getNodeLabel(node));

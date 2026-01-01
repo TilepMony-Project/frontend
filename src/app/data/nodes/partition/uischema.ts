@@ -20,6 +20,6 @@ export const uischema: UISchema = {
     {
       type: "Label",
       text: "This node splits the workflow. Connect multiple output nodes and configure their 'Percentage of Input' to divide the funds.",
-    }
+    },
   ],
 };

@@ -1,9 +1,9 @@
 "use client";
 
-import type React from "react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import type React from "react";
 import { TemplateMiniPreview } from "./template-mini-preview";
 
 interface TemplateCardProps {

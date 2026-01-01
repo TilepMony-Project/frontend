@@ -1,7 +1,7 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import useStore from "@/store/store";
+import { Plus } from "lucide-react";
 
 /**
  * EmptyWorkflowPlaceholder - Shows when the workflow canvas is empty.

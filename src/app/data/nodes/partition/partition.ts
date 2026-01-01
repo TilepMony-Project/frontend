@@ -8,7 +8,7 @@ export const partitionNode: PaletteItem<typeof defaultPropertiesData> = {
   label: "Partition",
   description: "Split funds into multiple streams by percentage",
   type: "partition",
-  icon: "GitBranch", 
+  icon: "GitBranch",
   defaultPropertiesData,
   schema,
   uischema,

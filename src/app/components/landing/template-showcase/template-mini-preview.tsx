@@ -1,18 +1,18 @@
 "use client";
 
-import { useMemo } from "react";
 import {
-  ReactFlow,
   Controls,
-  type Node,
   type Edge,
-  type NodeTypes,
   MarkerType,
+  type Node,
+  type NodeTypes,
+  ReactFlow,
   ReactFlowProvider,
 } from "@xyflow/react";
+import { useMemo } from "react";
 import "@xyflow/react/dist/style.css";
-import { LandingPageNode } from "../workflow-preview/landing-page-node";
 import { workflowTemplates } from "@/features/dashboard/data/templates";
+import { LandingPageNode } from "../workflow-preview/landing-page-node";
 
 interface TemplateMiniPreviewProps {
   templateId: string;
@@ -48,10 +48,7 @@ const getMappedTemplate = (templateId: string) => {
 };
 
 function MiniPreviewContent({ templateId }: { templateId: string }) {
-  const { nodes, edges } = useMemo(
-    () => getMappedTemplate(templateId),
-    [templateId]
-  );
+  const { nodes, edges } = useMemo(() => getMappedTemplate(templateId), [templateId]);
 
   const nodeTypes = useMemo<NodeTypes>(
     () => ({
@@ -86,10 +83,7 @@ function MiniPreviewContent({ templateId }: { templateId: string }) {
   );
 }
 
-export function TemplateMiniPreview({
-  templateId,
-  className = "",
-}: TemplateMiniPreviewProps) {
+export function TemplateMiniPreview({ templateId, className = "" }: TemplateMiniPreviewProps) {
   return (
     <div className={`w-full h-full ${className}`}>
       <ReactFlowProvider>

@@ -44,17 +44,11 @@ export function SelectWrapper({
     }
   };
 
-  const selectedItem = value
-    ? items.find((item) => item.value === value)
-    : null;
+  const selectedItem = value ? items.find((item) => item.value === value) : null;
   const displayIcon = icon || selectedItem?.icon;
 
   return (
-    <Select
-      value={value || undefined}
-      onValueChange={handleValueChange}
-      disabled={disabled}
-    >
+    <Select value={value || undefined} onValueChange={handleValueChange} disabled={disabled}>
       <SelectTrigger
         className={cn(
           "h-12 w-full rounded-xl border border-gray-200/80 bg-white px-4 text-left text-sm text-gray-900 shadow-sm transition-all duration-200 hover:border-gray-300 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/40 dark:border-gray-700 dark:bg-[#1c1c20] dark:text-gray-100",

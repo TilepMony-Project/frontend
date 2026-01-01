@@ -1,8 +1,8 @@
 import type { PaletteItem } from "@/types/common";
 import { NodeType } from "@/types/node-types";
+import { defaultPropertiesData } from "./default-properties-data";
 import { schema } from "./schema";
 import { uischema } from "./uischema";
-import { defaultPropertiesData } from "./default-properties-data";
 
 export const yieldDepositNode: PaletteItem<typeof defaultPropertiesData> = {
   type: "yield-deposit",

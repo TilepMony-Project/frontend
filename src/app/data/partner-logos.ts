@@ -1,35 +1,35 @@
-import type { FC, SVGProps } from "react";
+import NetworkArbitrumOne from "@web3icons/react/icons/networks/NetworkArbitrumOne";
+import NetworkAvalanche from "@web3icons/react/icons/networks/NetworkAvalanche";
+import NetworkBase from "@web3icons/react/icons/networks/NetworkBase";
+import NetworkBlast from "@web3icons/react/icons/networks/NetworkBlast";
+import NetworkEthereum from "@web3icons/react/icons/networks/NetworkEthereum";
+import NetworkLinea from "@web3icons/react/icons/networks/NetworkLinea";
+// Layer 1 & Layer 2 Networks
+import NetworkMantle from "@web3icons/react/icons/networks/NetworkMantle";
+import NetworkOptimism from "@web3icons/react/icons/networks/NetworkOptimism";
+import NetworkPolygon from "@web3icons/react/icons/networks/NetworkPolygon";
+import NetworkScroll from "@web3icons/react/icons/networks/NetworkScroll";
+import NetworkSolana from "@web3icons/react/icons/networks/NetworkSolana";
+import NetworkStarknet from "@web3icons/react/icons/networks/NetworkStarknet";
+import NetworkZksync from "@web3icons/react/icons/networks/NetworkZksync";
+import Token1INCH from "@web3icons/react/icons/tokens/Token1INCH";
+import TokenAAVE from "@web3icons/react/icons/tokens/TokenAAVE";
+import TokenCOMP from "@web3icons/react/icons/tokens/TokenCOMP";
+import TokenCRV from "@web3icons/react/icons/tokens/TokenCRV";
+import TokenDAI from "@web3icons/react/icons/tokens/TokenDAI";
+import TokenFRAX from "@web3icons/react/icons/tokens/TokenFRAX";
+import TokenLDO from "@web3icons/react/icons/tokens/TokenLDO";
+import TokenLINK from "@web3icons/react/icons/tokens/TokenLINK";
+import TokenMKR from "@web3icons/react/icons/tokens/TokenMKR";
+import TokenSNX from "@web3icons/react/icons/tokens/TokenSNX";
+import TokenUNI from "@web3icons/react/icons/tokens/TokenUNI";
+import TokenUSDC from "@web3icons/react/icons/tokens/TokenUSDC";
 // Import individual icons from @web3icons/react v4
 // Tokens
 import TokenUSDT from "@web3icons/react/icons/tokens/TokenUSDT";
-import TokenUSDC from "@web3icons/react/icons/tokens/TokenUSDC";
-import TokenDAI from "@web3icons/react/icons/tokens/TokenDAI";
-import TokenUNI from "@web3icons/react/icons/tokens/TokenUNI";
-import Token1INCH from "@web3icons/react/icons/tokens/Token1INCH";
-import TokenAAVE from "@web3icons/react/icons/tokens/TokenAAVE";
-import TokenLINK from "@web3icons/react/icons/tokens/TokenLINK";
-import TokenCRV from "@web3icons/react/icons/tokens/TokenCRV";
-import TokenCOMP from "@web3icons/react/icons/tokens/TokenCOMP";
-import TokenLDO from "@web3icons/react/icons/tokens/TokenLDO";
-import TokenMKR from "@web3icons/react/icons/tokens/TokenMKR";
-import TokenSNX from "@web3icons/react/icons/tokens/TokenSNX";
-import TokenYFI from "@web3icons/react/icons/tokens/TokenYFI";
 import TokenWBTC from "@web3icons/react/icons/tokens/TokenWBTC";
-import TokenFRAX from "@web3icons/react/icons/tokens/TokenFRAX";
-// Layer 1 & Layer 2 Networks
-import NetworkMantle from "@web3icons/react/icons/networks/NetworkMantle";
-import NetworkEthereum from "@web3icons/react/icons/networks/NetworkEthereum";
-import NetworkArbitrumOne from "@web3icons/react/icons/networks/NetworkArbitrumOne";
-import NetworkOptimism from "@web3icons/react/icons/networks/NetworkOptimism";
-import NetworkBase from "@web3icons/react/icons/networks/NetworkBase";
-import NetworkPolygon from "@web3icons/react/icons/networks/NetworkPolygon";
-import NetworkAvalanche from "@web3icons/react/icons/networks/NetworkAvalanche";
-import NetworkSolana from "@web3icons/react/icons/networks/NetworkSolana";
-import NetworkZksync from "@web3icons/react/icons/networks/NetworkZksync";
-import NetworkBlast from "@web3icons/react/icons/networks/NetworkBlast";
-import NetworkScroll from "@web3icons/react/icons/networks/NetworkScroll";
-import NetworkLinea from "@web3icons/react/icons/networks/NetworkLinea";
-import NetworkStarknet from "@web3icons/react/icons/networks/NetworkStarknet";
+import TokenYFI from "@web3icons/react/icons/tokens/TokenYFI";
+import type { FC, SVGProps } from "react";
 
 export interface PartnerLogo {
   name: string;

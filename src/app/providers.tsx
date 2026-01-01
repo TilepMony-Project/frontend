@@ -1,17 +1,17 @@
 "use client";
 
+import { PrivyUserSync } from "@/components/privy-user-sync";
+import { mantleSepoliaTestnet } from "@/config/chains";
+import { wagmiConfig } from "@/config/wagmiConfig";
+import { ThemeProvider } from "@/hooks/use-theme";
+import type { PrivyClientConfig } from "@privy-io/react-auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactFlowProvider } from "@xyflow/react";
 import { setAutoFreeze } from "immer";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import TagManager from "react-gtm-module";
-import type { PrivyClientConfig } from "@privy-io/react-auth";
-import { PrivyUserSync } from "@/components/privy-user-sync";
-import { ThemeProvider } from "@/hooks/use-theme";
 import { WagmiProvider } from "wagmi";
-import { wagmiConfig } from "@/config/wagmiConfig";
-import { mantleSepoliaTestnet } from "@/config/chains";
 
 // Disable immer's automatic object freezing because ReactFlow mutates objects under the hood
 // and requires this to be turned off to function properly, especially when node size is updated
@@ -40,10 +40,7 @@ const PrivyProviderNoSSR = dynamic(
 );
 
 const SmartWalletsProviderNoSSR = dynamic(
-  () =>
-    import("@privy-io/react-auth/smart-wallets").then(
-      (mod) => mod.SmartWalletsProvider
-    ),
+  () => import("@privy-io/react-auth/smart-wallets").then((mod) => mod.SmartWalletsProvider),
   { ssr: false }
 );
 

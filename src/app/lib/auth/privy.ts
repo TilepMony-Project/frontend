@@ -1,4 +1,4 @@
-import { PrivyClient, type AuthTokenClaims } from "@privy-io/server-auth";
+import { type AuthTokenClaims, PrivyClient } from "@privy-io/server-auth";
 
 class PrivyUnauthorizedError extends Error {
   constructor(message = "Unauthorized") {

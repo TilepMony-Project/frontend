@@ -4,15 +4,15 @@ import {
   rankWith,
   uiTypeIs,
 } from "@jsonforms/core";
+import { withJsonFormsControlProps, withJsonFormsLayoutProps } from "@jsonforms/react";
+import type { ComponentType } from "react";
+import type { BaseControlProps } from "../types/controls";
+import type { BaseLayoutElement, LayoutProps } from "../types/layouts";
 import type {
   UISchemaControlElementType,
   UISchemaElementType,
   UISchemaLayoutElementType,
 } from "../types/uischema";
-import type { BaseControlProps } from "../types/controls";
-import { withJsonFormsControlProps, withJsonFormsLayoutProps } from "@jsonforms/react";
-import type { ComponentType } from "react";
-import type { BaseLayoutElement, LayoutProps } from "../types/layouts";
 
 const JSON_FORM_DEFAULT_RANK = 1;
 

@@ -8,7 +8,7 @@ const nextConfig = {
       test: /\.svg$/,
       use: [
         {
-          loader: '@svgr/webpack',
+          loader: "@svgr/webpack",
           options: {
             svgo: false,
           },
@@ -28,10 +28,10 @@ const nextConfig = {
     // Alias Node-focused logging deps to browser-safe versions
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@react-native-async-storage/async-storage': false,
-      'pino-pretty': false,
-      pino: 'pino/browser',
-      'thread-stream': false,
+      "@react-native-async-storage/async-storage": false,
+      "pino-pretty": false,
+      pino: "pino/browser",
+      "thread-stream": false,
     };
 
     // Ignore warnings for optional peer dependencies
@@ -51,11 +51,10 @@ const nextConfig = {
     // Keep Turbopack aligned with the webpack aliases above
     resolveAlias: {
       pino: {
-        browser: 'pino/browser',
+        browser: "pino/browser",
       },
     },
   },
 };
 
 export default nextConfig;
-

@@ -1,7 +1,7 @@
-import type { PrimitiveFieldSchema } from "@/types/node-schema";
-import type { ControlElement, ControlProps as JsonFormsControlProps } from "@jsonforms/core";
 import type { InputProps } from "@/components/ui/input";
 import type { TextareaProps } from "@/components/ui/textarea";
+import type { PrimitiveFieldSchema } from "@/types/node-schema";
+import type { ControlElement, ControlProps as JsonFormsControlProps } from "@jsonforms/core";
 import type { ComparisonOperator, LogicalOperator } from "../utils/conditional-transform";
 import type { UISchemaRule } from "./rules";
 import type { UISchemaControlElement } from "./uischema";

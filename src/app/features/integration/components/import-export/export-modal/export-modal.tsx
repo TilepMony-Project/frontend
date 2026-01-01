@@ -1,11 +1,11 @@
-import { useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { useCallback, useMemo } from "react";
 
-import { showToast, ToastType } from "@/utils/toast-utils";
 import { Icon } from "@/components/icons";
+import { ToastType, showToast } from "@/utils/toast-utils";
 
-import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
 import { SyntaxHighlighterLazy } from "@/features/syntax-highlighter/components/syntax-highlighter-lazy";
+import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
 import { copy } from "@/utils/copy";
 import { noop } from "@/utils/noop";
 

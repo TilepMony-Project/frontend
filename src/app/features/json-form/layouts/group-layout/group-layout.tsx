@@ -1,9 +1,9 @@
 import clsx from "clsx";
 
-import { LayoutWrapper } from "../layout-wrapper";
 import type { GroupLayoutElement, LayoutProps } from "../../types/layouts";
-import { renderElements } from "../render-elements";
 import { createLayoutRenderer } from "../../utils/rendering";
+import { LayoutWrapper } from "../layout-wrapper";
+import { renderElements } from "../render-elements";
 
 function GroupLayout(props: LayoutProps<GroupLayoutElement>) {
   const { uischema } = props;

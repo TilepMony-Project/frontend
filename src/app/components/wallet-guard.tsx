@@ -1,10 +1,10 @@
 "use client";
 
+import { ToastType, showToast } from "@/utils/toast-utils";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import type { PropsWithChildren, ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
-import { showToast, ToastType } from "@/utils/toast-utils";
 
 type WalletGuardProps = PropsWithChildren<{
   fallback?: ReactNode;

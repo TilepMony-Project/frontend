@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import type { Node, Edge } from "@xyflow/react";
-import { DeleteConfirmation, DeleteConfirmationButtons } from "./delete-confirmation";
-import { MinusCircle } from "lucide-react";
 import useStore from "@/store/store";
+import type { Edge, Node } from "@xyflow/react";
+import { MinusCircle } from "lucide-react";
+import { useCallback } from "react";
 import { closeModal, openModal } from "../stores/use-modal-store";
+import { DeleteConfirmation, DeleteConfirmationButtons } from "./delete-confirmation";
 
 type Props = {
   nodes: Node[];

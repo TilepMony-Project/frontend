@@ -1,20 +1,19 @@
 import useStore from "@/store/store";
 
-import { memo } from "react";
-import type { NodeProps } from "@xyflow/react";
 import type { WorkflowBuilderNode } from "@/types/node-data";
-import { WorkflowNodeTemplate } from "./workflow-node-template/workflow-node-template";
-import { NodeAsPortWrapper } from "@synergycodes/overflow-ui";
-import { getHandlePosition } from "../handles/get-handle-position";
 import { getIsValidFromProperties } from "@/utils/validation/get-is-valid-from-properties";
+import { NodeAsPortWrapper } from "@synergycodes/overflow-ui";
+import type { NodeProps } from "@xyflow/react";
+import { memo } from "react";
+import { getHandlePosition } from "../handles/get-handle-position";
+import { WorkflowNodeTemplate } from "./workflow-node-template/workflow-node-template";
 
 type Props = NodeProps<WorkflowBuilderNode>;
 
 export const NodeContainer = memo(({ id, data, selected }: Props) => {
   const { icon, properties, type } = data;
   const label = typeof properties?.label === "string" ? properties.label : "";
-  const description =
-    typeof properties?.description === "string" ? properties.description : "";
+  const description = typeof properties?.description === "string" ? properties.description : "";
   const iconName = icon ?? "Circle";
   const isValid = getIsValidFromProperties(properties);
 
@@ -23,9 +22,7 @@ export const NodeContainer = memo(({ id, data, selected }: Props) => {
     direction: layoutDirection,
     handleType: "target",
   });
-  const connectionBeingDragged = useStore(
-    (store) => store.connectionBeingDragged
-  );
+  const connectionBeingDragged = useStore((store) => store.connectionBeingDragged);
 
   const nodeType = typeof type === "string" ? type : undefined;
   // Deposit: Output only (Right only) -> Hide Target

@@ -1,19 +1,19 @@
+import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { useCallback, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 
 import { Icon } from "@/components/icons";
-import { showToast, ToastType } from "@/utils/toast-utils";
+import { ToastType, showToast } from "@/utils/toast-utils";
 
-import { setStoreDataFromIntegration } from "@/store/slices/diagram-slice/actions";
 import { SyntaxHighlighterLazy } from "@/features/syntax-highlighter/components/syntax-highlighter-lazy";
+import { setStoreDataFromIntegration } from "@/store/slices/diagram-slice/actions";
 
+import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
 import {
   type IntegrationDataError,
   validateIntegrationData,
 } from "@/features/integration/utils/validate-integration-data";
 import { closeModal } from "@/features/modals/stores/use-modal-store";
-import { trackFutureChange } from "@/features/changes-tracker/stores/use-changes-tracker-store";
 
 export function ImportModal() {
   const [jsonToParse, setJsonToParse] = useState("");

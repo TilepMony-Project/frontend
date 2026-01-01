@@ -1,13 +1,19 @@
-import { useState, useEffect, useCallback } from "react";
-import { useWriteContract, useWaitForTransactionReceipt, usePublicClient } from "wagmi";
-import { CONTRACT_ABI, CONTRACT_ADDRESS, VAULT_ABI, ERC20_ABI, ADDRESSES } from "@/config/contractConfig";
+import {
+  ADDRESSES,
+  CONTRACT_ABI,
+  CONTRACT_ADDRESS,
+  ERC20_ABI,
+  VAULT_ABI,
+} from "@/config/contractConfig";
 import { usePrivySession } from "@/hooks/use-privy-session";
-import { useSmartWallets } from "@privy-io/react-auth/smart-wallets";
 import useStore from "@/store/store";
-import { parseEventLogs, formatEther, formatUnits } from "viem";
 import { decodeContractError } from "@/utils/error-decoder";
+import { useSmartWallets } from "@privy-io/react-auth/smart-wallets";
+import { useCallback, useEffect, useState } from "react";
+import { formatEther, formatUnits, parseEventLogs } from "viem";
+import { usePublicClient, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
-export type ExecutionStatus = 
+export type ExecutionStatus =
   | "idle"
   | "preparing"
   | "checking-approval"
@@ -33,7 +39,7 @@ export function useWorkflowExecution() {
   const { client } = useSmartWallets();
   const nodes = useStore((state) => state.nodes);
   const setLastExecutionRun = useStore((state) => state.setLastExecutionRun);
-  
+
   // Execution state from global store
   const logs = useStore((state) => state.executionLogs);
   const status = useStore((state) => state.executionStatus) as ExecutionStatus;
@@ -42,194 +48,212 @@ export function useWorkflowExecution() {
   const setExecutionStatus = useStore((state) => state.setExecutionStatus);
   const setEstimatedGasCost = useStore((state) => state.setEstimatedGasCost);
 
-  const [result, setResultState] = useState<{ txHash?: string; executionId?: string; error?: string }>({});
+  const [result, setResultState] = useState<{
+    txHash?: string;
+    executionId?: string;
+    error?: string;
+  }>({});
   const [targetNodeId, setTargetNodeId] = useState<string | null>(null);
 
   // Sync wrapper for backward compatibility with local state usage in the hook
-  const setResult = (update: Partial<ExecutionResult> | ((prev: ExecutionResult) => ExecutionResult)) => {
-    const prev: ExecutionResult = { 
-      ...result, 
-      status, 
-      logs, 
-      estimatedGasCost: estimatedGasCost || undefined 
+  const setResult = (
+    update: Partial<ExecutionResult> | ((prev: ExecutionResult) => ExecutionResult)
+  ) => {
+    const prev: ExecutionResult = {
+      ...result,
+      status,
+      logs,
+      estimatedGasCost: estimatedGasCost || undefined,
     };
     const next = typeof update === "function" ? update(prev) : { ...prev, ...update };
-    
+
     if (next.status !== status) setExecutionStatus(next.status);
     if (next.estimatedGasCost !== undefined) setEstimatedGasCost(next.estimatedGasCost || null);
-    setResultState({ 
-      txHash: next.txHash, 
-      executionId: next.executionId, 
-      error: next.error 
+    setResultState({
+      txHash: next.txHash,
+      executionId: next.executionId,
+      error: next.error,
     });
   };
 
-  const addLog = useCallback((message: string) => {
-    const timestamp = new Date().toLocaleTimeString();
-    setExecutionLogs(prev => [...prev, `[${timestamp}] ${message}`]);
-  }, [setExecutionLogs]);
+  const addLog = useCallback(
+    (message: string) => {
+      const timestamp = new Date().toLocaleTimeString();
+      setExecutionLogs((prev) => [...prev, `[${timestamp}] ${message}`]);
+    },
+    [setExecutionLogs]
+  );
 
   const publicClient = usePublicClient();
   const { writeContractAsync } = useWriteContract();
 
-  const { data: receipt, isSuccess: isConfirmed, isError: isReverted, error: receiptError } = 
-    useWaitForTransactionReceipt({
-      hash: result.txHash as `0x${string}`,
-    });
+  const {
+    data: receipt,
+    isSuccess: isConfirmed,
+    isError: isReverted,
+    error: receiptError,
+  } = useWaitForTransactionReceipt({
+    hash: result.txHash as `0x${string}`,
+  });
 
   // Handle transaction confirmation
   useEffect(() => {
     const finalizeExecution = async () => {
-        const updateNodeStatus = async (nodeId: string, status: "complete" | "failed") => {
-            await fetch(`/api/executions/${result.executionId}`, {
-                method: "PATCH",
-                headers: { 
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`
-                },
-                body: JSON.stringify({ 
-                    nodeUpdates: [{ nodeId, status }]
-                }),
-            });
-        };
+      const updateNodeStatus = async (nodeId: string, status: "complete" | "failed") => {
+        await fetch(`/api/executions/${result.executionId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            nodeUpdates: [{ nodeId, status }],
+          }),
+        });
+      };
 
-        if (
-            isConfirmed && 
-            status === "processing-execution" && 
-            result.executionId && 
-            accessToken && 
-            receipt
-        ) {
-            try {
-                addLog("Transaction confirmed! Finalizing execution...");
-                // 1. Mark Deposit (off-chain) nodes as complete immediately
-                const offChainNodes = nodes.filter(n => {
-                    if (targetNodeId && n.id !== targetNodeId) return false;
-                    const type = n.data?.type || n.type;
-                    return type === "deposit";
-                });
+      if (
+        isConfirmed &&
+        status === "processing-execution" &&
+        result.executionId &&
+        accessToken &&
+        receipt
+      ) {
+        try {
+          addLog("Transaction confirmed! Finalizing execution...");
+          // 1. Mark Deposit (off-chain) nodes as complete immediately
+          const offChainNodes = nodes.filter((n) => {
+            if (targetNodeId && n.id !== targetNodeId) return false;
+            const type = n.data?.type || n.type;
+            return type === "deposit";
+          });
 
-                for (const node of offChainNodes) {
-                    await updateNodeStatus(node.id, "complete");
-                }
+          for (const node of offChainNodes) {
+            await updateNodeStatus(node.id, "complete");
+          }
 
-                // 2. Identify on-chain nodes and parse events
-                const onChainNodes = nodes.filter(n => {
-                    if (targetNodeId && n.id !== targetNodeId) return false;
-                    const type = n.data?.type || n.type;
-                    return type !== "deposit";
-                });
+          // 2. Identify on-chain nodes and parse events
+          const onChainNodes = nodes.filter((n) => {
+            if (targetNodeId && n.id !== targetNodeId) return false;
+            const type = n.data?.type || n.type;
+            return type !== "deposit";
+          });
 
-                const logs = parseEventLogs({
-                    abi: CONTRACT_ABI,
-                    logs: receipt.logs,
-                    eventName: "ActionExecuted",
-                });
+          const logs = parseEventLogs({
+            abi: CONTRACT_ABI,
+            logs: receipt.logs,
+            eventName: "ActionExecuted",
+          });
 
-                // 3. Sequential Animation for on-chain progress
-                for (let i = 0; i < onChainNodes.length; i++) {
-                    const node = onChainNodes[i];
-                    // Map node index to action index in contract
-                    const log = logs.find(l => (l.args as any).index === BigInt(i));
-                    const isNodeSuccess = log ? (log.args as any).success : true;
+          // 3. Sequential Animation for on-chain progress
+          for (let i = 0; i < onChainNodes.length; i++) {
+            const node = onChainNodes[i];
+            // Map node index to action index in contract
+            const log = logs.find((l) => (l.args as any).index === BigInt(i));
+            const isNodeSuccess = log ? (log.args as any).success : true;
 
-                    await updateNodeStatus(node.id, isNodeSuccess ? "complete" : "failed");
+            await updateNodeStatus(node.id, isNodeSuccess ? "complete" : "failed");
 
-                    if (i < onChainNodes.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 800));
-                    }
-                }
-
-                // 3b. Yield Farming Simulation (Mock Exchange Rate)
-                const yieldNodes = onChainNodes.filter(n => ["yield-deposit", "yield-withdraw"].includes((n.data?.type || n.type) as string));
-                
-                if (yieldNodes.length > 0) {
-                    console.log("Simulating yield farming (setting exchange rates)...");
-                    for (const node of yieldNodes) {
-                        const type = (node.data?.type || node.type) as string;
-                        const props = node.data?.properties as any;
-                        const token = props?.underlyingToken;
-                        const adapter = props?.yieldAdapter;
-                        
-                        let vaultAddress = null;
-                        if (token && token !== "DYNAMIC" && adapter) {
-                             if (adapter === "MethLabAdapter") {
-                                vaultAddress = (ADDRESSES.YIELD.METHLAB.VAULTS as any)[token];
-                             } else if (adapter === "InitCapitalAdapter") {
-                                vaultAddress = (ADDRESSES.YIELD.INIT_CAPITAL.POOLS as any)[token];
-                             } else if (adapter === "CompoundAdapter") {
-                                vaultAddress = (ADDRESSES.YIELD.COMPOUND.COMETS as any)[token];
-                             }
-                        }
-
-                        if (vaultAddress) {
-                            try {
-                                const newRate = type === "yield-deposit" ? BigInt(1100000) : BigInt(1000000);
-                                await writeContractAsync({
-                                    address: vaultAddress,
-                                    abi: VAULT_ABI,
-                                    functionName: "setExchangeRate",
-                                    args: [newRate],
-                                });
-                                // Add small delay between simulations
-                                await new Promise(resolve => setTimeout(resolve, 500));
-                            } catch (simError) {
-                                console.warn("Yield simulation failed (user rejected or error):", simError);
-                            }
-                        }
-                    }
-                }
-
-                // 4. Finalize overall status
-                const payload = { 
-                    status: "finished",
-                    transactionHash: result.txHash,
-                    totalGasUsed: receipt.gasUsed.toString(),
-                    gasPriceGwei: formatUnits(receipt.effectiveGasPrice, 9),
-                    nodeUpdates: nodes
-                        .filter(n => !targetNodeId || n.id === targetNodeId)
-                        .map(n => ({ nodeId: n.id, status: "complete" }))
-                };
-                console.log("[FINALIZING] Sending request to server:", payload);
-
-                await fetch(`/api/executions/${result.executionId}`, {
-                    method: "PATCH",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                    body: JSON.stringify(payload),
-                });
-
-                setResult(prev => ({ ...prev, status: "success" }));
-            } catch (e) {
-                console.error("Failed to finalize execution:", e);
+            if (i < onChainNodes.length - 1) {
+              await new Promise((resolve) => setTimeout(resolve, 800));
             }
-        } else if (isReverted && status === "processing-execution" && result.executionId && accessToken) {
-            try {
-                // On revert, mark all targeted nodes as failed
-                const failedNodes = nodes
-                    .filter(n => !targetNodeId || n.id === targetNodeId)
-                    .map(n => ({ nodeId: n.id, status: "failed" }));
+          }
 
-                await fetch(`/api/executions/${result.executionId}`, {
-                    method: "PATCH",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                    body: JSON.stringify({ 
-                        status: "failed",
-                        transactionHash: result.txHash,
-                        nodeUpdates: failedNodes,
-                        error: receiptError?.message || "Transaction reverted"
-                    }),
-                });
-                setResult(prev => ({ ...prev, status: "error", error: "Transaction reverted" }));
-            } catch (e) {
-                console.error("Failed to mark execution as failed:", e);
+          // 3b. Yield Farming Simulation (Mock Exchange Rate)
+          const yieldNodes = onChainNodes.filter((n) =>
+            ["yield-deposit", "yield-withdraw"].includes((n.data?.type || n.type) as string)
+          );
+
+          if (yieldNodes.length > 0) {
+            for (const node of yieldNodes) {
+              const type = (node.data?.type || node.type) as string;
+              const props = node.data?.properties as any;
+              const token = props?.underlyingToken;
+              const adapter = props?.yieldAdapter;
+
+              let vaultAddress = null;
+              if (token && token !== "DYNAMIC" && adapter) {
+                if (adapter === "MethLabAdapter") {
+                  vaultAddress = (ADDRESSES.YIELD.METHLAB.VAULTS as any)[token];
+                } else if (adapter === "InitCapitalAdapter") {
+                  vaultAddress = (ADDRESSES.YIELD.INIT_CAPITAL.POOLS as any)[token];
+                } else if (adapter === "CompoundAdapter") {
+                  vaultAddress = (ADDRESSES.YIELD.COMPOUND.COMETS as any)[token];
+                }
+              }
+
+              if (vaultAddress) {
+                try {
+                  const newRate = type === "yield-deposit" ? BigInt(1100000) : BigInt(1000000);
+                  await writeContractAsync({
+                    address: vaultAddress,
+                    abi: VAULT_ABI,
+                    functionName: "setExchangeRate",
+                    args: [newRate],
+                  });
+                  // Add small delay between simulations
+                  await new Promise((resolve) => setTimeout(resolve, 500));
+                } catch (simError) {
+                  console.warn("Yield simulation failed (user rejected or error):", simError);
+                }
+              }
             }
+          }
+
+          // 4. Finalize overall status
+          const payload = {
+            status: "finished",
+            transactionHash: result.txHash,
+            totalGasUsed: receipt.gasUsed.toString(),
+            gasPriceGwei: formatUnits(receipt.effectiveGasPrice, 9),
+            nodeUpdates: nodes
+              .filter((n) => !targetNodeId || n.id === targetNodeId)
+              .map((n) => ({ nodeId: n.id, status: "complete" })),
+          };
+
+          await fetch(`/api/executions/${result.executionId}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify(payload),
+          });
+
+          setResult((prev) => ({ ...prev, status: "success" }));
+        } catch (e) {
+          console.error("Failed to finalize execution:", e);
         }
+      } else if (
+        isReverted &&
+        status === "processing-execution" &&
+        result.executionId &&
+        accessToken
+      ) {
+        try {
+          // On revert, mark all targeted nodes as failed
+          const failedNodes = nodes
+            .filter((n) => !targetNodeId || n.id === targetNodeId)
+            .map((n) => ({ nodeId: n.id, status: "failed" }));
+
+          await fetch(`/api/executions/${result.executionId}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+              status: "failed",
+              transactionHash: result.txHash,
+              nodeUpdates: failedNodes,
+              error: receiptError?.message || "Transaction reverted",
+            }),
+          });
+          setResult((prev) => ({ ...prev, status: "error", error: "Transaction reverted" }));
+        } catch (e) {
+          console.error("Failed to mark execution as failed:", e);
+        }
+      }
     };
 
     finalizeExecution();
@@ -250,9 +274,9 @@ export function useWorkflowExecution() {
       // 1. Get Execution Config from Backend
       const response = await fetch(`/api/workflows/${workflowId}/execute`, {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ userWalletAddress: walletAddress, nodeId }),
       });
@@ -264,7 +288,7 @@ export function useWorkflowExecution() {
 
       const { config, executionId } = await response.json();
       addLog(`Execution prepared. ID: ${executionId.slice(0, 8)}...`);
-      
+
       setResult({ status: "checking-approval", executionId });
 
       // Deserialize actions and enforce ABI structure
@@ -277,42 +301,42 @@ export function useWorkflowExecution() {
 
       // 1.5 Check Approval and Approve if needed
       if (
-        config.initialToken && 
-        config.initialToken !== "0x0000000000000000000000000000000000000000" && 
+        config.initialToken &&
+        config.initialToken !== "0x0000000000000000000000000000000000000000" &&
         BigInt(config.initialAmount) > BigInt(0)
       ) {
-         if (!publicClient) throw new Error("Public Client not ready");
-         
-         const allowance = await publicClient.readContract({
+        if (!publicClient) throw new Error("Public Client not ready");
+
+        const allowance = await publicClient.readContract({
+          address: config.initialToken as `0x${string}`,
+          abi: ERC20_ABI,
+          functionName: "allowance",
+          args: [walletAddress as `0x${string}`, CONTRACT_ADDRESS],
+        });
+
+        if (allowance < BigInt(config.initialAmount)) {
+          addLog("Approval required. Please sign the approval transaction...");
+          setResult((prev) => ({ ...prev, status: "signing-approval" }));
+          const approveHash = await writeContractAsync({
             address: config.initialToken as `0x${string}`,
             abi: ERC20_ABI,
-            functionName: "allowance",
-            args: [walletAddress as `0x${string}`, CONTRACT_ADDRESS],
-         });
+            functionName: "approve",
+            args: [CONTRACT_ADDRESS, BigInt(config.initialAmount)],
+          });
 
-         if (allowance < BigInt(config.initialAmount)) {
-             addLog("Approval required. Please sign the approval transaction...");
-             setResult(prev => ({ ...prev, status: "signing-approval" })); 
-             const approveHash = await writeContractAsync({
-                address: config.initialToken as `0x${string}`,
-                abi: ERC20_ABI,
-                functionName: "approve",
-                args: [CONTRACT_ADDRESS, BigInt(config.initialAmount)],
-             });
-             
-             addLog(`Approval submitted: ${approveHash.slice(0, 10)}...`);
-             setResult(prev => ({ ...prev, status: "processing-approval" }));
-             await publicClient.waitForTransactionReceipt({ hash: approveHash });
-             addLog("Approval confirmed!");
-         } else {
-             addLog("Sufficient approval already exists.");
-         }
+          addLog(`Approval submitted: ${approveHash.slice(0, 10)}...`);
+          setResult((prev) => ({ ...prev, status: "processing-approval" }));
+          await publicClient.waitForTransactionReceipt({ hash: approveHash });
+          addLog("Approval confirmed!");
+        } else {
+          addLog("Sufficient approval already exists.");
+        }
       }
 
       // 2. Estimate Gas
       addLog("Estimating gas cost...");
-      setResult(prev => ({ ...prev, status: "estimating-gas" }));
-      
+      setResult((prev) => ({ ...prev, status: "estimating-gas" }));
+
       let gasLimit: bigint | undefined;
       try {
         if (publicClient) {
@@ -320,65 +344,51 @@ export function useWorkflowExecution() {
             address: CONTRACT_ADDRESS,
             abi: CONTRACT_ABI,
             functionName: "executeWorkflow",
-            args: [
-              deserializedActions, 
-              config.initialToken, 
-              BigInt(config.initialAmount)
-            ],
+            args: [deserializedActions, config.initialToken, BigInt(config.initialAmount)],
             account: walletAddress as `0x${string}`,
           });
-          
+
           // Add 20% buffer
           gasLimit = (gasEstimate * BigInt(120)) / BigInt(100);
-          
+
           const gasPrice = await publicClient.getGasPrice();
           const estimatedCost = formatEther(gasLimit * gasPrice);
           addLog(`Estimated gas: ${estimatedCost} ETH (with 20% buffer)`);
-          setResult(prev => ({ ...prev, estimatedGasCost: estimatedCost }));
+          setResult((prev) => ({ ...prev, estimatedGasCost: estimatedCost }));
         }
       } catch (gasError) {
         addLog("Warning: Could not estimate gas. Using default limit.");
         console.warn("Gas estimation failed:", gasError);
       }
-      
+
       // 3. Send Transaction
       addLog("Please sign the workflow execution transaction...");
-      setResult(prev => ({ ...prev, status: "signing-execution" }));
-      
-      console.log("Calling writeContractAsync with args:", {
-        address: CONTRACT_ADDRESS,
-        args: [deserializedActions, config.initialToken, BigInt(config.initialAmount)],
-        gasLimit
-      });
+      setResult((prev) => ({ ...prev, status: "signing-execution" }));
 
       const hash = await writeContractAsync({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
         functionName: "executeWorkflow",
-        args: [
-            deserializedActions, 
-            config.initialToken, 
-            BigInt(config.initialAmount)
-        ],
+        args: [deserializedActions, config.initialToken, BigInt(config.initialAmount)],
         ...(gasLimit ? { gas: gasLimit } : {}),
       });
 
       // 3. Update Execution Record with Tx Hash and mark nodes as processing
       await fetch(`/api/executions/${executionId}`, {
         method: "PATCH",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
+          Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ 
-            status: "running", 
-            transactionHash: hash,
-            nodeUpdates: nodes
-                .filter(n => !nodeId || n.id === nodeId)
-                .map(n => ({
-                    nodeId: n.id,
-                    status: "processing"
-                }))
+        body: JSON.stringify({
+          status: "running",
+          transactionHash: hash,
+          nodeUpdates: nodes
+            .filter((n) => !nodeId || n.id === nodeId)
+            .map((n) => ({
+              nodeId: n.id,
+              status: "processing",
+            })),
         }),
       });
 
@@ -389,9 +399,8 @@ export function useWorkflowExecution() {
       addLog(`Transaction submitted: ${hash.slice(0, 10)}...`);
       addLog("Waiting for blockchain confirmation...");
       setResult({ status: "processing-execution", txHash: hash, executionId });
-      
-      return { hash, executionId };
 
+      return { hash, executionId };
     } catch (error: any) {
       const errorMessage = decodeContractError(error);
       console.error("Workflow Execution Failed:", error);

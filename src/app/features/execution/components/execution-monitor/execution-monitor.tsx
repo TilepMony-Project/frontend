@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Icon } from "@/components/icons";
-import { usePrivySession } from "@/hooks/use-privy-session";
-import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
-import { useWorkflowExecution } from "@/hooks/useWorkflowExecution";
-import { getStatusLabel as getFrontendStatusLabel } from "@/utils/error-decoder";
-import useStore from "@/store/store";
-import { Loader2, ExternalLink } from "lucide-react";
 import { getExplorerTxUrl } from "@/config/chains";
+import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
+import { usePrivySession } from "@/hooks/use-privy-session";
+import { useWorkflowExecution } from "@/hooks/useWorkflowExecution";
+import useStore from "@/store/store";
+import { getStatusLabel as getFrontendStatusLabel } from "@/utils/error-decoder";
+import { ExternalLink, Loader2 } from "lucide-react";
 
 type ExecutionStatus =
   | "running"
@@ -47,25 +47,17 @@ const TERMINAL_STATUSES: ExecutionStatus[] = ["finished", "failed", "stopped"];
 
 export function ExecutionMonitor() {
   const nodes = useStore((state) => state.nodes);
-  const setExecutionMonitorActive = useStore(
-    (state) => state.setExecutionMonitorActive
-  );
+  const setExecutionMonitorActive = useStore((state) => state.setExecutionMonitorActive);
   const lastExecutionRun = useStore((state) => state.lastExecutionRun);
   const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
   const { accessToken } = usePrivySession();
   const getFreshToken = useGetFreshToken();
 
   // Frontend execution state (real-time logs and status)
-  const {
-    logs: frontendLogs,
-    status: frontendStatus,
-    estimatedGasCost,
-  } = useWorkflowExecution();
+  const { logs: frontendLogs, status: frontendStatus, estimatedGasCost } = useWorkflowExecution();
 
   const [workflowId, setWorkflowId] = useState<string | null>(null);
-  const [execution, setExecution] = useState<
-    ExecutionResponse["execution"] | null
-  >(null);
+  const [execution, setExecution] = useState<ExecutionResponse["execution"] | null>(null);
   const [isExpanded, setIsExpanded] = useState(true);
   const [hasNoExecution, setHasNoExecution] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -87,9 +79,7 @@ export function ExecutionMonitor() {
     }
 
     const syncWorkflowId = () => {
-      const storedWorkflowId = localStorage.getItem(
-        "tilepmoney_current_workflow_id"
-      );
+      const storedWorkflowId = localStorage.getItem("tilepmoney_current_workflow_id");
       setWorkflowId(storedWorkflowId);
     };
 
@@ -133,9 +123,7 @@ export function ExecutionMonitor() {
     }
   }, [lastExecutionRun]);
 
-  const hasTerminalStatus = execution
-    ? TERMINAL_STATUSES.includes(execution.status)
-    : false;
+  const hasTerminalStatus = execution ? TERMINAL_STATUSES.includes(execution.status) : false;
 
   fetchStatusRef.current = async () => {
     if (!workflowId) {
@@ -231,9 +219,7 @@ export function ExecutionMonitor() {
 
     if (execution.status === "pending_signature") return 5;
 
-    const completed = execution.executionLog.filter(
-      (entry) => entry.status === "complete"
-    ).length;
+    const completed = execution.executionLog.filter((entry) => entry.status === "complete").length;
 
     const total = execution.executionLog.length || nodes.length;
     return Math.min(100, Math.round((completed / total) * 100));
@@ -270,9 +256,7 @@ export function ExecutionMonitor() {
     return nodes.map((node) => {
       const status = statusByNodeId.get(node.id) ?? "pending";
       const nodeLabel =
-        typeof node.data?.properties?.label === "string"
-          ? node.data.properties.label
-          : undefined;
+        typeof node.data?.properties?.label === "string" ? node.data.properties.label : undefined;
       return {
         id: node.id,
         label: nodeLabel ?? node.type ?? "Node",
@@ -293,12 +277,10 @@ export function ExecutionMonitor() {
 
   // Show if we have a backend execution OR a frontend execution in progress
   const isExecutionForCurrentWorkflow = execution?.workflowId === workflowId;
-  const hasFrontendActivity =
-    frontendStatus !== "idle" || frontendLogs.length > 0;
+  const hasFrontendActivity = frontendStatus !== "idle" || frontendLogs.length > 0;
 
   const shouldShow =
-    ((!!execution && isExecutionForCurrentWorkflow) || hasFrontendActivity) &&
-    !isReadOnlyMode;
+    ((!!execution && isExecutionForCurrentWorkflow) || hasFrontendActivity) && !isReadOnlyMode;
 
   if (!shouldShow) {
     return null;
@@ -317,28 +299,22 @@ export function ExecutionMonitor() {
           className="flex items-center justify-between gap-3 w-full cursor-pointer hover:bg-gray-100/50 dark:hover:bg-[#2a2a2d]/50 transition-colors -m-3 p-3 rounded-t-xl"
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
-          aria-label={
-            isExpanded
-              ? "Collapse execution monitor"
-              : "Expand execution monitor"
-          }
+          aria-label={isExpanded ? "Collapse execution monitor" : "Expand execution monitor"}
         >
           <div className="flex items-center gap-3">
             <div
               className={cn(
                 "flex items-center justify-center w-8 h-8 rounded-full",
-                overallStatus === "running" ||
-                  overallStatus === "pending_signature"
+                overallStatus === "running" || overallStatus === "pending_signature"
                   ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
                   : overallStatus === "finished"
-                  ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
-                  : overallStatus === "failed"
-                  ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
-                  : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                    ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                    : overallStatus === "failed"
+                      ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                      : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
               )}
             >
-              {overallStatus === "running" ||
-              overallStatus === "pending_signature" ? (
+              {overallStatus === "running" || overallStatus === "pending_signature" ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : overallStatus === "finished" ? (
                 <Icon name="Check" size={16} />
@@ -398,35 +374,34 @@ export function ExecutionMonitor() {
                   overallStatus === "failed"
                     ? "bg-red-500"
                     : overallStatus === "finished"
-                    ? "bg-green-500"
-                    : "bg-blue-500"
+                      ? "bg-green-500"
+                      : "bg-blue-500"
                 )}
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
 
-          {mainTxHash &&
-            (overallStatus === "finished" || overallStatus === "failed") && (
-              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-blue-800 dark:text-blue-300">
-                    Transaction Hash
-                  </span>
-                  <span className="text-[10px] text-blue-600 dark:text-blue-400 truncate max-w-[200px]">
-                    {mainTxHash}
-                  </span>
-                </div>
-                <a
-                  href={getExplorerTxUrl(mainTxHash)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-                >
-                  <ExternalLink size={14} />
-                </a>
+          {mainTxHash && (overallStatus === "finished" || overallStatus === "failed") && (
+            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="text-xs font-medium text-blue-800 dark:text-blue-300">
+                  Transaction Hash
+                </span>
+                <span className="text-[10px] text-blue-600 dark:text-blue-400 truncate max-w-[200px]">
+                  {mainTxHash}
+                </span>
               </div>
-            )}
+              <a
+                href={getExplorerTxUrl(mainTxHash)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+              >
+                <ExternalLink size={14} />
+              </a>
+            </div>
+          )}
 
           {/* Live Execution Logs (Frontend) */}
           {frontendLogs.length > 0 && (
@@ -450,9 +425,7 @@ export function ExecutionMonitor() {
               </div>
               <div className="text-[10px] text-gray-500 dark:text-gray-400">
                 Status:{" "}
-                <span className="text-blue-500">
-                  {getFrontendStatusLabel(frontendStatus)}
-                </span>
+                <span className="text-blue-500">{getFrontendStatusLabel(frontendStatus)}</span>
               </div>
             </div>
           )}
@@ -486,9 +459,7 @@ export function ExecutionMonitor() {
                       <span className="text-xs font-medium text-gray-700 dark:text-gray-200">
                         {node.label}
                       </span>
-                      <span className="text-[10px] text-gray-400 capitalize">
-                        {node.type}
-                      </span>
+                      <span className="text-[10px] text-gray-400 capitalize">{node.type}</span>
                     </div>
                   </div>
 
@@ -498,10 +469,10 @@ export function ExecutionMonitor() {
                       node.status === "processing"
                         ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
                         : node.status === "complete"
-                        ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
-                        : node.status === "failed"
-                        ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
-                        : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+                          ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                          : node.status === "failed"
+                            ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                            : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
                     )}
                   >
                     {node.status}

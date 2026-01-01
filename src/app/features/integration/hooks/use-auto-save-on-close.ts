@@ -1,6 +1,6 @@
+import { useChangesTrackerStore } from "@/features/changes-tracker/stores/use-changes-tracker-store";
 import { useContext, useEffect, useRef } from "react";
 import { IntegrationContext } from "../components/integration-variants/context/integration-context-wrapper";
-import { useChangesTrackerStore } from "@/features/changes-tracker/stores/use-changes-tracker-store";
 import { useIntegrationStore } from "../stores/use-integration-store";
 
 export function useAutoSaveOnClose() {

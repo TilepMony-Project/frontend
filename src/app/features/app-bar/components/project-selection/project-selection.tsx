@@ -1,10 +1,10 @@
 import { Icon } from "@/components/icons";
-import { IntegrationContext } from "@/features/integration/components/integration-variants/context/integration-context-wrapper";
-import { withOptionalComponentPlugins } from "@/features/plugins-core/adapters/adapter-components";
-import useStore from "@/store/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Menu } from "@/components/ui/menu";
+import { IntegrationContext } from "@/features/integration/components/integration-variants/context/integration-context-wrapper";
+import { withOptionalComponentPlugins } from "@/features/plugins-core/adapters/adapter-components";
+import useStore from "@/store/store";
 import { ChevronDown } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
 
