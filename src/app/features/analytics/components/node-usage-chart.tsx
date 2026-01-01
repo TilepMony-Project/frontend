@@ -98,7 +98,7 @@ export function NodeUsageChart({ data }: { data: NodeUsageData[] }) {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="count" layout="vertical" radius={10} barSize={60}>
+            <Bar dataKey="count" layout="vertical" radius={10} barSize={50}>
               {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />
               ))}

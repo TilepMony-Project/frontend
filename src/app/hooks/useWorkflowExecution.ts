@@ -53,7 +53,7 @@ export function useWorkflowExecution() {
     executionId?: string;
     error?: string;
   }>({});
-  const [targetNodeId, setTargetNodeId] = useState<string | null>(null);
+  const [targetNodeIds, setTargetNodeIds] = useState<string[]>([]);
 
   // Sync wrapper for backward compatibility with local state usage in the hook
   const setResult = (
@@ -123,7 +123,7 @@ export function useWorkflowExecution() {
           addLog("Transaction confirmed! Finalizing execution...");
           // 1. Mark Deposit (off-chain) nodes as complete immediately
           const offChainNodes = nodes.filter((n) => {
-            if (targetNodeId && n.id !== targetNodeId) return false;
+            if (targetNodeIds.length > 0 && !targetNodeIds.includes(n.id)) return false;
             const type = n.data?.type || n.type;
             return type === "deposit";
           });
@@ -134,7 +134,7 @@ export function useWorkflowExecution() {
 
           // 2. Identify on-chain nodes and parse events
           const onChainNodes = nodes.filter((n) => {
-            if (targetNodeId && n.id !== targetNodeId) return false;
+            if (targetNodeIds.length > 0 && !targetNodeIds.includes(n.id)) return false;
             const type = n.data?.type || n.type;
             return type !== "deposit";
           });
@@ -207,7 +207,7 @@ export function useWorkflowExecution() {
             totalGasUsed: receipt.gasUsed.toString(),
             gasPriceGwei: formatUnits(receipt.effectiveGasPrice, 9),
             nodeUpdates: nodes
-              .filter((n) => !targetNodeId || n.id === targetNodeId)
+              .filter((n) => targetNodeIds.length === 0 || targetNodeIds.includes(n.id))
               .map((n) => ({ nodeId: n.id, status: "complete" })),
           };
 
@@ -233,7 +233,7 @@ export function useWorkflowExecution() {
         try {
           // On revert, mark all targeted nodes as failed
           const failedNodes = nodes
-            .filter((n) => !targetNodeId || n.id === targetNodeId)
+            .filter((n) => targetNodeIds.length === 0 || targetNodeIds.includes(n.id))
             .map((n) => ({ nodeId: n.id, status: "failed" }));
 
           await fetch(`/api/executions/${result.executionId}`, {
@@ -257,11 +257,11 @@ export function useWorkflowExecution() {
     };
 
     finalizeExecution();
-  }, [isConfirmed, isReverted, result.executionId, accessToken, nodes]);
+  }, [isConfirmed, isReverted, result.executionId, accessToken, nodes, targetNodeIds]);
 
-  const executeWorkflow = async (workflowId: string, nodeId?: string) => {
+  const executeWorkflow = async (workflowId: string, nodeIds: string[] = []) => {
     try {
-      setTargetNodeId(nodeId || null);
+      setTargetNodeIds(nodeIds);
       setExecutionLogs([]);
       setExecutionStatus("preparing");
       addLog("Starting workflow execution...");
@@ -278,7 +278,7 @@ export function useWorkflowExecution() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ userWalletAddress: walletAddress, nodeId }),
+        body: JSON.stringify({ userWalletAddress: walletAddress, nodeIds }),
       });
 
       if (!response.ok) {
@@ -384,7 +384,7 @@ export function useWorkflowExecution() {
           status: "running",
           transactionHash: hash,
           nodeUpdates: nodes
-            .filter((n) => !nodeId || n.id === nodeId)
+            .filter((n) => nodeIds.length === 0 || nodeIds.includes(n.id))
             .map((n) => ({
               nodeId: n.id,
               status: "processing",

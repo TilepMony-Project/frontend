@@ -7,6 +7,7 @@ import { truncateText } from "@/utils/toast-utils";
 import { IntegrationContext } from "@/features/integration/components/integration-variants/context/integration-context-wrapper";
 import { useWorkflowExecution } from "@/hooks/useWorkflowExecution";
 import { useWorkflowValidation } from "@/hooks/useWorkflowValidation";
+import useStore from "@/store/store";
 import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useContext } from "react";
@@ -19,6 +20,7 @@ export function RunButton() {
   const { executeWorkflow, status } = useWorkflowExecution();
   const { validateWorkflow, validating } = useWorkflowValidation();
   const { onSave } = useContext(IntegrationContext);
+  const selectedNodesIds = useStore((state) => state.selectedNodesIds);
 
   const isExecuting =
     status === "preparing" ||
@@ -51,7 +53,9 @@ export function RunButton() {
 
     if (!validation.valid) {
       toast.error("Workflow has errors", {
-        description: truncateText(validation.errors.map((e) => e.message).join("\n")),
+        description: truncateText(
+          validation.errors.map((e) => e.message).join("\n")
+        ),
         duration: 5000,
       });
       return;
@@ -59,14 +63,16 @@ export function RunButton() {
 
     if (validation.warnings.length > 0) {
       toast.warning("Workflow has warnings", {
-        description: truncateText(validation.warnings.map((w) => w.message).join("\n")),
+        description: truncateText(
+          validation.warnings.map((w) => w.message).join("\n")
+        ),
         duration: 4000,
       });
     }
 
     // 2. Execute
     try {
-      await executeWorkflow(workflowId);
+      await executeWorkflow(workflowId, selectedNodesIds);
     } catch (e: any) {
       toast.error("Execution failed", {
         description: truncateText(e.message || "Unknown error"),
@@ -78,7 +84,10 @@ export function RunButton() {
   if (validating) tooltipText = "Validating...";
   else if (status === "signing-approval" || status === "signing-execution")
     tooltipText = "Sign in Wallet...";
-  else if (status === "processing-approval" || status === "processing-execution")
+  else if (
+    status === "processing-approval" ||
+    status === "processing-execution"
+  )
     tooltipText = "Processing...";
   else if (status === "estimating-gas") tooltipText = "Estimating gas...";
   else if (status === "checking-approval") tooltipText = "Checking approval...";

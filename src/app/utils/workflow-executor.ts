@@ -33,18 +33,22 @@ export async function buildWorkflowActions(
   nodes: Node[],
   edges: Edge[],
   userAddress: string,
-  targetNodeId?: string
+  nodeIds?: string[]
 ): Promise<{ actions: Action[]; initialToken: string; initialAmount: bigint }> {
-  // If targetNodeId is provided, only execute that node
-  let nodesToProcess = nodes;
-  if (targetNodeId) {
-    const targetNode = nodes.find((n) => n.id === targetNodeId);
-    if (!targetNode) throw new Error(`Target node ${targetNodeId} not found`);
-    nodesToProcess = [targetNode];
+  // Sort all nodes based on edges to determine the correct execution order first
+  const sortedFullWorkflow = sortNodesMock(nodes, edges);
+
+  // If nodeIds are provided, only execute those specific nodes
+  // We filter the already sorted nodes to maintain the correct logical order
+  let nodesToProcess = sortedFullWorkflow;
+  if (nodeIds && nodeIds.length > 0) {
+    nodesToProcess = sortedFullWorkflow.filter((n) => nodeIds.includes(n.id));
+    if (nodesToProcess.length === 0) {
+      throw new Error(`None of the target nodes ${nodeIds.join(", ")} found`);
+    }
   }
 
-  // Sort nodes based on edges to determine execution order
-  const sortedNodes = targetNodeId ? nodesToProcess : sortNodesMock(nodes, edges);
+  const sortedNodes = nodesToProcess;
 
   const actions: Action[] = [];
   let initialToken = ZERO_ADDRESS as string;

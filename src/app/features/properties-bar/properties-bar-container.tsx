@@ -11,7 +11,9 @@ import { PropertiesBar } from "./components/properties-bar/properties-bar";
 
 export function PropertiesBarContainer() {
   const { removeElements } = useRemoveElements();
-  const isPropertiesBarExpanded = useStore((state) => state.isPropertiesBarExpanded);
+  const isPropertiesBarExpanded = useStore(
+    (state) => state.isPropertiesBarExpanded
+  );
   const togglePropertiesBar = useStore((state) => state.togglePropertiesBar);
 
   const [selectedTab, setSelectedTab] = useState("properties");
@@ -64,7 +66,7 @@ export function PropertiesBarContainer() {
     }
 
     try {
-      await executeWorkflow(workflowId, node.id);
+      await executeWorkflow(workflowId, [node.id]);
 
       showToast({
         title: "Execution Started",

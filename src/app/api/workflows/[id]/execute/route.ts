@@ -28,7 +28,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     }
 
     const body = await request.json();
-    const { userWalletAddress, nodeId } = body;
+    const { userWalletAddress, nodeIds } = body;
 
     if (!userWalletAddress) {
       return NextResponse.json({ error: "User wallet address required" }, { status: 400 });
@@ -38,12 +38,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       workflow.nodes,
       workflow.edges,
       userWalletAddress,
-      nodeId
+      nodeIds
     );
 
-    // 0. Handle Deposit (Fiat Top-up)
     const depositNode = workflow.nodes.find(
-      (n: any) => n.type === "deposit" || n.data?.type === "deposit"
+      (n: any) =>
+        (n.type === "deposit" || n.data?.type === "deposit") &&
+        (!nodeIds || nodeIds.length === 0 || nodeIds.includes(n.id))
     );
 
     if (depositNode) {
@@ -79,7 +80,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     // 1. Check Balance if MINT is involved (Do not deduct yet)
     const mintNodes = workflow.nodes.filter((n: any) => {
       const type = n.data?.type || n.type;
-      return type === "mint" && (!nodeId || n.id === nodeId);
+      return type === "mint" && (!nodeIds || nodeIds.length === 0 || nodeIds.includes(n.id));
     });
 
     if (mintNodes.length > 0) {
@@ -129,15 +130,20 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       // Actual deduction will happen in PATCH /api/executions/[id] upon success
     }
 
+    // Determine targeted nodes for log creation
+    const targetedNodes = workflow.nodes.filter(
+      (n: any) => !nodeIds || nodeIds.length === 0 || nodeIds.includes(n.id)
+    );
+
     // Create Execution Record (Pending Signature)
     const execution = await Execution.create({
       workflowId: id,
       userId,
       status: "pending_signature",
       startedAt: new Date(),
-      stepCount: workflow.nodes.length,
+      stepCount: targetedNodes.length,
       executionType: "manual",
-      executionLog: workflow.nodes.map((node: any) => ({
+      executionLog: targetedNodes.map((node: any) => ({
         nodeId: node.id,
         nodeType: node.data?.type || node.type || "node",
         status: "pending",
