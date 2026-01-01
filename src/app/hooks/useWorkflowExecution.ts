@@ -61,13 +61,16 @@ export function useWorkflowExecution() {
   ) => {
     const prev: ExecutionResult = {
       ...result,
-      status,
-      logs,
-      estimatedGasCost: estimatedGasCost || undefined,
+      status: useStore.getState().executionStatus as ExecutionStatus,
+      logs: useStore.getState().executionLogs,
+      estimatedGasCost: useStore.getState().estimatedGasCost || undefined,
     };
     const next = typeof update === "function" ? update(prev) : { ...prev, ...update };
 
-    if (next.status !== status) setExecutionStatus(next.status);
+    // Always use the latest store state for comparison and update
+    const currentStoreStatus = useStore.getState().executionStatus;
+    if (next.status !== currentStoreStatus) setExecutionStatus(next.status);
+    
     if (next.estimatedGasCost !== undefined) setEstimatedGasCost(next.estimatedGasCost || null);
     setResultState({
       txHash: next.txHash,
@@ -414,8 +417,17 @@ export function useWorkflowExecution() {
     }
   };
 
+  const resetExecution = useCallback(() => {
+    setExecutionStatus("idle");
+    setExecutionLogs([]);
+    setEstimatedGasCost(null);
+    setResultState({});
+    setTargetNodeIds([]);
+  }, [setExecutionStatus, setExecutionLogs, setEstimatedGasCost]);
+
   return {
     executeWorkflow,
+    resetExecution,
     status,
     txHash: result.txHash,
     error: result.error,
