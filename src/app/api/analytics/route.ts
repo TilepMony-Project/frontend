@@ -101,14 +101,14 @@ export async function GET(request: Request) {
       { $unwind: "$executionLog" },
       { 
         $match: { 
-          "executionLog.token": { $in: ["USDT", "USDC", "IDRX"] }
+          "executionLog.detailExecution.token": { $in: ["USDT", "USDC", "IDRX"] }
         } 
       },
       {
         $group: {
-          _id: "$executionLog.token",
-          volume: { $sum: { $toDouble: { $ifNull: ["$executionLog.amount", "0"] } } },
-          fiatVolume: { $sum: { $toDouble: { $ifNull: ["$executionLog.fiatAmount", "0"] } } },
+          _id: "$executionLog.detailExecution.token",
+          volume: { $sum: { $toDouble: { $ifNull: ["$executionLog.detailExecution.amount", "0"] } } },
+          fiatVolume: { $sum: { $toDouble: { $ifNull: ["$executionLog.detailExecution.fiatAmount", "0"] } } },
           count: { $sum: 1 }
         }
       },
@@ -128,8 +128,8 @@ export async function GET(request: Request) {
                 $divide: [
                   { 
                     $multiply: [ 
-                      { $toDouble: { $ifNull: ["$executionLog.gasUsed", "0"] } }, 
-                      { $toDouble: { $ifNull: ["$executionLog.gasPriceGwei", "0"] } } 
+                      { $toDouble: { $ifNull: ["$executionLog.detailExecution.gasUsed", "0"] } }, 
+                      { $toDouble: { $ifNull: ["$executionLog.detailExecution.gasPriceGwei", "0"] } } 
                     ] 
                   },
                   1000000000

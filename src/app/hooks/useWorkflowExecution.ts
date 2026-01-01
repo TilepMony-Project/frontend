@@ -181,21 +181,24 @@ export function useWorkflowExecution() {
                 }
 
                 // 4. Finalize overall status
+                const payload = { 
+                    status: "finished",
+                    transactionHash: result.txHash,
+                    totalGasUsed: receipt.gasUsed.toString(),
+                    gasPriceGwei: formatUnits(receipt.effectiveGasPrice, 9),
+                    nodeUpdates: nodes
+                        .filter(n => !targetNodeId || n.id === targetNodeId)
+                        .map(n => ({ nodeId: n.id, status: "complete" }))
+                };
+                console.log("[FINALIZING] Sending request to server:", payload);
+
                 await fetch(`/api/executions/${result.executionId}`, {
                     method: "PATCH",
                     headers: { 
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${accessToken}`
                     },
-                    body: JSON.stringify({ 
-                        status: "finished",
-                        transactionHash: result.txHash,
-                        totalGasUsed: receipt.gasUsed.toString(),
-                        gasPriceGwei: formatUnits(receipt.effectiveGasPrice, 9),
-                        nodeUpdates: nodes
-                            .filter(n => !targetNodeId || n.id === targetNodeId)
-                            .map(n => ({ nodeId: n.id, status: "complete" }))
-                    }),
+                    body: JSON.stringify(payload),
                 });
 
                 setResult(prev => ({ ...prev, status: "success" }));

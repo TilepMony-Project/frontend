@@ -5,7 +5,9 @@ export interface IExecution extends Document {
   userId: string;
   status: "pending_signature" | "running" | "running_waiting" | "stopped" | "finished" | "failed";
   startedAt: Date;
+  startedAtLocal?: string;
   finishedAt?: Date;
+  finishedAtLocal?: string;
   currentNodeId?: string;
   executionLog: Array<{
     nodeId: string;
@@ -15,14 +17,8 @@ export interface IExecution extends Document {
     transactionHash?: string;
     error?: string;
     // Granular analytics fields
-    from?: string;
-    to?: string;
-    amount?: string;
-    token?: string;
-    gasUsed?: string;
-    gasPriceGwei?: string;
-    fiatAmount?: string;
-    slippage?: string;
+    // Granular fields moved to detailExecution
+    detailExecution?: any;
   }>;
   totalGasUsed?: string;
   gasPriceGwei?: string;
@@ -56,9 +52,11 @@ const ExecutionSchema = new Schema<IExecution>(
       type: Date,
       default: Date.now,
     },
+    startedAtLocal: String,
     finishedAt: {
       type: Date,
     },
+    finishedAtLocal: String,
     currentNodeId: {
       type: String,
     },
@@ -73,15 +71,11 @@ const ExecutionSchema = new Schema<IExecution>(
         timestamp: Date,
         transactionHash: String,
         error: String,
-        // Granular fields
-        from: String,
-        to: String,
-        amount: String,
-        token: String,
-        gasUsed: String,
-        gasPriceGwei: String,
-        fiatAmount: String,
-        slippage: String,
+        // Granular fields moved to detailExecution
+        // Detailed structured data
+        detailExecution: {
+          type: Schema.Types.Mixed
+        }
       },
     ],
     totalGasUsed: {

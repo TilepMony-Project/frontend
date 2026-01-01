@@ -77,8 +77,12 @@ export async function PATCH(
              // --- Post-Execution Balance Updates (Mint & Redeem) & Transaction Recording ---
              try {
                 const workflow = await Workflow.findById(execution.workflowId);
+                console.log(`[EXECUTION] Found workflow: ${workflow ? workflow._id : "null"}`);
+                
                 if (workflow) {
                     const user = await User.findOne({ $or: [{ userId }, { privyUserId: userId }] });
+                    console.log(`[EXECUTION] Found user: ${user ? user._id : "null"}`);
+                    
                     if (user) {
                         let netIDR = 0;
                         let netUSD = 0;
@@ -86,11 +90,14 @@ export async function PATCH(
                         // Analytics: record details directly into the existing executionLog items
                         for (let i = 0; i < execution.executionLog.length; i++) {
                             const logItem = execution.executionLog[i];
+                            console.log(`[EXECUTION] Processing node ${i}: ${logItem.nodeId} Status: ${logItem.status}`);
+                            
                             if (logItem.status !== "complete") continue;
                             
                             // Find corresponding node data from workflow for properties
                             const nodeData = workflow.nodes.find((n: any) => n.id === logItem.nodeId);
                             const type = logItem.nodeType || nodeData?.data?.type || nodeData?.type;
+                            console.log(`[EXECUTION] Node Type: ${type}`);
                             const props = nodeData?.data?.properties || {};
                             
                             const amountStr = props.amount || props.inputAmount || "0";
@@ -99,46 +106,72 @@ export async function PATCH(
                             const token = props.token || props.currency || props.inputToken || "UNKNOWN";
 
                             // Normalize volume to USD for the summary KPI
+                            // Normalize volume to USD for the summary KPI
                             let usdValue = 0;
 
-                            // Init update object
-                            const updateData: any = {
-                                transactionHash: logItem.transactionHash || transactionHash || execution.transactionHash,
-                                from: user.walletAddress || "0x0",
-                                to: props.recipientWallet || props.to || "0x0",
-                                amount: displayAmount,
-                                token,
-                                gasUsed: totalGasUsed || "0",
+                            // Construct detailed execution info based on node type
+                            const normalizedType = type.toLowerCase();
+                            let detailExecution: any = {
                                 gasPriceGwei: gasPriceGwei || "0",
-                                slippage: props.slippage || "0"
+                                gasUsed: totalGasUsed || "0", // Node specific if available, otherwise total?
+                                // For now, we use the totalGasUsed of the tx passed in. 
+                                // Ideally, if multiple nodes share a tx, this is shared.
                             };
 
-                            if (["mint", "redeem", "swap", "bridge", "transfer", "yield-deposit", "yield-withdraw", "deposit"].includes(type)) {
+                            if (["mint", "redeem", "swap", "bridge", "transfer", "yield-deposit", "yield-withdraw", "deposit"].includes(normalizedType)) {
                                 if (token === "IDR" || token === "IDRX") {
                                     usdValue = amountNum / 15000;
                                 } else {
                                     usdValue = amountNum;
                                 }
                                 totalValueProcessed += usdValue;
-                                updateData.fiatAmount = usdValue.toFixed(2);
-                            } else {
-                                updateData.fiatAmount = "0";
                             }
+                            detailExecution.fiatAmount = usdValue.toFixed(2);
+
+                            if (normalizedType === "swap") {
+                                detailExecution = {
+                                    ...detailExecution,
+                                    token: token, // Primary token for analytics
+                                    amount: displayAmount, // Primary amount for analytics
+                                    tokenIn: props.inputToken || "UNKNOWN",
+                                    tokenOut: props.outputToken || "UNKNOWN",
+                                    amountIn: displayAmount,
+                                    percentage: props.inputAmountPercentage || "0",
+                                    slippage: props.slippage || "0",
+                                };
+                            } else if (normalizedType === "transfer") {
+                                detailExecution = {
+                                    ...detailExecution,
+                                    token: token,
+                                    amount: displayAmount,
+                                    percentage: props.inputAmountPercentage || "0",
+                                    from: user.walletAddress || "0x0",
+                                    to: props.recipientWallet || "0x0",
+                                };
+                            } else if (normalizedType === "mint" || normalizedType === "redeem" || normalizedType === "deposit") {
+                                detailExecution = {
+                                    ...detailExecution,
+                                    token: token,
+                                    amount: displayAmount,
+                                    currency: props.currency || "USD",
+                                };
+                            } else if (normalizedType === "yield-deposit" || normalizedType === "yield-withdraw") {
+                                detailExecution = {
+                                    ...detailExecution,
+                                    token: token,
+                                    amount: displayAmount,
+                                    percentage: props.inputAmountPercentage || "0",
+                                    protocol: props.yieldAdapter || "UNKNOWN",
+                                };
+                            }
+                            
+                            console.log(`[EXECUTION] Generated Detail Execution for ${normalizedType}:`, detailExecution);
 
                             // Apply updates to the log item safely
-                            // Mongoose subdocuments cannot be spread like plain objects. 
-                            // Using .set() or individual assignment is safer.
-                            
+                            // Only update transactionHash and detailExecution
                             const logEntry = execution.executionLog[i];
-                            logEntry.transactionHash = updateData.transactionHash;
-                            logEntry.from = updateData.from;
-                            logEntry.to = updateData.to;
-                            logEntry.amount = updateData.amount;
-                            logEntry.token = updateData.token;
-                            logEntry.gasUsed = updateData.gasUsed;
-                            logEntry.gasPriceGwei = updateData.gasPriceGwei;
-                            logEntry.slippage = updateData.slippage;
-                            logEntry.fiatAmount = updateData.fiatAmount;
+                            logEntry.transactionHash = logItem.transactionHash || transactionHash || execution.transactionHash;
+                            logEntry.detailExecution = detailExecution;
 
                             // Balance Updates (Fiat/Token specific logic)
                             if (type === "mint" || type === "deposit") {
@@ -171,6 +204,7 @@ export async function PATCH(
         }
     }
     
+    execution.markModified('executionLog');
     await execution.save();
 
     return NextResponse.json({ success: true, execution });
