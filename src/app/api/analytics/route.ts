@@ -88,18 +88,36 @@ export async function GET(request: Request) {
           success: { $sum: { $cond: [{ $eq: ["$status", "finished"] }, 1, 0] } },
           failed: { $sum: { $cond: [{ $eq: ["$status", "failed"] }, 1, 0] } },
           volume: { $sum: { $toDouble: { $ifNull: ["$totalFiatValue", "0"] } } },
+          volumeIDR: {
+            $sum: {
+              $multiply: [{ $toDouble: { $ifNull: ["$totalFiatValue", "0"] } }, 16300],
+            },
+          },
         },
       },
       { $sort: { _id: 1 } },
     ]);
 
-    // 3. Token Distribution
+    // 3. Token Distribution - Show all tokens (USDT, USDC, IDRX)
+    // Include all execution logs that have detailExecution with token data
+    // Only include finished executions (not pending or running)
     const tokenVolume = await Execution.aggregate([
-      { $match: { userId } },
+      { 
+        $match: { 
+          userId,
+          status: { $in: ["finished", "failed"] } // Only finished or failed executions
+        } 
+      },
       { $unwind: "$executionLog" },
       {
         $match: {
-          "executionLog.detailExecution.token": { $in: ["USDT", "USDC", "IDRX"] },
+          "executionLog.detailExecution": { $exists: true, $ne: null },
+          $and: [
+            { "executionLog.detailExecution.token": { $exists: true } },
+            { "executionLog.detailExecution.token": { $ne: null } },
+            { "executionLog.detailExecution.token": { $ne: "" } },
+            { "executionLog.detailExecution.token": { $in: ["USDT", "USDC", "IDRX"] } },
+          ],
         },
       },
       {
