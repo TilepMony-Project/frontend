@@ -2,6 +2,7 @@
 
 import {
   Archive,
+  AlertCircle,
   ArrowLeft,
   ArrowLeftRight,
   ArrowRight,
@@ -112,6 +113,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   Pointer: Pointer,
   Check: Check,
   CheckCircle2: CheckCircle2,
+  AlertCircle: AlertCircle,
   XCircle: XCircle,
 
   // Additional icons used in components
@@ -164,7 +166,12 @@ function getIconComponent(name?: string): ComponentType<IconProps> | null {
   return null;
 }
 
-export const Icon: ComponentType<IconProps> = ({ size = 24, className, name, ...props }) => {
+export const Icon: ComponentType<IconProps> = ({
+  size = 24,
+  className,
+  name,
+  ...props
+}) => {
   if (!name) {
     return null;
   }
@@ -185,12 +192,20 @@ export const Icon: ComponentType<IconProps> = ({ size = 24, className, name, ...
     const spinnerClassName =
       name === "Loader2" ? `${className || ""} animate-spin`.trim() : className;
 
-    return <IconComponent size={iconSize} className={spinnerClassName} {...props} />;
+    return (
+      <IconComponent size={iconSize} className={spinnerClassName} {...props} />
+    );
   }
 
   // Final fallback: show placeholder with icon name
   const iconSize =
-    typeof size === "string" ? (size === "large" ? 32 : size === "small" ? 16 : 24) : size;
+    typeof size === "string"
+      ? size === "large"
+        ? 32
+        : size === "small"
+        ? 16
+        : 24
+      : size;
 
   return (
     <svg

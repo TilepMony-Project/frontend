@@ -164,6 +164,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         actions: serializedActions,
         initialToken,
         initialAmount: initialAmount.toString(),
+        targetedNodes: targetedNodes.map((n: any) => ({
+          id: n.id,
+          type: n.data?.type || n.type,
+          label: n.data?.properties?.label || n.data?.label || n.type,
+          properties: n.data?.properties || {},
+        })),
       },
     });
   } catch (error) {

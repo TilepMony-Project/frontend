@@ -10,8 +10,9 @@ import { useWorkflowValidation } from "@/hooks/useWorkflowValidation";
 import useStore from "@/store/store";
 import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { toast } from "sonner";
+import { ExecutionConfirmationModal } from "./execution-confirmation-modal";
 
 export function RunButton() {
   const params = useParams();
@@ -21,6 +22,7 @@ export function RunButton() {
   const { validateWorkflow, validating } = useWorkflowValidation();
   const { onSave } = useContext(IntegrationContext);
   const selectedNodesIds = useStore((state) => state.selectedNodesIds);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const isExecuting =
     status === "preparing" ||
@@ -32,12 +34,11 @@ export function RunButton() {
     status === "processing-execution" ||
     validating;
 
-  async function handleRun() {
+  async function handleRunClick() {
     if (!workflowId) return;
 
-    // 0. Auto-save first to ensure backend has latest data
+    // 0. Auto-save first
     const saveResult = await onSave({ isAutoSave: false });
-
     if (saveResult === "error") {
       toast.error("Failed to save workflow before execution");
       return;
@@ -45,7 +46,6 @@ export function RunButton() {
 
     // 1. Validate
     const validation = await validateWorkflow(workflowId);
-
     if (!validation) {
       toast.error("Validation failed to run");
       return;
@@ -61,16 +61,11 @@ export function RunButton() {
       return;
     }
 
-    if (validation.warnings.length > 0) {
-      toast.warning("Workflow has warnings", {
-        description: truncateText(
-          validation.warnings.map((w) => w.message).join("\n")
-        ),
-        duration: 4000,
-      });
-    }
+    // 2. Open confirmation modal instead of executing
+    setShowConfirmation(true);
+  }
 
-    // 2. Execute
+  async function handleConfirmExecution() {
     try {
       await executeWorkflow(workflowId, selectedNodesIds);
     } catch (e: any) {
@@ -93,20 +88,30 @@ export function RunButton() {
   else if (status === "checking-approval") tooltipText = "Checking approval...";
 
   return (
-    <Tooltip content={tooltipText}>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleRun}
-        disabled={isExecuting}
-        className={cn(isExecuting && "opacity-70")}
-      >
-        {isExecuting ? (
-          <Icon name="Loader2" className="animate-spin text-blue-600" />
-        ) : (
-          <Icon name="Play" />
-        )}
-      </Button>
-    </Tooltip>
+    <>
+      <Tooltip content={tooltipText}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleRunClick}
+          disabled={isExecuting}
+          className={cn(isExecuting && "opacity-70")}
+        >
+          {isExecuting ? (
+            <Icon name="Loader2" className="animate-spin text-blue-600" />
+          ) : (
+            <Icon name="Play" />
+          )}
+        </Button>
+      </Tooltip>
+
+      <ExecutionConfirmationModal
+        open={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        onConfirm={handleConfirmExecution}
+        workflowId={workflowId}
+        selectedNodeIds={selectedNodesIds}
+      />
+    </>
   );
 }

@@ -417,6 +417,84 @@ export function useWorkflowExecution() {
     }
   };
 
+  const simulateWorkflow = async (workflowId: string, nodeIds: string[] = []) => {
+    try {
+      if (!accessToken) throw new Error("Authentication token not ready");
+      const walletAddress = user?.wallet?.address;
+      if (!walletAddress) throw new Error("No wallet connected");
+
+      const response = await fetch(`/api/workflows/${workflowId}/execute`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ userWalletAddress: walletAddress, nodeIds }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Failed to prepare simulation");
+      }
+
+      const { config, executionId } = await response.json();
+
+      // 1.1 Get AI Explanation
+      let aiExplanation = "";
+      try {
+        const aiResponse = await fetch("/api/ai/simulate-workflow", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            workflow: { nodes, edges: useStore.getState().edges },
+            targetedNodes: config.targetedNodes,
+          }),
+        });
+        if (aiResponse.ok) {
+          const aiData = await aiResponse.json();
+          aiExplanation = aiData.explanation;
+        }
+      } catch (aiError) {
+        console.warn("AI simulation explanation failed:", aiError);
+      }
+
+      const deserializedActions = config.actions.map((action: any) => ({
+        actionType: Number(action.actionType),
+        targetContract: action.targetContract as `0x${string}`,
+        data: action.data as `0x${string}`,
+        inputAmountPercentage: BigInt(action.inputAmountPercentage),
+      }));
+
+      if (publicClient) {
+        await publicClient.simulateContract({
+          address: CONTRACT_ADDRESS,
+          abi: CONTRACT_ABI,
+          functionName: "executeWorkflow",
+          args: [deserializedActions, config.initialToken, BigInt(config.initialAmount)],
+          account: walletAddress as `0x${string}`,
+        });
+      }
+
+      return {
+        success: true,
+        actions: config.actions,
+        initialToken: config.initialToken,
+        initialAmount: config.initialAmount,
+        targetedNodes: config.targetedNodes,
+        aiExplanation,
+        executionId,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: decodeContractError(error),
+      };
+    }
+  };
+
   const resetExecution = useCallback(() => {
     setExecutionStatus("idle");
     setExecutionLogs([]);
@@ -427,6 +505,7 @@ export function useWorkflowExecution() {
 
   return {
     executeWorkflow,
+    simulateWorkflow,
     resetExecution,
     status,
     txHash: result.txHash,

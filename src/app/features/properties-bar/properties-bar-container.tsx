@@ -8,6 +8,8 @@ import { useWorkflowExecution } from "@/hooks/useWorkflowExecution";
 import useStore from "@/store/store";
 
 import { PropertiesBar } from "./components/properties-bar/properties-bar";
+import { ExecutionConfirmationModal } from "../integration/components/run-button/execution-confirmation-modal";
+import { Icon } from "@/components/icons";
 
 export function PropertiesBarContainer() {
   const { removeElements } = useRemoveElements();
@@ -35,11 +37,10 @@ export function PropertiesBarContainer() {
 
   const { executeWorkflow } = useWorkflowExecution();
   const { onSave } = useContext(IntegrationContext);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   async function handleRunNodeClick() {
-    if (!selection?.node) {
-      return;
-    }
+    if (!selection?.node) return;
 
     const workflowId = localStorage.getItem("tilepmoney_current_workflow_id");
     if (!workflowId) {
@@ -51,9 +52,6 @@ export function PropertiesBarContainer() {
       return;
     }
 
-    const node = selection.node;
-    const nodeLabel = getNodeLabel(node.data?.properties);
-
     // 0. Auto-save first
     const saveResult = await onSave({ isAutoSave: false });
     if (saveResult === "error") {
@@ -64,6 +62,17 @@ export function PropertiesBarContainer() {
       });
       return;
     }
+
+    setShowConfirmation(true);
+  }
+
+  async function handleConfirmExecution() {
+    if (!selection?.node) return;
+    const workflowId = localStorage.getItem("tilepmoney_current_workflow_id");
+    if (!workflowId) return;
+
+    const node = selection.node;
+    const nodeLabel = getNodeLabel(node.data?.properties);
 
     try {
       await executeWorkflow(workflowId, [node.id]);
@@ -83,19 +92,33 @@ export function PropertiesBarContainer() {
   }
 
   return (
-    <PropertiesBar
-      selection={selection}
-      onDeleteClick={handleDeleteClick}
-      onRunNodeClick={handleRunNodeClick}
-      headerLabel="Properties"
-      deleteNodeLabel="Delete Node"
-      deleteEdgeLabel="Delete Edge"
-      runNodeLabel="Run Node"
-      selectedTab={selectedTab}
-      onTabChange={setSelectedTab}
-      isSidebarExpanded={isPropertiesBarExpanded}
-      onToggleSidebar={togglePropertiesBar}
-    />
+    <>
+      <PropertiesBar
+        selection={selection}
+        onDeleteClick={handleDeleteClick}
+        onRunNodeClick={handleRunNodeClick}
+        headerLabel="Properties"
+        deleteNodeLabel="Delete Node"
+        deleteEdgeLabel="Delete Edge"
+        runNodeLabel="Run Node"
+        selectedTab={selectedTab}
+        onTabChange={setSelectedTab}
+        isSidebarExpanded={isPropertiesBarExpanded}
+        onToggleSidebar={togglePropertiesBar}
+      />
+
+      {selection?.node && (
+        <ExecutionConfirmationModal
+          open={showConfirmation}
+          onClose={() => setShowConfirmation(false)}
+          onConfirm={handleConfirmExecution}
+          workflowId={
+            localStorage.getItem("tilepmoney_current_workflow_id") || ""
+          }
+          selectedNodeIds={[selection.node.id]}
+        />
+      )}
+    </>
   );
 }
 
