@@ -10,6 +10,7 @@ import {
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { Activity, ArrowLeftRight, Clock, DollarSign } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { DailyExecutionActivityChart } from "./daily-execution-activity-chart";
 import { TokenVolumeChart } from "./token-volume-chart";
 import { NodeUsageChart } from "./node-usage-chart";
@@ -95,11 +96,9 @@ export function AnalyticsDashboard() {
           icon={<ArrowLeftRight className="text-indigo-500" />}
           description="Total node steps executed"
         />
-        <KPICard
-          title="Total Volume"
-          value={`$${Math.round(data.kpi.totalFiatValue).toLocaleString()}`}
+        <TotalVolumeKPICard
+          totalFiatValue={data.kpi.totalFiatValue}
           icon={<DollarSign className="text-green-500" />}
-          description="Cumulative fiat value processed"
         />
         <KPICard
           title="Gas Spent"
@@ -157,6 +156,70 @@ function KPICard({
         </div>
         <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
           {description}
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+// Exchange rate: 1 USD = 16300 IDR (based on analytics API)
+const EXCHANGE_RATE = 16300;
+
+function TotalVolumeKPICard({
+  totalFiatValue,
+  icon,
+}: {
+  totalFiatValue: number;
+  icon: React.ReactNode;
+}) {
+  const [currency, setCurrency] = useState<"USD" | "IDR">("USD");
+
+  const usdValue = totalFiatValue;
+  const idrValue = totalFiatValue * EXCHANGE_RATE;
+
+  const displayValue = currency === "USD" ? usdValue : idrValue;
+  const formattedValue = Math.round(displayValue).toLocaleString();
+  const currencySymbol = currency === "USD" ? "$" : "Rp";
+
+  return (
+    <Card className="dark:bg-[#27282b] border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+        <CardTitle className="text-sm font-medium text-gray-500 dark:text-gray-400">
+          Total Volume
+        </CardTitle>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 bg-gray-100 dark:bg-[#1a1b1e] rounded-md p-1">
+            <Button
+              variant={currency === "USD" ? "default" : "ghost"}
+              size="sm"
+              className="h-8 px-2 text-xs"
+              onClick={() => setCurrency("USD")}
+            >
+              USD
+            </Button>
+            <Button
+              variant={currency === "IDR" ? "default" : "ghost"}
+              size="sm"
+              className="h-8 px-2 text-xs"
+              onClick={() => setCurrency("IDR")}
+            >
+              IDR
+            </Button>
+          </div>
+          <div className="p-2 bg-gray-100 dark:bg-[#1a1b1e] rounded-lg">
+            {icon}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-baseline gap-1">
+          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            {currencySymbol}
+            {formattedValue}
+          </div>
+        </div>
+        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+          Cumulative fiat value processed
         </p>
       </CardContent>
     </Card>
