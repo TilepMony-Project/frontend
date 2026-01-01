@@ -6,6 +6,7 @@ import {
   ArrowLeftRight,
   ArrowRight,
   Asterisk,
+  BarChart3,
   Box,
   Building2,
   Check,
@@ -126,6 +127,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   Play: Play,
   Plus: Plus,
   Asterisk: Asterisk,
+  BarChart3: BarChart3,
 
   // Node icons - TilepMoney (Lucide React)
   DollarSign: DollarSign, // Deposit

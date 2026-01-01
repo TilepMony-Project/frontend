@@ -130,9 +130,11 @@ export async function POST(
       userId,
       status: "pending_signature",
       startedAt: new Date(),
+      stepCount: workflow.nodes.length,
+      executionType: "manual",
       executionLog: workflow.nodes.map((node: any) => ({
         nodeId: node.id,
-        nodeType: node.type || "node",
+        nodeType: node.data?.type || node.type || "node",
         status: "pending",
         timestamp: new Date(),
       })),

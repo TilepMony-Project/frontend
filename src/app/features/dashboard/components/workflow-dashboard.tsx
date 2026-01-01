@@ -81,6 +81,7 @@ import {
 } from "@/features/dashboard/data/templates";
 import { AIWorkflowGenerator } from "@/components/workflow/ai-workflow-generator";
 import { ProfileCheckAlert } from "@/components/profile-check-alert";
+import { AnalyticsDashboard } from "@/features/analytics/components/analytics-dashboard";
 
 type ViewMode = "grid" | "list";
 
@@ -205,6 +206,9 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
     useState<WorkflowSummary | null>(null);
   const [hasCopied, setHasCopied] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const [activeTab, setActiveTab] = useState<"workflows" | "analytics">(
+    "workflows"
+  );
 
   // Deposit Modal State
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
@@ -908,7 +912,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
             </div>
 
             <label className="font-semibold text-gray-900 dark:text-white mt-2">
-              Amount 
+              Amount
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
@@ -1087,752 +1091,526 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
         </div>
       </section>
 
-      {/* Analytics Section */}
-      <section className="grid gap-6">
-        {/* KPI Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
-            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-              <div className="flex flex-col space-y-3">
-                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Total Workflows
-                </CardTitle>
-                <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {workflows.length}
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {filteredWorkflows.length !== workflows.length && (
-                    <span>{filteredWorkflows.length} filtered</span>
-                  )}
-                </p>
-              </div>
-              <Icon
-                name="FileText"
-                size={24}
-                className="text-gray-500 dark:text-gray-400"
+      {/* Tab Switcher */}
+      <div className="flex items-center gap-4 bg-white dark:bg-[#27282b] px-2.5 py-1.5 rounded-2xl w-fit border border-gray-200 dark:border-gray-700 shadow-sm mb-2">
+        <button
+          onClick={() => setActiveTab("workflows")}
+          className={cn(
+            "px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2",
+            activeTab === "workflows"
+              ? "bg-primary text-white shadow-md transform scale-105"
+              : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+          )}
+          type="button"
+        >
+          <Icon name="LayoutGrid" size={16} />
+          My Workflows
+        </button>
+        <button
+          onClick={() => setActiveTab("analytics")}
+          className={cn(
+            "px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2",
+            activeTab === "analytics"
+              ? "bg-primary text-white shadow-md transform scale-105"
+              : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+          )}
+          type="button"
+        >
+          <Icon name="BarChart3" size={16} />
+          Advanced Analysis
+        </button>
+      </div>
+
+      {activeTab === "analytics" ? (
+        <AnalyticsDashboard />
+      ) : (
+        <>
+          <section className="flex flex-wrap gap-4 items-center bg-white dark:bg-[#27282b] rounded-2xl p-4 shadow-sm">
+            <div className="flex-1 min-w-[200px] flex items-center gap-2 p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white">
+              <Icon name="Search" size={18} />
+              <input
+                type="text"
+                value={searchTerm}
+                placeholder="Search workflows"
+                onChange={(event) => setSearchTerm(event.target.value)}
+                disabled={isBusy}
+                className="border-none outline-none focus-visible:outline-none focus-visible:ring-0 focus:ring-0 focus:outline-none bg-transparent text-inherit w-full disabled:opacity-50 disabled:cursor-not-allowed"
               />
-            </CardHeader>
-          </Card>
+            </div>
 
-          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
-            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-              <div className="flex flex-col space-y-3">
-                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Total Nodes
-                </CardTitle>
-                <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {workflows.reduce((sum, w) => sum + w.nodesCount, 0)}
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Across all workflows
-                </p>
-              </div>
-              <Icon
-                name="Box"
-                size={24}
-                className="text-gray-500 dark:text-gray-400"
-              />
-            </CardHeader>
-          </Card>
-
-          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
-            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-              <div className="flex flex-col space-y-3">
-                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Total Edges
-                </CardTitle>
-                <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {workflows.reduce((sum, w) => sum + w.edgesCount, 0)}
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Total connections
-                </p>
-              </div>
-              <Icon
-                name="GitBranch"
-                size={24}
-                className="text-gray-500 dark:text-gray-400"
-              />
-            </CardHeader>
-          </Card>
-
-          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
-            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-              <div className="flex flex-col space-y-3">
-                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Completion Rate
-                </CardTitle>
-                <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {workflows.length > 0
-                    ? Math.round(
-                        (workflows.filter((w) => w.status === "finished")
-                          .length /
-                          workflows.length) *
-                          100
-                      )
-                    : 0}
-                  %
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {workflows.filter((w) => w.status === "finished").length} of{" "}
-                  {workflows.length} completed
-                </p>
-              </div>
-              <Icon
-                name="CheckCircle2"
-                size={24}
-                className="text-gray-500 dark:text-gray-400"
-              />
-            </CardHeader>
-          </Card>
-        </div>
-
-        {/* Charts */}
-        <div className="grid gap-4 md:grid-cols-2">
-          {/* Status Distribution Chart */}
-          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-gray-900 dark:text-white">
-                Workflow Status Distribution
-              </CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-400">
-                Breakdown of workflows by status
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ChartContainer
-                config={{
-                  draft: { label: "Draft", color: "hsl(var(--chart-1))" },
-                  running: { label: "Running", color: "hsl(var(--chart-2))" },
-                  running_waiting: {
-                    label: "Running (Waiting)",
-                    color: "hsl(var(--chart-3))",
-                  },
-                  stopped: { label: "Stopped", color: "hsl(var(--chart-4))" },
-                  finished: { label: "Finished", color: "hsl(var(--chart-5))" },
-                  failed: { label: "Failed", color: "hsl(var(--chart-6))" },
-                }}
-                className="mx-auto aspect-square max-h-[250px]"
-              >
-                <PieChart>
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent hideLabel />}
-                  />
-                  <Pie
-                    data={[
-                      {
-                        name: "Draft",
-                        value: workflows.filter((w) => w.status === "draft")
-                          .length,
-                        fill: "var(--color-draft)",
-                      },
-                      {
-                        name: "Running",
-                        value: workflows.filter((w) => w.status === "running")
-                          .length,
-                        fill: "var(--color-running)",
-                      },
-                      {
-                        name: "Running (Waiting)",
-                        value: workflows.filter(
-                          (w) => w.status === "running_waiting"
-                        ).length,
-                        fill: "var(--color-running_waiting)",
-                      },
-                      {
-                        name: "Stopped",
-                        value: workflows.filter((w) => w.status === "stopped")
-                          .length,
-                        fill: "var(--color-stopped)",
-                      },
-                      {
-                        name: "Finished",
-                        value: workflows.filter((w) => w.status === "finished")
-                          .length,
-                        fill: "var(--color-finished)",
-                      },
-                      {
-                        name: "Failed",
-                        value: workflows.filter((w) => w.status === "failed")
-                          .length,
-                        fill: "var(--color-failed)",
-                      },
-                    ].filter((item) => item.value > 0)}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={60}
-                    strokeWidth={5}
-                  />
-                </PieChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-
-          {/* Activity Timeline Chart */}
-          <Card className="bg-white dark:bg-[#27282b] border-gray-200 dark:border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-gray-900 dark:text-white">
-                Recent Activity
-              </CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-400">
-                Workflows updated in the last 7 days
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ChartContainer
-                config={{
-                  count: { label: "Workflows", color: "hsl(var(--chart-1))" },
-                }}
-                className="aspect-auto h-[250px] w-full"
-              >
-                <AreaChart
-                  accessibilityLayer
-                  data={(() => {
-                    const last7Days = Array.from({ length: 7 }, (_, i) => {
-                      const date = new Date();
-                      date.setDate(date.getDate() - (6 - i));
-                      return date.toISOString().split("T")[0];
-                    });
-                    return last7Days.map((date) => ({
-                      date: new Date(date).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      }),
-                      count: workflows.filter((w) => {
-                        const workflowDate = new Date(w.updatedAt)
-                          .toISOString()
-                          .split("T")[0];
-                        return workflowDate === date;
-                      }).length,
-                    }));
-                  })()}
-                  margin={{
-                    left: 12,
-                    right: 12,
-                    top: 20,
-                  }}
-                >
-                  <CartesianGrid
-                    vertical={false}
-                    className="stroke-gray-200 dark:stroke-gray-700"
-                  />
-                  <XAxis
-                    dataKey="date"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    className="text-xs text-gray-600 dark:text-gray-400"
-                  />
-                  <YAxis domain={[0, "auto"]} hide />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="dot" />}
-                  />
-                  <defs>
-                    <linearGradient id="fillCount" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor="var(--color-count)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="var(--color-count)"
-                        stopOpacity={0.1}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <Area
-                    dataKey="count"
-                    type="natural"
-                    fill="url(#fillCount)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-count)"
-                    stackId="a"
-                  />
-                </AreaChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      <section className="flex flex-wrap gap-4 items-center bg-white dark:bg-[#27282b] rounded-2xl p-4 shadow-sm">
-        <div className="flex-1 min-w-[200px] flex items-center gap-2 p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white">
-          <Icon name="Search" size={18} />
-          <input
-            type="text"
-            value={searchTerm}
-            placeholder="Search workflows"
-            onChange={(event) => setSearchTerm(event.target.value)}
-            disabled={isBusy}
-            className="border-none outline-none focus-visible:outline-none focus-visible:ring-0 focus:ring-0 focus:outline-none bg-transparent text-inherit w-full disabled:opacity-50 disabled:cursor-not-allowed"
-          />
-        </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              disabled={isBusy}
-              className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white px-4 min-w-[200px] flex items-center justify-between disabled:opacity-50"
-            >
-              {STATUS_OPTIONS.find((option) => option.value === statusFilter)
-                ?.label ?? "All statuses"}
-              <Icon name="ChevronDown" size={16} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuRadioGroup
-              value={statusFilter}
-              onValueChange={(value) =>
-                setStatusFilter(value as typeof statusFilter)
-              }
-            >
-              {STATUS_OPTIONS.map((status) => (
-                <DropdownMenuRadioItem key={status.value} value={status.value}>
-                  {status.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <div className="flex rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden h-12">
-          <button
-            className={clsx(
-              "h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
-              viewMode === "grid" &&
-                "bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white"
-            )}
-            type="button"
-            onClick={() => setViewMode("grid")}
-            disabled={isBusy}
-            aria-label="Grid view"
-          >
-            <Icon name="LayoutGrid" size={18} />
-          </button>
-          <button
-            className={clsx(
-              "h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
-              viewMode === "list" &&
-                "bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white"
-            )}
-            type="button"
-            onClick={() => setViewMode("list")}
-            disabled={isBusy}
-            aria-label="List view"
-          >
-            <Icon name="List" size={18} />
-          </button>
-        </div>
-      </section>
-
-      <section className="flex justify-between items-center gap-4 text-gray-600 dark:text-gray-400 flex-wrap">
-        <div className="flex items-center gap-4 flex-wrap">
-          <span className="text-sm">
-            {isLoading ? (
-              <span className="flex items-center gap-2">
-                <Icon name="Loader2" size={16} className="animate-spin" />
-                {isLoadingToken
-                  ? "Preparing your workspace..."
-                  : "Loading workflows..."}
-              </span>
-            ) : (
-              <>
-                Showing {startIndex + 1}-
-                {Math.min(endIndex, filteredWorkflows.length)} of{" "}
-                {filteredWorkflows.length} workflows
-                {filteredWorkflows.length !== workflows.length &&
-                  ` (${workflows.length} total)`}
-              </>
-            )}
-          </span>
-          {!isLoading && filteredWorkflows.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  size="sm"
-                  className="h-9 text-xs"
                   disabled={isBusy}
+                  className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-[#eeeff3] dark:bg-[#151516] text-gray-900 dark:text-white px-4 min-w-[200px] flex items-center justify-between disabled:opacity-50"
                 >
-                  {itemsPerPage} per page
-                  <Icon name="ChevronDown" size={14} className="ml-1" />
+                  {STATUS_OPTIONS.find(
+                    (option) => option.value === statusFilter
+                  )?.label ?? "All statuses"}
+                  <Icon name="ChevronDown" size={16} />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-32">
-                {[6, 12, 24, 48].map((size) => (
-                  <DropdownMenuItem
-                    key={size}
-                    onClick={() => {
-                      setItemsPerPage(size);
-                      setCurrentPage(1);
-                    }}
-                    className="cursor-pointer"
-                  >
-                    {size} per page
-                  </DropdownMenuItem>
-                ))}
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuRadioGroup
+                  value={statusFilter}
+                  onValueChange={(value) =>
+                    setStatusFilter(value as typeof statusFilter)
+                  }
+                >
+                  {STATUS_OPTIONS.map((status) => (
+                    <DropdownMenuRadioItem
+                      key={status.value}
+                      value={status.value}
+                    >
+                      {status.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-          )}
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            className="min-w-[180px] px-6 py-3 text-base rounded-full border-[1px] border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500"
-            onClick={openTemplateModal}
-            disabled={creatingTemplate || isLoading}
-            variant="outline"
-            size="lg"
-          >
-            {creatingTemplate ? (
-              <>
-                <Icon name="Loader2" size={18} className="animate-spin" />
-                Loading template...
-              </>
-            ) : (
-              <>
+            <div className="flex rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden h-12">
+              <button
+                className={clsx(
+                  "h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+                  viewMode === "grid" &&
+                    "bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white"
+                )}
+                type="button"
+                onClick={() => setViewMode("grid")}
+                disabled={isBusy}
+                aria-label="Grid view"
+              >
                 <Icon name="LayoutGrid" size={18} />
-                Choose template
-              </>
-            )}
-          </Button>
-          <AIWorkflowGenerator
-            onWorkflowGenerated={() => {
-              // Refresh workflows after AI generation
-              if (!initialWorkflows) {
-                void fetchWorkflows();
-              }
-            }}
-          />
-          <Button
-            className="min-w-[180px] px-6 py-3 text-base rounded-full"
-            onClick={openCreateWorkflowModal}
-            disabled={creating || isLoading}
-            variant="default"
-            size="lg"
-          >
-            {creating ? (
-              <>
-                <Icon name="Loader2" size={18} className="animate-spin" />
-                Creating...
-              </>
-            ) : (
-              <>
-                <Icon name="Plus" size={18} />
-                New workflow
-              </>
-            )}
-          </Button>
-        </div>
-      </section>
-
-      {isBusy ? (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="bg-white dark:bg-[#27282b] rounded-2xl p-8 border border-gray-200 dark:border-gray-700 animate-pulse"
-            >
-              <div className="flex justify-between gap-3 items-start mb-4">
-                <div className="flex-1">
-                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
-                </div>
-                <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-20" />
-              </div>
-              <div className="flex items-center gap-4 mb-4">
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24" />
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24" />
-              </div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-4" />
-              <div className="flex gap-2 pt-4 border-t border-gray-100 dark:border-gray-800">
-                <div className="flex-1 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
-                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
-                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
-              </div>
+              </button>
+              <button
+                className={clsx(
+                  "h-12 w-12 flex items-center justify-center border-none text-gray-600 dark:text-gray-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+                  viewMode === "list" &&
+                    "bg-[#eeeff3] dark:bg-[#27282b] text-gray-900 dark:text-white"
+                )}
+                type="button"
+                onClick={() => setViewMode("list")}
+                disabled={isBusy}
+                aria-label="List view"
+              >
+                <Icon name="List" size={18} />
+              </button>
             </div>
-          ))}
-        </div>
-      ) : filteredWorkflows.length === 0 ? (
-        <div className="border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl py-8 px-2 text-center bg-white dark:bg-[#27282b] text-gray-600 dark:text-gray-400">
-          <h3 className="m-0 mb-2 text-gray-900 dark:text-white text-lg font-semibold">
-            No workflows found
-          </h3>
-          <p>
-            Try adjusting your filters or create a new workflow to get started.
-          </p>
-        </div>
-      ) : viewMode === "grid" ? (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
-          {paginatedWorkflows.map((workflow) => (
-            <article
-              key={workflow.id}
-              className="group bg-white dark:bg-[#27282b] rounded-2xl p-8 border border-gray-200 dark:border-gray-700 flex flex-col gap-5 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/50"
-            >
-              <div className="flex justify-between gap-3 items-start">
-                <div className="flex-1">
-                  <h3 className="m-0 text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
-                    {workflow.name}
-                  </h3>
-                  <p className="m-0 text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
-                    {workflow.description || "No description provided"}
-                  </p>
-                </div>
-                <span
-                  className={clsx(
-                    "px-3 py-1.5 rounded-full text-xs font-semibold capitalize border shrink-0",
-                    STATUS_STYLES[workflow.status] ||
-                      "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700"
-                  )}
-                >
-                  {STATUS_LABELS[workflow.status]}
-                </span>
-              </div>
+          </section>
 
-              <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm mt-6">
-                <div className="flex items-center gap-1.5">
-                  <Icon name="Box" size={16} />
-                  <span>{workflow.nodesCount} nodes</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Icon name="GitBranch" size={16} />
-                  <span>{workflow.edgesCount} edges</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-500 text-xs">
-                <Icon name="Clock" size={14} />
-                <span>Updated {formatDate(workflow.updatedAt)}</span>
-              </div>
-
-              <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 flex gap-2">
-                <button
-                  type="button"
-                  className="flex-1 text-center rounded-xl py-3 px-4 border-none cursor-pointer font-semibold bg-primary text-white hover:bg-primary/90 transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => handleOpenWorkflow(workflow.id)}
-                  disabled={isOpeningWorkflow === workflow.id}
-                >
-                  {isOpeningWorkflow === workflow.id ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Loading...
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center gap-2">
-                      <Icon name="Pencil" size={16} />
-                      Edit
-                    </div>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  className="px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 cursor-pointer font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => handleDuplicateWorkflow(workflow.id)}
-                  disabled={
-                    pendingAction.type === "duplicate" &&
-                    mutatingWorkflowId === workflow.id
-                  }
-                  title="Duplicate workflow"
-                >
-                  <Icon name="Copy" size={18} />
-                </button>
-                <button
-                  type="button"
-                  className="px-4 py-3 rounded-xl border border-red-200 dark:border-red-900/50 bg-transparent text-red-600 dark:text-red-400 cursor-pointer font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => openDeleteWorkflowModal(workflow)}
-                  disabled={
-                    pendingAction.type === "delete" &&
-                    mutatingWorkflowId === workflow.id
-                  }
-                  title="Delete workflow"
-                >
-                  <Icon name="Trash2" size={18} />
-                </button>
+          <section className="flex justify-between items-center gap-4 text-gray-600 dark:text-gray-400 flex-wrap">
+            <div className="flex items-center gap-4 flex-wrap">
+              <span className="text-sm">
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <Icon name="Loader2" size={16} className="animate-spin" />
+                    {isLoadingToken
+                      ? "Preparing your workspace..."
+                      : "Loading workflows..."}
+                  </span>
+                ) : (
+                  <>
+                    Showing {startIndex + 1}-
+                    {Math.min(endIndex, filteredWorkflows.length)} of{" "}
+                    {filteredWorkflows.length} workflows
+                    {filteredWorkflows.length !== workflows.length &&
+                      ` (${workflows.length} total)`}
+                  </>
+                )}
+              </span>
+              {!isLoading && filteredWorkflows.length > 0 && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button
-                      type="button"
-                      className="px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 cursor-pointer font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={
-                        pendingAction.type === "update" &&
-                        mutatingWorkflowId === workflow.id
-                      }
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-9 text-xs"
+                      disabled={isBusy}
                     >
-                      {pendingAction.type === "update" &&
-                      mutatingWorkflowId === workflow.id ? (
-                        <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <Icon name="MoreHorizontal" size={18} />
-                      )}
-                    </button>
+                      {itemsPerPage} per page
+                      <Icon name="ChevronDown" size={14} className="ml-1" />
+                    </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      onClick={() => handleSetStatusCompleted(workflow.id)}
-                      disabled={workflow.status === "finished"}
-                      className="cursor-pointer dark:border dark:border-gray-700"
-                    >
-                      <Icon name="CheckCircle2" size={16} className="mr-2" />
-                      Set as Completed
-                    </DropdownMenuItem>
+                  <DropdownMenuContent align="end" className="w-32">
+                    {[6, 12, 24, 48].map((size) => (
+                      <DropdownMenuItem
+                        key={size}
+                        onClick={() => {
+                          setItemsPerPage(size);
+                          setCurrentPage(1);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        {size} per page
+                      </DropdownMenuItem>
+                    ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </div>
-            </article>
-          ))}
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-[#27282b]">
-          <table className="w-full border-collapse">
-            <thead className="bg-[#eeeff3] dark:bg-[#151516]">
-              <tr>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                  Name
-                </th>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                  Status
-                </th>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                  Updated
-                </th>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                  Nodes
-                </th>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                  Edges
-                </th>
-                <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+              )}
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button
+                className="min-w-[180px] px-6 py-3 text-base rounded-full border-[1px] border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500"
+                onClick={openTemplateModal}
+                disabled={creatingTemplate || isLoading}
+                variant="outline"
+                size="lg"
+              >
+                {creatingTemplate ? (
+                  <>
+                    <Icon name="Loader2" size={18} className="animate-spin" />
+                    Loading template...
+                  </>
+                ) : (
+                  <>
+                    <Icon name="LayoutGrid" size={18} />
+                    Choose template
+                  </>
+                )}
+              </Button>
+              <AIWorkflowGenerator
+                onWorkflowGenerated={() => {
+                  // Refresh workflows after AI generation
+                  if (!initialWorkflows) {
+                    void fetchWorkflows();
+                  }
+                }}
+              />
+              <Button
+                className="min-w-[180px] px-6 py-3 text-base rounded-full"
+                onClick={openCreateWorkflowModal}
+                disabled={creating || isLoading}
+                variant="default"
+                size="lg"
+              >
+                {creating ? (
+                  <>
+                    <Icon name="Loader2" size={18} className="animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <Icon name="Plus" size={18} />
+                    New workflow
+                  </>
+                )}
+              </Button>
+            </div>
+          </section>
+
+          {isBusy ? (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="bg-white dark:bg-[#27282b] rounded-2xl p-8 border border-gray-200 dark:border-gray-700 animate-pulse"
+                >
+                  <div className="flex justify-between gap-3 items-start mb-4">
+                    <div className="flex-1">
+                      <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
+                    </div>
+                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-20" />
+                  </div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24" />
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24" />
+                  </div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-4" />
+                  <div className="flex gap-2 pt-4 border-t border-gray-100 dark:border-gray-800">
+                    <div className="flex-1 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+                    <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+                    <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filteredWorkflows.length === 0 ? (
+            <div className="border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl py-8 px-2 text-center bg-white dark:bg-[#27282b] text-gray-600 dark:text-gray-400">
+              <h3 className="m-0 mb-2 text-gray-900 dark:text-white text-lg font-semibold">
+                No workflows found
+              </h3>
+              <p>
+                Try adjusting your filters or create a new workflow to get
+                started.
+              </p>
+            </div>
+          ) : viewMode === "grid" ? (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-6">
               {paginatedWorkflows.map((workflow) => (
-                <tr key={workflow.id}>
-                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white max-w-xs">
-                    <div className="max-w-xs">
-                      <strong className="block truncate">
+                <article
+                  key={workflow.id}
+                  className="group bg-white dark:bg-[#27282b] rounded-2xl p-8 border border-gray-200 dark:border-gray-700 flex flex-col gap-5 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/50"
+                >
+                  <div className="flex justify-between gap-3 items-start">
+                    <div className="flex-1">
+                      <h3 className="m-0 text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
                         {workflow.name}
-                      </strong>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm truncate">
-                        {workflow.description || "No description"}
+                      </h3>
+                      <p className="m-0 text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
+                        {workflow.description || "No description provided"}
                       </p>
                     </div>
-                  </td>
-                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                     <span
                       className={clsx(
-                        "px-3 py-1 rounded-full text-xs font-semibold capitalize border border-gray-200 dark:border-gray-700",
+                        "px-3 py-1.5 rounded-full text-xs font-semibold capitalize border shrink-0",
                         STATUS_STYLES[workflow.status] ||
-                          "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                          "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700"
                       )}
                     >
                       {STATUS_LABELS[workflow.status]}
                     </span>
-                  </td>
-                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                    {formatDate(workflow.updatedAt)}
-                  </td>
-                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                    {workflow.nodesCount}
-                  </td>
-                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                    {workflow.edgesCount}
-                  </td>
-                  <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                    <div className="flex gap-2 flex-wrap">
-                      <button
-                        type="button"
-                        className="rounded-lg border-transparent bg-[#1296e7] text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-[#0d7ac4]"
-                        onClick={() => handleOpenWorkflow(workflow.id)}
-                        disabled={isOpeningWorkflow === workflow.id}
-                      >
-                        {isOpeningWorkflow === workflow.id ? (
-                          <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                            Loading...
-                          </div>
-                        ) : (
-                          "Edit"
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                        onClick={() => handleDuplicateWorkflow(workflow.id)}
-                        disabled={
-                          pendingAction.type === "duplicate" &&
-                          mutatingWorkflowId === workflow.id
-                        }
-                      >
-                        <Icon name="Copy" size={18} />
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-lg border border-red-200 dark:border-red-900/50 bg-transparent text-red-600 dark:text-red-400 px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                        onClick={() => openDeleteWorkflowModal(workflow)}
-                        disabled={
-                          pendingAction.type === "delete" &&
-                          mutatingWorkflowId === workflow.id
-                        }
-                      >
-                        <Icon name="Trash2" size={18} />
-                      </button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
+                  </div>
+
+                  <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm mt-6">
+                    <div className="flex items-center gap-1.5">
+                      <Icon name="Box" size={16} />
+                      <span>{workflow.nodesCount} nodes</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Icon name="GitBranch" size={16} />
+                      <span>{workflow.edgesCount} edges</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-500 text-xs">
+                    <Icon name="Clock" size={14} />
+                    <span>Updated {formatDate(workflow.updatedAt)}</span>
+                  </div>
+
+                  <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 flex gap-2">
+                    <button
+                      type="button"
+                      className="flex-1 text-center rounded-xl py-3 px-4 border-none cursor-pointer font-semibold bg-primary text-white hover:bg-primary/90 transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => handleOpenWorkflow(workflow.id)}
+                      disabled={isOpeningWorkflow === workflow.id}
+                    >
+                      {isOpeningWorkflow === workflow.id ? (
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Loading...
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-2">
+                          <Icon name="Pencil" size={16} />
+                          Edit
+                        </div>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      className="px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 cursor-pointer font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => handleDuplicateWorkflow(workflow.id)}
+                      disabled={
+                        pendingAction.type === "duplicate" &&
+                        mutatingWorkflowId === workflow.id
+                      }
+                      title="Duplicate workflow"
+                    >
+                      <Icon name="Copy" size={18} />
+                    </button>
+                    <button
+                      type="button"
+                      className="px-4 py-3 rounded-xl border border-red-200 dark:border-red-900/50 bg-transparent text-red-600 dark:text-red-400 cursor-pointer font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => openDeleteWorkflowModal(workflow)}
+                      disabled={
+                        pendingAction.type === "delete" &&
+                        mutatingWorkflowId === workflow.id
+                      }
+                      title="Delete workflow"
+                    >
+                      <Icon name="Trash2" size={18} />
+                    </button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          type="button"
+                          className="px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 cursor-pointer font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={
+                            pendingAction.type === "update" &&
+                            mutatingWorkflowId === workflow.id
+                          }
+                        >
+                          {pendingAction.type === "update" &&
+                          mutatingWorkflowId === workflow.id ? (
+                            <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <Icon name="MoreHorizontal" size={18} />
+                          )}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={() => handleSetStatusCompleted(workflow.id)}
+                          disabled={workflow.status === "finished"}
+                          className="cursor-pointer dark:border dark:border-gray-700"
+                        >
+                          <Icon
+                            name="CheckCircle2"
+                            size={16}
+                            className="mr-2"
+                          />
+                          Set as Completed
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-[#27282b]">
+              <table className="w-full border-collapse">
+                <thead className="bg-[#eeeff3] dark:bg-[#151516]">
+                  <tr>
+                    <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      Name
+                    </th>
+                    <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      Status
+                    </th>
+                    <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      Updated
+                    </th>
+                    <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      Nodes
+                    </th>
+                    <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      Edges
+                    </th>
+                    <th className="text-left p-3.5 text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedWorkflows.map((workflow) => (
+                    <tr key={workflow.id}>
+                      <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white max-w-xs">
+                        <div className="max-w-xs">
+                          <strong className="block truncate">
+                            {workflow.name}
+                          </strong>
+                          <p className="text-gray-600 dark:text-gray-400 text-sm truncate">
+                            {workflow.description || "No description"}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                        <span
+                          className={clsx(
+                            "px-3 py-1 rounded-full text-xs font-semibold capitalize border border-gray-200 dark:border-gray-700",
+                            STATUS_STYLES[workflow.status] ||
+                              "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                          )}
+                        >
+                          {STATUS_LABELS[workflow.status]}
+                        </span>
+                      </td>
+                      <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                        {formatDate(workflow.updatedAt)}
+                      </td>
+                      <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                        {workflow.nodesCount}
+                      </td>
+                      <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                        {workflow.edgesCount}
+                      </td>
+                      <td className="p-3.5 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                        <div className="flex gap-2 flex-wrap">
+                          <button
+                            type="button"
+                            className="rounded-lg border-transparent bg-[#1296e7] text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-[#0d7ac4]"
+                            onClick={() => handleOpenWorkflow(workflow.id)}
+                            disabled={isOpeningWorkflow === workflow.id}
+                          >
+                            {isOpeningWorkflow === workflow.id ? (
+                              <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                Loading...
+                              </div>
+                            ) : (
+                              "Edit"
+                            )}
+                          </button>
                           <button
                             type="button"
                             className="rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={() => handleDuplicateWorkflow(workflow.id)}
                             disabled={
-                              pendingAction.type === "update" &&
+                              pendingAction.type === "duplicate" &&
                               mutatingWorkflowId === workflow.id
                             }
                           >
-                            {pendingAction.type === "update" &&
-                            mutatingWorkflowId === workflow.id ? (
-                              <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin" />
-                            ) : (
-                              <Icon name="MoreHorizontal" size={18} />
-                            )}
+                            <Icon name="Copy" size={18} />
                           </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            onClick={() =>
-                              handleSetStatusCompleted(workflow.id)
+                          <button
+                            type="button"
+                            className="rounded-lg border border-red-200 dark:border-red-900/50 bg-transparent text-red-600 dark:text-red-400 px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={() => openDeleteWorkflowModal(workflow)}
+                            disabled={
+                              pendingAction.type === "delete" &&
+                              mutatingWorkflowId === workflow.id
                             }
-                            disabled={workflow.status === "finished"}
-                            className="cursor-pointer dark:border dark:border-gray-700"
                           >
-                            <Icon
-                              name="CheckCircle2"
-                              size={16}
-                              className="mr-2"
-                            />
-                            Set as Completed
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                            <Icon name="Trash2" size={18} />
+                          </button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button
+                                type="button"
+                                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-gray-900 dark:text-white px-3 py-1.5 cursor-pointer text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={
+                                  pendingAction.type === "update" &&
+                                  mutatingWorkflowId === workflow.id
+                                }
+                              >
+                                {pendingAction.type === "update" &&
+                                mutatingWorkflowId === workflow.id ? (
+                                  <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin" />
+                                ) : (
+                                  <Icon name="MoreHorizontal" size={18} />
+                                )}
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleSetStatusCompleted(workflow.id)
+                                }
+                                disabled={workflow.status === "finished"}
+                                className="cursor-pointer dark:border dark:border-gray-700"
+                              >
+                                <Icon
+                                  name="CheckCircle2"
+                                  size={16}
+                                  className="mr-2"
+                                />
+                                Set as Completed
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
-      {/* Pagination */}
-      {!isBusy && filteredWorkflows.length > 0 && totalPages > 1 && (
-        <div className="flex items-center justify-center py-6">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+          {/* Pagination */}
+          {!isBusy && filteredWorkflows.length > 0 && totalPages > 1 && (
+            <div className="flex items-center justify-center py-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          )}
+        </>
       )}
 
       {isCreateModalOpen && (

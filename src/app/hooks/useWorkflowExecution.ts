@@ -4,7 +4,7 @@ import { CONTRACT_ABI, CONTRACT_ADDRESS, VAULT_ABI, ERC20_ABI, ADDRESSES } from 
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { useSmartWallets } from "@privy-io/react-auth/smart-wallets";
 import useStore from "@/store/store";
-import { parseEventLogs, formatEther } from "viem";
+import { parseEventLogs, formatEther, formatUnits } from "viem";
 import { decodeContractError } from "@/utils/error-decoder";
 
 export type ExecutionStatus = 
@@ -189,7 +189,12 @@ export function useWorkflowExecution() {
                     },
                     body: JSON.stringify({ 
                         status: "finished",
-                        transactionHash: result.txHash
+                        transactionHash: result.txHash,
+                        totalGasUsed: receipt.gasUsed.toString(),
+                        gasPriceGwei: formatUnits(receipt.effectiveGasPrice, 9),
+                        nodeUpdates: nodes
+                            .filter(n => !targetNodeId || n.id === targetNodeId)
+                            .map(n => ({ nodeId: n.id, status: "complete" }))
                     }),
                 });
 
@@ -259,9 +264,11 @@ export function useWorkflowExecution() {
       
       setResult({ status: "checking-approval", executionId });
 
-      // Deserialize actions from API (strings back to BigInt)
+      // Deserialize actions and enforce ABI structure
       const deserializedActions = config.actions.map((action: any) => ({
-        ...action,
+        actionType: Number(action.actionType), // Ensure number for uint8
+        targetContract: action.targetContract as `0x${string}`,
+        data: action.data as `0x${string}`,
         inputAmountPercentage: BigInt(action.inputAmountPercentage),
       }));
 
@@ -335,6 +342,12 @@ export function useWorkflowExecution() {
       addLog("Please sign the workflow execution transaction...");
       setResult(prev => ({ ...prev, status: "signing-execution" }));
       
+      console.log("Calling writeContractAsync with args:", {
+        address: CONTRACT_ADDRESS,
+        args: [deserializedActions, config.initialToken, BigInt(config.initialAmount)],
+        gasLimit
+      });
+
       const hash = await writeContractAsync({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,

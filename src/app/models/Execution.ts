@@ -14,8 +14,21 @@ export interface IExecution extends Document {
     timestamp: Date;
     transactionHash?: string;
     error?: string;
+    // Granular analytics fields
+    from?: string;
+    to?: string;
+    amount?: string;
+    token?: string;
+    gasUsed?: string;
+    gasPriceGwei?: string;
+    fiatAmount?: string;
+    slippage?: string;
   }>;
   totalGasUsed?: string;
+  gasPriceGwei?: string;
+  totalFiatValue?: string;
+  stepCount?: number;
+  executionType?: "manual" | "scheduled" | "triggered";
   transactionHash?: string; // Main controller tx hash
   runCount?: number;
   createdAt: Date;
@@ -60,10 +73,33 @@ const ExecutionSchema = new Schema<IExecution>(
         timestamp: Date,
         transactionHash: String,
         error: String,
+        // Granular fields
+        from: String,
+        to: String,
+        amount: String,
+        token: String,
+        gasUsed: String,
+        gasPriceGwei: String,
+        fiatAmount: String,
+        slippage: String,
       },
     ],
     totalGasUsed: {
       type: String,
+    },
+    gasPriceGwei: {
+      type: String,
+    },
+    totalFiatValue: {
+      type: String,
+    },
+    stepCount: {
+      type: Number,
+    },
+    executionType: {
+      type: String,
+      enum: ["manual", "scheduled", "triggered"],
+      default: "manual",
     },
     transactionHash: {
       type: String,
