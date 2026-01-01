@@ -34,14 +34,6 @@ const ERROR_MESSAGES: Record<string, string> = {
 };
 
 /**
- * Extracts the error selector (first 4 bytes) from error data
- */
-function extractErrorSelector(data: string): string | null {
-  if (!data || data.length < 10) return null;
-  return data.slice(0, 10); // 0x + 8 hex chars
-}
-
-/**
  * Decodes contract errors into user-friendly messages
  */
 export function decodeContractError(error: unknown): string {

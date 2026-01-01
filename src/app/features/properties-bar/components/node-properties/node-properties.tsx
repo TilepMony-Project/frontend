@@ -7,7 +7,7 @@ import type { WorkflowBuilderNode } from "@/types/node-data";
 import { flatErrors } from "@/utils/validation/flat-errors";
 import type { JsonFormsProps } from "@jsonforms/core";
 import type { JsonFormsReactProps } from "@jsonforms/react";
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect } from "react";
 import { isDeepEqual } from "remeda";
 import { useAccount } from "wagmi";
 

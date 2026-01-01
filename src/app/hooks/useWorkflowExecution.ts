@@ -36,7 +36,7 @@ export interface ExecutionResult {
 
 export function useWorkflowExecution() {
   const { accessToken, user } = usePrivySession();
-  const { client } = useSmartWallets();
+  useSmartWallets();
   const nodes = useStore((state) => state.nodes);
   const setLastExecutionRun = useStore((state) => state.setLastExecutionRun);
 

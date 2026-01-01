@@ -2,7 +2,7 @@ import { Icon } from "@/components/icons";
 
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
-import { ToastType, showToast, truncateText } from "@/utils/toast-utils";
+import { truncateText } from "@/utils/toast-utils";
 
 import { IntegrationContext } from "@/features/integration/components/integration-variants/context/integration-context-wrapper";
 import { useWorkflowExecution } from "@/hooks/useWorkflowExecution";
@@ -16,7 +16,7 @@ export function RunButton() {
   const params = useParams();
   const workflowId = params?.workflowId as string;
 
-  const { executeWorkflow, status, error: executionError } = useWorkflowExecution();
+  const { executeWorkflow, status } = useWorkflowExecution();
   const { validateWorkflow, validating } = useWorkflowValidation();
   const { onSave } = useContext(IntegrationContext);
 

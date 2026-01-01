@@ -123,20 +123,6 @@ const NODE_REGISTRY = {
 
 // ...
 
-// Icon mapping for each node type
-const iconMap: Record<string, string> = {
-  deposit: "DollarSign",
-  mint: "Coins",
-  swap: "ArrowLeftRight",
-  bridge: "Link2",
-  redeem: "Building2",
-  transfer: "Send",
-  "yield-deposit": "TrendingUp",
-  "yield-withdraw": "TrendingDown",
-  wait: "Clock",
-  partition: "GitBranch",
-};
-
 // Function definition for OpenAI function calling
 const generateWorkflowFunction = {
   name: "generate_workflow",
