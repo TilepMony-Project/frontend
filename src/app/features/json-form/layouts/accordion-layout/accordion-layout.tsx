@@ -17,6 +17,7 @@ function AccordionLayout(props: LayoutProps<AccordionLayoutElement>) {
       <Accordion
         type="single"
         collapsible
+        defaultValue="accordion-section"
         className="rounded-2xl border border-gray-200/80 bg-white dark:border-gray-800 dark:bg-[#1a1b1f]"
       >
         <AccordionItem value="accordion-section" className="border-none">
@@ -35,4 +36,7 @@ function AccordionLayout(props: LayoutProps<AccordionLayoutElement>) {
   );
 }
 
-export const accordionLayoutRenderer = createLayoutRenderer("Accordion", AccordionLayout);
+export const accordionLayoutRenderer = createLayoutRenderer(
+  "Accordion",
+  AccordionLayout
+);
