@@ -44,10 +44,13 @@ import TokenUSDT from "@web3icons/react/icons/tokens/TokenUSDT";
 import TokenWBTC from "@web3icons/react/icons/tokens/TokenWBTC";
 import TokenYFI from "@web3icons/react/icons/tokens/TokenYFI";
 import {
+  CompoundIcon,
   FusionXIcon,
   HyperlaneIcon,
+  InitCapitalIcon,
   LayerZeroIcon,
   MerchantMoeIcon,
+  MethLabIcon,
   OrbiterIcon,
   VertexIcon,
 } from "@/components/icons";
@@ -92,6 +95,10 @@ const web3IconMap: Record<string, FC<SVGProps<SVGSVGElement>>> = {
   LayerZeroIcon,
   OrbiterIcon,
   HyperlaneIcon,
+  // Yield Protocol icons
+  MethLabIcon,
+  InitCapitalIcon,
+  CompoundIcon,
 };
 
 // Helper to render icon (web3icon or lucide icon)

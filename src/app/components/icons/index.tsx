@@ -166,18 +166,24 @@ function getIconComponent(name?: string): ComponentType<IconProps> | null {
   return null;
 }
 
+import CompoundIcon from "./CompoundIcon";
 import FusionXIcon from "./FusionXIcon";
 import HyperlaneIcon from "./HyperlaneIcon";
+import InitCapitalIcon from "./InitCapitalIcon";
 import LayerZeroIcon from "./LayerZeroIcon";
 import MerchantMoeIcon from "./MerchantMoeIcon";
+import MethLabIcon from "./MethLabIcon";
 import OrbiterIcon from "./OrbiterIcon";
 import VertexIcon from "./VertexIcon";
 
 export {
+  CompoundIcon,
   FusionXIcon,
   HyperlaneIcon,
+  InitCapitalIcon,
   LayerZeroIcon,
   MerchantMoeIcon,
+  MethLabIcon,
   OrbiterIcon,
   VertexIcon,
 };
