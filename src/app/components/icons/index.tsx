@@ -166,6 +166,22 @@ function getIconComponent(name?: string): ComponentType<IconProps> | null {
   return null;
 }
 
+import FusionXIcon from "./FusionXIcon";
+import HyperlaneIcon from "./HyperlaneIcon";
+import LayerZeroIcon from "./LayerZeroIcon";
+import MerchantMoeIcon from "./MerchantMoeIcon";
+import OrbiterIcon from "./OrbiterIcon";
+import VertexIcon from "./VertexIcon";
+
+export {
+  FusionXIcon,
+  HyperlaneIcon,
+  LayerZeroIcon,
+  MerchantMoeIcon,
+  OrbiterIcon,
+  VertexIcon,
+};
+
 export const Icon: ComponentType<IconProps> = ({
   size = 24,
   className,

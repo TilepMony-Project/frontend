@@ -15,9 +15,13 @@ export const tokenOptions = [
  * Swap adapter options - real adapters from deployed contracts
  */
 export const swapAdapterOptions = [
-  { label: "FusionX", value: "FusionXAdapter", icon: "ArrowLeftRight" },
-  { label: "MerchantMoe", value: "MerchantMoeAdapter", icon: "ArrowLeftRight" },
-  { label: "Vertex", value: "VertexAdapter", icon: "ArrowLeftRight" },
+  { label: "FusionX", value: "FusionXAdapter", icon: "FusionXIcon" },
+  {
+    label: "MerchantMoe",
+    value: "MerchantMoeAdapter",
+    icon: "MerchantMoeIcon",
+  },
+  { label: "Vertex", value: "VertexAdapter", icon: "VertexIcon" },
 ];
 
 export const routeOptions = [
