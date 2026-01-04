@@ -1,16 +1,15 @@
-import type { SVGProps } from "react";
+import type { ImgHTMLAttributes } from "react";
 
 export default function MerchantMoeIcon({
   className,
   ...props
-}: SVGProps<SVGSVGElement>) {
+}: ImgHTMLAttributes<HTMLImageElement>) {
   return (
     <img
       src="/logos/merchantmoe.png"
       alt="MerchantMoe"
       className={className}
-      // @ts-ignore
-      {...(props as any)}
+      {...props}
     />
   );
 }
