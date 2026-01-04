@@ -130,7 +130,7 @@ export const ERC20_ABI = [
 // Contract Addresses on Mantle Sepolia
 export const ADDRESSES = {
   CORE: {
-    MainController: "0xD49565df5B91eD2FA8CB3f448313Cd736Ad23c32" as const,
+    MainController: "0x3DF27Fb51Ef8bCC7AbD0D67d4531E6eD6d990b9f" as const,
     SwapAggregator: "0xed47849Eb9548F164234287964356eF9A6f73075" as const,
     YieldRouter: "0xfd5d839ef67bb50a3395f2974419274b47d7cb90" as const,
   },
@@ -171,22 +171,22 @@ export const ADDRESSES = {
     },
   },
   TOKENS: {
-    IDRX: "0xc39DfE81DcAd49F1Da4Ff8d41f723922Febb75dc" as const,
-    USDC: "0x681db03Ef13e37151e9fd68920d2c34273194379" as const,
-    USDT: "0x9a82fC0c460A499b6ce3d6d8A29835a438B5Ec28" as const,
+    IDRX: "0x9C314942eAD675f56274da992aCCa6bCaA5d5147" as const,
+    USDC: "0xd0f6B4Ed0F01579DaC8870A8EDba81c3ae6e751f" as const,
+    USDT: "0x72a9793834a41054216Dfaf8782A38044470f42F" as const,
   },
   TOKENS_METADATA: {
-    "0xc39DfE81DcAd49F1Da4Ff8d41f723922Febb75dc": {
+    "0x9C314942eAD675f56274da992aCCa6bCaA5d5147": {
       decimals: 6,
       symbol: "IDRX",
       name: "Mock IDRX",
     },
-    "0x681db03Ef13e37151e9fd68920d2c34273194379": {
+    "0xd0f6B4Ed0F01579DaC8870A8EDba81c3ae6e751f": {
       decimals: 6,
       symbol: "USDC",
       name: "Mock USDC",
     },
-    "0x9a82fC0c460A499b6ce3d6d8A29835a438B5Ec28": {
+    "0x72a9793834a41054216Dfaf8782A38044470f42F": {
       decimals: 6,
       symbol: "USDT",
       name: "Mock USDT",
