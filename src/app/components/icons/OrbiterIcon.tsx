@@ -1,16 +1,15 @@
-import type { SVGProps } from "react";
+import type { ImgHTMLAttributes } from "react";
 
 export default function OrbiterIcon({
   className,
   ...props
-}: SVGProps<SVGSVGElement>) {
+}: ImgHTMLAttributes<HTMLImageElement>) {
   return (
     <img
       src="/logos/orbiter.png"
       alt="Orbiter"
       className={className}
-      // @ts-ignore
-      {...(props as any)}
+      {...props}
     />
   );
 }
