@@ -43,6 +43,17 @@ import TokenUSDC from "@web3icons/react/icons/tokens/TokenUSDC";
 import TokenUSDT from "@web3icons/react/icons/tokens/TokenUSDT";
 import TokenWBTC from "@web3icons/react/icons/tokens/TokenWBTC";
 import TokenYFI from "@web3icons/react/icons/tokens/TokenYFI";
+import {
+  CompoundIcon,
+  FusionXIcon,
+  HyperlaneIcon,
+  InitCapitalIcon,
+  LayerZeroIcon,
+  MerchantMoeIcon,
+  MethLabIcon,
+  OrbiterIcon,
+  VertexIcon,
+} from "@/components/icons";
 
 // Web3icon mapping
 const web3IconMap: Record<string, FC<SVGProps<SVGSVGElement>>> = {
@@ -78,6 +89,16 @@ const web3IconMap: Record<string, FC<SVGProps<SVGSVGElement>>> = {
   // Exchange/Protocol icons for swap providers
   ExchangeUniswap,
   Exchange1inch,
+  FusionXIcon,
+  MerchantMoeIcon,
+  VertexIcon,
+  LayerZeroIcon,
+  OrbiterIcon,
+  HyperlaneIcon,
+  // Yield Protocol icons
+  MethLabIcon,
+  InitCapitalIcon,
+  CompoundIcon,
 };
 
 // Helper to render icon (web3icon or lucide icon)
@@ -97,14 +118,15 @@ function renderIcon(iconName: string | undefined): React.ReactNode {
 function SelectControl(props: SelectControlProps) {
   const { data, handleChange, path, enabled, schema } = props;
 
-  const items = ((schema as PrimitiveFieldSchema).options as ItemOption[] | undefined)?.map(
-    (option) =>
-      option.type === "separator" || !option.icon
-        ? option
-        : {
-            ...option,
-            icon: renderIcon(option.icon as string),
-          }
+  const items = (
+    (schema as PrimitiveFieldSchema).options as ItemOption[] | undefined
+  )?.map((option) =>
+    option.type === "separator" || !option.icon
+      ? option
+      : {
+          ...option,
+          icon: renderIcon(option.icon as string),
+        }
   );
 
   const onChange: SelectProps["onChange"] = (_event, value) => {
@@ -131,4 +153,7 @@ function SelectControl(props: SelectControlProps) {
   );
 }
 
-export const selectControlRenderer = createControlRenderer("Select", SelectControl);
+export const selectControlRenderer = createControlRenderer(
+  "Select",
+  SelectControl
+);
