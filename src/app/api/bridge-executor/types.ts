@@ -1,9 +1,9 @@
 // Types for Bridge Executor Service
 export interface WorkflowAction {
-  actionType: number;
-  targetContract: `0x${string}`;
-  data: `0x${string}`;
-  inputAmountPercentage: bigint;
+  readonly actionType: number;
+  readonly targetContract: `0x${string}`;
+  readonly data: `0x${string}`;
+  readonly inputAmountPercentage: bigint;
 }
 
 export interface WorkflowDataReceivedEvent {

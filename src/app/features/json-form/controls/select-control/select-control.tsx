@@ -56,7 +56,7 @@ import {
 } from "@/components/icons";
 
 // Web3icon mapping
-const web3IconMap: Record<string, FC<SVGProps<SVGSVGElement>>> = {
+const web3IconMap: Record<string, FC<any>> = {
   TokenUSDT,
   TokenUSDC,
   TokenDAI,

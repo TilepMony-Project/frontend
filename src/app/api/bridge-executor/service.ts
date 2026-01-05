@@ -42,7 +42,7 @@ function getExecutorAccount() {
 /**
  * Create public client for a chain
  */
-function getPublicClient(chainId: number): PublicClient {
+function getPublicClient(chainId: number) {
   const config = BRIDGE_EXECUTOR_CONFIG.chains[chainId];
   if (!config) {
     throw new Error(`Chain ${chainId} not configured`);
@@ -62,7 +62,7 @@ function getPublicClient(chainId: number): PublicClient {
 /**
  * Create wallet client for a chain
  */
-function getWalletClient(chainId: number): WalletClient {
+function getWalletClient(chainId: number) {
   const config = BRIDGE_EXECUTOR_CONFIG.chains[chainId];
   if (!config) {
     throw new Error(`Chain ${chainId} not configured`);
@@ -221,7 +221,7 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
     const account = getExecutorAccount();
 
     // Decode workflow data
-    const actions = decodeWorkflowData(workflow.workflowData as `0x${string}`);
+    const actions = decodeWorkflowData(workflow.workflowData as `0x${string}`) as readonly WorkflowAction[];
     console.log(`[BridgeExecutor] Executing workflow ${messageId} with ${actions.length} actions`);
 
     // Check token balance in MainController
@@ -256,11 +256,11 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
     try {
       await publicClient.simulateContract({
         address: config.mainControllerAddress,
-        abi: MAIN_CONTROLLER_ABI,
+        abi: MAIN_CONTROLLER_ABI as any,
         functionName: 'executeWorkflowWithReceivedTokens',
-        args: [actions, workflow.tokenAddress as `0x${string}`, BigInt(workflow.amount)],
+        args: [actions as any, workflow.tokenAddress as `0x${string}`, BigInt(workflow.amount)],
         account,
-      });
+      } as any);
       console.log(`[BridgeExecutor] Simulation passed, proceeding with execution`);
     } catch (simulateError: any) {
       console.error(`[BridgeExecutor] Simulation failed with error:`, simulateError.message);
@@ -278,11 +278,11 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
     try {
       const estimatedGas = await publicClient.estimateContractGas({
         address: config.mainControllerAddress,
-        abi: MAIN_CONTROLLER_ABI,
+        abi: MAIN_CONTROLLER_ABI as any,
         functionName: 'executeWorkflowWithReceivedTokens',
-        args: [actions, workflow.tokenAddress as `0x${string}`, BigInt(workflow.amount)],
+        args: [actions as any, workflow.tokenAddress as `0x${string}`, BigInt(workflow.amount)],
         account,
-      });
+      } as any);
       // Add 20% safety margin - DO NOT CAP for L2 chains
       gasLimit = (estimatedGas * 120n) / 100n;
       gasEstimationSucceeded = true;
@@ -298,12 +298,12 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
 
     const txHash = await walletClient.writeContract({
       address: config.mainControllerAddress,
-      abi: MAIN_CONTROLLER_ABI,
+      abi: MAIN_CONTROLLER_ABI as any,
       functionName: 'executeWorkflowWithReceivedTokens',
-      args: [actions, workflow.tokenAddress as `0x${string}`, BigInt(workflow.amount)],
+      args: [actions as any, workflow.tokenAddress as `0x${string}`, BigInt(workflow.amount)],
       gas: gasLimit,
       account,
-    });
+    } as any);
 
     console.log(`[BridgeExecutor] Workflow execution tx: ${txHash}`);
 
