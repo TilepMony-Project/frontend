@@ -13,6 +13,7 @@ import {
   type Action,
   ActionType,
   ZERO_ADDRESS,
+  encodeBridgeData,
   encodeMintData,
   encodeSwapData,
   encodeTransferData,
@@ -305,6 +306,34 @@ export async function buildWorkflowActions(
           actionType: ActionType.TRANSFER,
           targetContract: (properties.recipientAddress || userAddress || ZERO_ADDRESS) as Address,
           data: encodeTransferData(token),
+          inputAmountPercentage: percentage,
+        };
+        actions.push(action);
+        break;
+      }
+
+      case "bridge": {
+        // Token: DYNAMIC (Previous Step) or Specific (User Wallet)
+        const token =
+          properties.token === "DYNAMIC" || !properties.token
+            ? ZERO_ADDRESS
+            : getTokenAddress(properties.token);
+
+        // Destination chain (defaults to Base Sepolia)
+        const destinationChain = properties.destinationChain || 84532;
+
+        // Recipient is always MainController (CREATE2: same address across chains)
+        // This ensures tokens arrive at MainController for workflow execution
+        const recipient = ADDRESSES.CORE.MainController;
+
+        // For bridge node, Chain B actions will be encoded separately during execution
+        // The additionalData is initially empty - execution hook will populate it
+        const additionalData = "0x" as `0x${string}`;
+
+        const action: Action = {
+          actionType: ActionType.BRIDGE,
+          targetContract: ADDRESSES.BRIDGE.BridgeRouter as Address,
+          data: encodeBridgeData(token, destinationChain, recipient, additionalData),
           inputAmountPercentage: percentage,
         };
         actions.push(action);

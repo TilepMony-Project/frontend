@@ -241,21 +241,30 @@ async function executeNode(
       };
     }
     case "bridge": {
-      const amount = getNumberProperty(properties, "amount");
-      const receiverWallet = getStringProperty(properties, "receiverWallet", "0xreceiver");
+      // Use inputAmountPercentage from properties, default to 100% (10000 basis points)
+      const percentage = getNumberProperty(properties, "inputAmountPercentage", 10000);
       const token = getStringProperty(properties, "token", "USDX");
-      if ((context.tokenBalances[token] ?? 0) < amount) {
+      const destinationChain = getNumberProperty(properties, "destinationChain", 84532);
+
+      // Estimate amount based on percentage of available balance
+      const currentBalance = context.tokenBalances[token] ?? 0;
+      const amount = (currentBalance * percentage) / 10000;
+
+      if (currentBalance < amount) {
         return { status: "failed", error: "Insufficient funds for bridge" };
       }
+      // Deduct from Chain A
       context.tokenBalances[token] -= amount;
-      // Assume bridged tokens are credited back after transfer
-      context.tokenBalances[token] = (context.tokenBalances[token] ?? 0) + amount;
+
+      // Note: In a real simulation, we'd need to simulate Chain B credits.
+      // For now, we assume tokens exit the local context.
+
       return {
         status: "success",
         transaction: {
           hash: generateMockHash(),
-          from: "BridgeContract",
-          to: receiverWallet,
+          from: "BridgeRouter",
+          to: "MainController", // Bridged to MainController on destination
           amount,
           token,
         },
