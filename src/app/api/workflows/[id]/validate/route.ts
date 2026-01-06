@@ -287,17 +287,27 @@ function validateNodeConfigurations(nodes: WorkflowNode[], edges: WorkflowEdge[]
         break;
       }
       case "bridge": {
-        const wallet = props.receiverWallet as string | undefined;
-        if (!wallet || !ETH_ADDRESS_REGEX.test(wallet)) {
+        const destination = toNumber(props.destinationChain);
+        const percent = toNumber(props.inputAmountPercentage);
+        
+        if (!destination) {
           errors.push({
             section: "configuration",
-            message: `Bridge node "${getNodeLabel(node)}" requires a valid receiver wallet address.`,
+            message: `Bridge node "${getNodeLabel(node)}" must have a destination chain selected.`,
           });
         }
-        if (toNumber(props.amount) <= 0) {
+        
+        if (percent < 1 || percent > 10000) {
           errors.push({
             section: "configuration",
-            message: `Bridge node "${getNodeLabel(node)}" amount must be greater than zero.`,
+            message: `Bridge node "${getNodeLabel(node)}" input percentage must be between 0.01% and 100%.`,
+          });
+        }
+        
+        if (!props.token) {
+           errors.push({
+            section: "configuration",
+            message: `Bridge node "${getNodeLabel(node)}" must have a token selected.`,
           });
         }
         break;
