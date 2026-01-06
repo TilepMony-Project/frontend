@@ -130,43 +130,46 @@ export const ERC20_ABI = [
 // Contract Addresses on Mantle Sepolia
 export const ADDRESSES = {
   CORE: {
-    MainController: "0x3DF27Fb51Ef8bCC7AbD0D67d4531E6eD6d990b9f" as const,
-    SwapAggregator: "0xed47849Eb9548F164234287964356eF9A6f73075" as const,
-    YieldRouter: "0xfd5d839ef67bb50a3395f2974419274b47d7cb90" as const,
+    MainController: "0xFE16617562Ce4005C42B0CDd70493820Ff0d8494" as const,
+    SwapAggregator: "0x2C66416C018Fd9bD505A1FB07672d41271b00A90" as const,
+    YieldRouter: "0x0222ac14bae2f6b4229ac6bc25f42c62b203893d" as const,
   },
   SWAP_ADAPTERS: {
-    FusionXAdapter: "0x864d3a6F4804ABd32D7b42414E33Ed1CAeC5F505" as const,
-    MerchantMoeAdapter: "0xA80e0Cc68389D3e98Fd41887e70580d5D260f022" as const,
-    VertexAdapter: "0x20e7f518Bf77cde999Dba30758F7C562Db0b5A9C" as const,
+    FusionXAdapter: "0x69ef210A4BE2F51558E0C4eE09c8E8a952b08B5a" as const,
+    MerchantMoeAdapter: "0x7CCa9e3464AB751b94E59641E24D4e781366FDa9" as const,
+    VertexAdapter: "0x16AB225113e6504aA38448C02c4ff3EDFbB6676D" as const,
   },
   YIELD: {
-    ROUTER: "0xfd5d839ef67bb50a3395f2974419274b47d7cb90" as const,
+    // Adapters
+    MethLabAdapter: '0x3ac50c119c1fec7ce2da88b7661965a4251be9f5' as const,
+    InitCapitalAdapter: '0x8c8d17e5772ac3cefd01452952fd37316649853a' as const,
+    ROUTER: "0x0222ac14bae2f6b4229ac6bc25f42c62b203893d" as const,
     METHLAB: {
-      ADAPTER: "0x183c5d648a3b36144ac7697aabc3ce27e1086e36" as const,
+      ADAPTER: "0x3ac50c119c1fec7ce2da88b7661965a4251be9f5" as const,
       VAULTS: {
-        IDRX: "0xbe97818d0b6577410b7282f9306ea9ed8967d56a" as const,
-        USDC: "0xde28623e3a209062479c4cd3240ed14819309d66" as const,
-        USDT: "0x30f42e2f1931324abc0ee9975ff63c552ab50ab7" as const,
+        IDRX: "0x33b412fc19f18ca897f5046a6c2835cf8967b98c" as const,
+        USDC: "0x2d7df3362ad89dc9647f62ef02d5a9b048f60e66" as const,
+        USDT: "0xaf3b9f8207c9e86c71b46633c5e670bbf8ccc946" as const,
       },
     },
     INIT_CAPITAL: {
-      ADAPTER: "0x9738885a3946456f471c17f43dd421ebe7ceb0ef" as const,
-      POOLS: {
-        IDRX: "0x6adaa6312b785fcbf4904ba505ecff4f3fe2b4e2" as const,
-        USDC: "0x2e01d3672be5978a0cceada25097325f255f76e8" as const,
-        USDT: "0x99a13d0d22025ebee7958be133022aa17e63a821" as const,
-      },
+        ADAPTER: '0x8c8d17e5772ac3cefd01452952fd37316649853a' as const,
+        POOLS: {
+            IDRX: '0xeddcf78479dd5a358d23dd88bc2e17f443c0744b' as const,
+            USDC: '0x2379f8671c294bf25a34e0f57aae0445074ae5cc' as const,
+            USDT: '0x7ad0e6c5ef91d1fae6ad7cac00cf68f445710523' as const,
+        },
     },
     COMPOUND: {
       ADAPTERS: {
-        IDRX: "0xf040bb54c3b3a842543f2586f83ffe0bb0b3c0ad" as const,
-        USDC: "0xceb77041351731c0613dce7f67e0c4086e283d5d" as const,
-        USDT: "0x18706225374771d0d6286ed17b79a74445dedca5" as const,
+        IDRX: "0x47c241c8fc2f799f2c1394073e43c2bb68495258" as const,
+        USDC: "0x82b1af1ce5345e0f3b81a766a304954a00820f9e" as const,
+        USDT: "0xd93dc201a691c7fbf61273e083bd8a68282b0057" as const,
       },
       COMETS: {
-        IDRX: "0xadc863d35179fb78d05cd7bc270117d47cb7c366" as const,
-        USDC: "0x36ecf1a5e8fb62ab7289b8eaeb1083f1211679fd" as const,
-        USDT: "0xb01a0dbb3334da1087f87e70fb5149da1093e6a2" as const,
+          IDRX: '0x851e69b388d055fc1068c3cd2888e32d2b8c6f5d' as const,
+          USDC: '0x3e39df4be60278a77ff3d62004228d299a794d46' as const,
+          USDT: '0xe7fdda7fa6b95e93c16229c6123174acf431e0df' as const,
       },
     },
   },
@@ -177,7 +180,7 @@ export const ADDRESSES = {
   },
   TOKENS_METADATA: {
     "0x9C314942eAD675f56274da992aCCa6bCaA5d5147": {
-      decimals: 6,
+      decimals: 18,
       symbol: "IDRX",
       name: "Mock IDRX",
     },
@@ -192,37 +195,65 @@ export const ADDRESSES = {
       name: "Mock USDT",
     },
     // MethLab Vault Tokens
-    "0xbe97818d0b6577410b7282f9306ea9ed8967d56a": {
-      decimals: 6,
-      symbol: "mIDRX_METH",
+    "0x33b412fc19f18ca897f5046a6c2835cf8967b98c": {
+      decimals: 18, // Updated from 6
+      symbol: "mIDRX_METH", // Keep internal name or sync to mlIDRX? Keeping internal names for now but address updated
       name: "MethLab IDRX Vault",
     },
-    "0xde28623e3a209062479c4cd3240ed14819309d66": {
+    "0x2d7df3362ad89dc9647f62ef02d5a9b048f60e66": {
       decimals: 6,
       symbol: "mUSDC_METH",
       name: "MethLab USDC Vault",
     },
-    "0x30f42e2f1931324abc0ee9975ff63c552ab50ab7": {
+    "0xaf3b9f8207c9e86c71b46633c5e670bbf8ccc946": {
       decimals: 6,
       symbol: "mUSDT_METH",
       name: "MethLab USDT Vault",
     },
     // Init Capital Pool Tokens
-    "0x6adaa6312b785fcbf4904ba505ecff4f3fe2b4e2": {
-      decimals: 14,
+    "0xeddcf78479dd5a358d23dd88bc2e17f443c0744b": {
+      decimals: 26,
       symbol: "inIDRX",
       name: "InitCapital IDRX",
     },
-    "0x2e01d3672be5978a0cceada25097325f255f76e8": {
+    "0x2379f8671c294bf25a34e0f57aae0445074ae5cc": {
       decimals: 14,
       symbol: "inUSDC",
       name: "InitCapital USDC",
     },
-    "0x99a13d0d22025ebee7958be133022aa17e63a821": {
+    "0x7ad0e6c5ef91d1fae6ad7cac00cf68f445710523": {
       decimals: 14,
       symbol: "inUSDT",
       name: "InitCapital USDT",
     },
+    // Compound Comet Tokens (Missing in prev config, adding match)
+    "0x851e69b388d055fc1068c3cd2888e32d2b8c6f5d": {
+       decimals: 18,
+       symbol: "cIDRXv3",
+       name: "Compound IDRX",
+    },
+    "0x3e39df4be60278a77ff3d62004228d299a794d46": {
+       decimals: 6,
+       symbol: "cUSDCv3",
+       name: "Compound USDC",
+    },
+    "0xe7fdda7fa6b95e93c16229c6123174acf431e0df": {
+       decimals: 6,
+       symbol: "cUSDTv3",
+       name: "Compound USDT",
+    },
+  },
+  BRIDGE: {
+    BridgeRouter: "0xBEF02e7378378F4AB4E76F935d432fA27a51A828" as const,
+    HypERC20Adapter: "0xDc505033eF57054b6613D75B5d7B806FD72F7BBf" as const,
+  },
+  DESTINATION_CHAINS: {
+    mantleSepolia: { id: 5003, name: "Mantle Sepolia" },
+    baseSepolia: { id: 84532, name: "Base Sepolia" },
+  },
+  IGP: {
+    mantleSepolia: "0x6ad4c78ee9612eC9387370a9b9A997676B6C0228" as const,
+    baseSepolia: "0x2a1dd0325fCeC114b9C4e62D06e09b8B2eBbC935" as const,
   },
 } as const;
 
@@ -294,3 +325,17 @@ export const getShareTokenAddress = (symbol: string): string => {
 // Main Contract Address Export
 export const CONTRACT_ADDRESS = ADDRESSES.CORE.MainController;
 export const CONTRACT_ABI = MAIN_CONTROLLER_ABI;
+
+// IGP (Interchain Gas Paymaster) ABI for gas quote
+export const IGP_ABI = [
+  {
+    inputs: [
+      { name: "destinationDomain", type: "uint32" },
+      { name: "gasAmount", type: "uint256" },
+    ],
+    name: "quoteGasPayment",
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const;
