@@ -28,19 +28,38 @@ export type DiagramDataModificationState = {
   }) => void;
 };
 
+import { updateNetworkMetadata } from "@/utils/network-utils";
+
 export function useDiagramDataModificationSlice(
   set: SetDiagramState,
   get: GetDiagramState
 ): DiagramDataModificationState {
   return {
     onNodesChange: (changes) => {
+      const { nodes, edges } = get();
+      const newNodes = applyNodeChanges(changes, nodes);
+
+      // Only recompute metadata on structural changes to avoid performance hit on dragging
+      // 'add' and 'remove' are the main structural changes
+      const shouldRecompute = changes.some(
+        (c) => c.type === "add" || c.type === "remove"
+      );
+
       set({
-        nodes: applyNodeChanges(changes, get().nodes),
+        nodes: shouldRecompute ? updateNetworkMetadata(newNodes, edges) : newNodes,
       });
     },
     onEdgesChange: (changes) => {
+      const { nodes, edges } = get();
+      const newEdges = applyEdgeChanges(changes, edges);
+
+      const shouldRecompute = changes.some(
+        (c) => c.type === "add" || c.type === "remove"
+      );
+
       set({
-        edges: applyEdgeChanges(changes, get().edges),
+        edges: newEdges,
+        nodes: shouldRecompute ? updateNetworkMetadata(nodes, newEdges) : nodes,
       });
     },
     setNodeProperties: (nodeId, properties) => {

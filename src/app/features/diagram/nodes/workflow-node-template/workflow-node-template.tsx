@@ -61,11 +61,15 @@ const WorkflowNodeTemplateComponent = memo(
       handleType: "source",
     });
 
-    const iconElement = useMemo(() => <Icon name={icon} size="large" />, [icon]);
+    const iconElement = useMemo(
+      () => <Icon name={icon} size="large" />,
+      [icon]
+    );
 
     const hasContent = !!children;
 
-    const handlesAlignment = hasContent && layoutDirection === "horizontal" ? "header" : "center";
+    const handlesAlignment =
+      hasContent && layoutDirection === "horizontal" ? "header" : "center";
 
     const executionStatus = data?.executionStatus || "idle";
 
@@ -85,13 +89,32 @@ const WorkflowNodeTemplateComponent = memo(
             </>
           )}
 
+          {/* Network Badge */}
+          {data?.meta?.chainName && (
+            <div
+              className={cn(
+                "absolute -top-2.5 right-4 z-40 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-sm border",
+                data.meta.isBridge
+                  ? "bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/50 dark:text-purple-300 dark:border-purple-800"
+                  : data.meta.chainType === "destination"
+                  ? "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/50 dark:text-orange-300 dark:border-orange-800"
+                  : "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-800"
+              )}
+            >
+              {data.meta.chainName}
+            </div>
+          )}
+
           <NodePanel.Root
             selected={selected}
             className={cn(
               "[--ax-public-node-gap:0] workflow-node-with-border relative transition-all duration-300",
-              executionStatus === "success" && "!border-green-500 !ring-2 !ring-green-500/20",
-              executionStatus === "error" && "!border-red-500 !ring-2 !ring-red-500/20",
-              executionStatus === "running" && "!border-blue-500 ring-2 ring-blue-500/20"
+              executionStatus === "success" &&
+                "!border-green-500 !ring-2 !ring-green-500/20",
+              executionStatus === "error" &&
+                "!border-red-500 !ring-2 !ring-red-500/20",
+              executionStatus === "running" &&
+                "!border-blue-500 ring-2 ring-blue-500/20"
             )}
           >
             <NodePanel.Header>
@@ -107,23 +130,46 @@ const WorkflowNodeTemplateComponent = memo(
                 <div className="pt-2">{children}</div>
               </Collapsible.Content>
             </NodePanel.Content>
-            <NodePanel.Handles isVisible={showHandles} alignment={handlesAlignment}>
+            <NodePanel.Handles
+              isVisible={showHandles}
+              alignment={handlesAlignment}
+            >
               {!hideTargetHandle && (
-                <Handle id={handleTargetId} position={handleTargetPosition} type="target" />
+                <Handle
+                  id={handleTargetId}
+                  position={handleTargetPosition}
+                  type="target"
+                />
               )}
               {!hideSourceHandle && (
-                <Handle id={handleSourceId} position={handleSourcePosition} type="source" />
+                <Handle
+                  id={handleSourceId}
+                  position={handleSourcePosition}
+                  type="source"
+                />
               )}
             </NodePanel.Handles>
           </NodePanel.Root>
 
           {/* Add Node Button - appears on hover, opens Nodes Library */}
-          {["yield-deposit", "yield-withdraw", "swap", "mint", "transfer"].includes(
-            typeof data?.type === "string" ? data.type : ""
-          ) ? (
+          {[
+            "yield-deposit",
+            "yield-withdraw",
+            "swap",
+            "mint",
+            "transfer",
+          ].includes(typeof data?.type === "string" ? data.type : "") ? (
             <>
-              <AddNodeButton nodeId={id} layoutDirection={layoutDirection} side="left" />
-              <AddNodeButton nodeId={id} layoutDirection={layoutDirection} side="right" />
+              <AddNodeButton
+                nodeId={id}
+                layoutDirection={layoutDirection}
+                side="left"
+              />
+              <AddNodeButton
+                nodeId={id}
+                layoutDirection={layoutDirection}
+                side="right"
+              />
             </>
           ) : (
             <AddNodeButton
