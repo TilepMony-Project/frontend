@@ -138,3 +138,79 @@ export const isDynamicToken = (address: string): boolean => {
     address.toLowerCase() === ZERO_ADDRESS.toLowerCase() || address === "" || address === "0x0"
   );
 };
+
+/**
+ * Encode BRIDGE action data
+ * Matches MainController: (address token, uint32 destination, bytes32 recipient, bytes additionalData)
+ * @param token - Token to bridge (use 0x0 for dynamic from previous action)
+ * @param destination - Destination chain ID (uint32)
+ * @param recipient - Recipient address on destination chain (converted to bytes32)
+ * @param additionalData - Encoded Chain B workflow data
+ */
+export const encodeBridgeData = (
+  token: string,
+  destination: number,
+  recipient: string,
+  additionalData: Hex = "0x"
+): Hex => {
+  // Convert recipient address to bytes32 (left-padded with zeros)
+  const recipientBytes32 = ("0x" + recipient.slice(2).padStart(64, "0")) as `0x${string}`;
+
+  return encodeAbiParameters(
+    parseAbiParameters("address token, uint32 destination, bytes32 recipient, bytes additionalData"),
+    [token as `0x${string}`, destination, recipientBytes32, additionalData]
+  );
+};
+
+/**
+ * WORKFLOW_ID = keccak256(abi.encodePacked("WORKFLOW"))
+ * Used to identify workflow data in cross-chain messages
+ */
+const WORKFLOW_ID = "0xca5c284a0aa1c6618e287ec3266b1e676f808351b35a5133f9869ff0bc3921d7" as const;
+
+/**
+ * Encode Chain B actions into additionalData format for TokenHypERC20
+ * 
+ * Matches Solidity encoding:
+ *   bytes32 workflowId = keccak256(abi.encodePacked("WORKFLOW"));
+ *   TokenHypERC20.WorkflowData memory workflowData = TokenHypERC20.WorkflowData({actions: actions});
+ *   return abi.encodePacked(workflowId, abi.encode(workflowData));
+ * 
+ * @param actions - Array of Action objects for Chain B execution
+ * @returns Hex encoded workflow data
+ */
+export const encodeChainBWorkflow = (actions: Action[]): Hex => {
+  // Convert actions to TokenHypERC20.Action format
+  const workflowActions = actions.map((a) => ({
+    actionType: a.actionType,
+    target: a.targetContract,
+    data: a.data,
+    inputAmountPercentage: a.inputAmountPercentage,
+  }));
+
+  // abi.encode(WorkflowData) where WorkflowData = { actions: Action[] }
+  const encodedWorkflowData = encodeAbiParameters(
+    [
+      {
+        type: "tuple",
+        components: [
+          {
+            name: "actions",
+            type: "tuple[]",
+            components: [
+              { name: "actionType", type: "uint8" },
+              { name: "target", type: "address" },
+              { name: "data", type: "bytes" },
+              { name: "inputAmountPercentage", type: "uint256" },
+            ],
+          },
+        ],
+      },
+    ],
+    [{ actions: workflowActions }]
+  );
+
+  // abi.encodePacked(workflowId, abi.encode(workflowData))
+  // = simple concatenation: WORKFLOW_ID (32 bytes) + encodedWorkflowData
+  return (WORKFLOW_ID + encodedWorkflowData.slice(2)) as Hex;
+};
