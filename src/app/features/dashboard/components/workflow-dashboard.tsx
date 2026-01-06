@@ -1035,7 +1035,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           className={cn(
             "px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2",
             activeTab === "workflows"
-              ? "bg-primary text-white shadow-md transform scale-105"
+              ? "bg-primary text-white transform scale-105"
               : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
           )}
           type="button"
@@ -1048,7 +1048,7 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
           className={cn(
             "px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2",
             activeTab === "analytics"
-              ? "bg-primary text-white shadow-md transform scale-105"
+              ? "bg-primary text-white transform scale-105"
               : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
           )}
           type="button"
