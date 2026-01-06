@@ -1,9 +1,19 @@
 import type { NodeSchema } from "@/types/node-schema";
 
 export const bridgeProviderOptions = [
-  { label: "LayerZero", value: "DummyLayerZero", icon: "LayerZeroIcon" },
-  { label: "Orbiter", value: "DummyOrbiter", icon: "OrbiterIcon" },
-  { label: "Hyperlane", value: "DummyHyperlane", icon: "HyperlaneIcon" },
+  { label: "Hyperlane", value: "Hyperlane", icon: "HyperlaneIcon" },
+];
+
+export const destinationChainOptions = [
+  { label: "Mantle Sepolia", value: 5003 },
+  { label: "Base Sepolia", value: 84532 },
+];
+
+export const bridgeTokenOptions = [
+  { label: "DYNAMIC (from previous step)", value: "DYNAMIC" },
+  { label: "IDRX", value: "IDRX" },
+  { label: "USDC", value: "USDC" },
+  { label: "USDT", value: "USDT" },
 ];
 
 export const schema = {
@@ -14,27 +24,26 @@ export const schema = {
     description: {
       type: "string",
     },
-    amount: {
-      type: "number",
-      minimum: 0,
+    token: {
+      type: "string",
+      options: bridgeTokenOptions,
     },
     bridgeProvider: {
       type: "string",
       options: bridgeProviderOptions,
-    },
-    sourceChain: {
-      type: "string",
       readOnly: true,
     },
     destinationChain: {
-      type: "string",
-      readOnly: true,
+      type: "number",
+      options: destinationChainOptions,
     },
-    receiverWallet: {
-      type: "string",
-      pattern: "^0x[a-fA-F0-9]{40}$",
+    inputAmountPercentage: {
+      type: "number",
+      minimum: 1,
+      maximum: 10000,
     },
-    estimatedTime: {
+    // Auto-set to MainController address (CREATE2: same across chains)
+    recipientAddress: {
       type: "string",
       readOnly: true,
     },

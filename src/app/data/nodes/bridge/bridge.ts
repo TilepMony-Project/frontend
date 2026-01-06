@@ -6,7 +6,7 @@ import { uischema } from "./uischema";
 
 export const bridgeNode: PaletteItem<typeof defaultPropertiesData> = {
   label: "Bridge",
-  description: "Transfer tokens to Mantle testnet from simulated source chain",
+  description: "Cross-chain token transfer via Hyperlane",
   type: "bridge",
   icon: "Link2",
   defaultPropertiesData,
