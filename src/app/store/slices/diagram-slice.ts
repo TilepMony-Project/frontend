@@ -75,12 +75,16 @@ export function useDiagramSlice(set: SetDiagramState, get: GetDiagramState) {
         }
       }
 
-      const nodes = model?.diagram?.nodes?.map(getNodeWithErrors) ?? [];
+      const loadedNodes = model?.diagram?.nodes?.map(getNodeWithErrors) ?? [];
       const edges = model?.diagram?.edges ?? [];
       const documentName = model?.name || "Untitled";
       const layoutDirection = model?.layoutDirection || "horizontal";
+      const { sourceChainId } = get();
 
       trackFutureChange("setDiagramModel");
+
+      // Recalculate network metadata with current sourceChainId to ensure consistency
+      const nodes = updateNetworkMetadata(loadedNodes, edges, sourceChainId);
 
       set({
         nodes,
