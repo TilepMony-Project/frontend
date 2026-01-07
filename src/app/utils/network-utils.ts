@@ -17,8 +17,17 @@ const getOppositeChainId = (chainId: number): number => {
 };
 
 /**
+ * Check if a node is a bridge node
+ */
+const isBridgeNode = (node: WorkflowBuilderNode): boolean => {
+  return node.type === 'bridge' || (node.data && node.data.type === 'bridge');
+};
+
+/**
  * Updates network metadata for all nodes based on the workflow structure.
- * Propagates chain context (Chain A -> Bridge -> Chain B).
+ * Each connected component is processed separately, starting from sourceChainId.
+ * Chain only changes after encountering a bridge node within that component.
+ * 
  * @param nodes - Current workflow nodes
  * @param edges - Current workflow edges
  * @param sourceChainId - The starting chain ID (default: 5003 = Mantle Sepolia)
@@ -28,105 +37,99 @@ export const updateNetworkMetadata = (
   edges: Edge[],
   sourceChainId: number = 5003
 ): WorkflowBuilderNode[] => {
-  // Sort nodes to process them in execution order
-  const sortedNodes = sortNodesTopologically(nodes, edges);
+  if (nodes.length === 0) return nodes;
+
+  // Build adjacency lists (both directions for component detection)
+  const adj = new Map<string, string[]>(); // source -> targets
+  const inDegree = new Map<string, number>();
+  const nodeMap = new Map<string, WorkflowBuilderNode>();
   
-  let currentChainId = sourceChainId;
-  let currentChainName = CHAIN_NAMES[sourceChainId] || "Unknown Chain";
-  let chainType: "source" | "destination" | "bridge" = "source";
+  nodes.forEach(n => {
+    adj.set(n.id, []);
+    inDegree.set(n.id, 0);
+    nodeMap.set(n.id, n);
+  });
+  
+  edges.forEach(e => {
+    if (adj.has(e.source) && inDegree.has(e.target)) {
+      adj.get(e.source)!.push(e.target);
+      inDegree.set(e.target, (inDegree.get(e.target) || 0) + 1);
+    }
+  });
 
   const updatedNodesMap = new Map<string, WorkflowBuilderNode>();
-  
-  // First pass: Process sorted nodes to determine context
-  sortedNodes.forEach(node => {
-    // Check both top-level type and data.type to be robust
-    const isBridge = node.type === 'bridge' || (node.data && node.data.type === 'bridge');
+  const visited = new Set<string>();
+
+  /**
+   * Process a single node and its downstream nodes (DFS with chain propagation)
+   */
+  const processNodeChain = (
+    nodeId: string, 
+    chainId: number, 
+    chainType: "source" | "destination"
+  ) => {
+    if (visited.has(nodeId)) return;
+    visited.add(nodeId);
+
+    const node = nodeMap.get(nodeId);
+    if (!node) return;
+
+    const isBridge = isBridgeNode(node);
     
-    // Determine metadata for THIS node
-    let nodeChainName = currentChainName;
-    let nodeChainType = chainType;
+    // Determine this node's chain label
+    let nodeChainName = CHAIN_NAMES[chainId] || "Unknown Chain";
+    let nodeChainType: "source" | "destination" | "bridge" = chainType;
 
     if (isBridge) {
-      // Bridge nodes get special "bridge" type and "From -> To" label
       nodeChainType = "bridge";
-      const destChainId = getOppositeChainId(currentChainId);
-      nodeChainName = `${CHAIN_NAMES[currentChainId]} -> ${CHAIN_NAMES[destChainId]}`;
+      const destChainId = getOppositeChainId(chainId);
+      nodeChainName = `${CHAIN_NAMES[chainId]} -> ${CHAIN_NAMES[destChainId]}`;
     }
 
-    // Create new node object with updated meta
-    const newNode: WorkflowBuilderNode = {
+    // Create updated node
+    const updatedNode: WorkflowBuilderNode = {
       ...node,
       data: {
         ...node.data,
         meta: {
-          chainId: currentChainId, // ID stays as source for technical reasons (execution context)
+          chainId: chainId,
           chainName: nodeChainName,
           isBridge,
           chainType: nodeChainType
         }
       }
     };
+    updatedNodesMap.set(nodeId, updatedNode);
 
-    updatedNodesMap.set(node.id, newNode);
+    // Determine chain context for downstream nodes
+    const nextChainId = isBridge ? getOppositeChainId(chainId) : chainId;
+    const nextChainType = isBridge ? "destination" as const : chainType;
 
-    // If this is a bridge node, switch global context for SUBSEQUENT nodes
-    if (isBridge) {
-      const nextChainId = getOppositeChainId(currentChainId);
-      currentChainId = nextChainId;
-      currentChainName = CHAIN_NAMES[nextChainId] || "Unknown Chain";
-      chainType = "destination"; // Subsequent nodes are destination
+    // Process all downstream nodes
+    const downstream = adj.get(nodeId) || [];
+    for (const childId of downstream) {
+      processNodeChain(childId, nextChainId, nextChainType);
     }
-  });
+  };
 
-  // Second pass: Map original nodes to updated versions to preserve order
-  // (though React Flow validates order mostly by ID, preserving array order is good practice)
+  // Find all root nodes (in-degree 0) and process each chain starting from sourceChainId
+  const rootNodes = nodes.filter(n => (inDegree.get(n.id) || 0) === 0);
+  
+  for (const rootNode of rootNodes) {
+    if (!visited.has(rootNode.id)) {
+      // Each root starts fresh with sourceChainId
+      processNodeChain(rootNode.id, sourceChainId, "source");
+    }
+  }
+
+  // Handle any nodes not yet visited (shouldn't happen with valid graphs, but safety net)
+  for (const node of nodes) {
+    if (!visited.has(node.id)) {
+      processNodeChain(node.id, sourceChainId, "source");
+    }
+  }
+
+  // Return nodes in original order with updated metadata
   return nodes.map(n => updatedNodesMap.get(n.id) || n);
 };
 
-/**
- * Simple Kahn's algorithm for topological sort
- */
-const sortNodesTopologically = (nodes: WorkflowBuilderNode[], edges: Edge[]): WorkflowBuilderNode[] => {
-  const nodeMap = new Map(nodes.map(n => [n.id, n]));
-  const adj = new Map<string, string[]>();
-  const inDegree = new Map<string, number>();
-  
-  nodes.forEach(n => {
-    adj.set(n.id, []);
-    inDegree.set(n.id, 0);
-  });
-  
-  edges.forEach(e => {
-    // Only verify nodes that exist in the current set
-    if (adj.has(e.source) && inDegree.has(e.target)) {
-      adj.get(e.source)?.push(e.target);
-      inDegree.set(e.target, (inDegree.get(e.target) || 0) + 1);
-    }
-  });
-  
-  const queue: string[] = [];
-  inDegree.forEach((deg, id) => {
-    if (deg === 0) queue.push(id);
-  });
-  
-  const result: WorkflowBuilderNode[] = [];
-  
-  while (queue.length > 0) {
-    const u = queue.shift()!;
-    const node = nodeMap.get(u);
-    if (node) result.push(node);
-    
-    adj.get(u)?.forEach(v => {
-      inDegree.set(v, (inDegree.get(v) || 0) - 1);
-      if (inDegree.get(v) === 0) queue.push(v);
-    });
-  }
-  
-  // Append any nodes not reached (cycles or disconnected components not reachable from 0-degree nodes)
-  // This ensures we don't lose nodes in the UI even if the graph is malformed
-  nodes.forEach(n => {
-    if (!result.find(r => r.id === n.id)) result.push(n);
-  });
-  
-  return result;
-};
