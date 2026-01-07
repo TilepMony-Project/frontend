@@ -12,7 +12,7 @@ export type NodeMeta = {
   chainId?: number;
   chainName?: string;
   isBridge?: boolean;
-  chainType?: "source" | "destination";
+  chainType?: "source" | "destination" | "bridge";
 };
 
 export type NodeData = {

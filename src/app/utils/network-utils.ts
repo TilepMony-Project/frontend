@@ -2,48 +2,79 @@ import type { Edge } from "@xyflow/react";
 import type { WorkflowBuilderNode } from "@/types/node-data";
 
 /**
+ * Chain ID to Name mapping
+ */
+const CHAIN_NAMES: Record<number, string> = {
+  5003: "Mantle Sepolia",
+  84532: "Base Sepolia",
+};
+
+/**
+ * Get the opposite chain ID for bridging
+ */
+const getOppositeChainId = (chainId: number): number => {
+  return chainId === 5003 ? 84532 : 5003;
+};
+
+/**
  * Updates network metadata for all nodes based on the workflow structure.
  * Propagates chain context (Chain A -> Bridge -> Chain B).
+ * @param nodes - Current workflow nodes
+ * @param edges - Current workflow edges
+ * @param sourceChainId - The starting chain ID (default: 5003 = Mantle Sepolia)
  */
 export const updateNetworkMetadata = (
   nodes: WorkflowBuilderNode[],
-  edges: Edge[]
+  edges: Edge[],
+  sourceChainId: number = 5003
 ): WorkflowBuilderNode[] => {
   // Sort nodes to process them in execution order
   const sortedNodes = sortNodesTopologically(nodes, edges);
   
-  let currentChainId = 5003; // Default: Mantle Sepolia
-  let currentChainName = "Mantle Sepolia";
-  let chainType: "source" | "destination" = "source";
+  let currentChainId = sourceChainId;
+  let currentChainName = CHAIN_NAMES[sourceChainId] || "Unknown Chain";
+  let chainType: "source" | "destination" | "bridge" = "source";
 
   const updatedNodesMap = new Map<string, WorkflowBuilderNode>();
   
   // First pass: Process sorted nodes to determine context
   sortedNodes.forEach(node => {
-    const isBridge = node.type === 'bridge';
+    // Check both top-level type and data.type to be robust
+    const isBridge = node.type === 'bridge' || (node.data && node.data.type === 'bridge');
     
+    // Determine metadata for THIS node
+    let nodeChainName = currentChainName;
+    let nodeChainType = chainType;
+
+    if (isBridge) {
+      // Bridge nodes get special "bridge" type and "From -> To" label
+      nodeChainType = "bridge";
+      const destChainId = getOppositeChainId(currentChainId);
+      nodeChainName = `${CHAIN_NAMES[currentChainId]} -> ${CHAIN_NAMES[destChainId]}`;
+    }
+
     // Create new node object with updated meta
-    // Note: We create a shallow copy of data to avoid mutating read-only props if any
     const newNode: WorkflowBuilderNode = {
       ...node,
       data: {
         ...node.data,
         meta: {
-          chainId: currentChainId,
-          chainName: currentChainName,
+          chainId: currentChainId, // ID stays as source for technical reasons (execution context)
+          chainName: nodeChainName,
           isBridge,
-          chainType
+          chainType: nodeChainType
         }
       }
     };
 
     updatedNodesMap.set(node.id, newNode);
 
-    // If this is a bridge node, switch context for SUBSEQUENT nodes
+    // If this is a bridge node, switch global context for SUBSEQUENT nodes
     if (isBridge) {
-      currentChainId = 84532; // Base Sepolia
-      currentChainName = "Base Sepolia";
-      chainType = "destination";
+      const nextChainId = getOppositeChainId(currentChainId);
+      currentChainId = nextChainId;
+      currentChainName = CHAIN_NAMES[nextChainId] || "Unknown Chain";
+      chainType = "destination"; // Subsequent nodes are destination
     }
   });
 
