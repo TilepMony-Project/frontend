@@ -285,6 +285,13 @@ export async function buildWorkflowActions(
         const token =
           properties.token === "DYNAMIC" ? ZERO_ADDRESS : getTokenAddress(properties.token);
 
+        // Validate: DYNAMIC token not allowed as first action (no previous output to transfer)
+        if (actions.length === 0 && token === ZERO_ADDRESS) {
+          throw new Error(
+            "Transfer node cannot use DYNAMIC token as the first action. Please select a specific token (USDT, USDC, etc.) or add a Mint/Deposit node before Transfer."
+          );
+        }
+
         let amount = BigInt(0);
         if (token !== ZERO_ADDRESS) {
           const decimals = getTokenDecimals(token);
@@ -297,7 +304,8 @@ export async function buildWorkflowActions(
           amount = parseUnits(rawAmount.toString(), decimals);
         }
 
-        if (actions.length === 0) {
+        // Set initialToken for approval if this is the first action
+        if (actions.length === 0 && token !== ZERO_ADDRESS) {
           initialToken = token;
           initialAmount = amount;
         }
