@@ -9,6 +9,7 @@ import type {
 } from "@/types/common";
 import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
 import { getNodeWithErrors } from "@/utils/validation/get-node-errors";
+import { updateNetworkMetadata } from "@/utils/network-utils";
 import { type Connection, type Node, type OnConnect, addEdge } from "@xyflow/react";
 
 export type DiagramState = {
@@ -109,8 +110,10 @@ export function useDiagramSlice(set: SetDiagramState, get: GetDiagramState) {
       });
     },
     setSourceChainId: (chainId: number) => {
+      const { nodes, edges } = get();
       set({
         sourceChainId: chainId,
+        nodes: updateNetworkMetadata(nodes, edges, chainId),
       });
     },
     setConnectionBeingDragged: (nodeId: string | null, handleId: string | null) => {
