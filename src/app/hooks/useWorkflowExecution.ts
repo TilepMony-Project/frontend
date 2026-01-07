@@ -369,14 +369,13 @@ export function useWorkflowExecution() {
         // For now, we'll rely on the backend having this information or pass it separately
         // This is a limitation of the current architecture
         
-        // Update processed actions to only include Chain A (with updated bridge data)
-        // We cannot modify the bridge data here without knowing token/destination
-        // So we'll pass the chainB data separately or rely on backend encoding
+        // Update processed actions for Chain A execution
+        // We MUST truncate the list key to ensure Chain A Actions stops at Bridge action
+        // The actions after Bridge are for Chain B
         
-        // For this implementation, we'll keep processedActions as Chain A only
+        // This assignment was previously seemingly ignored or failed
         processedActions = chainAActions;
-        
-        addLog(`⚠️ Note: Chain B workflow encoding requires backend support`);
+        addLog(`⚠️ Splitting workflow: ${chainAActions.length} actions for Chain A (ending with Bridge)`);
       }
       
       // 1.8 IGP Gas Quote for bridge transactions
@@ -538,14 +537,35 @@ export function useWorkflowExecution() {
         console.warn("AI simulation explanation failed:", aiError);
       }
 
-      const deserializedActions = config.actions.map((action: any) => ({
+      let deserializedActions = config.actions.map((action: any) => ({
         actionType: Number(action.actionType),
         targetContract: action.targetContract as `0x${string}`,
         data: action.data as `0x${string}`,
         inputAmountPercentage: BigInt(action.inputAmountPercentage),
       }));
 
+      // Split workflow for simulation if bridge is present
+      const bridgeIndex = deserializedActions.findIndex(
+        (a: any) => Number(a.actionType) === ActionType.BRIDGE
+      );
+      
+      if (bridgeIndex >= 0 && bridgeIndex < deserializedActions.length - 1) {
+        const chainAActions = deserializedActions.slice(0, bridgeIndex + 1);
+        console.log(`⚠️ Simulation: Splitting workflow. Simulating ${chainAActions.length} Chain A actions only.`);
+        deserializedActions = chainAActions;
+      }
+
       if (publicClient) {
+        console.log("🔍 SIMULATION DEBUG:");
+        console.log("Chain ID:", chainId);
+        console.log("Target Contract:", CONTRACT_ADDRESS);
+        console.log("Wallet:", walletAddress);
+        console.log("Initial Token:", config.initialToken);
+        console.log("Initial Amount:", config.initialAmount);
+        console.log("Actions:", JSON.stringify(deserializedActions, (_, v) => 
+          typeof v === 'bigint' ? v.toString() : v
+        , 2));
+
         await publicClient.simulateContract({
           address: CONTRACT_ADDRESS,
           abi: CONTRACT_ABI,
