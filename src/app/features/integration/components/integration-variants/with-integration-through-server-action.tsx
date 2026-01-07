@@ -5,7 +5,10 @@ import { useCallback, useEffect, useState } from "react";
 import { IntegrationWrapper } from "./wrapper/integration-wrapper";
 
 import { WorkflowLoadingOverlay } from "@/components/workflow-loading-overlay";
-import type { IntegrationDataFormatOptional, OnSave } from "@/features/integration/types";
+import type {
+  IntegrationDataFormatOptional,
+  OnSave,
+} from "@/features/integration/types";
 import { useGetFreshToken } from "@/hooks/use-get-fresh-token";
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { getStoreDataForIntegration } from "@/store/slices/diagram-slice/actions";
@@ -31,8 +34,11 @@ export function withIntegrationThroughServerAction<WProps extends object>(
     const { workflowId: workflowIdFromProps, ...restProps } = allProps;
 
     const [isClient, setIsClient] = useState(false);
-    const [workflowId, setWorkflowId] = useState<string | null>(workflowIdFromProps ?? null);
-    const [initialData, setInitialData] = useState<IntegrationDataFormatOptional>({});
+    const [workflowId, setWorkflowId] = useState<string | null>(
+      workflowIdFromProps ?? null
+    );
+    const [initialData, setInitialData] =
+      useState<IntegrationDataFormatOptional>({});
     const [isLoadingWorkflow, setIsLoadingWorkflow] = useState(false);
     const { accessToken, userId } = usePrivySession();
     const getFreshToken = useGetFreshToken();
@@ -124,7 +130,8 @@ export function withIntegrationThroughServerAction<WProps extends object>(
             setIsLoadingWorkflow(false);
             showToast({
               title: "Failed to load workflow",
-              subtitle: error instanceof Error ? error.message : "Please try again.",
+              subtitle:
+                error instanceof Error ? error.message : "Please try again.",
               variant: ToastType.ERROR,
             });
           }
@@ -164,7 +171,9 @@ export function withIntegrationThroughServerAction<WProps extends object>(
             return "error";
           }
 
-          const endpoint = workflowId ? `/api/workflows/${workflowId}` : "/api/workflows";
+          const endpoint = workflowId
+            ? `/api/workflows/${workflowId}`
+            : "/api/workflows";
           const method = workflowId ? "PUT" : "POST";
           const response = await fetch(endpoint, {
             method,
@@ -189,7 +198,10 @@ export function withIntegrationThroughServerAction<WProps extends object>(
             workflow?: { _id?: string; id?: string };
           };
           const savedId =
-            payload.workflow?._id?.toString?.() ?? payload.workflow?.id ?? workflowId ?? null;
+            payload.workflow?._id?.toString?.() ??
+            payload.workflow?.id ??
+            workflowId ??
+            null;
 
           if (savedId && savedId !== workflowId) {
             setWorkflowId(savedId);
@@ -213,8 +225,15 @@ export function withIntegrationThroughServerAction<WProps extends object>(
 
     return (
       <>
-        {(isLoadingWorkflow || (workflowId && !accessToken)) && <WorkflowLoadingOverlay />}
-        <IntegrationWrapper name={name} nodes={nodes} edges={edges} onSave={handleSave}>
+        {(isLoadingWorkflow || (workflowId && !accessToken)) && (
+          <WorkflowLoadingOverlay />
+        )}
+        <IntegrationWrapper
+          name={name}
+          nodes={nodes}
+          edges={edges}
+          onSave={handleSave}
+        >
           <WrappedComponent {...(restProps as WProps)} />
         </IntegrationWrapper>
       </>

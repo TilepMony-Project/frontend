@@ -29,7 +29,10 @@ import { useDeleteConfirmation } from "@/features/modals/delete-confirmation/use
 import { withOptionalComponentPlugins } from "@/features/plugins-core/adapters/adapter-components";
 import { usePaletteDrop } from "@/hooks/use-palette-drop";
 import type { WorkflowBuilderOnSelectionChangeParams } from "@/types/common";
-import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
+import type {
+  WorkflowBuilderEdge,
+  WorkflowBuilderNode,
+} from "@/types/node-data";
 import { EmptyWorkflowPlaceholder } from "./components/empty-workflow-placeholder";
 import { LabelEdge } from "./edges/label-edge/label-edge";
 import { TemporaryEdge } from "./edges/temporary-edge/temporary-edge";
@@ -59,7 +62,9 @@ function DiagramContainerComponent({
 
   const { openDeleteConfirmationModal } = useDeleteConfirmation();
 
-  const setConnectionBeingDragged = useStore((store) => store.setConnectionBeingDragged);
+  const setConnectionBeingDragged = useStore(
+    (store) => store.setConnectionBeingDragged
+  );
   const togglePropertiesBar = useStore((store) => store.togglePropertiesBar);
   const nodeTypes = useMemo(getNodeTypesObject, []);
 
@@ -129,9 +134,15 @@ function DiagramContainerComponent({
     destroyNodeDragStartListeners();
   }, []);
 
-  const diagramEdgeTypes = useMemo(() => ({ labelEdge: LabelEdge, ...edgeTypes }), [edgeTypes]);
+  const diagramEdgeTypes = useMemo(
+    () => ({ labelEdge: LabelEdge, ...edgeTypes }),
+    [edgeTypes]
+  );
 
-  const onBeforeDelete: OnBeforeDelete<WorkflowBuilderNode, WorkflowBuilderEdge> = useCallback(
+  const onBeforeDelete: OnBeforeDelete<
+    WorkflowBuilderNode,
+    WorkflowBuilderEdge
+  > = useCallback(
     async ({ nodes, edges }) => {
       if (isReadOnlyMode) {
         return false;
