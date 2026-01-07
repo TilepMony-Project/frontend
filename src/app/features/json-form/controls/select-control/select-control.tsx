@@ -54,6 +54,8 @@ import {
   OrbiterIcon,
   VertexIcon,
 } from "@/components/icons";
+import BaseLogo from "@/components/icons/BaseLogo";
+import MantleLogo from "@/components/icons/MantleLogo";
 
 // Web3icon mapping
 const web3IconMap: Record<string, FC<any>> = {
@@ -86,6 +88,9 @@ const web3IconMap: Record<string, FC<any>> = {
   NetworkScroll,
   NetworkLinea,
   NetworkStarknet,
+  // Custom logos for bridge destination chains
+  MantleLogo,
+  BaseLogo,
   // Exchange/Protocol icons for swap providers
   ExchangeUniswap,
   Exchange1inch,

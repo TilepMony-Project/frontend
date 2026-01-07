@@ -5,8 +5,8 @@ export const bridgeProviderOptions = [
 ];
 
 export const destinationChainOptions = [
-  { label: "Mantle Sepolia", value: 5003, icon: "NetworkMantle" },
-  { label: "Base Sepolia", value: 84532, icon: "NetworkBase" },
+  { label: "Mantle Sepolia", value: 5003, icon: "MantleLogo" },
+  { label: "Base Sepolia", value: 84532, icon: "BaseLogo" },
 ];
 
 export const bridgeTokenOptions = [
