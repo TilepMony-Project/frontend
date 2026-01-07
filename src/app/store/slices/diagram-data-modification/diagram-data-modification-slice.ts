@@ -36,7 +36,7 @@ export function useDiagramDataModificationSlice(
 ): DiagramDataModificationState {
   return {
     onNodesChange: (changes) => {
-      const { nodes, edges } = get();
+      const { nodes, edges, sourceChainId } = get();
       const newNodes = applyNodeChanges(changes, nodes);
 
       // Only recompute metadata on structural changes to avoid performance hit on dragging
@@ -46,11 +46,11 @@ export function useDiagramDataModificationSlice(
       );
 
       set({
-        nodes: shouldRecompute ? updateNetworkMetadata(newNodes, edges) : newNodes,
+        nodes: updateNetworkMetadata(newNodes, edges, sourceChainId),
       });
     },
     onEdgesChange: (changes) => {
-      const { nodes, edges } = get();
+      const { nodes, edges, sourceChainId } = get();
       const newEdges = applyEdgeChanges(changes, edges);
 
       const shouldRecompute = changes.some(
@@ -59,13 +59,19 @@ export function useDiagramDataModificationSlice(
 
       set({
         edges: newEdges,
-        nodes: shouldRecompute ? updateNetworkMetadata(nodes, newEdges) : nodes,
+        // Always recompute on edge changes (connections affect topology)
+        nodes: updateNetworkMetadata(nodes, newEdges, sourceChainId),
       });
     },
     setNodeProperties: (nodeId, properties) => {
       trackFutureChange("dataUpdate");
+      const { nodes, edges, sourceChainId } = get();
+      const updatedNodes = updateNodesProperties(nodes, nodeId, properties);
+      
+      // Always recompute metadata when properties change, as a node might become a bridge 
+      // or change its configuration that affects downstream nodes
       set({
-        nodes: updateNodesProperties(get().nodes, nodeId, properties),
+        nodes: updateNetworkMetadata(updatedNodes, edges, sourceChainId),
       });
     },
     setNodeData: (nodeId, data) => {

@@ -19,6 +19,7 @@ export type DiagramState = {
   isReadOnlyMode: boolean;
   layoutDirection: LayoutDirection;
   canvasInteractionMode: "select" | "pan";
+  sourceChainId: number; // 5003 = Mantle Sepolia, 84532 = Base Sepolia
   onConnect: OnConnect;
   onInit: (instance: WorkflowBuilderReactFlowInstance) => void;
   setDocumentName: (name: string) => void;
@@ -26,6 +27,7 @@ export type DiagramState = {
   setToggleReadOnlyMode: (value?: boolean) => void;
   setLayoutDirection: (value: LayoutDirection) => void;
   setCanvasInteractionMode: (mode: "select" | "pan") => void;
+  setSourceChainId: (chainId: number) => void;
   setConnectionBeingDragged: (nodeId: string | null, handleId: string | null) => void;
   connectionBeingDragged: ConnectionBeingDragged | null;
   draggedSegmentDestinationId: string | null;
@@ -42,6 +44,7 @@ export function useDiagramSlice(set: SetDiagramState, get: GetDiagramState) {
     isReadOnlyMode: false,
     layoutDirection: "horizontal" as LayoutDirection,
     canvasInteractionMode: "select" as "select" | "pan",
+    sourceChainId: 5003, // Default: Mantle Sepolia
     connectionBeingDragged: null,
     draggedSegmentDestinationId: null,
     onConnect: (connection: Connection) => {
@@ -103,6 +106,11 @@ export function useDiagramSlice(set: SetDiagramState, get: GetDiagramState) {
     setCanvasInteractionMode: (mode: "select" | "pan") => {
       set({
         canvasInteractionMode: mode,
+      });
+    },
+    setSourceChainId: (chainId: number) => {
+      set({
+        sourceChainId: chainId,
       });
     },
     setConnectionBeingDragged: (nodeId: string | null, handleId: string | null) => {
