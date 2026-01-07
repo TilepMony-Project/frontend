@@ -3,6 +3,7 @@ import type { IntegrationDataFormat } from "@/features/integration/types";
 import useStore from "@/store/store";
 import type { LayoutDirection } from "@/types/common";
 import type { WorkflowBuilderEdge, WorkflowBuilderNode } from "@/types/node-data";
+import { updateNetworkMetadata } from "@/utils/network-utils";
 import { getNodeWithErrors } from "@/utils/validation/get-node-errors";
 
 export function getStoreNodes() {
@@ -44,9 +45,17 @@ export function getStoreDataForIntegration(): IntegrationDataFormat {
 }
 
 export function setStoreDataFromIntegration(loadData: Partial<IntegrationDataFormat>) {
-  useStore.setState((state) => ({
+  const state = useStore.getState();
+  const loadedNodes = (loadData.nodes ?? state.nodes).map(getNodeWithErrors);
+  const edges = loadData.edges ?? state.edges;
+  
+  // Recalculate network metadata with current sourceChainId to ensure badges are in sync
+  const nodes = updateNetworkMetadata(loadedNodes, edges, state.sourceChainId);
+  
+  useStore.setState({
     documentName: loadData.name ?? state.documentName,
-    nodes: loadData.nodes ?? state.nodes.map(getNodeWithErrors),
-    edges: loadData.edges ?? state.edges,
-  }));
+    nodes,
+    edges,
+  });
 }
+
