@@ -314,6 +314,8 @@ export function useWorkflowExecution() {
       ) {
         if (!publicClient) throw new Error("Public Client not ready");
 
+        addLog(`Checking token approval for ${config.initialToken.slice(0, 10)}...`);
+        
         const allowance = await publicClient.readContract({
           address: config.initialToken as `0x${string}`,
           abi: ERC20_ABI,
@@ -321,14 +323,21 @@ export function useWorkflowExecution() {
           args: [walletAddress as `0x${string}`, CONTRACT_ADDRESS],
         });
 
-        if (allowance < BigInt(config.initialAmount)) {
+        const requiredAmount = BigInt(config.initialAmount);
+        addLog(`Current allowance: ${allowance.toString()}, Required: ${requiredAmount.toString()}`);
+
+        if (allowance < requiredAmount) {
           addLog("Approval required. Please sign the approval transaction...");
           setResult((prev) => ({ ...prev, status: "signing-approval" }));
+          
+          // Use max uint256 for better UX (approve once, use many times)
+          const MAX_UINT256 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+          
           const approveHash = await writeContractAsync({
             address: config.initialToken as `0x${string}`,
             abi: ERC20_ABI,
             functionName: "approve",
-            args: [CONTRACT_ADDRESS, BigInt(config.initialAmount)],
+            args: [CONTRACT_ADDRESS, MAX_UINT256],
           });
 
           addLog(`Approval submitted: ${approveHash.slice(0, 10)}...`);
@@ -338,6 +347,10 @@ export function useWorkflowExecution() {
         } else {
           addLog("Sufficient approval already exists.");
         }
+      } else if (config.initialToken === "0x0000000000000000000000000000000000000000") {
+        addLog("Using native token (no approval needed)");
+      } else {
+        addLog("No initial token specified (using output from workflow)");
       }
 
       // 1.7 Bridge-specific logic: Auto-split workflow and encode Chain B actions
