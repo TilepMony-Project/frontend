@@ -47,6 +47,7 @@ const TERMINAL_STATUSES: ExecutionStatus[] = ["finished", "failed", "stopped"];
 
 export function ExecutionMonitor() {
   const nodes = useStore((state) => state.nodes);
+  const sourceChainId = useStore((state) => state.sourceChainId);
   const setExecutionMonitorActive = useStore((state) => state.setExecutionMonitorActive);
   const lastExecutionRun = useStore((state) => state.lastExecutionRun);
   const isReadOnlyMode = useStore((state) => state.isReadOnlyMode);
@@ -393,7 +394,7 @@ export function ExecutionMonitor() {
                 </span>
               </div>
               <a
-                href={getExplorerTxUrl(mainTxHash)}
+                href={getExplorerTxUrl(mainTxHash, sourceChainId)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"

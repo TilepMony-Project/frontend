@@ -267,6 +267,9 @@ export function useWorkflowExecution() {
   }, [isConfirmed, isReverted, result.executionId, accessToken, nodes, targetNodeIds]);
 
   const executeWorkflow = async (workflowId: string, nodeIds: string[] = []) => {
+    // Get the selected source chain from the store
+    const sourceChainId = useStore.getState().sourceChainId;
+    
     try {
       setTargetNodeIds(nodeIds);
       setExecutionLogs([]);
@@ -277,6 +280,19 @@ export function useWorkflowExecution() {
 
       const walletAddress = user?.wallet?.address;
       if (!walletAddress) throw new Error("No wallet connected");
+
+      // Check if wallet is on the correct chain, switch if needed
+      if (chainId !== sourceChainId) {
+        addLog(`⚠️ Wallet is on chain ${chainId}. Switching to selected chain ${sourceChainId}...`);
+        try {
+          await switchChain({ chainId: sourceChainId });
+          addLog(`✅ Successfully switched to chain ${sourceChainId}`);
+          // Wait a bit for the chain switch to propagate
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } catch (switchError: any) {
+          throw new Error(`Failed to switch chain: ${switchError.message || 'User rejected'}`);
+        }
+      }
 
       // 1. Get Execution Config from Backend
       const response = await fetch(`/api/workflows/${workflowId}/execute`, {
@@ -507,10 +523,26 @@ export function useWorkflowExecution() {
   };
 
   const simulateWorkflow = async (workflowId: string, nodeIds: string[] = []) => {
+    // Get the selected source chain from the store
+    const sourceChainId = useStore.getState().sourceChainId;
+    
     try {
       if (!accessToken) throw new Error("Authentication token not ready");
       const walletAddress = user?.wallet?.address;
       if (!walletAddress) throw new Error("No wallet connected");
+
+      // Check if wallet is on the correct chain, switch if needed
+      if (chainId !== sourceChainId) {
+        console.log(`⚠️ Simulation: Wallet is on chain ${chainId}. Switching to selected chain ${sourceChainId}...`);
+        try {
+          await switchChain({ chainId: sourceChainId });
+          console.log(`✅ Successfully switched to chain ${sourceChainId}`);
+          // Wait a bit for the chain switch to propagate
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } catch (switchError: any) {
+          throw new Error(`Failed to switch chain: ${switchError.message || 'User rejected'}`);
+        }
+      }
 
       const response = await fetch(`/api/workflows/${workflowId}/execute`, {
         method: "POST",
@@ -579,13 +611,44 @@ export function useWorkflowExecution() {
           typeof v === 'bigint' ? v.toString() : v
         , 2));
 
-        await publicClient.simulateContract({
-          address: CONTRACT_ADDRESS,
-          abi: CONTRACT_ABI,
-          functionName: "executeWorkflow",
-          args: [deserializedActions, config.initialToken, BigInt(config.initialAmount)],
-          account: walletAddress as `0x${string}`,
-        });
+        try {
+          // Try simulation without state override first
+          await publicClient.simulateContract({
+            address: CONTRACT_ADDRESS,
+            abi: CONTRACT_ABI,
+            functionName: "executeWorkflow",
+            args: [deserializedActions, config.initialToken, BigInt(config.initialAmount)],
+            account: walletAddress as `0x${string}`,
+          });
+        } catch (simError: any) {
+          // Log full error for debugging
+          console.error("🔴 Simulation error details:", simError);
+          
+          // Check if it's an allowance error - if so, treat as success since approval will be requested during execution
+          const errorMessage = simError?.message || simError?.shortMessage || String(simError);
+          const causeMessage = simError?.cause?.message || simError?.cause?.shortMessage || "";
+          const detailsMessage = simError?.details || "";
+          const fullError = (errorMessage + " " + causeMessage + " " + detailsMessage).toLowerCase();
+          
+          if (fullError.includes("allowance") || 
+              fullError.includes("erc20insufficientallowance") ||
+              fullError.includes("insufficient allowance")) {
+            console.log("⚠️ Allowance error detected - simulation will succeed, approval will be requested during execution.");
+            // Return success but note that approval is needed
+            return {
+              success: true,
+              actions: config.actions,
+              initialToken: config.initialToken,
+              initialAmount: config.initialAmount,
+              targetedNodes: config.targetedNodes,
+              aiExplanation: aiExplanation + "\n\n⚠️ Note: Token approval will be requested during execution.",
+              executionId,
+              requiresApproval: true,
+            };
+          }
+          // Re-throw other errors
+          throw simError;
+        }
       }
 
       return {
@@ -598,6 +661,9 @@ export function useWorkflowExecution() {
         executionId,
       };
     } catch (error: any) {
+      // Log detailed error for debugging
+      console.error("🔴 Workflow simulation failed:", error);
+      
       return {
         success: false,
         error: decodeContractError(error),
