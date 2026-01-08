@@ -1,5 +1,6 @@
 import { Icon } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import useStore from "@/store/store";
 import type { IconType, LayoutDirection } from "@/types/common";
 import {
   Collapsible,
@@ -9,7 +10,7 @@ import {
   Status,
 } from "@synergycodes/overflow-ui";
 import { Handle } from "@xyflow/react";
-import { Loader2 } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import { memo, useMemo } from "react";
 import { getHandleId } from "../../handles/get-handle-id";
 import { getHandlePosition } from "../../handles/get-handle-position";
@@ -73,6 +74,23 @@ const WorkflowNodeTemplateComponent = memo(
 
     const executionStatus = data?.executionStatus || "idle";
 
+    // Check for bridge destination conflict
+    const sourceChainId = useStore((state) => state.sourceChainId);
+    const isBridgeNode = data?.type === "bridge";
+    const bridgeDestinationChain = data?.properties?.destinationChain as number | undefined;
+    
+    // Bridge conflict: destination chain is same as source chain
+    const hasBridgeConflict = isBridgeNode && 
+      bridgeDestinationChain !== undefined && 
+      bridgeDestinationChain === sourceChainId;
+
+    // Get chain name for warning message
+    const getChainName = (chainId: number) => {
+      if (chainId === 5003) return "Mantle Sepolia";
+      if (chainId === 84532) return "Base Sepolia";
+      return `Chain ${chainId}`;
+    };
+
     return (
       <Collapsible>
         {/* Added 'group' class to enable hover effect for AddNodeButton */}
@@ -87,6 +105,21 @@ const WorkflowNodeTemplateComponent = memo(
               </div>
               <div className="absolute inset-0 z-50 bg-white/50 dark:bg-black/50 backdrop-blur-[0.5px] rounded-xl pointer-events-none" />
             </>
+          )}
+
+          {/* Bridge Destination Conflict Warning */}
+          {hasBridgeConflict && (
+            <div
+              className="absolute -top-8 left-1/2 -translate-x-1/2 z-50 px-3 py-1.5 rounded-lg bg-yellow-100 text-yellow-800 border border-yellow-300 dark:bg-yellow-900/70 dark:text-yellow-200 dark:border-yellow-700 shadow-md"
+            >
+              <div className="flex items-center gap-1.5 text-[10px] font-semibold whitespace-nowrap">
+                <AlertTriangle className="h-3 w-3" />
+                <span>Invalid: Can&apos;t bridge to {getChainName(bridgeDestinationChain!)}</span>
+              </div>
+              <div className="text-[9px] text-yellow-700 dark:text-yellow-300 mt-0.5">
+                Source is also {getChainName(sourceChainId)}. Update destination.
+              </div>
+            </div>
           )}
 
           {/* Network Badge */}
@@ -114,7 +147,10 @@ const WorkflowNodeTemplateComponent = memo(
               executionStatus === "error" &&
                 "!border-red-500 !ring-2 !ring-red-500/20",
               executionStatus === "running" &&
-                "!border-blue-500 ring-2 ring-blue-500/20"
+                "!border-blue-500 ring-2 ring-blue-500/20",
+              // Yellow border for bridge conflict
+              hasBridgeConflict &&
+                "!border-yellow-400 ring-2 ring-yellow-400/30 dark:!border-yellow-500"
             )}
           >
             <NodePanel.Header>
