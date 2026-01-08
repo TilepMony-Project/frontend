@@ -22,8 +22,37 @@ export const mantleSepoliaTestnet = defineChain({
   testnet: true,
 });
 
+export const baseSepoliaTestnet = defineChain({
+  id: 84532,
+  name: "Base Sepolia",
+  nativeCurrency: {
+    decimals: 18,
+    name: "ETH",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://sepolia.base.org"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Basescan",
+      url: "https://sepolia.basescan.org",
+    },
+  },
+  testnet: true,
+});
+
 export const EXPLORER_URL = "https://sepolia.mantlescan.xyz";
+export const BASE_EXPLORER_URL = "https://sepolia.basescan.org";
 
-export const getExplorerTxUrl = (txHash: string) => `${EXPLORER_URL}/tx/${txHash}`;
+export const getExplorerTxUrl = (txHash: string, chainId?: number) => {
+  const baseUrl = chainId === 84532 ? BASE_EXPLORER_URL : EXPLORER_URL;
+  return `${baseUrl}/tx/${txHash}`;
+};
 
-export const getExplorerAddressUrl = (address: string) => `${EXPLORER_URL}/address/${address}`;
+export const getExplorerAddressUrl = (address: string, chainId?: number) => {
+  const baseUrl = chainId === 84532 ? BASE_EXPLORER_URL : EXPLORER_URL;
+  return `${baseUrl}/address/${address}`;
+};

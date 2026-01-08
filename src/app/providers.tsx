@@ -1,7 +1,7 @@
 "use client";
 
 import { PrivyUserSync } from "@/components/privy-user-sync";
-import { mantleSepoliaTestnet } from "@/config/chains";
+import { mantleSepoliaTestnet, baseSepoliaTestnet } from "@/config/chains";
 import { wagmiConfig } from "@/config/wagmiConfig";
 import { ThemeProvider } from "@/hooks/use-theme";
 import type { PrivyClientConfig } from "@privy-io/react-auth";
@@ -21,7 +21,7 @@ const queryClient = new QueryClient();
 const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
 const privyConfig: PrivyClientConfig = {
-  supportedChains: [mantleSepoliaTestnet],
+  supportedChains: [mantleSepoliaTestnet, baseSepoliaTestnet],
   loginMethods: ["wallet", "email"],
   appearance: {
     theme: "dark",
