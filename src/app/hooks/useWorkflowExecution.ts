@@ -600,6 +600,47 @@ export function useWorkflowExecution() {
         deserializedActions = chainAActions;
       }
 
+      // Check and request approval BEFORE simulation to avoid "insufficient allowance" error
+      let approvalWasNeeded = false;
+      if (
+        config.initialToken &&
+        config.initialToken !== "0x0000000000000000000000000000000000000000" &&
+        BigInt(config.initialAmount) > BigInt(0)
+      ) {
+        if (!publicClient) throw new Error("Public Client not ready");
+
+        console.log(`🔍 Checking token approval for ${config.initialToken}...`);
+        
+        const allowance = await publicClient.readContract({
+          address: config.initialToken as `0x${string}`,
+          abi: ERC20_ABI,
+          functionName: "allowance",
+          args: [walletAddress as `0x${string}`, CONTRACT_ADDRESS],
+        });
+
+        const requiredAmount = BigInt(config.initialAmount);
+        console.log(`Current allowance: ${allowance.toString()}, Required: ${requiredAmount.toString()}`);
+
+        if (allowance < requiredAmount) {
+          console.log("⚠️ Approval required before simulation. Requesting approval...");
+          approvalWasNeeded = true;
+          
+          // Use max uint256 for better UX (approve once, use many times)
+          const MAX_UINT256 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+          
+          const approveHash = await writeContractAsync({
+            address: config.initialToken as `0x${string}`,
+            abi: ERC20_ABI,
+            functionName: "approve",
+            args: [CONTRACT_ADDRESS, MAX_UINT256],
+          });
+
+          console.log(`✅ Approval submitted: ${approveHash}`);
+          await publicClient.waitForTransactionReceipt({ hash: approveHash });
+          console.log("✅ Approval confirmed! Proceeding with simulation...");
+        }
+      }
+
       if (publicClient) {
         console.log("🔍 SIMULATION DEBUG:");
         console.log("Chain ID:", chainId);
@@ -612,7 +653,7 @@ export function useWorkflowExecution() {
         , 2));
 
         try {
-          // Try simulation without state override first
+          // Run simulation (approval should already be done if needed)
           await publicClient.simulateContract({
             address: CONTRACT_ADDRESS,
             abi: CONTRACT_ABI,
@@ -657,8 +698,11 @@ export function useWorkflowExecution() {
         initialToken: config.initialToken,
         initialAmount: config.initialAmount,
         targetedNodes: config.targetedNodes,
-        aiExplanation,
+        aiExplanation: approvalWasNeeded 
+          ? aiExplanation + "\n\n✅ Token approval completed during simulation."
+          : aiExplanation,
         executionId,
+        approvalCompleted: approvalWasNeeded,
       };
     } catch (error: any) {
       // Log detailed error for debugging
@@ -667,6 +711,193 @@ export function useWorkflowExecution() {
       return {
         success: false,
         error: decodeContractError(error),
+      };
+    }
+  };
+
+  // Check if approval is needed without requesting it
+  const checkApproval = async (workflowId: string, nodeIds: string[] = []) => {
+    try {
+      if (!accessToken) throw new Error("Authentication token not ready");
+      const walletAddress = user?.wallet?.address;
+      if (!walletAddress) throw new Error("No wallet connected");
+
+      // Get execution config from backend
+      const response = await fetch(`/api/workflows/${workflowId}/execute`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ userWalletAddress: walletAddress, nodeIds }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Failed to prepare execution");
+      }
+
+      const { config } = await response.json();
+
+      if (!publicClient) throw new Error("Public Client not ready");
+
+      // Collect all tokens that need approval
+      const tokensToCheck: { address: string; amount: bigint }[] = [];
+
+      // 1. Check initialToken if it exists and is not zero address
+      if (
+        config.initialToken &&
+        config.initialToken !== "0x0000000000000000000000000000000000000000" &&
+        BigInt(config.initialAmount) > BigInt(0)
+      ) {
+        tokensToCheck.push({
+          address: config.initialToken,
+          amount: BigInt(config.initialAmount),
+        });
+      }
+
+      // 2. Check actions for YIELD_WITHDRAW (actionType 5) with specific shareToken
+      // YIELD_WITHDRAW with specific shareToken (not DYNAMIC/0x0) pulls from user wallet (line 214 in MainController.sol)
+      // MINT (actionType 4) does NOT need approval - it calls giveMe() to mint new tokens
+      if (config.actions && Array.isArray(config.actions)) {
+        console.log("🔍 [checkApproval] Checking", config.actions.length, "actions for approval requirements");
+        
+        for (let i = 0; i < config.actions.length; i++) {
+          const action = config.actions[i];
+          const actionType = Number(action.actionType);
+          
+          console.log(`   Action[${i}]: type=${actionType}, target=${action.targetContract?.slice(0, 10)}...`);
+          
+          // ActionType.YIELD_WITHDRAW = 5 - this pulls shareToken from user wallet if not DYNAMIC
+          if (actionType === ActionType.YIELD_WITHDRAW && action.data) {
+            console.log(`   → YIELD_WITHDRAW detected, checking shareToken...`);
+            try {
+              // Decode YIELD_WITHDRAW action data: (address adapter, address shareToken, address underlyingToken, uint256 amount, bytes adapterData)
+              // ABI encoded with dynamic bytes: static params first, then offset pointer to bytes data
+              const data = action.data as string;
+              console.log(`   → Data length: ${data.length}, data preview: ${data.slice(0, 66)}...`);
+              
+              // For ABI encoding with (address, address, address, uint256, bytes):
+              // - adapter: bytes 0-31 (chars 2-65 after 0x)
+              // - shareToken: bytes 32-63 (chars 66-129 after 0x)
+              if (data.length >= 130) {
+                // shareToken is the second parameter
+                const shareTokenPadded = data.slice(66, 130); // 64 hex chars = 32 bytes
+                const shareToken = "0x" + shareTokenPadded.slice(24); // Last 40 chars = 20 bytes = address
+                
+                console.log(`   → shareToken extracted: ${shareToken}`);
+                
+                // If shareToken is not zero address, it needs approval
+                if (shareToken.toLowerCase() !== "0x0000000000000000000000000000000000000000") {
+                  console.log(`   ✅ YIELD_WITHDRAW needs approval for token: ${shareToken}`);
+                  // Use MAX_UINT256 since actual amount depends on user's balance * percentage
+                  const MAX_UINT256 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+                  tokensToCheck.push({
+                    address: shareToken,
+                    amount: MAX_UINT256,
+                  });
+                } else {
+                  console.log(`   → shareToken is DYNAMIC (0x0), no approval needed`);
+                }
+              }
+            } catch (e) {
+              console.warn("Failed to decode YIELD_WITHDRAW action data:", e);
+            }
+          }
+        }
+        
+        console.log(`🔍 [checkApproval] Tokens to check: ${tokensToCheck.length}`, tokensToCheck.map(t => t.address));
+      }
+
+      // If no tokens to check, no approval needed
+      if (tokensToCheck.length === 0) {
+        return {
+          needsApproval: false,
+          currentAllowance: "0",
+          requiredAmount: "0",
+          tokenAddress: config.initialToken || "0x0000000000000000000000000000000000000000",
+          tokensNeedingApproval: [],
+          config,
+        };
+      }
+
+      // Check allowance for each token
+      const tokensNeedingApproval: { address: string; currentAllowance: string; requiredAmount: string }[] = [];
+
+      for (const tokenInfo of tokensToCheck) {
+        try {
+          const allowance = await publicClient.readContract({
+            address: tokenInfo.address as `0x${string}`,
+            abi: ERC20_ABI,
+            functionName: "allowance",
+            args: [walletAddress as `0x${string}`, CONTRACT_ADDRESS],
+          });
+
+          if (allowance < tokenInfo.amount) {
+            tokensNeedingApproval.push({
+              address: tokenInfo.address,
+              currentAllowance: allowance.toString(),
+              requiredAmount: tokenInfo.amount.toString(),
+            });
+          }
+        } catch (e) {
+          console.warn(`Failed to check allowance for token ${tokenInfo.address}:`, e);
+        }
+      }
+
+      // Return first token needing approval (we'll approve one at a time)
+      if (tokensNeedingApproval.length > 0) {
+        const firstToken = tokensNeedingApproval[0];
+        return {
+          needsApproval: true,
+          currentAllowance: firstToken.currentAllowance,
+          requiredAmount: firstToken.requiredAmount,
+          tokenAddress: firstToken.address,
+          tokensNeedingApproval,
+          config,
+        };
+      }
+
+      // All tokens have sufficient approval
+      return {
+        needsApproval: false,
+        currentAllowance: "0",
+        requiredAmount: "0",
+        tokenAddress: tokensToCheck[0]?.address || "0x0000000000000000000000000000000000000000",
+        tokensNeedingApproval: [],
+        config,
+      };
+    } catch (error: any) {
+      console.error("Check approval failed:", error);
+      throw error;
+    }
+  };
+
+  // Request approval for a specific token
+  const requestApproval = async (tokenAddress: string) => {
+    try {
+      if (!publicClient) throw new Error("Public Client not ready");
+      
+      const MAX_UINT256 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+      
+      const approveHash = await writeContractAsync({
+        address: tokenAddress as `0x${string}`,
+        abi: ERC20_ABI,
+        functionName: "approve",
+        args: [CONTRACT_ADDRESS, MAX_UINT256],
+      });
+
+      await publicClient.waitForTransactionReceipt({ hash: approveHash });
+      
+      return {
+        success: true,
+        txHash: approveHash,
+      };
+    } catch (error: any) {
+      console.error("Approval request failed:", error);
+      return {
+        success: false,
+        error: error.message || "Approval failed",
       };
     }
   };
@@ -682,6 +913,8 @@ export function useWorkflowExecution() {
   return {
     executeWorkflow,
     simulateWorkflow,
+    checkApproval,
+    requestApproval,
     resetExecution,
     status,
     txHash: result.txHash,

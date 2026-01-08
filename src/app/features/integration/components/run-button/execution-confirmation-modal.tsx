@@ -188,6 +188,16 @@ interface SimulationResult {
   error?: string;
 }
 
+interface ApprovalStatus {
+  needsApproval: boolean;
+  currentAllowance: string;
+  requiredAmount: string;
+  tokenAddress: string;
+  tokensNeedingApproval?: { address: string; currentAllowance: string; requiredAmount: string }[];
+}
+
+type ModalStep = "checking-approval" | "needs-approval" | "approving" | "simulating" | "done";
+
 export function ExecutionConfirmationModal({
   open,
   onClose,
@@ -201,26 +211,104 @@ export function ExecutionConfirmationModal({
   workflowId: string;
   selectedNodeIds: string[];
 }) {
-  const { simulateWorkflow } = useWorkflowExecution();
+  const { simulateWorkflow, checkApproval, requestApproval } = useWorkflowExecution();
   const [simulationResult, setSimulationResult] =
     useState<SimulationResult | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [approvalStatus, setApprovalStatus] = useState<ApprovalStatus | null>(null);
+  const [currentStep, setCurrentStep] = useState<ModalStep>("checking-approval");
+  const [approvalError, setApprovalError] = useState<string | null>(null);
+  const [approvalProgress, setApprovalProgress] = useState<{ current: number; total: number } | null>(null);
 
   useEffect(() => {
     if (open) {
-      setLoading(true);
+      // Reset state
+      setCurrentStep("checking-approval");
       setSimulationResult(null);
-      simulateWorkflow(workflowId, selectedNodeIds).then((res) => {
-        setSimulationResult(res);
-        setLoading(false);
-      });
+      setApprovalStatus(null);
+      setApprovalError(null);
+      setApprovalProgress(null);
+
+      // Start the flow: check approval first
+      checkApproval(workflowId, selectedNodeIds)
+        .then((result) => {
+          setApprovalStatus(result);
+          if (result.needsApproval) {
+            const total = result.tokensNeedingApproval?.length || 1;
+            setApprovalProgress({ current: 1, total });
+            setCurrentStep("needs-approval");
+          } else {
+            // No approval needed, proceed to simulation
+            setCurrentStep("simulating");
+            return simulateWorkflow(workflowId, selectedNodeIds);
+          }
+        })
+        .then((simResult) => {
+          if (simResult) {
+            setSimulationResult(simResult);
+            setCurrentStep("done");
+          }
+        })
+        .catch((error) => {
+          console.error("Workflow preparation failed:", error);
+          setSimulationResult({
+            success: false,
+            error: error.message || "Failed to prepare workflow",
+          });
+          setCurrentStep("done");
+        });
     }
   }, [open, workflowId, selectedNodeIds]);
+
+  const handleApprove = async () => {
+    if (!approvalStatus?.tokenAddress) return;
+    
+    setCurrentStep("approving");
+    setApprovalError(null);
+    
+    const result = await requestApproval(approvalStatus.tokenAddress);
+    
+    if (result.success) {
+      // Approval successful, re-check if more approvals are needed
+      try {
+        const newCheck = await checkApproval(workflowId, selectedNodeIds);
+        setApprovalStatus(newCheck);
+        
+        if (newCheck.needsApproval) {
+          // More tokens need approval
+          const total = approvalProgress?.total || 1;
+          const current = total - (newCheck.tokensNeedingApproval?.length || 0) + 1;
+          setApprovalProgress({ current, total });
+          setCurrentStep("needs-approval");
+        } else {
+          // All approvals done, proceed to simulation
+          setApprovalProgress(null);
+          setCurrentStep("simulating");
+          const simResult = await simulateWorkflow(workflowId, selectedNodeIds);
+          setSimulationResult(simResult);
+          setCurrentStep("done");
+        }
+      } catch (error: any) {
+        console.error("Re-check approval failed:", error);
+        setSimulationResult({
+          success: false,
+          error: error.message || "Failed to verify approval",
+        });
+        setCurrentStep("done");
+      }
+    } else {
+      // Approval failed
+      setApprovalError(result.error || "Approval was rejected");
+      setCurrentStep("needs-approval");
+    }
+  };
 
   const handleConfirm = () => {
     onConfirm();
     onClose();
   };
+
+  const isLoading = currentStep === "checking-approval" || currentStep === "simulating" || currentStep === "approving";
+  const canConfirm = currentStep === "done" && simulationResult?.success;
 
   return (
     <Modal
@@ -230,29 +318,137 @@ export function ExecutionConfirmationModal({
       size="extra-large"
       footer={
         <div className="flex justify-end gap-3 w-full">
-          <Button variant="outline" onClick={onClose} disabled={loading}>
+          <Button variant="outline" onClick={onClose} disabled={currentStep === "approving"}>
             Cancel
           </Button>
-          <Button
-            variant="default"
-            onClick={handleConfirm}
-            disabled={loading || !simulationResult?.success}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Confirm & Run
-          </Button>
+          {currentStep === "needs-approval" ? (
+            <Button
+              variant="default"
+              onClick={handleApprove}
+              className="bg-amber-600 hover:bg-amber-700 text-white"
+            >
+              <Icon name="Key" className="mr-2" size={16} />
+              Approve Token
+            </Button>
+          ) : (
+            <Button
+              variant="default"
+              onClick={handleConfirm}
+              disabled={!canConfirm}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Confirm & Run
+            </Button>
+          )}
         </div>
       }
     >
       <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-800">
-        <div>
-          {loading ? (
-            <div className="space-y-2">
-              <div className="h-4 w-full animate-pulse bg-gray-100 dark:bg-gray-800 rounded" />
-              <div className="h-4 w-[90%] animate-pulse bg-gray-100 dark:bg-gray-800 rounded" />
-              <div className="h-4 w-[95%] animate-pulse bg-gray-100 dark:bg-gray-800 rounded" />
+        {/* Step Progress Indicator */}
+        <div className="flex items-center gap-2 text-sm">
+          <div className={cn(
+            "flex items-center gap-1.5 px-2 py-1 rounded-full",
+            currentStep === "checking-approval" 
+              ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+              : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+          )}>
+            {currentStep === "checking-approval" ? (
+              <Icon name="Loader2" className="animate-spin" size={14} />
+            ) : (
+              <Icon name="Check" size={14} />
+            )}
+            <span>Check Approval</span>
+          </div>
+          <Icon name="ChevronRight" size={14} className="text-gray-400" />
+          <div className={cn(
+            "flex items-center gap-1.5 px-2 py-1 rounded-full",
+            currentStep === "checking-approval" 
+              ? "bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+              : currentStep === "needs-approval" || currentStep === "approving"
+                ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+          )}>
+            {currentStep === "approving" ? (
+              <Icon name="Loader2" className="animate-spin" size={14} />
+            ) : currentStep === "needs-approval" ? (
+              <Icon name="Key" size={14} />
+            ) : currentStep !== "checking-approval" ? (
+              <Icon name="Check" size={14} />
+            ) : (
+              <Icon name="Key" size={14} />
+            )}
+            <span>Approve</span>
+          </div>
+          <Icon name="ChevronRight" size={14} className="text-gray-400" />
+          <div className={cn(
+            "flex items-center gap-1.5 px-2 py-1 rounded-full",
+            currentStep === "simulating" 
+              ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+              : currentStep === "done"
+                ? simulationResult?.success
+                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                  : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                : "bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+          )}>
+            {currentStep === "simulating" ? (
+              <Icon name="Loader2" className="animate-spin" size={14} />
+            ) : currentStep === "done" ? (
+              simulationResult?.success ? (
+                <Icon name="Check" size={14} />
+              ) : (
+                <Icon name="X" size={14} />
+              )
+            ) : (
+              <Icon name="Play" size={14} />
+            )}
+            <span>Simulate</span>
+          </div>
+        </div>
+
+        {/* Approval Needed Message */}
+        {(currentStep === "needs-approval" || currentStep === "approving") && (
+          <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/30">
+            <div className="flex gap-3">
+              <Icon name="AlertTriangle" className="text-amber-600 dark:text-amber-400 mt-0.5" size={20} />
+              <div>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-bold text-amber-800 dark:text-amber-300">
+                    Token Approval Required
+                  </p>
+                  {approvalProgress && approvalProgress.total > 1 && (
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200">
+                      {approvalProgress.current} / {approvalProgress.total}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-amber-700 dark:text-amber-400 mt-1 leading-relaxed">
+                  This workflow requires spending your tokens. Please approve the token spending 
+                  to continue with the simulation.
+                </p>
+                {approvalStatus && (
+                  <div className="mt-2 text-xs text-amber-600 dark:text-amber-500 font-mono">
+                    Token: {approvalStatus.tokenAddress.slice(0, 10)}...{approvalStatus.tokenAddress.slice(-8)}
+                  </div>
+                )}
+                {approvalError && (
+                  <div className="mt-2 text-xs text-red-600 dark:text-red-400">
+                    ⚠️ {approvalError}
+                  </div>
+                )}
+                {currentStep === "approving" && (
+                  <div className="mt-2 flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400">
+                    <Icon name="Loader2" className="animate-spin" size={14} />
+                    Waiting for wallet confirmation...
+                  </div>
+                )}
+              </div>
             </div>
-          ) : (
+          </div>
+        )}
+
+        {/* AI Explanation */}
+        {currentStep === "done" && (
+          <div>
             <div className="p-4 rounded-xl bg-blue-50/30 dark:bg-blue-900/10 border border-blue-100/50 dark:border-blue-900/20">
               {simulationResult?.aiExplanation ? (
                 <MarkdownText text={simulationResult.aiExplanation} />
@@ -262,44 +458,67 @@ export function ExecutionConfirmationModal({
                 </div>
               )}
             </div>
-          )}
-        </div>
-
-        <div
-          className={cn(
-            "p-4 rounded-xl border flex gap-3",
-            loading
-              ? "bg-gray-50 border-gray-100 text-gray-500"
-              : simulationResult?.success
-              ? "bg-green-50 border-green-100 text-green-800 dark:bg-green-900/20 dark:border-green-900/30 dark:text-green-400"
-              : "bg-red-50 border-red-100 text-red-800 dark:bg-red-900/20 dark:border-red-900/30 dark:text-red-400"
-          )}
-        >
-          {loading ? (
-            <Icon name="Loader2" className="animate-spin mt-0.5" size={18} />
-          ) : simulationResult?.success ? (
-            <Icon name="ShieldCheck" className="mt-0.5" size={18} />
-          ) : (
-            <Icon name="AlertCircle" className="mt-0.5" size={18} />
-          )}
-          <div>
-            <p className="text-sm font-bold">
-              {loading
-                ? "Simulating Workflow..."
-                : simulationResult?.success
-                ? "Simulation Successful"
-                : "Simulation Failed"}
-            </p>
-            <p className="text-xs opacity-90 leading-relaxed mt-1">
-              {loading
-                ? "Verifying steps and gas requirements on-chain..."
-                : simulationResult?.success
-                ? "The workflow is valid and safe to execute. No reverts detected."
-                : simulationResult?.error ||
-                  "An error occurred during simulation. Please check your workflow configuration."}
-            </p>
           </div>
-        </div>
+        )}
+
+        {/* Loading States */}
+        {(currentStep === "checking-approval" || currentStep === "simulating") && (
+          <div className="space-y-2">
+            <div className="h-4 w-full animate-pulse bg-gray-100 dark:bg-gray-800 rounded" />
+            <div className="h-4 w-[90%] animate-pulse bg-gray-100 dark:bg-gray-800 rounded" />
+            <div className="h-4 w-[95%] animate-pulse bg-gray-100 dark:bg-gray-800 rounded" />
+          </div>
+        )}
+
+        {/* Simulation Result */}
+        {currentStep === "done" && (
+          <div
+            className={cn(
+              "p-4 rounded-xl border flex gap-3",
+              simulationResult?.success
+                ? "bg-green-50 border-green-100 text-green-800 dark:bg-green-900/20 dark:border-green-900/30 dark:text-green-400"
+                : "bg-red-50 border-red-100 text-red-800 dark:bg-red-900/20 dark:border-red-900/30 dark:text-red-400"
+            )}
+          >
+            {simulationResult?.success ? (
+              <Icon name="ShieldCheck" className="mt-0.5" size={18} />
+            ) : (
+              <Icon name="AlertCircle" className="mt-0.5" size={18} />
+            )}
+            <div>
+              <p className="text-sm font-bold">
+                {simulationResult?.success
+                  ? "Simulation Successful"
+                  : "Simulation Failed"}
+              </p>
+              <p className="text-xs opacity-90 leading-relaxed mt-1">
+                {simulationResult?.success
+                  ? "The workflow is valid and safe to execute. No reverts detected."
+                  : simulationResult?.error ||
+                    "An error occurred during simulation. Please check your workflow configuration."}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Status Message for Loading States */}
+        {(currentStep === "checking-approval" || currentStep === "simulating") && (
+          <div className="p-4 rounded-xl border bg-gray-50 border-gray-100 text-gray-500 flex gap-3">
+            <Icon name="Loader2" className="animate-spin mt-0.5" size={18} />
+            <div>
+              <p className="text-sm font-bold">
+                {currentStep === "checking-approval"
+                  ? "Checking Token Approval..."
+                  : "Simulating Workflow..."}
+              </p>
+              <p className="text-xs opacity-90 leading-relaxed mt-1">
+                {currentStep === "checking-approval"
+                  ? "Verifying if token approval is required for this workflow..."
+                  : "Verifying steps and gas requirements on-chain..."}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </Modal>
   );
