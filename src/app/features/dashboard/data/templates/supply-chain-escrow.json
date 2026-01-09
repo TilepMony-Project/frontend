@@ -1,0 +1,156 @@
+{
+  "id": "supply-chain-escrow",
+  "name": "Supply Chain Escrow with Yield",
+  "category": "Logistics",
+  "description": "Hold vendor payments in a yield-bearing protocol during shipping, then automatically release principal + interest upon delivery.",
+  "layoutDirection": "horizontal",
+  "nodes": [
+    {
+      "id": "deposit-escrow",
+      "type": "Node",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "deposit",
+        "icon": "DollarSign",
+        "properties": {
+          "label": "Deposit Contract Value",
+          "description": "Inbound payment for goods",
+          "amount": 50000,
+          "currency": "USD",
+          "paymentGateway": "LogisticsPay"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "mint-escrow",
+      "type": "Node",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "mint",
+        "icon": "Coins",
+        "properties": {
+          "label": "Mint mUSDT",
+          "description": "Convert to stablecoin for escrow",
+          "amount": 50000,
+          "issuer": "EscrowIssuer",
+          "receivingWallet": "0x1111111111111111111111111111111111111111",
+          "exchangeRate": 1
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "yield-deposit-escrow",
+      "type": "Node",
+      "position": { "x": 640, "y": 0 },
+      "data": {
+        "type": "yield-deposit",
+        "icon": "TrendingUp",
+        "properties": {
+          "label": "Lock in Yield Escrow",
+          "description": "Deposit to Aave while shipping",
+          "amount": 50000,
+          "underlyingToken": "mUSDT",
+          "yieldAdapter": "AaveAdapter"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "wait-escrow",
+      "type": "Node",
+      "position": { "x": 960, "y": 0 },
+      "data": {
+        "type": "wait",
+        "icon": "Clock",
+        "properties": {
+          "label": "Wait for Delivery",
+          "description": "30-day shipping window",
+          "delayDuration": 30,
+          "timeUnit": "days",
+          "reason": "Shipping transit time"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "yield-withdraw-escrow",
+      "type": "Node",
+      "position": { "x": 1280, "y": 0 },
+      "data": {
+        "type": "yield-withdraw",
+        "icon": "TrendingUp",
+        "properties": {
+          "label": "Liquidate Escrow",
+          "description": "Withdraw principal + yield",
+          "amount": 50000,
+          "shareToken": "aArbUSDT",
+          "yieldAdapter": "AaveAdapter"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-escrow",
+      "type": "Node",
+      "position": { "x": 1600, "y": 0 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Pay Vendor",
+          "description": "Release funds to supplier",
+          "amount": 50250,
+          "recipientWallet": "0xVendorWalletAddress...",
+          "token": "mUSDT",
+          "maxSlippage": 0.1,
+          "memo": "Invoice #9928 Settlement"
+        },
+        "segments": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-deposit-mint",
+      "type": "labelEdge",
+      "source": "deposit-escrow",
+      "target": "mint-escrow",
+      "sourceHandle": "deposit-escrow:source",
+      "targetHandle": "mint-escrow:target"
+    },
+    {
+      "id": "edge-mint-yield",
+      "type": "labelEdge",
+      "source": "mint-escrow",
+      "target": "yield-deposit-escrow",
+      "sourceHandle": "mint-escrow:source",
+      "targetHandle": "yield-deposit-escrow:target"
+    },
+    {
+      "id": "edge-yield-wait",
+      "type": "labelEdge",
+      "source": "yield-deposit-escrow",
+      "target": "wait-escrow",
+      "sourceHandle": "yield-deposit-escrow:source",
+      "targetHandle": "wait-escrow:target"
+    },
+    {
+      "id": "edge-wait-withdraw",
+      "type": "labelEdge",
+      "source": "wait-escrow",
+      "target": "yield-withdraw-escrow",
+      "sourceHandle": "wait-escrow:source",
+      "targetHandle": "yield-withdraw-escrow:target"
+    },
+    {
+      "id": "edge-withdraw-transfer",
+      "type": "labelEdge",
+      "source": "yield-withdraw-escrow",
+      "target": "transfer-escrow",
+      "sourceHandle": "yield-withdraw-escrow:source",
+      "targetHandle": "transfer-escrow:target"
+    }
+  ]
+}

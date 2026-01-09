@@ -6,6 +6,11 @@ import invoiceSettlementData from "./corporate-invoice-settlement.json";
 import crossBorderData from "./cross-border-treasury-transfer.json";
 import salaryDistributionData from "./scheduled-salary-distribution.json";
 
+import multiChainGasData from "./multi-chain-gas-refill.json";
+import revenueSplitData from "./revenue-split-tax.json";
+import supplyChainEscrowData from "./supply-chain-escrow.json";
+import treasuryFxData from "./treasury-fx-hedging.json";
+
 export type WorkflowTemplate = {
   id: string;
   name: string;
@@ -18,6 +23,10 @@ export type WorkflowTemplate = {
 
 const rawTemplates = [
   crossBorderData,
+  treasuryFxData,
+  supplyChainEscrowData,
+  revenueSplitData,
+  multiChainGasData,
   automatedOnRampData,
   salaryDistributionData,
   invoiceSettlementData,

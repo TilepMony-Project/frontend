@@ -1,0 +1,136 @@
+{
+  "id": "multi-chain-gas-refill",
+  "name": "Multi-Chain Gas Refill Station",
+  "category": "Infrastructure",
+  "description": "Periodic top-up workflow that bridges Treasury funds to Base L2 and swaps to native ETH for gas.",
+  "layoutDirection": "horizontal",
+  "nodes": [
+    {
+      "id": "deposit-gas",
+      "type": "Node",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "deposit",
+        "icon": "DollarSign",
+        "properties": {
+          "label": "Deposit Treasury Funds",
+          "description": "Allocation for gas refill",
+          "amount": 5000,
+          "currency": "USD",
+          "paymentGateway": "CorporateTreasury"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "mint-gas",
+      "type": "Node",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "mint",
+        "icon": "Coins",
+        "properties": {
+          "label": "Mint mUSDT",
+          "description": "Mint stablecoin on Source Chain",
+          "amount": 5000,
+          "issuer": "TreasuryIssuer",
+          "receivingWallet": "0xTreasuryOps...",
+          "exchangeRate": 1
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "bridge-gas",
+      "type": "Node",
+      "position": { "x": 640, "y": 0 },
+      "data": {
+        "type": "bridge",
+        "icon": "Link2",
+        "properties": {
+          "label": "Bridge to Base",
+          "description": "Move stablecoin to operations network",
+          "amount": 5000,
+          "token": "mUSDT",
+          "bridgeProvider": "Stargate",
+          "destinationChain": "Base Sepolia",
+          "inputAmountPercentage": 10000
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "swap-gas",
+      "type": "Node",
+      "position": { "x": 960, "y": 0 },
+      "data": {
+        "type": "swap",
+        "icon": "ArrowLeftRight",
+        "properties": {
+          "label": "Swap mUSDT → ETH",
+          "description": "Convert stablecoin to native gas",
+          "inputToken": "mUSDT",
+          "outputToken": "ETH",
+          "amount": 5000,
+          "swapProvider": "Uniswap",
+          "slippageTolerance": 0.5,
+          "preferredRoute": "Best price"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-gas",
+      "type": "Node",
+      "position": { "x": 1280, "y": 0 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Refill Bot Wallet",
+          "description": "Send ETH to operations bot",
+          "amount": 1.5,
+          "recipientWallet": "0xBotWalletAddress...",
+          "token": "ETH",
+          "network": "Base",
+          "memo": "Weekly Gas Refill"
+        },
+        "segments": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-deposit-mint",
+      "type": "labelEdge",
+      "source": "deposit-gas",
+      "target": "mint-gas",
+      "sourceHandle": "deposit-gas:source",
+      "targetHandle": "mint-gas:target"
+    },
+    {
+      "id": "edge-mint-bridge",
+      "type": "labelEdge",
+      "source": "mint-gas",
+      "target": "bridge-gas",
+      "sourceHandle": "mint-gas:source",
+      "targetHandle": "bridge-gas:target"
+    },
+    {
+      "id": "edge-bridge-swap",
+      "type": "labelEdge",
+      "source": "bridge-gas",
+      "target": "swap-gas",
+      "sourceHandle": "bridge-gas:source",
+      "targetHandle": "swap-gas:target"
+    },
+    {
+      "id": "edge-swap-transfer",
+      "type": "labelEdge",
+      "source": "swap-gas",
+      "target": "transfer-gas",
+      "sourceHandle": "swap-gas:source",
+      "targetHandle": "transfer-gas:target"
+    }
+  ]
+}

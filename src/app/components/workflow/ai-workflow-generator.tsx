@@ -166,7 +166,7 @@ export function AIWorkflowGenerator({
 
           <div className="space-y-3">
             <p className="text-sm font-medium">Try a template:</p>
-            <div className="grid grid-cols-1 gap-2">
+            <div className="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
               <button
                 type="button"
                 onClick={() =>
