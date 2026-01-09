@@ -309,24 +309,7 @@ async function executeNode(
         },
       };
     }
-    case "vault": {
-      const amount = getNumberProperty(properties, "amount");
-      const token = "mUSDT";
-      if ((context.tokenBalances[token] ?? 0) < amount) {
-        return { status: "failed", error: "Insufficient vault balance" };
-      }
-      context.tokenBalances[token] -= amount;
-      return {
-        status: "success",
-        transaction: {
-          hash: generateMockHash(),
-          from: "WorkflowWallet",
-          to: "VaultContract",
-          amount,
-          token,
-        },
-      };
-    }
+
     case "wait": {
       const duration = getNumberProperty(properties, "delayDuration", 1);
       const unit = getStringProperty(properties, "timeUnit", "seconds");

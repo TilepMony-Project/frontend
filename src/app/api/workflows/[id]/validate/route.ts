@@ -312,15 +312,7 @@ function validateNodeConfigurations(nodes: WorkflowNode[], edges: WorkflowEdge[]
         }
         break;
       }
-      case "vault": {
-        if (!props.stopCondition) {
-          warnings.push({
-            section: "configuration",
-            message: `Vault node "${getNodeLabel(node)}" should define a stop condition.`,
-          });
-        }
-        break;
-      }
+
       case "partition": {
         // Find downstream nodes connected to this partition
         const downstreamEdges = edges.filter((e) => e.source === node.id);

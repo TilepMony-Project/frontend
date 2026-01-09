@@ -47,7 +47,7 @@ const RULES = `Rules:
 11. Include label and description properties for all nodes`;
 
 // Example section
-const EXAMPLE = `Example:
+const EXAMPLE = `Example 1: Yield Farming
 Prompt: "Deposit 10,000 USD, mint to stablecoin, deposit to Aave yield, wait 7 days, then withdraw"
 Response: {
   workflowName: "USD Yield Farming with Wait",
@@ -87,7 +87,7 @@ Response: {
       properties: { 
         label: "Deposit to Aave",
         amount: 10000, 
-        token: "mUSDT",
+        underlyingToken: "mUSDT",
         yieldAdapter: "AaveAdapter",
         description: "Deposit mUSDT to Aave Protocol"
       },
@@ -124,6 +124,59 @@ Response: {
     { id: "edge-2", source: "mint-1", target: "yield-deposit-1" },
     { id: "edge-3", source: "yield-deposit-1", target: "wait-1" },
     { id: "edge-4", source: "wait-1", target: "yield-withdraw-1" }
+  ]
+}
+
+Example 2: Cross-Chain Bridge
+Prompt: "Bridge 5000 IDR to Base Sepolia"
+Response: {
+  workflowName: "Bridge IDR to Base",
+  workflowDescription: "Deposit IDR, mint IDRX, and bridge to Base Sepolia chain",
+  nodes: [
+    {
+      id: "deposit-1",
+      type: "deposit",
+      label: "Deposit IDR",
+      properties: {
+        label: "Deposit IDR",
+        amount: 5000,
+        currency: "IDR",
+        paymentGateway: "DummyGatewayA",
+        description: "Receive 5,000 IDR"
+      },
+      position: { x: 0, y: 0 }
+    },
+    {
+      id: "mint-1",
+      type: "mint",
+      label: "Mint IDRX",
+      properties: {
+        label: "Mint IDRX",
+        amount: 5000,
+        issuer: "DummyIssuerA",
+        receivingWallet: "0x2222222222222222222222222222222222222222",
+        description: "Mint IDRX stablecoin"
+      },
+      position: { x: 320, y: 0 }
+    },
+    {
+      id: "bridge-1",
+      type: "bridge",
+      label: "Bridge to Base",
+      properties: {
+        label: "Bridge to Base",
+        token: "IDRX",
+        bridgeProvider: "Hyperlane",
+        destinationChain: 84532,
+        inputAmountPercentage: 100,
+        description: "Bridge IDRX to Base Sepolia"
+      },
+      position: { x: 640, y: 0 }
+    }
+  ],
+  edges: [
+    { id: "edge-1", source: "deposit-1", target: "mint-1" },
+    { id: "edge-2", source: "mint-1", target: "bridge-1" }
   ]
 }`;
 
