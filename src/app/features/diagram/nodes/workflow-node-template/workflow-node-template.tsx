@@ -62,15 +62,11 @@ const WorkflowNodeTemplateComponent = memo(
       handleType: "source",
     });
 
-    const iconElement = useMemo(
-      () => <Icon name={icon} size="large" />,
-      [icon]
-    );
+    const iconElement = useMemo(() => <Icon name={icon} size="large" />, [icon]);
 
     const hasContent = !!children;
 
-    const handlesAlignment =
-      hasContent && layoutDirection === "horizontal" ? "header" : "center";
+    const handlesAlignment = hasContent && layoutDirection === "horizontal" ? "header" : "center";
 
     const executionStatus = data?.executionStatus || "idle";
 
@@ -78,10 +74,11 @@ const WorkflowNodeTemplateComponent = memo(
     const sourceChainId = useStore((state) => state.sourceChainId);
     const isBridgeNode = data?.type === "bridge";
     const bridgeDestinationChain = data?.properties?.destinationChain as number | undefined;
-    
+
     // Bridge conflict: destination chain is same as source chain
-    const hasBridgeConflict = isBridgeNode && 
-      bridgeDestinationChain !== undefined && 
+    const hasBridgeConflict =
+      isBridgeNode &&
+      bridgeDestinationChain !== undefined &&
       bridgeDestinationChain === sourceChainId;
 
     // Get chain name for warning message
@@ -109,9 +106,7 @@ const WorkflowNodeTemplateComponent = memo(
 
           {/* Bridge Destination Conflict Warning */}
           {hasBridgeConflict && (
-            <div
-              className="absolute -top-8 left-1/2 -translate-x-1/2 z-50 px-3 py-1.5 rounded-lg bg-yellow-100 text-yellow-800 border border-yellow-300 dark:bg-yellow-900/70 dark:text-yellow-200 dark:border-yellow-700 shadow-md"
-            >
+            <div className="absolute -top-8 left-1/2 -translate-x-1/2 z-50 px-3 py-1.5 rounded-lg bg-yellow-100 text-yellow-800 border border-yellow-300 dark:bg-yellow-900/70 dark:text-yellow-200 dark:border-yellow-700 shadow-md">
               <div className="flex items-center gap-1.5 text-[10px] font-semibold whitespace-nowrap">
                 <AlertTriangle className="h-3 w-3" />
                 <span>Invalid: Can&apos;t bridge to {getChainName(bridgeDestinationChain!)}</span>
@@ -130,8 +125,8 @@ const WorkflowNodeTemplateComponent = memo(
                 data.meta.isBridge
                   ? "bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/50 dark:text-purple-300 dark:border-purple-800"
                   : data.meta.chainType === "destination"
-                  ? "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/50 dark:text-orange-300 dark:border-orange-800"
-                  : "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-800"
+                    ? "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/50 dark:text-orange-300 dark:border-orange-800"
+                    : "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-800"
               )}
             >
               {data.meta.chainName}
@@ -142,12 +137,9 @@ const WorkflowNodeTemplateComponent = memo(
             selected={selected}
             className={cn(
               "[--ax-public-node-gap:0] workflow-node-with-border relative transition-all duration-300",
-              executionStatus === "success" &&
-                "!border-green-500 !ring-2 !ring-green-500/20",
-              executionStatus === "error" &&
-                "!border-red-500 !ring-2 !ring-red-500/20",
-              executionStatus === "running" &&
-                "!border-blue-500 ring-2 ring-blue-500/20",
+              executionStatus === "success" && "!border-green-500 !ring-2 !ring-green-500/20",
+              executionStatus === "error" && "!border-red-500 !ring-2 !ring-red-500/20",
+              executionStatus === "running" && "!border-blue-500 ring-2 ring-blue-500/20",
               // Yellow border for bridge conflict
               hasBridgeConflict &&
                 "!border-yellow-400 ring-2 ring-yellow-400/30 dark:!border-yellow-500"
@@ -166,46 +158,23 @@ const WorkflowNodeTemplateComponent = memo(
                 <div className="pt-2">{children}</div>
               </Collapsible.Content>
             </NodePanel.Content>
-            <NodePanel.Handles
-              isVisible={showHandles}
-              alignment={handlesAlignment}
-            >
+            <NodePanel.Handles isVisible={showHandles} alignment={handlesAlignment}>
               {!hideTargetHandle && (
-                <Handle
-                  id={handleTargetId}
-                  position={handleTargetPosition}
-                  type="target"
-                />
+                <Handle id={handleTargetId} position={handleTargetPosition} type="target" />
               )}
               {!hideSourceHandle && (
-                <Handle
-                  id={handleSourceId}
-                  position={handleSourcePosition}
-                  type="source"
-                />
+                <Handle id={handleSourceId} position={handleSourcePosition} type="source" />
               )}
             </NodePanel.Handles>
           </NodePanel.Root>
 
           {/* Add Node Button - appears on hover, opens Nodes Library */}
-          {[
-            "yield-deposit",
-            "yield-withdraw",
-            "swap",
-            "mint",
-            "transfer",
-          ].includes(typeof data?.type === "string" ? data.type : "") ? (
+          {["yield-deposit", "yield-withdraw", "swap", "mint", "transfer"].includes(
+            typeof data?.type === "string" ? data.type : ""
+          ) ? (
             <>
-              <AddNodeButton
-                nodeId={id}
-                layoutDirection={layoutDirection}
-                side="left"
-              />
-              <AddNodeButton
-                nodeId={id}
-                layoutDirection={layoutDirection}
-                side="right"
-              />
+              <AddNodeButton nodeId={id} layoutDirection={layoutDirection} side="left" />
+              <AddNodeButton nodeId={id} layoutDirection={layoutDirection} side="right" />
             </>
           ) : (
             <AddNodeButton

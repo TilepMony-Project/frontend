@@ -9,11 +9,22 @@ import {
 import { usePrivySession } from "@/hooks/use-privy-session";
 import useStore from "@/store/store";
 import { decodeContractError } from "@/utils/error-decoder";
-import { ActionType, encodeBridgeData, encodeChainBWorkflow, type Action } from "@/utils/mainController";
+import {
+  ActionType,
+  encodeBridgeData,
+  encodeChainBWorkflow,
+  type Action,
+} from "@/utils/mainController";
 import { useSmartWallets } from "@privy-io/react-auth/smart-wallets";
 import { useCallback, useEffect, useState } from "react";
 import { formatEther, formatUnits, parseAbi, parseEventLogs } from "viem";
-import { useChainId, usePublicClient, useSwitchChain, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useChainId,
+  usePublicClient,
+  useSwitchChain,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 
 export type ExecutionStatus =
   | "idle"
@@ -74,7 +85,7 @@ export function useWorkflowExecution() {
     // Always use the latest store state for comparison and update
     const currentStoreStatus = useStore.getState().executionStatus;
     if (next.status !== currentStoreStatus) setExecutionStatus(next.status);
-    
+
     if (next.estimatedGasCost !== undefined) setEstimatedGasCost(next.estimatedGasCost || null);
     setResultState({
       txHash: next.txHash,
@@ -269,7 +280,7 @@ export function useWorkflowExecution() {
   const executeWorkflow = async (workflowId: string, nodeIds: string[] = []) => {
     // Get the selected source chain from the store
     const sourceChainId = useStore.getState().sourceChainId;
-    
+
     try {
       setTargetNodeIds(nodeIds);
       setExecutionLogs([]);
@@ -288,9 +299,9 @@ export function useWorkflowExecution() {
           await switchChain({ chainId: sourceChainId });
           addLog(`✅ Successfully switched to chain ${sourceChainId}`);
           // Wait a bit for the chain switch to propagate
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         } catch (switchError: any) {
-          throw new Error(`Failed to switch chain: ${switchError.message || 'User rejected'}`);
+          throw new Error(`Failed to switch chain: ${switchError.message || "User rejected"}`);
         }
       }
 
@@ -331,7 +342,7 @@ export function useWorkflowExecution() {
         if (!publicClient) throw new Error("Public Client not ready");
 
         addLog(`Checking token approval for ${config.initialToken.slice(0, 10)}...`);
-        
+
         const allowance = await publicClient.readContract({
           address: config.initialToken as `0x${string}`,
           abi: ERC20_ABI,
@@ -340,15 +351,19 @@ export function useWorkflowExecution() {
         });
 
         const requiredAmount = BigInt(config.initialAmount);
-        addLog(`Current allowance: ${allowance.toString()}, Required: ${requiredAmount.toString()}`);
+        addLog(
+          `Current allowance: ${allowance.toString()}, Required: ${requiredAmount.toString()}`
+        );
 
         if (allowance < requiredAmount) {
           addLog("Approval required. Please sign the approval transaction...");
           setResult((prev) => ({ ...prev, status: "signing-approval" }));
-          
+
           // Use max uint256 for better UX (approve once, use many times)
-          const MAX_UINT256 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-          
+          const MAX_UINT256 = BigInt(
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          );
+
           const approveHash = await writeContractAsync({
             address: config.initialToken as `0x${string}`,
             abi: ERC20_ABI,
@@ -372,69 +387,75 @@ export function useWorkflowExecution() {
       // 1.7 Bridge-specific logic: Auto-split workflow and encode Chain B actions
       let processedActions = deserializedActions;
       let igpGasQuote = BigInt(0);
-      
+
       const bridgeIndex = deserializedActions.findIndex(
         (a: any) => Number(a.actionType) === ActionType.BRIDGE
       );
-      
+
       if (bridgeIndex >= 0 && bridgeIndex < deserializedActions.length - 1) {
         // There are actions AFTER the bridge - encode them for Chain B execution
         const chainBActions = deserializedActions.slice(bridgeIndex + 1);
         const chainAActions = deserializedActions.slice(0, bridgeIndex + 1);
-        
-        addLog(`🌉 Cross-chain workflow detected: ${chainAActions.length} Chain A actions, ${chainBActions.length} Chain B actions`);
-        
+
+        addLog(
+          `🌉 Cross-chain workflow detected: ${chainAActions.length} Chain A actions, ${chainBActions.length} Chain B actions`
+        );
+
         // Get bridge action details
         const bridgeAction = chainAActions[bridgeIndex];
         // Parse the bridge data to extract token - we need to reconstruct it with Chain B workflow
         // For simplicity, we'll assume properties are available from config
         // In a full implementation, you'd decode the existing data
-        
+
         // Encode Chain B workflow
         const chainBWorkflowData = encodeChainBWorkflow(chainBActions as Action[]);
         addLog(`📦 Encoded ${chainBActions.length} actions for Chain B execution`);
-        
+
         // Note: We cannot easily extract token/destination from the encoded data without decoding
         // For now, we'll rely on the backend having this information or pass it separately
         // This is a limitation of the current architecture
-        
+
         // Update processed actions for Chain A execution
         // We MUST truncate the list key to ensure Chain A Actions stops at Bridge action
         // The actions after Bridge are for Chain B
-        
+
         // This assignment was previously seemingly ignored or failed
         processedActions = chainAActions;
-        addLog(`⚠️ Splitting workflow: ${chainAActions.length} actions for Chain A (ending with Bridge)`);
+        addLog(
+          `⚠️ Splitting workflow: ${chainAActions.length} actions for Chain A (ending with Bridge)`
+        );
       }
-      
+
       // 1.8 IGP Gas Quote for bridge transactions
       if (bridgeIndex >= 0 && publicClient) {
         const bridgeAction = deserializedActions[bridgeIndex];
         // Extract destination chain from bridge action
         // For now, we'll use a default or extract from config
         // This requires decoding the bridge data which is complex
-        
+
         // Simplified: Assume destination is Base Sepolia (84532) for now
         const destinationChain = 84532;
         const bridgeToken = config.initialToken || ADDRESSES.TOKENS.IDRX;
-        
+
         try {
           addLog(`💰 Fetching IGP gas quote for destination chain ${destinationChain}...`);
-          
+
           // Query quoteGasPayment directly from token contract
           const rawQuote = await publicClient.readContract({
             address: bridgeToken as `0x${string}`,
-            abi: parseAbi(['function quoteGasPayment(uint32 _destinationDomain) view returns (uint256)']),
-            functionName: 'quoteGasPayment',
+            abi: parseAbi([
+              "function quoteGasPayment(uint32 _destinationDomain) view returns (uint256)",
+            ]),
+            functionName: "quoteGasPayment",
             args: [destinationChain],
           });
-          
+
           // Add 20% safety buffer
           igpGasQuote = (rawQuote * BigInt(120)) / BigInt(100);
-          
+
           addLog(`💸 IGP gas quote: ${formatEther(igpGasQuote)} native token (with 20% buffer)`);
         } catch (igpError) {
-          console.warn('Failed to get IGP gas quote:', igpError);
+          console.warn("Failed to get IGP gas quote:", igpError);
           addLog(`⚠️ Warning: Could not fetch IGP gas quote. Bridge may fail.`);
         }
       }
@@ -525,7 +546,7 @@ export function useWorkflowExecution() {
   const simulateWorkflow = async (workflowId: string, nodeIds: string[] = []) => {
     // Get the selected source chain from the store
     const sourceChainId = useStore.getState().sourceChainId;
-    
+
     try {
       if (!accessToken) throw new Error("Authentication token not ready");
       const walletAddress = user?.wallet?.address;
@@ -533,14 +554,16 @@ export function useWorkflowExecution() {
 
       // Check if wallet is on the correct chain, switch if needed
       if (chainId !== sourceChainId) {
-        console.log(`⚠️ Simulation: Wallet is on chain ${chainId}. Switching to selected chain ${sourceChainId}...`);
+        console.log(
+          `⚠️ Simulation: Wallet is on chain ${chainId}. Switching to selected chain ${sourceChainId}...`
+        );
         try {
           await switchChain({ chainId: sourceChainId });
           console.log(`✅ Successfully switched to chain ${sourceChainId}`);
           // Wait a bit for the chain switch to propagate
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         } catch (switchError: any) {
-          throw new Error(`Failed to switch chain: ${switchError.message || 'User rejected'}`);
+          throw new Error(`Failed to switch chain: ${switchError.message || "User rejected"}`);
         }
       }
 
@@ -593,10 +616,12 @@ export function useWorkflowExecution() {
       const bridgeIndex = deserializedActions.findIndex(
         (a: any) => Number(a.actionType) === ActionType.BRIDGE
       );
-      
+
       if (bridgeIndex >= 0 && bridgeIndex < deserializedActions.length - 1) {
         const chainAActions = deserializedActions.slice(0, bridgeIndex + 1);
-        console.log(`⚠️ Simulation: Splitting workflow. Simulating ${chainAActions.length} Chain A actions only.`);
+        console.log(
+          `⚠️ Simulation: Splitting workflow. Simulating ${chainAActions.length} Chain A actions only.`
+        );
         deserializedActions = chainAActions;
       }
 
@@ -610,7 +635,7 @@ export function useWorkflowExecution() {
         if (!publicClient) throw new Error("Public Client not ready");
 
         console.log(`🔍 Checking token approval for ${config.initialToken}...`);
-        
+
         const allowance = await publicClient.readContract({
           address: config.initialToken as `0x${string}`,
           abi: ERC20_ABI,
@@ -619,15 +644,19 @@ export function useWorkflowExecution() {
         });
 
         const requiredAmount = BigInt(config.initialAmount);
-        console.log(`Current allowance: ${allowance.toString()}, Required: ${requiredAmount.toString()}`);
+        console.log(
+          `Current allowance: ${allowance.toString()}, Required: ${requiredAmount.toString()}`
+        );
 
         if (allowance < requiredAmount) {
           console.log("⚠️ Approval required before simulation. Requesting approval...");
           approvalWasNeeded = true;
-          
+
           // Use max uint256 for better UX (approve once, use many times)
-          const MAX_UINT256 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-          
+          const MAX_UINT256 = BigInt(
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          );
+
           const approveHash = await writeContractAsync({
             address: config.initialToken as `0x${string}`,
             abi: ERC20_ABI,
@@ -648,9 +677,14 @@ export function useWorkflowExecution() {
         console.log("Wallet:", walletAddress);
         console.log("Initial Token:", config.initialToken);
         console.log("Initial Amount:", config.initialAmount);
-        console.log("Actions:", JSON.stringify(deserializedActions, (_, v) => 
-          typeof v === 'bigint' ? v.toString() : v
-        , 2));
+        console.log(
+          "Actions:",
+          JSON.stringify(
+            deserializedActions,
+            (_, v) => (typeof v === "bigint" ? v.toString() : v),
+            2
+          )
+        );
 
         try {
           // Run simulation (approval should already be done if needed)
@@ -664,17 +698,27 @@ export function useWorkflowExecution() {
         } catch (simError: any) {
           // Log full error for debugging
           console.error("🔴 Simulation error details:", simError);
-          
+
           // Check if it's an allowance error - if so, treat as success since approval will be requested during execution
           const errorMessage = simError?.message || simError?.shortMessage || String(simError);
           const causeMessage = simError?.cause?.message || simError?.cause?.shortMessage || "";
           const detailsMessage = simError?.details || "";
-          const fullError = (errorMessage + " " + causeMessage + " " + detailsMessage).toLowerCase();
-          
-          if (fullError.includes("allowance") || 
-              fullError.includes("erc20insufficientallowance") ||
-              fullError.includes("insufficient allowance")) {
-            console.log("⚠️ Allowance error detected - simulation will succeed, approval will be requested during execution.");
+          const fullError = (
+            errorMessage +
+            " " +
+            causeMessage +
+            " " +
+            detailsMessage
+          ).toLowerCase();
+
+          if (
+            fullError.includes("allowance") ||
+            fullError.includes("erc20insufficientallowance") ||
+            fullError.includes("insufficient allowance")
+          ) {
+            console.log(
+              "⚠️ Allowance error detected - simulation will succeed, approval will be requested during execution."
+            );
             // Return success but note that approval is needed
             return {
               success: true,
@@ -682,7 +726,8 @@ export function useWorkflowExecution() {
               initialToken: config.initialToken,
               initialAmount: config.initialAmount,
               targetedNodes: config.targetedNodes,
-              aiExplanation: aiExplanation + "\n\n⚠️ Note: Token approval will be requested during execution.",
+              aiExplanation:
+                aiExplanation + "\n\n⚠️ Note: Token approval will be requested during execution.",
               executionId,
               requiresApproval: true,
             };
@@ -698,7 +743,7 @@ export function useWorkflowExecution() {
         initialToken: config.initialToken,
         initialAmount: config.initialAmount,
         targetedNodes: config.targetedNodes,
-        aiExplanation: approvalWasNeeded 
+        aiExplanation: approvalWasNeeded
           ? aiExplanation + "\n\n✅ Token approval completed during simulation."
           : aiExplanation,
         executionId,
@@ -707,7 +752,7 @@ export function useWorkflowExecution() {
     } catch (error: any) {
       // Log detailed error for debugging
       console.error("🔴 Workflow simulation failed:", error);
-      
+
       return {
         success: false,
         error: decodeContractError(error),
@@ -760,14 +805,20 @@ export function useWorkflowExecution() {
       // YIELD_WITHDRAW with specific shareToken (not DYNAMIC/0x0) pulls from user wallet (line 214 in MainController.sol)
       // MINT (actionType 4) does NOT need approval - it calls giveMe() to mint new tokens
       if (config.actions && Array.isArray(config.actions)) {
-        console.log("🔍 [checkApproval] Checking", config.actions.length, "actions for approval requirements");
-        
+        console.log(
+          "🔍 [checkApproval] Checking",
+          config.actions.length,
+          "actions for approval requirements"
+        );
+
         for (let i = 0; i < config.actions.length; i++) {
           const action = config.actions[i];
           const actionType = Number(action.actionType);
-          
-          console.log(`   Action[${i}]: type=${actionType}, target=${action.targetContract?.slice(0, 10)}...`);
-          
+
+          console.log(
+            `   Action[${i}]: type=${actionType}, target=${action.targetContract?.slice(0, 10)}...`
+          );
+
           // ActionType.YIELD_WITHDRAW = 5 - this pulls shareToken from user wallet if not DYNAMIC
           if (actionType === ActionType.YIELD_WITHDRAW && action.data) {
             console.log(`   → YIELD_WITHDRAW detected, checking shareToken...`);
@@ -775,8 +826,10 @@ export function useWorkflowExecution() {
               // Decode YIELD_WITHDRAW action data: (address adapter, address shareToken, address underlyingToken, uint256 amount, bytes adapterData)
               // ABI encoded with dynamic bytes: static params first, then offset pointer to bytes data
               const data = action.data as string;
-              console.log(`   → Data length: ${data.length}, data preview: ${data.slice(0, 66)}...`);
-              
+              console.log(
+                `   → Data length: ${data.length}, data preview: ${data.slice(0, 66)}...`
+              );
+
               // For ABI encoding with (address, address, address, uint256, bytes):
               // - adapter: bytes 0-31 (chars 2-65 after 0x)
               // - shareToken: bytes 32-63 (chars 66-129 after 0x)
@@ -784,14 +837,16 @@ export function useWorkflowExecution() {
                 // shareToken is the second parameter
                 const shareTokenPadded = data.slice(66, 130); // 64 hex chars = 32 bytes
                 const shareToken = "0x" + shareTokenPadded.slice(24); // Last 40 chars = 20 bytes = address
-                
+
                 console.log(`   → shareToken extracted: ${shareToken}`);
-                
+
                 // If shareToken is not zero address, it needs approval
                 if (shareToken.toLowerCase() !== "0x0000000000000000000000000000000000000000") {
                   console.log(`   ✅ YIELD_WITHDRAW needs approval for token: ${shareToken}`);
                   // Use MAX_UINT256 since actual amount depends on user's balance * percentage
-                  const MAX_UINT256 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+                  const MAX_UINT256 = BigInt(
+                    "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+                  );
                   tokensToCheck.push({
                     address: shareToken,
                     amount: MAX_UINT256,
@@ -805,8 +860,11 @@ export function useWorkflowExecution() {
             }
           }
         }
-        
-        console.log(`🔍 [checkApproval] Tokens to check: ${tokensToCheck.length}`, tokensToCheck.map(t => t.address));
+
+        console.log(
+          `🔍 [checkApproval] Tokens to check: ${tokensToCheck.length}`,
+          tokensToCheck.map((t) => t.address)
+        );
       }
 
       // If no tokens to check, no approval needed
@@ -822,7 +880,11 @@ export function useWorkflowExecution() {
       }
 
       // Check allowance for each token
-      const tokensNeedingApproval: { address: string; currentAllowance: string; requiredAmount: string }[] = [];
+      const tokensNeedingApproval: {
+        address: string;
+        currentAllowance: string;
+        requiredAmount: string;
+      }[] = [];
 
       for (const tokenInfo of tokensToCheck) {
         try {
@@ -877,9 +939,11 @@ export function useWorkflowExecution() {
   const requestApproval = async (tokenAddress: string) => {
     try {
       if (!publicClient) throw new Error("Public Client not ready");
-      
-      const MAX_UINT256 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-      
+
+      const MAX_UINT256 = BigInt(
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      );
+
       const approveHash = await writeContractAsync({
         address: tokenAddress as `0x${string}`,
         abi: ERC20_ABI,
@@ -888,7 +952,7 @@ export function useWorkflowExecution() {
       });
 
       await publicClient.waitForTransactionReceipt({ hash: approveHash });
-      
+
       return {
         success: true,
         txHash: approveHash,

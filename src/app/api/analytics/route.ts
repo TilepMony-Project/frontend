@@ -102,11 +102,11 @@ export async function GET(request: Request) {
     // Include all execution logs that have detailExecution with token data
     // Only include finished executions (not pending or running)
     const tokenVolume = await Execution.aggregate([
-      { 
-        $match: { 
+      {
+        $match: {
           userId,
-          status: { $in: ["finished", "failed"] } // Only finished or failed executions
-        } 
+          status: { $in: ["finished", "failed"] }, // Only finished or failed executions
+        },
       },
       { $unwind: "$executionLog" },
       {

@@ -36,7 +36,4 @@ function AccordionLayout(props: LayoutProps<AccordionLayoutElement>) {
   );
 }
 
-export const accordionLayoutRenderer = createLayoutRenderer(
-  "Accordion",
-  AccordionLayout
-);
+export const accordionLayoutRenderer = createLayoutRenderer("Accordion", AccordionLayout);

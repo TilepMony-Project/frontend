@@ -4,12 +4,5 @@ export default function MerchantMoeIcon({
   className,
   ...props
 }: ImgHTMLAttributes<HTMLImageElement>) {
-  return (
-    <img
-      src="/logos/merchantmoe.png"
-      alt="MerchantMoe"
-      className={className}
-      {...props}
-    />
-  );
+  return <img src="/logos/merchantmoe.png" alt="MerchantMoe" className={className} {...props} />;
 }

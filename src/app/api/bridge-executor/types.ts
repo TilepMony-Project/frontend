@@ -24,7 +24,7 @@ export interface PendingWorkflow {
   chainId: number;
   blockNumber: number;
   transactionHash: string;
-  status: 'pending' | 'executing' | 'completed' | 'failed';
+  status: "pending" | "executing" | "completed" | "failed";
   executionTxHash?: string;
   error?: string;
   createdAt: Date;
@@ -50,7 +50,7 @@ export interface ExecuteWorkflowRequest {
 
 export interface WorkflowStatus {
   messageId: string;
-  status: PendingWorkflow['status'];
+  status: PendingWorkflow["status"];
   executionTxHash?: string;
   error?: string;
 }

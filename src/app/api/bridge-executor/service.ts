@@ -6,17 +6,17 @@ import {
   type PublicClient,
   type WalletClient,
   type Chain,
-} from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
-import { mantleSepoliaTestnet, baseSepolia } from 'viem/chains';
+} from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { mantleSepoliaTestnet, baseSepolia } from "viem/chains";
 import {
   TOKEN_HYP_ERC20_ABI,
   MAIN_CONTROLLER_ABI,
   BRIDGE_EXECUTOR_CONFIG,
   INITIAL_LOOKBACK_BLOCKS,
   MAX_GAS_LIMIT,
-} from './config';
-import type { PendingWorkflow, WorkflowDataReceivedEvent, WorkflowAction } from './types';
+} from "./config";
+import type { PendingWorkflow, WorkflowDataReceivedEvent, WorkflowAction } from "./types";
 
 // In-memory storage for pending workflows (use Redis/DB in production)
 const pendingWorkflows = new Map<string, PendingWorkflow>();
@@ -34,7 +34,7 @@ const CHAIN_MAP: Record<number, Chain> = {
 function getExecutorAccount() {
   const privateKey = process.env.BRIDGE_EXECUTOR_PRIVATE_KEY;
   if (!privateKey) {
-    throw new Error('BRIDGE_EXECUTOR_PRIVATE_KEY not set in environment');
+    throw new Error("BRIDGE_EXECUTOR_PRIVATE_KEY not set in environment");
   }
   return privateKeyToAccount(privateKey as `0x${string}`);
 }
@@ -98,22 +98,25 @@ export async function pollForWorkflowEvents(chainId: number): Promise<WorkflowDa
   // Get last checked block or use lookback
   let fromBlock = lastCheckedBlock.get(chainId);
   if (!fromBlock) {
-    fromBlock = currentBlock > INITIAL_LOOKBACK_BLOCKS ? currentBlock - INITIAL_LOOKBACK_BLOCKS : 0n;
+    fromBlock =
+      currentBlock > INITIAL_LOOKBACK_BLOCKS ? currentBlock - INITIAL_LOOKBACK_BLOCKS : 0n;
   }
 
-  console.log(`[BridgeExecutor] Polling chain ${chainId} from block ${fromBlock} to ${currentBlock}`);
+  console.log(
+    `[BridgeExecutor] Polling chain ${chainId} from block ${fromBlock} to ${currentBlock}`
+  );
 
   const events: WorkflowDataReceivedEvent[] = [];
 
   // Poll each token address for events
   for (const tokenAddress of config.tokenAddresses) {
-    if (tokenAddress === '0x0000000000000000000000000000000000000000') continue;
+    if (tokenAddress === "0x0000000000000000000000000000000000000000") continue;
 
     try {
       const logs = await publicClient.getContractEvents({
         address: tokenAddress,
         abi: TOKEN_HYP_ERC20_ABI,
-        eventName: 'WorkflowDataReceived',
+        eventName: "WorkflowDataReceived",
         fromBlock,
         toBlock: currentBlock,
       });
@@ -141,7 +144,7 @@ export async function pollForWorkflowEvents(chainId: number): Promise<WorkflowDa
             chainId,
             blockNumber: Number(event.blockNumber),
             transactionHash: event.transactionHash,
-            status: 'pending',
+            status: "pending",
             createdAt: new Date(),
           });
           console.log(`[BridgeExecutor] New workflow detected: ${event.messageId}`);
@@ -168,16 +171,16 @@ function decodeWorkflowData(workflowDataHex: `0x${string}`): WorkflowAction[] {
     const decoded = decodeAbiParameters(
       [
         {
-          type: 'tuple',
+          type: "tuple",
           components: [
             {
-              name: 'actions',
-              type: 'tuple[]',
+              name: "actions",
+              type: "tuple[]",
               components: [
-                { name: 'actionType', type: 'uint8' },
-                { name: 'targetContract', type: 'address' },
-                { name: 'data', type: 'bytes' },
-                { name: 'inputAmountPercentage', type: 'uint256' },
+                { name: "actionType", type: "uint8" },
+                { name: "targetContract", type: "address" },
+                { name: "data", type: "bytes" },
+                { name: "inputAmountPercentage", type: "uint256" },
               ],
             },
           ],
@@ -188,21 +191,23 @@ function decodeWorkflowData(workflowDataHex: `0x${string}`): WorkflowAction[] {
 
     return decoded[0].actions as WorkflowAction[];
   } catch (error) {
-    console.error('[BridgeExecutor] Failed to decode workflow data:', error);
-    throw new Error('Failed to decode workflow data');
+    console.error("[BridgeExecutor] Failed to decode workflow data:", error);
+    throw new Error("Failed to decode workflow data");
   }
 }
 
 /**
  * Execute a pending workflow
  */
-export async function executeWorkflow(messageId: string): Promise<{ success: boolean; txHash?: string; error?: string }> {
+export async function executeWorkflow(
+  messageId: string
+): Promise<{ success: boolean; txHash?: string; error?: string }> {
   const workflow = pendingWorkflows.get(messageId);
   if (!workflow) {
-    return { success: false, error: 'Workflow not found' };
+    return { success: false, error: "Workflow not found" };
   }
 
-  if (workflow.status !== 'pending') {
+  if (workflow.status !== "pending") {
     return { success: false, error: `Workflow already ${workflow.status}` };
   }
 
@@ -212,7 +217,7 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
   }
 
   // Update status
-  workflow.status = 'executing';
+  workflow.status = "executing";
   pendingWorkflows.set(messageId, workflow);
 
   try {
@@ -221,14 +226,16 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
     const account = getExecutorAccount();
 
     // Decode workflow data
-    const actions = decodeWorkflowData(workflow.workflowData as `0x${string}`) as readonly WorkflowAction[];
+    const actions = decodeWorkflowData(
+      workflow.workflowData as `0x${string}`
+    ) as readonly WorkflowAction[];
     console.log(`[BridgeExecutor] Executing workflow ${messageId} with ${actions.length} actions`);
 
     // Check token balance in MainController
     const tokenBalance = await publicClient.readContract({
       address: workflow.tokenAddress as `0x${string}`,
       abi: TOKEN_HYP_ERC20_ABI,
-      functionName: 'balanceOf',
+      functionName: "balanceOf",
       args: [config.mainControllerAddress],
     });
 
@@ -247,7 +254,7 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
       console.log(`  Action ${idx}:`, {
         actionType: action.actionType,
         targetContract: action.targetContract,
-        data: action.data?.substring(0, 66) + '...', // Truncate for readability
+        data: action.data?.substring(0, 66) + "...", // Truncate for readability
         inputAmountPercentage: action.inputAmountPercentage?.toString(),
       });
     });
@@ -257,7 +264,7 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
       await publicClient.simulateContract({
         address: config.mainControllerAddress,
         abi: MAIN_CONTROLLER_ABI as any,
-        functionName: 'executeWorkflowWithReceivedTokens',
+        functionName: "executeWorkflowWithReceivedTokens",
         args: [actions as any, workflow.tokenAddress as `0x${string}`, BigInt(workflow.amount)],
         account,
       } as any);
@@ -279,7 +286,7 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
       const estimatedGas = await publicClient.estimateContractGas({
         address: config.mainControllerAddress,
         abi: MAIN_CONTROLLER_ABI as any,
-        functionName: 'executeWorkflowWithReceivedTokens',
+        functionName: "executeWorkflowWithReceivedTokens",
         args: [actions as any, workflow.tokenAddress as `0x${string}`, BigInt(workflow.amount)],
         account,
       } as any);
@@ -293,13 +300,15 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
 
     // Only warn if using estimated gas significantly exceeds MAX (for logging purposes)
     if (gasEstimationSucceeded && gasLimit > MAX_GAS_LIMIT) {
-      console.warn(`[BridgeExecutor] Using estimated gas ${gasLimit} (exceeds MAX_GAS_LIMIT ${MAX_GAS_LIMIT}) - required for L2 execution`);
+      console.warn(
+        `[BridgeExecutor] Using estimated gas ${gasLimit} (exceeds MAX_GAS_LIMIT ${MAX_GAS_LIMIT}) - required for L2 execution`
+      );
     }
 
     const txHash = await walletClient.writeContract({
       address: config.mainControllerAddress,
       abi: MAIN_CONTROLLER_ABI as any,
-      functionName: 'executeWorkflowWithReceivedTokens',
+      functionName: "executeWorkflowWithReceivedTokens",
       args: [actions as any, workflow.tokenAddress as `0x${string}`, BigInt(workflow.amount)],
       gas: gasLimit,
       account,
@@ -310,18 +319,18 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
     // Wait for confirmation
     const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
-    if (receipt.status === 'success') {
-      workflow.status = 'completed';
+    if (receipt.status === "success") {
+      workflow.status = "completed";
       workflow.executionTxHash = txHash;
       workflow.executedAt = new Date();
       pendingWorkflows.set(messageId, workflow);
       return { success: true, txHash };
     } else {
-      throw new Error('Transaction reverted');
+      throw new Error("Transaction reverted");
     }
   } catch (error) {
     console.error(`[BridgeExecutor] Workflow execution failed:`, error);
-    workflow.status = 'failed';
+    workflow.status = "failed";
     workflow.error = error instanceof Error ? error.message : String(error);
     pendingWorkflows.set(messageId, workflow);
     return { success: false, error: workflow.error };
@@ -332,7 +341,7 @@ export async function executeWorkflow(messageId: string): Promise<{ success: boo
  * Get pending workflows
  */
 export function getPendingWorkflows(): PendingWorkflow[] {
-  return Array.from(pendingWorkflows.values()).filter((w) => w.status === 'pending');
+  return Array.from(pendingWorkflows.values()).filter((w) => w.status === "pending");
 }
 
 /**
@@ -352,7 +361,11 @@ export function getAllWorkflows(): PendingWorkflow[] {
 /**
  * Automatically process all pending workflows
  */
-export async function processAllPendingWorkflows(): Promise<{ processed: number; succeeded: number; failed: number }> {
+export async function processAllPendingWorkflows(): Promise<{
+  processed: number;
+  succeeded: number;
+  failed: number;
+}> {
   const pending = getPendingWorkflows();
   let succeeded = 0;
   let failed = 0;

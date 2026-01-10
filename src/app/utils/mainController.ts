@@ -157,7 +157,9 @@ export const encodeBridgeData = (
   const recipientBytes32 = ("0x" + recipient.slice(2).padStart(64, "0")) as `0x${string}`;
 
   return encodeAbiParameters(
-    parseAbiParameters("address token, uint32 destination, bytes32 recipient, bytes additionalData"),
+    parseAbiParameters(
+      "address token, uint32 destination, bytes32 recipient, bytes additionalData"
+    ),
     [token as `0x${string}`, destination, recipientBytes32, additionalData]
   );
 };
@@ -170,12 +172,12 @@ const WORKFLOW_ID = "0xca5c284a0aa1c6618e287ec3266b1e676f808351b35a5133f9869ff0b
 
 /**
  * Encode Chain B actions into additionalData format for TokenHypERC20
- * 
+ *
  * Matches Solidity encoding:
  *   bytes32 workflowId = keccak256(abi.encodePacked("WORKFLOW"));
  *   TokenHypERC20.WorkflowData memory workflowData = TokenHypERC20.WorkflowData({actions: actions});
  *   return abi.encodePacked(workflowId, abi.encode(workflowData));
- * 
+ *
  * @param actions - Array of Action objects for Chain B execution
  * @returns Hex encoded workflow data
  */

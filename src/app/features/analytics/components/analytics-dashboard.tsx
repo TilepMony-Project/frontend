@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePrivySession } from "@/hooks/use-privy-session";
 import { Activity, ArrowLeftRight, Clock, DollarSign } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -143,20 +137,14 @@ function KPICard({
         <CardTitle className="text-sm font-medium text-gray-500 dark:text-gray-400">
           {title}
         </CardTitle>
-        <div className="p-2 bg-gray-100 dark:bg-[#1a1b1e] rounded-lg">
-          {icon}
-        </div>
+        <div className="p-2 bg-gray-100 dark:bg-[#1a1b1e] rounded-lg">{icon}</div>
       </CardHeader>
       <CardContent>
         <div className="flex items-baseline gap-1">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-gray-900 dark:text-white">{value}</div>
           {unit && <span className="text-xs text-gray-500">{unit}</span>}
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-          {description}
-        </p>
+        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{description}</p>
       </CardContent>
     </Card>
   );
@@ -206,9 +194,7 @@ function TotalVolumeKPICard({
               IDR
             </Button>
           </div>
-          <div className="p-2 bg-gray-100 dark:bg-[#1a1b1e] rounded-lg">
-            {icon}
-          </div>
+          <div className="p-2 bg-gray-100 dark:bg-[#1a1b1e] rounded-lg">{icon}</div>
         </div>
       </CardHeader>
       <CardContent>

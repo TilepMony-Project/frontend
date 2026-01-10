@@ -53,9 +53,7 @@ export function RunButton() {
 
     if (!validation.valid) {
       toast.error("Workflow has errors", {
-        description: truncateText(
-          validation.errors.map((e) => e.message).join("\n")
-        ),
+        description: truncateText(validation.errors.map((e) => e.message).join("\n")),
         duration: 5000,
       });
       return;
@@ -79,10 +77,7 @@ export function RunButton() {
   if (validating) tooltipText = "Validating...";
   else if (status === "signing-approval" || status === "signing-execution")
     tooltipText = "Sign in Wallet...";
-  else if (
-    status === "processing-approval" ||
-    status === "processing-execution"
-  )
+  else if (status === "processing-approval" || status === "processing-execution")
     tooltipText = "Processing...";
   else if (status === "estimating-gas") tooltipText = "Estimating gas...";
   else if (status === "checking-approval") tooltipText = "Checking approval...";

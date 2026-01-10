@@ -66,8 +66,7 @@ function formatInlineMarkdown(text: string) {
   // Pattern for addresses (0x...)
   const addressPattern = /(0x[a-fA-F0-9]{40})/g;
   // Pattern for currency amounts ($XXX, XXX USD, etc.)
-  const amountPattern =
-    /(\$[\d,]+(?:\.\d+)?|[\d,]+(?:\.\d+)?\s*(?:USD|IDR|USDC|USDT|IDRX))/gi;
+  const amountPattern = /(\$[\d,]+(?:\.\d+)?|[\d,]+(?:\.\d+)?\s*(?:USD|IDR|USDC|USDT|IDRX))/gi;
 
   // Combine all patterns
   const allMatches: Array<{
@@ -212,12 +211,14 @@ export function ExecutionConfirmationModal({
   selectedNodeIds: string[];
 }) {
   const { simulateWorkflow, checkApproval, requestApproval } = useWorkflowExecution();
-  const [simulationResult, setSimulationResult] =
-    useState<SimulationResult | null>(null);
+  const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
   const [approvalStatus, setApprovalStatus] = useState<ApprovalStatus | null>(null);
   const [currentStep, setCurrentStep] = useState<ModalStep>("checking-approval");
   const [approvalError, setApprovalError] = useState<string | null>(null);
-  const [approvalProgress, setApprovalProgress] = useState<{ current: number; total: number } | null>(null);
+  const [approvalProgress, setApprovalProgress] = useState<{
+    current: number;
+    total: number;
+  } | null>(null);
 
   useEffect(() => {
     if (open) {
@@ -261,18 +262,18 @@ export function ExecutionConfirmationModal({
 
   const handleApprove = async () => {
     if (!approvalStatus?.tokenAddress) return;
-    
+
     setCurrentStep("approving");
     setApprovalError(null);
-    
+
     const result = await requestApproval(approvalStatus.tokenAddress);
-    
+
     if (result.success) {
       // Approval successful, re-check if more approvals are needed
       try {
         const newCheck = await checkApproval(workflowId, selectedNodeIds);
         setApprovalStatus(newCheck);
-        
+
         if (newCheck.needsApproval) {
           // More tokens need approval
           const total = approvalProgress?.total || 1;
@@ -307,7 +308,10 @@ export function ExecutionConfirmationModal({
     onClose();
   };
 
-  const isLoading = currentStep === "checking-approval" || currentStep === "simulating" || currentStep === "approving";
+  const isLoading =
+    currentStep === "checking-approval" ||
+    currentStep === "simulating" ||
+    currentStep === "approving";
   const canConfirm = currentStep === "done" && simulationResult?.success;
 
   return (
@@ -346,12 +350,14 @@ export function ExecutionConfirmationModal({
       <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-800">
         {/* Step Progress Indicator */}
         <div className="flex items-center gap-2 text-sm">
-          <div className={cn(
-            "flex items-center gap-1.5 px-2 py-1 rounded-full",
-            currentStep === "checking-approval" 
-              ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
-              : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-          )}>
+          <div
+            className={cn(
+              "flex items-center gap-1.5 px-2 py-1 rounded-full",
+              currentStep === "checking-approval"
+                ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+            )}
+          >
             {currentStep === "checking-approval" ? (
               <Icon name="Loader2" className="animate-spin" size={14} />
             ) : (
@@ -360,14 +366,16 @@ export function ExecutionConfirmationModal({
             <span>Check Approval</span>
           </div>
           <Icon name="ChevronRight" size={14} className="text-gray-400" />
-          <div className={cn(
-            "flex items-center gap-1.5 px-2 py-1 rounded-full",
-            currentStep === "checking-approval" 
-              ? "bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
-              : currentStep === "needs-approval" || currentStep === "approving"
-                ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
-                : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-          )}>
+          <div
+            className={cn(
+              "flex items-center gap-1.5 px-2 py-1 rounded-full",
+              currentStep === "checking-approval"
+                ? "bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+                : currentStep === "needs-approval" || currentStep === "approving"
+                  ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                  : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+            )}
+          >
             {currentStep === "approving" ? (
               <Icon name="Loader2" className="animate-spin" size={14} />
             ) : currentStep === "needs-approval" ? (
@@ -380,16 +388,18 @@ export function ExecutionConfirmationModal({
             <span>Approve</span>
           </div>
           <Icon name="ChevronRight" size={14} className="text-gray-400" />
-          <div className={cn(
-            "flex items-center gap-1.5 px-2 py-1 rounded-full",
-            currentStep === "simulating" 
-              ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
-              : currentStep === "done"
-                ? simulationResult?.success
-                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                  : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
-                : "bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
-          )}>
+          <div
+            className={cn(
+              "flex items-center gap-1.5 px-2 py-1 rounded-full",
+              currentStep === "simulating"
+                ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                : currentStep === "done"
+                  ? simulationResult?.success
+                    ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                    : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                  : "bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+            )}
+          >
             {currentStep === "simulating" ? (
               <Icon name="Loader2" className="animate-spin" size={14} />
             ) : currentStep === "done" ? (
@@ -409,7 +419,11 @@ export function ExecutionConfirmationModal({
         {(currentStep === "needs-approval" || currentStep === "approving") && (
           <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/30">
             <div className="flex gap-3">
-              <Icon name="AlertTriangle" className="text-amber-600 dark:text-amber-400 mt-0.5" size={20} />
+              <Icon
+                name="AlertTriangle"
+                className="text-amber-600 dark:text-amber-400 mt-0.5"
+                size={20}
+              />
               <div>
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-bold text-amber-800 dark:text-amber-300">
@@ -422,12 +436,13 @@ export function ExecutionConfirmationModal({
                   )}
                 </div>
                 <p className="text-xs text-amber-700 dark:text-amber-400 mt-1 leading-relaxed">
-                  This workflow requires spending your tokens. Please approve the token spending 
-                  to continue with the simulation.
+                  This workflow requires spending your tokens. Please approve the token spending to
+                  continue with the simulation.
                 </p>
                 {approvalStatus && (
                   <div className="mt-2 text-xs text-amber-600 dark:text-amber-500 font-mono">
-                    Token: {approvalStatus.tokenAddress.slice(0, 10)}...{approvalStatus.tokenAddress.slice(-8)}
+                    Token: {approvalStatus.tokenAddress.slice(0, 10)}...
+                    {approvalStatus.tokenAddress.slice(-8)}
                   </div>
                 )}
                 {approvalError && (
@@ -487,9 +502,7 @@ export function ExecutionConfirmationModal({
             )}
             <div>
               <p className="text-sm font-bold">
-                {simulationResult?.success
-                  ? "Simulation Successful"
-                  : "Simulation Failed"}
+                {simulationResult?.success ? "Simulation Successful" : "Simulation Failed"}
               </p>
               <p className="text-xs opacity-90 leading-relaxed mt-1">
                 {simulationResult?.success

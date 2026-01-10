@@ -8,20 +8,22 @@
 
 export async function register() {
   // Only run on server side (not edge runtime)
-  if (process.env.NEXT_RUNTIME === 'nodejs') {
-    console.log('\n🚀 [Instrumentation] Next.js server starting...');
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    console.log("\n🚀 [Instrumentation] Next.js server starting...");
 
     // Check if bridge executor worker should be enabled
-    if (process.env.ENABLE_BRIDGE_EXECUTOR_WORKER === 'true') {
-      console.log('🔧 [Instrumentation] Starting Bridge Executor Worker...');
+    if (process.env.ENABLE_BRIDGE_EXECUTOR_WORKER === "true") {
+      console.log("🔧 [Instrumentation] Starting Bridge Executor Worker...");
 
       // Dynamic import to avoid issues with Edge runtime
-      const { startWorker } = await import('./app/api/bridge-executor/worker');
+      const { startWorker } = await import("./app/api/bridge-executor/worker");
       startWorker();
 
-      console.log('✅ [Instrumentation] Bridge Executor Worker started!');
+      console.log("✅ [Instrumentation] Bridge Executor Worker started!");
     } else {
-      console.log('⏸️ [Instrumentation] Bridge Executor Worker disabled (ENABLE_BRIDGE_EXECUTOR_WORKER != true)');
+      console.log(
+        "⏸️ [Instrumentation] Bridge Executor Worker disabled (ENABLE_BRIDGE_EXECUTOR_WORKER != true)"
+      );
     }
   }
 }

@@ -141,8 +141,8 @@ export const ADDRESSES = {
   },
   YIELD: {
     // Adapters
-    MethLabAdapter: '0x3ac50c119c1fec7ce2da88b7661965a4251be9f5' as const,
-    InitCapitalAdapter: '0x8c8d17e5772ac3cefd01452952fd37316649853a' as const,
+    MethLabAdapter: "0x3ac50c119c1fec7ce2da88b7661965a4251be9f5" as const,
+    InitCapitalAdapter: "0x8c8d17e5772ac3cefd01452952fd37316649853a" as const,
     ROUTER: "0x0222ac14bae2f6b4229ac6bc25f42c62b203893d" as const,
     METHLAB: {
       ADAPTER: "0x3ac50c119c1fec7ce2da88b7661965a4251be9f5" as const,
@@ -153,12 +153,12 @@ export const ADDRESSES = {
       },
     },
     INIT_CAPITAL: {
-        ADAPTER: '0x8c8d17e5772ac3cefd01452952fd37316649853a' as const,
-        POOLS: {
-            IDRX: '0xeddcf78479dd5a358d23dd88bc2e17f443c0744b' as const,
-            USDC: '0x2379f8671c294bf25a34e0f57aae0445074ae5cc' as const,
-            USDT: '0x7ad0e6c5ef91d1fae6ad7cac00cf68f445710523' as const,
-        },
+      ADAPTER: "0x8c8d17e5772ac3cefd01452952fd37316649853a" as const,
+      POOLS: {
+        IDRX: "0xeddcf78479dd5a358d23dd88bc2e17f443c0744b" as const,
+        USDC: "0x2379f8671c294bf25a34e0f57aae0445074ae5cc" as const,
+        USDT: "0x7ad0e6c5ef91d1fae6ad7cac00cf68f445710523" as const,
+      },
     },
     COMPOUND: {
       ADAPTERS: {
@@ -167,9 +167,9 @@ export const ADDRESSES = {
         USDT: "0xd93dc201a691c7fbf61273e083bd8a68282b0057" as const,
       },
       COMETS: {
-          IDRX: '0x851e69b388d055fc1068c3cd2888e32d2b8c6f5d' as const,
-          USDC: '0x3e39df4be60278a77ff3d62004228d299a794d46' as const,
-          USDT: '0xe7fdda7fa6b95e93c16229c6123174acf431e0df' as const,
+        IDRX: "0x851e69b388d055fc1068c3cd2888e32d2b8c6f5d" as const,
+        USDC: "0x3e39df4be60278a77ff3d62004228d299a794d46" as const,
+        USDT: "0xe7fdda7fa6b95e93c16229c6123174acf431e0df" as const,
       },
     },
   },
@@ -228,19 +228,19 @@ export const ADDRESSES = {
     },
     // Compound Comet Tokens (Missing in prev config, adding match)
     "0x851e69b388d055fc1068c3cd2888e32d2b8c6f5d": {
-       decimals: 18,
-       symbol: "cIDRXv3",
-       name: "Compound IDRX",
+      decimals: 18,
+      symbol: "cIDRXv3",
+      name: "Compound IDRX",
     },
     "0x3e39df4be60278a77ff3d62004228d299a794d46": {
-       decimals: 6,
-       symbol: "cUSDCv3",
-       name: "Compound USDC",
+      decimals: 6,
+      symbol: "cUSDCv3",
+      name: "Compound USDC",
     },
     "0xe7fdda7fa6b95e93c16229c6123174acf431e0df": {
-       decimals: 6,
-       symbol: "cUSDTv3",
-       name: "Compound USDT",
+      decimals: 6,
+      symbol: "cUSDTv3",
+      name: "Compound USDT",
     },
   },
   BRIDGE: {

@@ -3,13 +3,7 @@
 import { Activity } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis, Cell } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
@@ -87,17 +81,14 @@ export function NodeUsageChart({ data }: { data: NodeUsageData[] }) {
               tickMargin={8}
               axisLine={false}
               tickFormatter={(value) =>
-                (chartConfig[value.toLowerCase() as keyof typeof chartConfig]
-                  ?.label as string) || value
+                (chartConfig[value.toLowerCase() as keyof typeof chartConfig]?.label as string) ||
+                value
               }
               fontSize={14}
               width={120}
             />
             <XAxis dataKey="count" type="number" hide />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Bar dataKey="count" layout="vertical" radius={10} barSize={50}>
               {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />

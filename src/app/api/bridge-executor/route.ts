@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from "next/server";
 import {
   pollForWorkflowEvents,
   executeWorkflow,
@@ -6,11 +6,11 @@ import {
   getAllWorkflows,
   processAllPendingWorkflows,
   getWorkflow,
-} from './service';
-import { BRIDGE_EXECUTOR_CONFIG } from './config';
+} from "./service";
+import { BRIDGE_EXECUTOR_CONFIG } from "./config";
 
 // Import worker to auto-start background polling (if enabled via env)
-import './worker';
+import "./worker";
 
 /**
  * GET /api/bridge-executor
@@ -19,14 +19,14 @@ import './worker';
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const messageId = searchParams.get('messageId');
-    const status = searchParams.get('status');
+    const messageId = searchParams.get("messageId");
+    const status = searchParams.get("status");
 
     // If messageId provided, return specific workflow
     if (messageId) {
       const workflow = getWorkflow(messageId);
       if (!workflow) {
-        return NextResponse.json({ error: 'Workflow not found' }, { status: 404 });
+        return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
       }
       return NextResponse.json({ workflow });
     }
@@ -42,9 +42,9 @@ export async function GET(request: NextRequest) {
       workflows,
     });
   } catch (error) {
-    console.error('[BridgeExecutor API] GET error:', error);
+    console.error("[BridgeExecutor API] GET error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
+      { error: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     const { action, messageId, chainId } = body;
 
     switch (action) {
-      case 'poll': {
+      case "poll": {
         // Poll for new workflow events on specified chain or all chains
         const chainIds = chainId
           ? [chainId]
@@ -80,17 +80,17 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      case 'execute': {
+      case "execute": {
         // Execute a specific workflow by messageId
         if (!messageId) {
-          return NextResponse.json({ error: 'messageId required' }, { status: 400 });
+          return NextResponse.json({ error: "messageId required" }, { status: 400 });
         }
 
         const result = await executeWorkflow(messageId);
         return NextResponse.json(result);
       }
 
-      case 'process-all': {
+      case "process-all": {
         // Process all pending workflows
         const result = await processAllPendingWorkflows();
         return NextResponse.json({
@@ -101,14 +101,14 @@ export async function POST(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { error: 'Invalid action. Use: poll, execute, or process-all' },
+          { error: "Invalid action. Use: poll, execute, or process-all" },
           { status: 400 }
         );
     }
   } catch (error) {
-    console.error('[BridgeExecutor API] POST error:', error);
+    console.error("[BridgeExecutor API] POST error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
+      { error: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

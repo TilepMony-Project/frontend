@@ -3,13 +3,7 @@
 import { BarChart3 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
@@ -48,9 +42,7 @@ export function DailyExecutionActivityChart({
           <BarChart3 size={20} className="text-[#6366f1]" />
           Daily Execution Activity
         </CardTitle>
-        <CardDescription>
-          Total workflow runs over the last 30 days
-        </CardDescription>
+        <CardDescription>Total workflow runs over the last 30 days</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[250px] w-full">

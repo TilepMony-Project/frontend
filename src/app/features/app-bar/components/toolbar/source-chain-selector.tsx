@@ -20,7 +20,7 @@ const chainOptions: ChainOption[] = [
 export function SourceChainSelector() {
   const sourceChainId = useStore((state) => state.sourceChainId);
   const setSourceChainId = useStore((state) => state.setSourceChainId);
-  
+
   const { isConnected } = useAccount();
   const walletChainId = useChainId();
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
@@ -28,7 +28,7 @@ export function SourceChainSelector() {
   const handleChainSelect = (chainId: number) => {
     // Update the UI state
     setSourceChainId(chainId);
-    
+
     // Switch wallet chain if connected and different from selected
     if (isConnected && walletChainId !== chainId) {
       switchChain({ chainId });
@@ -42,12 +42,10 @@ export function SourceChainSelector() {
     <div className="flex items-center gap-2">
       <div className="flex rounded-full border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-[#1c1c20]">
         {chainOptions.map((chain, index) => (
-          <Tooltip 
-            key={chain.id} 
+          <Tooltip
+            key={chain.id}
             content={
-              isSwitchingChain 
-                ? "Switching network..." 
-                : `Start from ${chain.label} Sepolia`
+              isSwitchingChain ? "Switching network..." : `Start from ${chain.label} Sepolia`
             }
           >
             <button
@@ -79,7 +77,9 @@ export function SourceChainSelector() {
         ))}
       </div>
       {isWalletMismatch && !isSwitchingChain && (
-        <Tooltip content={`Click to switch wallet to ${chainOptions.find(c => c.id === sourceChainId)?.label || 'selected network'}`}>
+        <Tooltip
+          content={`Click to switch wallet to ${chainOptions.find((c) => c.id === sourceChainId)?.label || "selected network"}`}
+        >
           <button
             type="button"
             onClick={() => switchChain({ chainId: sourceChainId })}
@@ -91,9 +91,7 @@ export function SourceChainSelector() {
         </Tooltip>
       )}
       {isSwitchingChain && (
-        <span className="text-xs text-gray-500 dark:text-gray-400 animate-pulse">
-          Switching...
-        </span>
+        <span className="text-xs text-gray-500 dark:text-gray-400 animate-pulse">Switching...</span>
       )}
     </div>
   );

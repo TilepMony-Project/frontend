@@ -123,15 +123,14 @@ function renderIcon(iconName: string | undefined): React.ReactNode {
 function SelectControl(props: SelectControlProps) {
   const { data, handleChange, path, enabled, schema } = props;
 
-  const items = (
-    (schema as PrimitiveFieldSchema).options as ItemOption[] | undefined
-  )?.map((option) =>
-    option.type === "separator" || !option.icon
-      ? option
-      : {
-          ...option,
-          icon: renderIcon(option.icon as string),
-        }
+  const items = ((schema as PrimitiveFieldSchema).options as ItemOption[] | undefined)?.map(
+    (option) =>
+      option.type === "separator" || !option.icon
+        ? option
+        : {
+            ...option,
+            icon: renderIcon(option.icon as string),
+          }
   );
 
   const onChange: SelectProps["onChange"] = (_event, value) => {
@@ -158,7 +157,4 @@ function SelectControl(props: SelectControlProps) {
   );
 }
 
-export const selectControlRenderer = createControlRenderer(
-  "Select",
-  SelectControl
-);
+export const selectControlRenderer = createControlRenderer("Select", SelectControl);

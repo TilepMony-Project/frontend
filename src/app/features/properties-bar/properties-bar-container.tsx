@@ -13,9 +13,7 @@ import { Icon } from "@/components/icons";
 
 export function PropertiesBarContainer() {
   const { removeElements } = useRemoveElements();
-  const isPropertiesBarExpanded = useStore(
-    (state) => state.isPropertiesBarExpanded
-  );
+  const isPropertiesBarExpanded = useStore((state) => state.isPropertiesBarExpanded);
   const togglePropertiesBar = useStore((state) => state.togglePropertiesBar);
 
   const [selectedTab, setSelectedTab] = useState("properties");
@@ -112,9 +110,7 @@ export function PropertiesBarContainer() {
           open={showConfirmation}
           onClose={() => setShowConfirmation(false)}
           onConfirm={handleConfirmExecution}
-          workflowId={
-            localStorage.getItem("tilepmoney_current_workflow_id") || ""
-          }
+          workflowId={localStorage.getItem("tilepmoney_current_workflow_id") || ""}
           selectedNodeIds={[selection.node.id]}
         />
       )}

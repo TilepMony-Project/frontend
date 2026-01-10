@@ -1,9 +1,6 @@
 import type { SVGProps } from "react";
 
-export default function BaseLogo({
-  className,
-  ...props
-}: SVGProps<SVGSVGElement>) {
+export default function BaseLogo({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
     <img
       src="/logos/base.png"

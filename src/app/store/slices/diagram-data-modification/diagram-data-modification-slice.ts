@@ -41,9 +41,7 @@ export function useDiagramDataModificationSlice(
 
       // Only recompute metadata on structural changes to avoid performance hit on dragging
       // 'add' and 'remove' are the main structural changes
-      const shouldRecompute = changes.some(
-        (c) => c.type === "add" || c.type === "remove"
-      );
+      const shouldRecompute = changes.some((c) => c.type === "add" || c.type === "remove");
 
       set({
         nodes: updateNetworkMetadata(newNodes, edges, sourceChainId),
@@ -53,9 +51,7 @@ export function useDiagramDataModificationSlice(
       const { nodes, edges, sourceChainId } = get();
       const newEdges = applyEdgeChanges(changes, edges);
 
-      const shouldRecompute = changes.some(
-        (c) => c.type === "add" || c.type === "remove"
-      );
+      const shouldRecompute = changes.some((c) => c.type === "add" || c.type === "remove");
 
       set({
         edges: newEdges,
@@ -67,8 +63,8 @@ export function useDiagramDataModificationSlice(
       trackFutureChange("dataUpdate");
       const { nodes, edges, sourceChainId } = get();
       const updatedNodes = updateNodesProperties(nodes, nodeId, properties);
-      
-      // Always recompute metadata when properties change, as a node might become a bridge 
+
+      // Always recompute metadata when properties change, as a node might become a bridge
       // or change its configuration that affects downstream nodes
       set({
         nodes: updateNetworkMetadata(updatedNodes, edges, sourceChainId),

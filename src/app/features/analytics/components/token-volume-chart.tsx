@@ -3,13 +3,7 @@
 import { Coins } from "lucide-react";
 import { Cell, Pie, PieChart } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
@@ -99,15 +93,9 @@ export function TokenVolumeChart({ data }: { data: TokenVolumeData[] }) {
         <CardDescription>Volume by token type</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
+        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
           <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Pie
               data={chartData}
               dataKey="fiatVolume"
@@ -119,7 +107,12 @@ export function TokenVolumeChart({ data }: { data: TokenVolumeData[] }) {
               endAngle={-270}
             >
               {chartData.map((entry) => (
-                <Cell key={`cell-${entry.token}`} fill={entry.fill} stroke={entry.fill} strokeWidth={1} />
+                <Cell
+                  key={`cell-${entry.token}`}
+                  fill={entry.fill}
+                  stroke={entry.fill}
+                  strokeWidth={1}
+                />
               ))}
             </Pie>
           </PieChart>
@@ -128,7 +121,11 @@ export function TokenVolumeChart({ data }: { data: TokenVolumeData[] }) {
           <div className="text-center">
             <div className="text-sm text-muted-foreground">Total Volume</div>
             <div className="text-xl font-semibold text-foreground">
-              ${totalVolume.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              $
+              {totalVolume.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </div>
           </div>
           <div className="border-t pt-3">
@@ -139,15 +136,16 @@ export function TokenVolumeChart({ data }: { data: TokenVolumeData[] }) {
                 return (
                   <div key={entry.token} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-sm"
-                        style={{ backgroundColor: entry.fill }}
-                      />
+                      <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: entry.fill }} />
                       <span className="font-medium">{entry.token}</span>
                     </div>
                     <div className="text-right">
                       <div className="font-semibold">
-                        ${entry.fiatVolume.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        $
+                        {entry.fiatVolume.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
                       </div>
                       <div className="text-muted-foreground text-[10px]">{percentage}%</div>
                     </div>

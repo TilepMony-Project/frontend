@@ -4,12 +4,5 @@ export default function LayerZeroIcon({
   className,
   ...props
 }: ImgHTMLAttributes<HTMLImageElement>) {
-  return (
-    <img
-      src="/logos/layerzero.png"
-      alt="LayerZero"
-      className={className}
-      {...props}
-    />
-  );
+  return <img src="/logos/layerzero.png" alt="LayerZero" className={className} {...props} />;
 }

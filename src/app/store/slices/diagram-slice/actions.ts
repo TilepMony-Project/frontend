@@ -48,14 +48,13 @@ export function setStoreDataFromIntegration(loadData: Partial<IntegrationDataFor
   const state = useStore.getState();
   const loadedNodes = (loadData.nodes ?? state.nodes).map(getNodeWithErrors);
   const edges = loadData.edges ?? state.edges;
-  
+
   // Recalculate network metadata with current sourceChainId to ensure badges are in sync
   const nodes = updateNetworkMetadata(loadedNodes, edges, state.sourceChainId);
-  
+
   useStore.setState({
     documentName: loadData.name ?? state.documentName,
     nodes,
     edges,
   });
 }
-
