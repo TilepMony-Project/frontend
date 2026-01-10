@@ -13,14 +13,31 @@ import { TemplateMiniPreview } from "./template-mini-preview";
 
 // Template metadata for display
 const TEMPLATE_DISPLAY_DATA: Record<string, { shortDescription: string }> = {
+  "treasury-fx-hedging": {
+    shortDescription:
+      "Diversify treasury funds into a basket of USD + Euro assets",
+  },
   "cross-border-treasury-transfer": {
-    shortDescription: "Multi-branch IDR→USD treasury flow with vault & partition",
+    shortDescription:
+      "Multi-branch IDR→USD treasury flow with yield allocation",
+  },
+  "supply-chain-escrow": {
+    shortDescription:
+      "Yield-bearing escrow that releases principal + interest on delivery",
+  },
+  "revenue-split-tax": {
+    shortDescription: "Auto-route revenue: 70% Ops, 20% Growth, 10% Tax Vault",
+  },
+  "multi-chain-gas-refill": {
+    shortDescription: "Bridge & Swap stablecoins to native gas on L2 networks",
   },
   "automated-onramp-investment-vault": {
-    shortDescription: "Fiat onboarding to USDC investment vault with auto-withdraw",
+    shortDescription:
+      "Fiat onboarding to USDC investment vault with auto-withdraw",
   },
   "scheduled-salary-distribution": {
-    shortDescription: "Monthly salary distribution to multiple employee wallets",
+    shortDescription:
+      "Monthly salary distribution to multiple employee wallets",
   },
   "corporate-invoice-settlement": {
     shortDescription: "B2B invoice settlement with due date scheduling",
@@ -28,7 +45,9 @@ const TEMPLATE_DISPLAY_DATA: Record<string, { shortDescription: string }> = {
 };
 
 const TemplateShowcase: React.FC = () => {
-  const [activeTemplateId, setActiveTemplateId] = useState(workflowTemplates[0]?.id || "");
+  const [activeTemplateId, setActiveTemplateId] = useState(
+    workflowTemplates[0]?.id || ""
+  );
   const { ready, authenticated } = usePrivy();
   const router = useRouter();
 
@@ -64,7 +83,9 @@ const TemplateShowcase: React.FC = () => {
     ease: "power3.out",
   });
 
-  const activeTemplate = workflowTemplates.find((t) => t.id === activeTemplateId);
+  const activeTemplate = workflowTemplates.find(
+    (t) => t.id === activeTemplateId
+  );
 
   const handleUseTemplate = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -145,7 +166,10 @@ const TemplateShowcase: React.FC = () => {
         </div>
 
         {/* Tabbed Template Viewer */}
-        <div ref={containerRef as React.RefObject<HTMLDivElement>} className="w-full">
+        <div
+          ref={containerRef as React.RefObject<HTMLDivElement>}
+          className="w-full"
+        >
           <div className="flex flex-col overflow-hidden rounded-2xl border border-primary/30 dark:border-white/20 bg-card shadow-xl">
             {/* Tabs Row */}
             <div className="flex flex-wrap gap-2 p-3 border-b border-border bg-gradient-to-b from-muted/50 to-muted/20">
@@ -165,7 +189,9 @@ const TemplateShowcase: React.FC = () => {
                   <span
                     className={cn(
                       "text-sm font-bold transition-colors",
-                      activeTemplateId === template.id ? "text-primary" : "text-foreground"
+                      activeTemplateId === template.id
+                        ? "text-primary"
+                        : "text-foreground"
                     )}
                   >
                     {template.category}
@@ -208,7 +234,10 @@ const TemplateShowcase: React.FC = () => {
 
             {/* Preview Canvas */}
             <div className="relative w-full h-72 md:h-96 lg:h-[450px] bg-gradient-to-b from-muted/10 to-muted/30">
-              <TemplateMiniPreview key={activeTemplateId} templateId={activeTemplateId} />
+              <TemplateMiniPreview
+                key={activeTemplateId}
+                templateId={activeTemplateId}
+              />
 
               {/* Category Badge */}
               <div className="absolute top-4 left-4 z-10">
@@ -221,7 +250,9 @@ const TemplateShowcase: React.FC = () => {
             {/* Template Info Footer */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 border-t border-border bg-card">
               <div className="flex flex-col gap-1">
-                <h3 className="text-lg font-bold text-foreground">{activeTemplate?.name}</h3>
+                <h3 className="text-lg font-bold text-foreground">
+                  {activeTemplate?.name}
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   {TEMPLATE_DISPLAY_DATA[activeTemplateId]?.shortDescription ||
                     activeTemplate?.description}

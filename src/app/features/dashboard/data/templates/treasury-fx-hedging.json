@@ -1,0 +1,164 @@
+{
+  "id": "treasury-fx-hedging",
+  "name": "Treasury FX Hedging Strategy",
+  "category": "Risk Management",
+  "description": "Protect purchasing power by diversifying treasury funds into a basket of stable currencies (USD + Euro).",
+  "layoutDirection": "horizontal",
+  "nodes": [
+    {
+      "id": "deposit-hedge",
+      "type": "Node",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "deposit",
+        "icon": "DollarSign",
+        "properties": {
+          "label": "Deposit Capital",
+          "description": "Inject USD for diversification",
+          "amount": 1000000,
+          "currency": "USD",
+          "paymentGateway": "CorporateWire"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "mint-hedge",
+      "type": "Node",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "mint",
+        "icon": "Coins",
+        "properties": {
+          "label": "Mint mUSDT",
+          "description": "Tokenize fiat capital",
+          "amount": 1000000,
+          "issuer": "TreasuryIssuer",
+          "receivingWallet": "0xOpsExecutor...",
+          "exchangeRate": 1
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "partition-hedge",
+      "type": "Node",
+      "position": { "x": 640, "y": 0 },
+      "data": {
+        "type": "partition",
+        "icon": "GitBranch",
+        "properties": {
+          "label": "Diversification Split",
+          "description": "60% USD / 40% Euro Allocation",
+          "numberOfBranches": 2,
+          "autoBalance": true,
+          "branches": [
+            { "percentage": 60, "label": "USD Reserve" },
+            { "percentage": 40, "label": "Euro Hedge" }
+          ]
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-usd",
+      "type": "Node",
+      "position": { "x": 960, "y": -150 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Store USD Reserve",
+          "description": "Move 60% to Cold Storage",
+          "amount": 600000,
+          "recipientWallet": "0xColdStorageA...",
+          "token": "mUSDT",
+          "network": "Mantle",
+          "memo": "Primary USD Reserve"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "swap-eur",
+      "type": "Node",
+      "position": { "x": 960, "y": 150 },
+      "data": {
+        "type": "swap",
+        "icon": "ArrowLeftRight",
+        "properties": {
+          "label": "Swap to Euro",
+          "description": "Convert 40% to EUR stablecoin",
+          "inputToken": "mUSDT",
+          "outputToken": "EURC",
+          "amount": 400000,
+          "swapProvider": "Uniswap",
+          "slippageTolerance": 0.5,
+          "preferredRoute": "Low volatility"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-eur",
+      "type": "Node",
+      "position": { "x": 1280, "y": 150 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Store Euro Hedge",
+          "description": "Move EURC to Cold Storage",
+          "amount": 365000,
+          "recipientWallet": "0xColdStorageB...",
+          "token": "EURC",
+          "network": "Mantle",
+          "memo": "Euro Hedge Reserve"
+        },
+        "segments": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-deposit-mint",
+      "type": "labelEdge",
+      "source": "deposit-hedge",
+      "target": "mint-hedge",
+      "sourceHandle": "deposit-hedge:source",
+      "targetHandle": "mint-hedge:target"
+    },
+    {
+      "id": "edge-mint-partition",
+      "type": "labelEdge",
+      "source": "mint-hedge",
+      "target": "partition-hedge",
+      "sourceHandle": "mint-hedge:source",
+      "targetHandle": "partition-hedge:target"
+    },
+    {
+      "id": "edge-partition-usd",
+      "type": "labelEdge",
+      "source": "partition-hedge",
+      "target": "transfer-usd",
+      "sourceHandle": "partition-hedge:source",
+      "targetHandle": "transfer-usd:target"
+    },
+    {
+      "id": "edge-partition-swap",
+      "type": "labelEdge",
+      "source": "partition-hedge",
+      "target": "swap-eur",
+      "sourceHandle": "partition-hedge:source",
+      "targetHandle": "swap-eur:target"
+    },
+    {
+      "id": "edge-swap-transfer",
+      "type": "labelEdge",
+      "source": "swap-eur",
+      "target": "transfer-eur",
+      "sourceHandle": "swap-eur:source",
+      "targetHandle": "transfer-eur:target"
+    }
+  ]
+}

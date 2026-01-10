@@ -13,6 +13,8 @@ import {
   Check,
   CheckCircle2,
   ChevronDown,
+  ChevronRight,
+  ChevronUp,
   Clock,
   Coins,
   Copy,
@@ -24,6 +26,7 @@ import {
   Hand,
   Image,
   Info,
+  Key,
   LayoutGrid,
   Link2,
   List,
@@ -98,6 +101,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
 
   // Modal and form icons
   Lock: Lock,
+  Key: Key,
   Image: Image,
   Archive: Archive,
   MoreVertical: MoreVertical,
@@ -122,6 +126,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   Moon: Moon,
   Sun: Sun,
   ChevronDown: ChevronDown,
+  ChevronRight: ChevronRight,
   Info: Info,
   MinusCircle: MinusCircle,
   SlidersHorizontal: SlidersHorizontal,
@@ -144,6 +149,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   GitBranch: GitBranch, // Partition
   TrendingUp: TrendingUp, // Yield Deposit
   TrendingDown: TrendingDown, // Yield Withdraw
+  ChevronUp: ChevronUp, // UI Toggle
 
   // Web3 icons for dynamic node icons (swap providers, issuers)
   TokenUSDT: TokenUSDT as unknown as ComponentType<IconProps>,

@@ -156,23 +156,18 @@
       }
     },
     {
-      "id": "vault-cbtt",
+      "id": "yield-deposit-cbtt",
       "type": "Node",
       "position": { "x": 1880, "y": 220 },
       "data": {
-        "type": "vault",
-        "icon": "ShieldCheck",
+        "type": "yield-deposit",
+        "icon": "TrendingUp",
         "properties": {
-          "label": "Vault Allocation",
-          "description": "Hold funds until 120 mUSDT target hit",
+          "label": "Yield Allocation",
+          "description": "Deposit delayed funds into yield protocol",
           "amount": 200000,
-          "yieldModel": "Moderate 5% APR",
-          "stopCondition": "targetAmount",
-          "targetAmount": 120,
-          "timePeriod": 30,
-          "timeUnit": "days",
-          "aprThreshold": 2,
-          "autoWithdrawDestination": "redeem"
+          "underlyingToken": "mUSDT",
+          "yieldAdapter": "InitCapitalAdapter"
         },
         "segments": []
       }
@@ -239,9 +234,9 @@
       "id": "edge-wait-vault",
       "type": "labelEdge",
       "source": "wait-cbtt",
-      "target": "vault-cbtt",
+      "target": "yield-deposit-cbtt",
       "sourceHandle": "wait-cbtt:source",
-      "targetHandle": "vault-cbtt:target"
+      "targetHandle": "yield-deposit-cbtt:target"
     }
   ]
 }
