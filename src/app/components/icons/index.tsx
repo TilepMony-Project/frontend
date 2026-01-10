@@ -26,6 +26,7 @@ import {
   Hand,
   Image,
   Info,
+  Key,
   LayoutGrid,
   Link2,
   List,
@@ -100,6 +101,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
 
   // Modal and form icons
   Lock: Lock,
+  Key: Key,
   Image: Image,
   Archive: Archive,
   MoreVertical: MoreVertical,
