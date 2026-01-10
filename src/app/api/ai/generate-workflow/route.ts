@@ -71,10 +71,10 @@ const NODE_REGISTRY = {
     properties: extractPropertyInfo(swapSchema),
   },
   bridge: {
-    description: "Moves tokens across blockchains",
+    description: "Moves tokens across blockchains (Mantle<->Base)",
     inputs: ["mUSDT", "IDRX"],
     outputs: ["mUSDT", "IDRX"],
-    requiredFields: ["amount", "bridgeProvider", "receiverWallet"],
+    requiredFields: ["bridgeProvider", "destinationChain", "inputAmountPercentage"],
     properties: extractPropertyInfo(bridgeSchema),
   },
   redeem: {

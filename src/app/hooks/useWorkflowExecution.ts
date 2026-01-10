@@ -498,6 +498,7 @@ export function useWorkflowExecution() {
         abi: CONTRACT_ABI,
         functionName: "executeWorkflow",
         args: [processedActions, config.initialToken, BigInt(config.initialAmount)],
+        account: walletAddress as `0x${string}`,
         ...(gasLimit ? { gas: gasLimit } : {}),
         ...(igpGasQuote > BigInt(0) ? { value: igpGasQuote } : {}),
       });

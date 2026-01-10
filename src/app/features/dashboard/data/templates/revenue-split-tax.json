@@ -1,0 +1,162 @@
+{
+  "id": "revenue-split-tax",
+  "name": "Revenue Split & Tax Provisioning",
+  "category": "Compliance",
+  "description": "Automatically route incoming revenue: 70% to Ops, 20% to Growth, and 10% directly into a Yield Vault for tax season.",
+  "layoutDirection": "horizontal",
+  "nodes": [
+    {
+      "id": "deposit-rev",
+      "type": "Node",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "deposit",
+        "icon": "DollarSign",
+        "properties": {
+          "label": "Deposit Monthly Revenue",
+          "description": "Inbound revenue sweep",
+          "amount": 100000,
+          "currency": "USD",
+          "paymentGateway": "StripeConnect"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "mint-rev",
+      "type": "Node",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "mint",
+        "icon": "Coins",
+        "properties": {
+          "label": "Mint mUSDT",
+          "description": "Convert to on-chain stablecoin",
+          "amount": 100000,
+          "issuer": "TreasuryIssuer",
+          "receivingWallet": "0xTreasuryMultisig...",
+          "exchangeRate": 1
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "partition-rev",
+      "type": "Node",
+      "position": { "x": 640, "y": 0 },
+      "data": {
+        "type": "partition",
+        "icon": "GitBranch",
+        "properties": {
+          "label": "Split Allocation",
+          "description": "70% Ops, 20% Growth, 10% Tax",
+          "numberOfBranches": 3,
+          "autoBalance": false,
+          "branches": [
+            { "percentage": 70, "label": "Ops Budget" },
+            { "percentage": 20, "label": "Growth Fund" },
+            { "percentage": 10, "label": "Tax Reserve" }
+          ]
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-ops",
+      "type": "Node",
+      "position": { "x": 960, "y": -150 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Transfer to Ops Wallet",
+          "description": "70% for operational expenses",
+          "amount": 70000,
+          "recipientWallet": "0xOpsWallet...",
+          "token": "mUSDT",
+          "network": "Mantle",
+          "memo": "Ops Allocation"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "transfer-growth",
+      "type": "Node",
+      "position": { "x": 960, "y": 0 },
+      "data": {
+        "type": "transfer",
+        "icon": "Send",
+        "properties": {
+          "label": "Transfer to Growth Wallet",
+          "description": "20% for marketing & sales",
+          "amount": 20000,
+          "recipientWallet": "0xGrowthWallet...",
+          "token": "mUSDT",
+          "network": "Mantle",
+          "memo": "Growth Allocation"
+        },
+        "segments": []
+      }
+    },
+    {
+      "id": "yield-deposit-tax",
+      "type": "Node",
+      "position": { "x": 960, "y": 150 },
+      "data": {
+        "type": "yield-deposit",
+        "icon": "TrendingUp",
+        "properties": {
+          "label": "Tax Reserve Vault",
+          "description": "10% locked in low-risk yield",
+          "amount": 10000,
+          "underlyingToken": "mUSDT",
+          "yieldAdapter": "CompoundAdapter"
+        },
+        "segments": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-deposit-mint",
+      "type": "labelEdge",
+      "source": "deposit-rev",
+      "target": "mint-rev",
+      "sourceHandle": "deposit-rev:source",
+      "targetHandle": "mint-rev:target"
+    },
+    {
+      "id": "edge-mint-partition",
+      "type": "labelEdge",
+      "source": "mint-rev",
+      "target": "partition-rev",
+      "sourceHandle": "mint-rev:source",
+      "targetHandle": "partition-rev:target"
+    },
+    {
+      "id": "edge-partition-ops",
+      "type": "labelEdge",
+      "source": "partition-rev",
+      "target": "transfer-ops",
+      "sourceHandle": "partition-rev:source",
+      "targetHandle": "transfer-ops:target"
+    },
+    {
+      "id": "edge-partition-growth",
+      "type": "labelEdge",
+      "source": "partition-rev",
+      "target": "transfer-growth",
+      "sourceHandle": "partition-rev:source",
+      "targetHandle": "transfer-growth:target"
+    },
+    {
+      "id": "edge-partition-tax",
+      "type": "labelEdge",
+      "source": "partition-rev",
+      "target": "yield-deposit-tax",
+      "sourceHandle": "partition-rev:source",
+      "targetHandle": "yield-deposit-tax:target"
+    }
+  ]
+}

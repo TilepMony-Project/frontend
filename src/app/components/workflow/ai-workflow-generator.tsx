@@ -14,7 +14,9 @@ interface AIWorkflowGeneratorProps {
   onWorkflowGenerated?: (workflow: any) => void;
 }
 
-export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGeneratorProps) {
+export function AIWorkflowGenerator({
+  onWorkflowGenerated,
+}: AIWorkflowGeneratorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -122,10 +124,17 @@ export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGenerator
         size="large"
         footer={
           <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isGenerating}>
+            <Button
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+              disabled={isGenerating}
+            >
               Cancel
             </Button>
-            <Button onClick={handleGenerate} disabled={isGenerating || !prompt.trim()}>
+            <Button
+              onClick={handleGenerate}
+              disabled={isGenerating || !prompt.trim()}
+            >
               {isGenerating ? (
                 <>
                   <Loader2 size={18} className="animate-spin mr-2" />
@@ -143,7 +152,9 @@ export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGenerator
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Describe your workflow</label>
+            <label className="block text-sm font-medium mb-2">
+              Describe your workflow
+            </label>
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
@@ -153,19 +164,69 @@ export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGenerator
             />
           </div>
 
-          <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-            <p className="text-sm font-medium">Example prompts:</p>
-            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-              <li>"Deposit 10,000 USD, mint to stablecoin, wait 7 days, then redeem to USD"</li>
-              <li>
-                "Create a stablecoin workflow: deposit IDR → mint → vault with 120 mUSDT target →
-                partition 60/40 to transfer and redeem"
-              </li>
-              <li>
-                "I need to receive USD, convert to stablecoin, bridge to Mantle, then transfer to
-                wallet 0xABC"
-              </li>
-            </ul>
+          <div className="space-y-3">
+            <p className="text-sm font-medium">Try a template:</p>
+            <div className="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
+              <button
+                type="button"
+                onClick={() =>
+                  setPrompt(
+                    "Deposit USD, mint mUSDT, bridge to Base Sepolia, then transfer to Treasury Wallet"
+                  )
+                }
+                className="text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs"
+              >
+                <span className="font-semibold block mb-1">
+                  🌍 Cross-Border Treasury Transfer
+                </span>
+                Deposit USD → Mint → Bridge to Base → Transfer to Treasury
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setPrompt(
+                    "Deposit USD, mint mUSDT, deposit to Aave yield, transfer shares to Cold Storage, then withdraw from yield"
+                  )
+                }
+                className="text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs"
+              >
+                <span className="font-semibold block mb-1">
+                  🏦 Automated On-Ramp + Investment Vault
+                </span>
+                Deposit → Mint → Yield Deposit → Transfer Shares → Withdraw
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setPrompt(
+                    "Deposit USD, mint mUSDT, wait 30 days, then partition 50/50 to Employee A and Employee B"
+                  )
+                }
+                className="text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs"
+              >
+                <span className="font-semibold block mb-1">
+                  📅 Scheduled Salary Distribution
+                </span>
+                Deposit → Mint → Wait (30d) → Split Pay (50/50)
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setPrompt(
+                    "Deposit IDR, mint IDRX, transfer to Vendor Wallet 0x123"
+                  )
+                }
+                className="text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs"
+              >
+                <span className="font-semibold block mb-1">
+                  🧾 Corporate Invoice Settlement
+                </span>
+                Deposit IDR → Mint IDRX → Pay Vendor
+              </button>
+            </div>
           </div>
         </div>
       </Modal>

@@ -2,7 +2,7 @@
   "id": "automated-onramp-investment-vault",
   "name": "Automated On-Ramp + Investment Vault",
   "category": "On-Ramp",
-  "description": "Streamline fiat onboarding into IDRX, swap to USDC, hold funds in a vault, then push into an investment wallet.",
+  "description": "Streamline fiat onboarding into IDRX, swap to mUSDT, deposit into yield, then push shares to investment wallet.",
   "layoutDirection": "horizontal",
   "nodes": [
     {
@@ -48,10 +48,10 @@
         "type": "swap",
         "icon": "ArrowLeftRight",
         "properties": {
-          "label": "Swap IDRX → USDC",
+          "label": "Swap IDRX → mUSDT",
           "description": "Move into USD stablecoin for investment",
           "inputToken": "IDRX",
-          "outputToken": "USDC",
+          "outputToken": "mUSDT",
           "amount": 250000,
           "swapProvider": "DummyDEXB",
           "slippageTolerance": 0.35,
@@ -61,23 +61,18 @@
       }
     },
     {
-      "id": "vault-onramp",
+      "id": "yield-deposit-onramp",
       "type": "Node",
       "position": { "x": 960, "y": 0 },
       "data": {
-        "type": "vault",
-        "icon": "ShieldCheck",
+        "type": "yield-deposit",
+        "icon": "TrendingUp",
         "properties": {
-          "label": "Investment Vault",
-          "description": "Hold until vault reaches 2,000 USDC",
-          "amount": 2000,
-          "yieldModel": "Moderate 5% APR",
-          "stopCondition": "targetAmount",
-          "targetAmount": 2000,
-          "timePeriod": 14,
-          "timeUnit": "days",
-          "aprThreshold": 2,
-          "autoWithdrawDestination": "transfer"
+          "label": "Deposit to Aave",
+          "description": "Deposit mUSDT into lending protocol",
+          "amount": 250000,
+          "underlyingToken": "mUSDT",
+          "yieldAdapter": "AaveAdapter"
         },
         "segments": []
       }
@@ -90,11 +85,11 @@
         "type": "transfer",
         "icon": "Send",
         "properties": {
-          "label": "Transfer to Investment Wallet",
-          "description": "Move vault tokens into investment strategy",
-          "amount": 2000,
+          "label": "Transfer Shares",
+          "description": "Move yield tokens into investment strategy",
+          "amount": 250000,
           "recipientWallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-          "network": "Mantle Testnet",
+          "token": "DYNAMIC",
           "maxSlippage": 0.25,
           "memo": "Auto on-ramp investment"
         },
@@ -120,19 +115,19 @@
       "targetHandle": "swap-onramp:target"
     },
     {
-      "id": "edge-swap-onramp-vault",
+      "id": "edge-swap-onramp-yield",
       "type": "labelEdge",
       "source": "swap-onramp",
-      "target": "vault-onramp",
+      "target": "yield-deposit-onramp",
       "sourceHandle": "swap-onramp:source",
-      "targetHandle": "vault-onramp:target"
+      "targetHandle": "yield-deposit-onramp:target"
     },
     {
-      "id": "edge-vault-onramp-transfer",
+      "id": "edge-yield-onramp-transfer",
       "type": "labelEdge",
-      "source": "vault-onramp",
+      "source": "yield-deposit-onramp",
       "target": "transfer-onramp",
-      "sourceHandle": "vault-onramp:source",
+      "sourceHandle": "yield-deposit-onramp:source",
       "targetHandle": "transfer-onramp:target"
     }
   ]
