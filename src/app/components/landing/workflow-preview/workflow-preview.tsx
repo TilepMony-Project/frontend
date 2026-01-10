@@ -37,7 +37,7 @@ import { partitionNode } from "@/data/nodes/partition/partition";
 import { redeemNode } from "@/data/nodes/redeem/redeem";
 import { swapNode } from "@/data/nodes/swap/swap";
 import { transferNode } from "@/data/nodes/transfer/transfer";
-import { vaultNode } from "@/data/nodes/vault/vault";
+
 import { waitNode } from "@/data/nodes/wait/wait";
 
 const ALL_NODES = [
@@ -49,40 +49,36 @@ const ALL_NODES = [
   mintNode,
   partitionNode,
   redeemNode,
-  vaultNode,
 ];
 
 import { workflowTemplates } from "@/features/dashboard/data/templates";
 
 // Map real templates to the format needed for the preview
-const MAPPED_TEMPLATES = workflowTemplates.reduce(
-  (acc, template) => {
-    acc[template.id] = {
-      label: template.name,
-      nodes: template.nodes.map((node) => ({
-        ...node,
-        type: "landingPageNode", // Override type for landing page
-        data: {
-          ...node.data,
-          // Ensure icon is passed correctly if it exists in data
-          icon: node.data.icon,
-        },
-      })),
-      edges: template.edges.map((edge) => ({
-        ...edge,
-        id: `e-${edge.source}-${edge.target}`, // Ensure unique ID
-        type: "default", // Use default edge type
-        sourceHandle: "source", // Match LandingPageNode handle ID
-        targetHandle: "target", // Match LandingPageNode handle ID
-        animated: true,
-        style: { stroke: "#94a3b8", strokeWidth: 2 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: "#94a3b8" },
-      })),
-    };
-    return acc;
-  },
-  {} as Record<string, { label: string; nodes: Node[]; edges: Edge[] }>
-);
+const MAPPED_TEMPLATES = workflowTemplates.reduce((acc, template) => {
+  acc[template.id] = {
+    label: template.name,
+    nodes: template.nodes.map((node) => ({
+      ...node,
+      type: "landingPageNode", // Override type for landing page
+      data: {
+        ...node.data,
+        // Ensure icon is passed correctly if it exists in data
+        icon: node.data.icon,
+      },
+    })),
+    edges: template.edges.map((edge) => ({
+      ...edge,
+      id: `e-${edge.source}-${edge.target}`, // Ensure unique ID
+      type: "default", // Use default edge type
+      sourceHandle: "source", // Match LandingPageNode handle ID
+      targetHandle: "target", // Match LandingPageNode handle ID
+      animated: true,
+      style: { stroke: "#94a3b8", strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: "#94a3b8" },
+    })),
+  };
+  return acc;
+}, {} as Record<string, { label: string; nodes: Node[]; edges: Edge[] }>);
 
 const DEFAULT_TEMPLATE_ID = "cross-border-treasury-transfer";
 
@@ -226,7 +222,10 @@ function WorkflowPreviewContent() {
         <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-1">
           Templates
         </span>
-        <Select defaultValue={DEFAULT_TEMPLATE_ID} onValueChange={handleTemplateChange}>
+        <Select
+          defaultValue={DEFAULT_TEMPLATE_ID}
+          onValueChange={handleTemplateChange}
+        >
           <SelectTrigger className="h-8 w-full bg-white dark:bg-[#242427] border-gray-200 dark:border-gray-700">
             <SelectValue placeholder="Select template" />
           </SelectTrigger>

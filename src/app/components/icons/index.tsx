@@ -13,6 +13,7 @@ import {
   Check,
   CheckCircle2,
   ChevronDown,
+  ChevronUp,
   Clock,
   Coins,
   Copy,
@@ -144,6 +145,7 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   GitBranch: GitBranch, // Partition
   TrendingUp: TrendingUp, // Yield Deposit
   TrendingDown: TrendingDown, // Yield Withdraw
+  ChevronUp: ChevronUp, // UI Toggle
 
   // Web3 icons for dynamic node icons (swap providers, issuers)
   TokenUSDT: TokenUSDT as unknown as ComponentType<IconProps>,

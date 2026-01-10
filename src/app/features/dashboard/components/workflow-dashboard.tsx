@@ -216,6 +216,11 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
   const [depositAmount, setDepositAmount] = useState("");
   const [isDepositing, setIsDepositing] = useState(false);
 
+  // Template Modal State
+  const [expandedTemplateId, setExpandedTemplateId] = useState<string | null>(
+    null
+  );
+
   const isBusy = isLoading || isLoadingToken;
 
   // Wallet connection logic
@@ -1715,6 +1720,14 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                   <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                     {template.description}
                   </p>
+                  {template.scenario && (
+                    <div className="bg-gray-50 dark:bg-gray-800/80 rounded-lg p-3 text-xs text-gray-600 dark:text-gray-300 italic border border-gray-100 dark:border-gray-700/50">
+                      <span className="font-semibold text-gray-900 dark:text-gray-200 not-italic block mb-1">
+                        Scenario:
+                      </span>
+                      &ldquo;{template.scenario}&rdquo;
+                    </div>
+                  )}
                   <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                     <span className="flex items-center gap-1">
                       <Icon name="Box" size={14} />
@@ -1724,7 +1737,65 @@ export function WorkflowDashboard({ initialWorkflows }: Props) {
                       <Icon name="GitBranch" size={14} />
                       {template.edges.length} edges
                     </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExpandedTemplateId(
+                          expandedTemplateId === template.id
+                            ? null
+                            : template.id
+                        );
+                      }}
+                      className="ml-auto text-primary hover:text-primary/80 text-xs font-medium flex items-center gap-1 transition-colors"
+                    >
+                      {expandedTemplateId === template.id
+                        ? "Hide Flow"
+                        : "View Flow"}
+                      {expandedTemplateId === template.id ? (
+                        <Icon name="ChevronUp" size={14} />
+                      ) : (
+                        <Icon name="ChevronDown" size={14} />
+                      )}
+                    </button>
                   </div>
+
+                  {expandedTemplateId === template.id && (
+                    <div className="border-t border-gray-100 dark:border-gray-800 pt-3 mt-1 animate-in fade-in slide-in-from-top-2 duration-200">
+                      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider">
+                        Workflow Steps
+                      </p>
+                      <div className="relative pl-4 border-l border-gray-200 dark:border-gray-700 space-y-4 ml-2">
+                        {template.nodes
+                          .sort((a, b) => a.position.x - b.position.x) // Simple sort by X position to guess order
+                          .map((node, index) => (
+                            <div key={node.id} className="relative group">
+                              <span className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gray-200 dark:bg-gray-700 border-2 border-white dark:border-[#27282b] group-hover:bg-primary group-hover:scale-110 transition-all" />
+                              <div className="flex items-start gap-2">
+                                <div className="p-1.5 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                                  <Icon
+                                    name={(node.data as any)?.icon || "Circle"}
+                                    size={14}
+                                  />
+                                </div>
+                                <div>
+                                  <p className="text-xs font-medium text-gray-900 dark:text-white leading-none mb-1">
+                                    {(node.data as any)?.properties?.label ||
+                                      "Node"}
+                                  </p>
+                                  <p className="text-[10px] text-gray-500 dark:text-gray-400 leading-tight">
+                                    {(node.data as any)?.properties
+                                      ?.description ||
+                                      (node.data as any)?.type ||
+                                      ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
                   <Button
                     variant="default"
                     className="mt-auto"
