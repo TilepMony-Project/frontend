@@ -14,9 +14,7 @@ interface AIWorkflowGeneratorProps {
   onWorkflowGenerated?: (workflow: any) => void;
 }
 
-export function AIWorkflowGenerator({
-  onWorkflowGenerated,
-}: AIWorkflowGeneratorProps) {
+export function AIWorkflowGenerator({ onWorkflowGenerated }: AIWorkflowGeneratorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -124,17 +122,10 @@ export function AIWorkflowGenerator({
         size="large"
         footer={
           <div className="flex justify-end gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setIsOpen(false)}
-              disabled={isGenerating}
-            >
+            <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isGenerating}>
               Cancel
             </Button>
-            <Button
-              onClick={handleGenerate}
-              disabled={isGenerating || !prompt.trim()}
-            >
+            <Button onClick={handleGenerate} disabled={isGenerating || !prompt.trim()}>
               {isGenerating ? (
                 <>
                   <Loader2 size={18} className="animate-spin mr-2" />
@@ -152,9 +143,7 @@ export function AIWorkflowGenerator({
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Describe your workflow
-            </label>
+            <label className="block text-sm font-medium mb-2">Describe your workflow</label>
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
@@ -176,9 +165,7 @@ export function AIWorkflowGenerator({
                 }
                 className="text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs"
               >
-                <span className="font-semibold block mb-1">
-                  🌍 Cross-Border Treasury Transfer
-                </span>
+                <span className="font-semibold block mb-1">🌍 Cross-Border Treasury Transfer</span>
                 Deposit USD → Mint → Bridge to Base → Transfer to Treasury
               </button>
 
@@ -206,24 +193,16 @@ export function AIWorkflowGenerator({
                 }
                 className="text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs"
               >
-                <span className="font-semibold block mb-1">
-                  📅 Scheduled Salary Distribution
-                </span>
+                <span className="font-semibold block mb-1">📅 Scheduled Salary Distribution</span>
                 Deposit → Mint → Wait (30d) → Split Pay (50/50)
               </button>
 
               <button
                 type="button"
-                onClick={() =>
-                  setPrompt(
-                    "Deposit IDR, mint IDRX, transfer to Vendor Wallet 0x123"
-                  )
-                }
+                onClick={() => setPrompt("Deposit IDR, mint IDRX, transfer to Vendor Wallet 0x123")}
                 className="text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs"
               >
-                <span className="font-semibold block mb-1">
-                  🧾 Corporate Invoice Settlement
-                </span>
+                <span className="font-semibold block mb-1">🧾 Corporate Invoice Settlement</span>
                 Deposit IDR → Mint IDRX → Pay Vendor
               </button>
             </div>

@@ -19,7 +19,7 @@ const FAQ: React.FC = () => {
     {
       question: "How does the visual drag-and-drop workflow builder work?",
       answer:
-        "Our visual workflow builder uses a node-based interface where you drag and drop modular nodes to create stablecoin payment flows. Each node represents an action (Deposit, Mint, Swap, Bridge, Redeem, Transfer, Vault, Wait, Partition) and is fully configurable via a right-side panel. You connect nodes to define your workflow logic, and the system validates and simulates it before execution.",
+        "Our visual workflow builder uses a node-based interface where you drag and drop modular nodes to create stablecoin payment flows. Each node represents an action (Deposit, Mint, Swap, Bridge, Redeem, Transfer, Yield Deposit, Yield Withdraw, Wait, Partition) and is fully configurable via a right-side panel. You connect nodes to define your workflow logic, and the system validates and simulations it before execution.",
     },
     {
       question: "What makes TilepMoney suitable for enterprise B2B operations?",
@@ -34,7 +34,7 @@ const FAQ: React.FC = () => {
     {
       question: "What types of nodes are available and what can I build with them?",
       answer:
-        "TilepMoney offers 9 node types: Deposit (bring fiat into system), Mint (convert fiat to stablecoin), Swap (exchange tokens), Bridge (move assets across chains), Redeem (convert stablecoin to fiat), Transfer (send to wallets), Vault (earn yield with stop conditions), Wait (delay execution), and Partition (split amounts into multiple branches). You can build complex workflows like corporate payments, treasury automation, merchant settlements, and cross-chain liquidity management.",
+        "TilepMoney offers 9 node types: Deposit (bring fiat into system), Mint (convert fiat to stablecoin), Swap (exchange tokens), Bridge (move assets across chains), Redeem (convert stablecoin to fiat), Transfer (send to wallets), Yield Deposit (earn interest on idle assets), Yield Withdraw (liquidate positions), Wait (delay execution), and Partition (split amounts multiple branches). You can build complex workflows like corporate payments, treasury automation, merchant settlements, and cross-chain liquidity management.",
     },
     {
       question: "How does TilepMoney ensure routing transparency and compliance?",
