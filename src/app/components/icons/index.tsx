@@ -2,6 +2,7 @@
 
 import {
   Archive,
+  Activity,
   AlertCircle,
   ArrowLeft,
   ArrowLeftRight,
@@ -84,6 +85,7 @@ export type WBIconProps = IconProps;
 // Uses Lucide React as primary icon library
 const iconMap: Record<string, ComponentType<IconProps>> = {
   // Common UI icons (Lucide React)
+  Activity: Activity,
   Save: Save,
   Upload: Upload,
   Download: Download,
