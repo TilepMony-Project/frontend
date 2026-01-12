@@ -49,10 +49,10 @@ const nextConfig = {
   // Add turbopack config here when migrating from webpack
   turbopack: {
     // Keep Turbopack aligned with the webpack aliases above
+    // These are needed for @privy-io/wagmi and WalletConnect dependencies
     resolveAlias: {
-      pino: {
-        browser: "pino/browser",
-      },
+      // Redirect pino to browser-safe version
+      pino: "pino/browser",
     },
   },
 };

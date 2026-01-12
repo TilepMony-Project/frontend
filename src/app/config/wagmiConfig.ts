@@ -1,10 +1,12 @@
-import { http, createConfig } from "wagmi";
-import { injected } from "wagmi/connectors";
-import { mantleSepoliaTestnet, baseSepoliaTestnet } from "./chains";
+// Import createConfig from @privy-io/wagmi, NOT from wagmi
+// This enables automatic sync between Privy auth and Wagmi connector
+import { createConfig } from "@privy-io/wagmi";
+import { http } from "wagmi";
+import { baseSepoliaTestnet, mantleSepoliaTestnet } from "./chains";
 
 export const wagmiConfig = createConfig({
   chains: [mantleSepoliaTestnet, baseSepoliaTestnet],
-  connectors: [injected()],
+  // No connectors needed - Privy handles this automatically
   transports: {
     [mantleSepoliaTestnet.id]: http(),
     [baseSepoliaTestnet.id]: http(),

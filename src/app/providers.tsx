@@ -1,17 +1,20 @@
 "use client";
 
 import { PrivyUserSync } from "@/components/privy-user-sync";
-import { mantleSepoliaTestnet, baseSepoliaTestnet } from "@/config/chains";
+import { WalletSyncGuard } from "@/components/wallet-sync-guard";
+import { baseSepoliaTestnet, mantleSepoliaTestnet } from "@/config/chains";
 import { wagmiConfig } from "@/config/wagmiConfig";
 import { ThemeProvider } from "@/hooks/use-theme";
 import type { PrivyClientConfig } from "@privy-io/react-auth";
+// Import WagmiProvider from @privy-io/wagmi, NOT from wagmi
+// This enables automatic sync between Privy auth and Wagmi connector
+import { WagmiProvider } from "@privy-io/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactFlowProvider } from "@xyflow/react";
 import { setAutoFreeze } from "immer";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import TagManager from "react-gtm-module";
-import { WagmiProvider } from "wagmi";
 
 // Disable immer's automatic object freezing because ReactFlow mutates objects under the hood
 // and requires this to be turned off to function properly, especially when node size is updated
@@ -64,16 +67,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <PrivyProviderNoSSR appId={privyAppId} config={privyConfig}>
       <SmartWalletsProviderNoSSR>
-        <WagmiProvider config={wagmiConfig}>
-          <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <WagmiProvider config={wagmiConfig}>
             <ReactFlowProvider>
               <ThemeProvider>
                 <PrivyUserSync />
+                <WalletSyncGuard />
                 {children}
               </ThemeProvider>
             </ReactFlowProvider>
-          </QueryClientProvider>
-        </WagmiProvider>
+          </WagmiProvider>
+        </QueryClientProvider>
       </SmartWalletsProviderNoSSR>
     </PrivyProviderNoSSR>
   );

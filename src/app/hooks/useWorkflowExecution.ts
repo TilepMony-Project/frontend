@@ -10,15 +10,16 @@ import { usePrivySession } from "@/hooks/use-privy-session";
 import useStore from "@/store/store";
 import { decodeContractError } from "@/utils/error-decoder";
 import {
+  type Action,
   ActionType,
   encodeBridgeData,
   encodeChainBWorkflow,
-  type Action,
 } from "@/utils/mainController";
 import { useSmartWallets } from "@privy-io/react-auth/smart-wallets";
 import { useCallback, useEffect, useState } from "react";
 import { formatEther, formatUnits, parseAbi, parseEventLogs } from "viem";
 import {
+  useAccount,
   useChainId,
   usePublicClient,
   useSwitchChain,
@@ -53,6 +54,11 @@ export function useWorkflowExecution() {
   const nodes = useStore((state) => state.nodes);
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
+  const {
+    address: wagmiAddress,
+    isConnected: isWagmiConnected,
+    status: wagmiStatus,
+  } = useAccount();
   const setLastExecutionRun = useStore((state) => state.setLastExecutionRun);
 
   // Execution state from global store
@@ -291,6 +297,15 @@ export function useWorkflowExecution() {
 
       const walletAddress = user?.wallet?.address;
       if (!walletAddress) throw new Error("No wallet connected");
+
+      // Check if Wagmi connector has the account synced
+      // This prevents "Account not found for connector" error after auto-reconnect
+      if (!isWagmiConnected || wagmiStatus !== "connected") {
+        throw new Error("Wallet connector is still syncing. Please wait a moment and try again.");
+      }
+      if (wagmiAddress?.toLowerCase() !== walletAddress.toLowerCase()) {
+        throw new Error("Wallet sync mismatch. Please disconnect and reconnect your wallet.");
+      }
 
       // Check if wallet is on the correct chain, switch if needed
       if (chainId !== sourceChainId) {
@@ -553,6 +568,14 @@ export function useWorkflowExecution() {
       const walletAddress = user?.wallet?.address;
       if (!walletAddress) throw new Error("No wallet connected");
 
+      // Check if Wagmi connector has the account synced
+      if (!isWagmiConnected || wagmiStatus !== "connected") {
+        throw new Error("Wallet connector is still syncing. Please wait a moment and try again.");
+      }
+      if (wagmiAddress?.toLowerCase() !== walletAddress.toLowerCase()) {
+        throw new Error("Wallet sync mismatch. Please disconnect and reconnect your wallet.");
+      }
+
       // Check if wallet is on the correct chain, switch if needed
       if (chainId !== sourceChainId) {
         console.log(
@@ -767,6 +790,11 @@ export function useWorkflowExecution() {
       if (!accessToken) throw new Error("Authentication token not ready");
       const walletAddress = user?.wallet?.address;
       if (!walletAddress) throw new Error("No wallet connected");
+
+      // Check if Wagmi connector has the account synced
+      if (!isWagmiConnected || wagmiStatus !== "connected") {
+        throw new Error("Wallet connector is still syncing. Please wait a moment and try again.");
+      }
 
       // Get execution config from backend
       const response = await fetch(`/api/workflows/${workflowId}/execute`, {
