@@ -21,6 +21,8 @@ const nextConfig = {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
+        net: false,
+        tls: false,
       };
     }
 
@@ -30,8 +32,10 @@ const nextConfig = {
       ...config.resolve.alias,
       "@react-native-async-storage/async-storage": false,
       "pino-pretty": false,
-      pino: "pino/browser",
       "thread-stream": false,
+      "encoding": false,
+      "lokijs": false,
+      // pino: "pino/browser", // Rely on pino's package.json browser field instead
     };
 
     // Ignore warnings for optional peer dependencies
@@ -39,6 +43,8 @@ const nextConfig = {
       ...(config.ignoreWarnings || []),
       { module: /@react-native-async-storage\/async-storage/ },
       { module: /pino-pretty/ },
+      { module: /encoding/ },
+      { module: /lokijs/ },
     ];
 
     return config;
@@ -52,7 +58,10 @@ const nextConfig = {
     // These are needed for @privy-io/wagmi and WalletConnect dependencies
     resolveAlias: {
       // Redirect pino to browser-safe version
-      pino: "pino/browser",
+      // pino: "pino/browser", // Let's rely on browser field
+      "thread-stream": "pino/browser", // Hack? No, just remove it or map to something safe? 
+      // Turbopack alias support is limited, keeping pino/browser if failing
+      pino: "pino/browser", 
     },
   },
 };
